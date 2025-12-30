@@ -24,8 +24,4 @@
 	<TopNav />
 {/if}
 
-{#key $page.url.pathname}
-	<div class="page-transition">
-		{@render children()}
-	</div>
-{/key}
+{@render children()}
