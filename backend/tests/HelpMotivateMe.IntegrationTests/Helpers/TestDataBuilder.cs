@@ -115,22 +115,6 @@ public class TestDataBuilder
         return task;
     }
 
-    public async Task<Category> CreateCategoryAsync(Guid userId, string? name = null, string? color = null, string? icon = null)
-    {
-        var category = new Category
-        {
-            Id = Guid.NewGuid(),
-            UserId = userId,
-            Name = name ?? _faker.Commerce.Categories(1)[0],
-            Color = color ?? _faker.Internet.Color(),
-            Icon = icon,
-            CreatedAt = DateTime.UtcNow
-        };
-        _db.Categories.Add(category);
-        await _db.SaveChangesAsync();
-        return category;
-    }
-
     public async Task<Identity> CreateIdentityAsync(Guid userId, string? name = null)
     {
         var identity = new Identity
@@ -217,7 +201,6 @@ public class TestDataBuilder
         _db.TaskItems.RemoveRange(_db.TaskItems);
         _db.RepeatSchedules.RemoveRange(_db.RepeatSchedules);
         _db.Goals.RemoveRange(_db.Goals);
-        _db.Categories.RemoveRange(_db.Categories);
         _db.Identities.RemoveRange(_db.Identities);
         _db.UserExternalLogins.RemoveRange(_db.UserExternalLogins);
         _db.Users.RemoveRange(_db.Users);

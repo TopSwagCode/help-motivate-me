@@ -462,13 +462,13 @@
 
 		const diffDays = Math.round((targetDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
-		if (diffDays === 0) {
-			return `Today - ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
-		} else if (diffDays === -1) {
-			return `Yesterday - ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
-		} else if (diffDays === 1) {
-			return `Tomorrow - ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
-		}
+		// if (diffDays === 0) {
+		// 	return `Today - ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
+		// } else if (diffDays === -1) {
+		// 	return `Yesterday - ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
+		// } else if (diffDays === 1) {
+		// 	return `Tomorrow - ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
+		// }
 		return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 	}
 
@@ -539,7 +539,7 @@
 			<div class="flex items-center justify-center py-3 gap-4">
 				<button
 					onclick={goToPreviousDay}
-					class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
+					class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg flex-shrink-0"
 					title="Previous day"
 				>
 					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -549,30 +549,34 @@
 
 				<button
 					onclick={() => (showDatePicker = !showDatePicker)}
-					class="text-lg font-semibold text-gray-900 hover:text-primary-600 px-3 py-1 rounded-lg hover:bg-gray-100"
+					class="text-lg font-semibold text-gray-900 hover:text-primary-600 px-3 py-1 rounded-lg hover:bg-gray-100 min-w-[320px] text-center"
+					style="width: 320px;"
 				>
 					{formatDisplayDate(currentDate)}
 				</button>
 
 				<button
 					onclick={goToNextDay}
-					class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
+					class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg flex-shrink-0"
 					title="Next day"
 				>
 					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
 					</svg>
 				</button>
+			</div>
 
-				{#if !isToday()}
+			<!-- Jump to Today Button -->
+			{#if !isToday()}
+				<div class="flex justify-center pb-3">
 					<button
 						onclick={goToToday}
-						class="px-3 py-1 text-sm text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg"
+						class="px-4 py-1.5 text-sm text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg font-medium transition-colors"
 					>
 						Jump to Today
 					</button>
-				{/if}
-			</div>
+				</div>
+			{/if}
 
 			<!-- Date Picker Dropdown -->
 			{#if showDatePicker}

@@ -35,28 +35,6 @@ public class GoalsControllerTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task GetGoals_FilterByCategory_ReturnsOnlyMatchingGoals()
-    {
-        // Arrange
-        var user = await DataBuilder.CreateUserAsync();
-        var category = await DataBuilder.CreateCategoryAsync(user.Id, "Work");
-        var goalWithCategory = await DataBuilder.CreateGoalAsync(user.Id, "Work Goal");
-        var goalWithoutCategory = await DataBuilder.CreateGoalAsync(user.Id, "Personal Goal");
-
-        // Associate category with goal
-        goalWithCategory.Categories.Add(category);
-        await Db.SaveChangesAsync();
-
-        // Act
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.GetFromJsonAsync<List<GoalResponse>>($"/api/goals?categoryId={category.Id}");
-
-        // Assert
-        response.Should().ContainSingle();
-        response![0].Title.Should().Be("Work Goal");
-    }
-
-    [Fact]
     public async Task GetGoal_ReturnsGoalWithTaskCounts()
     {
         // Arrange
@@ -97,30 +75,6 @@ public class GoalsControllerTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task CreateGoal_WithCategories_AssociatesCategories()
-    {
-        // Arrange
-        var user = await DataBuilder.CreateUserAsync();
-        var category1 = await DataBuilder.CreateCategoryAsync(user.Id, "Work");
-        var category2 = await DataBuilder.CreateCategoryAsync(user.Id, "Health");
-
-        var request = new
-        {
-            Title = "Categorized Goal",
-            CategoryIds = new[] { category1.Id, category2.Id }
-        };
-
-        // Act
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.PostAsJsonAsync("/api/goals", request);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Created);
-        var created = await response.Content.ReadFromJsonAsync<GoalResponse>();
-        created!.Categories.Should().HaveCount(2);
-    }
-
-    [Fact]
     public async Task UpdateGoal_UpdatesFields()
     {
         // Arrange
@@ -145,34 +99,6 @@ public class GoalsControllerTests : IntegrationTestBase
         updated!.Title.Should().Be("New Title");
         updated.Description.Should().Be("New Description");
         updated.TargetDate.Should().Be(newTargetDate);
-    }
-
-    [Fact]
-    public async Task UpdateGoal_WithCategories_ReplacesCategories()
-    {
-        // Arrange
-        var user = await DataBuilder.CreateUserAsync();
-        var oldCategory = await DataBuilder.CreateCategoryAsync(user.Id, "Old");
-        var newCategory = await DataBuilder.CreateCategoryAsync(user.Id, "New");
-        var goal = await DataBuilder.CreateGoalAsync(user.Id, "Goal");
-        goal.Categories.Add(oldCategory);
-        await Db.SaveChangesAsync();
-
-        var request = new
-        {
-            Title = "Goal",
-            CategoryIds = new[] { newCategory.Id }
-        };
-
-        // Act
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.PutAsJsonAsync($"/api/goals/{goal.Id}", request);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var updated = await response.Content.ReadFromJsonAsync<GoalResponse>();
-        updated!.Categories.Should().ContainSingle(c => c.Name == "New");
-        updated.Categories.Should().NotContain(c => c.Name == "Old");
     }
 
     [Fact]
@@ -378,31 +304,6 @@ public class GoalsControllerTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    [Fact]
-    public async Task CreateGoal_CannotAssociateOtherUsersCategories()
-    {
-        // Arrange
-        var user1 = await DataBuilder.CreateUserAsync();
-        var user2 = await DataBuilder.CreateUserAsync();
-        var user1Category = await DataBuilder.CreateCategoryAsync(user1.Id, "User1 Category");
-
-        var request = new
-        {
-            Title = "Goal with stolen category",
-            CategoryIds = new[] { user1Category.Id }
-        };
-
-        // Act
-        Client.AuthenticateAs(user2.Id);
-        var response = await Client.PostAsJsonAsync("/api/goals", request);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Created);
-        var created = await response.Content.ReadFromJsonAsync<GoalResponse>();
-        // Category should not be associated (filtered out)
-        created!.Categories.Should().BeEmpty();
-    }
-
     #endregion
 
     #region Client Date Parameter Tests
@@ -468,14 +369,7 @@ public record GoalResponse(
     int SortOrder,
     int TaskCount,
     int CompletedTaskCount,
-    IEnumerable<CategoryResponse> Categories,
     DateTime CreatedAt,
     DateTime? UpdatedAt
 );
 
-public record CategoryResponse(
-    Guid Id,
-    string Name,
-    string? Color,
-    string? Icon
-);

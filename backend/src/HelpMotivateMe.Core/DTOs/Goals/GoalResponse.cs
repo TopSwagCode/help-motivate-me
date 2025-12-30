@@ -1,5 +1,3 @@
-using HelpMotivateMe.Core.DTOs.Categories;
-
 namespace HelpMotivateMe.Core.DTOs.Goals;
 
 public record GoalResponse(
@@ -12,7 +10,6 @@ public record GoalResponse(
     int SortOrder,
     int TaskCount,
     int CompletedTaskCount,
-    IEnumerable<CategoryResponse> Categories,
     DateTime CreatedAt,
     DateTime UpdatedAt
 );

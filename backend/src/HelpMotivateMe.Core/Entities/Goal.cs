@@ -16,5 +16,4 @@ public class Goal
     // Navigation properties
     public User User { get; set; } = null!;
     public ICollection<TaskItem> Tasks { get; set; } = [];
-    public ICollection<Category> Categories { get; set; } = [];
 }

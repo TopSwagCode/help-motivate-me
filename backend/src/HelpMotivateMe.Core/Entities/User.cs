@@ -14,7 +14,6 @@ public class User
     // Navigation properties
     public ICollection<UserExternalLogin> ExternalLogins { get; set; } = [];
     public ICollection<Goal> Goals { get; set; } = [];
-    public ICollection<Category> Categories { get; set; } = [];
     public ICollection<Identity> Identities { get; set; } = [];
     public ICollection<HabitStack> HabitStacks { get; set; } = [];
 }

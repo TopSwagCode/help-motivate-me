@@ -71,20 +71,7 @@
 					<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						{#each activeGoals as goal (goal.id)}
 							<a href="/goals/{goal.id}" class="card-hover p-6 block">
-								<div class="flex items-start justify-between mb-3">
-									<h3 class="font-medium text-gray-900 line-clamp-2">{goal.title}</h3>
-									{#if goal.categories.length > 0}
-										<div class="flex gap-1 ml-2 flex-shrink-0">
-											{#each goal.categories.slice(0, 2) as category (category.id)}
-												<span
-													class="inline-block w-3 h-3 rounded-full"
-													style="background-color: {category.color || '#9CA3AF'}"
-													title={category.name}
-												></span>
-											{/each}
-										</div>
-									{/if}
-								</div>
+								<h3 class="font-medium text-gray-900 line-clamp-2 mb-3">{goal.title}</h3>
 
 								{#if goal.description}
 									<p class="text-sm text-gray-500 line-clamp-2 mb-4">{goal.description}</p>
