@@ -138,7 +138,6 @@ Track your progress over time (note: streak tracking is under development).
 
 ### ✅ Goals & Tasks
 Traditional goal and task management with:
-- Categories for organization
 - Repeatable tasks (daily, weekly, monthly)
 - Subtasks support
 - Priority levels
