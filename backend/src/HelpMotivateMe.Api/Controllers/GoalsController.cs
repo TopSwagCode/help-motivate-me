@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using HelpMotivateMe.Core.DTOs.Categories;
 using HelpMotivateMe.Core.DTOs.Goals;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
@@ -23,21 +22,13 @@ public class GoalsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<GoalResponse>>> GetGoals([FromQuery] Guid? categoryId)
+    public async Task<ActionResult<List<GoalResponse>>> GetGoals()
     {
         var userId = GetUserId();
 
-        var query = _db.Goals
-            .Include(g => g.Categories)
+        var goals = await _db.Goals
             .Include(g => g.Tasks)
-            .Where(g => g.UserId == userId);
-
-        if (categoryId.HasValue)
-        {
-            query = query.Where(g => g.Categories.Any(c => c.Id == categoryId.Value));
-        }
-
-        var goals = await query
+            .Where(g => g.UserId == userId)
             .OrderBy(g => g.SortOrder)
             .ThenByDescending(g => g.CreatedAt)
             .ToListAsync();
@@ -51,7 +42,6 @@ public class GoalsController : ControllerBase
         var userId = GetUserId();
 
         var goal = await _db.Goals
-            .Include(g => g.Categories)
             .Include(g => g.Tasks)
             .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
 
@@ -76,14 +66,6 @@ public class GoalsController : ControllerBase
             TargetDate = request.TargetDate
         };
 
-        if (request.CategoryIds?.Count > 0)
-        {
-            var categories = await _db.Categories
-                .Where(c => c.UserId == userId && request.CategoryIds.Contains(c.Id))
-                .ToListAsync();
-            goal.Categories = categories;
-        }
-
         // Set sort order to be at the top
         var maxSortOrder = await _db.Goals
             .Where(g => g.UserId == userId)
@@ -102,7 +84,6 @@ public class GoalsController : ControllerBase
         var userId = GetUserId();
 
         var goal = await _db.Goals
-            .Include(g => g.Categories)
             .Include(g => g.Tasks)
             .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
 
@@ -115,21 +96,6 @@ public class GoalsController : ControllerBase
         goal.Description = request.Description;
         goal.TargetDate = request.TargetDate;
         goal.UpdatedAt = DateTime.UtcNow;
-
-        if (request.CategoryIds != null)
-        {
-            goal.Categories.Clear();
-            if (request.CategoryIds.Count > 0)
-            {
-                var categories = await _db.Categories
-                    .Where(c => c.UserId == userId && request.CategoryIds.Contains(c.Id))
-                    .ToListAsync();
-                foreach (var category in categories)
-                {
-                    goal.Categories.Add(category);
-                }
-            }
-        }
 
         await _db.SaveChangesAsync();
 
@@ -165,7 +131,6 @@ public class GoalsController : ControllerBase
         var targetDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
 
         var goal = await _db.Goals
-            .Include(g => g.Categories)
             .Include(g => g.Tasks)
             .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
 
@@ -224,7 +189,6 @@ public class GoalsController : ControllerBase
             goal.SortOrder,
             goal.Tasks.Count,
             goal.Tasks.Count(t => t.Status == TaskItemStatus.Completed),
-            goal.Categories.Select(c => new CategoryResponse(c.Id, c.Name, c.Color, c.Icon)),
             goal.CreatedAt,
             goal.UpdatedAt
         );

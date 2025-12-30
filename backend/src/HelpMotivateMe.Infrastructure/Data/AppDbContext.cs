@@ -11,7 +11,6 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<UserExternalLogin> UserExternalLogins => Set<UserExternalLogin>();
-    public DbSet<Category> Categories => Set<Category>();
     public DbSet<Goal> Goals => Set<Goal>();
     public DbSet<TaskItem> TaskItems => Set<TaskItem>();
     public DbSet<RepeatSchedule> RepeatSchedules => Set<RepeatSchedule>();

@@ -27,12 +27,5 @@ public class GoalConfiguration : IEntityTypeConfiguration<Goal>
             .HasForeignKey(g => g.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(g => g.Categories)
-            .WithMany(c => c.Goals)
-            .UsingEntity<Dictionary<string, object>>(
-                "goal_categories",
-                j => j.HasOne<Category>().WithMany().HasForeignKey("category_id").OnDelete(DeleteBehavior.Cascade),
-                j => j.HasOne<Goal>().WithMany().HasForeignKey("goal_id").OnDelete(DeleteBehavior.Cascade)
-            );
     }
 }

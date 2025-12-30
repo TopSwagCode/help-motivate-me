@@ -182,8 +182,7 @@
 			goal = await updateGoal(goal.id, {
 				title: goal.title,
 				description: goal.description || undefined,
-				targetDate: newTargetDate || undefined,
-				categoryIds: goal.categories.map((c) => c.id)
+				targetDate: newTargetDate || undefined
 			});
 			editingTargetDate = false;
 		} catch (e) {
@@ -337,23 +336,9 @@
 			<!-- Goal Info -->
 			<div class="card p-6 mb-6">
 				<div class="flex items-start justify-between mb-4">
-					<div>
-						<h1 class="text-2xl font-bold text-gray-900 {goal.isCompleted ? 'line-through opacity-60' : ''}">
-							{goal.title}
-						</h1>
-						{#if goal.categories.length > 0}
-							<div class="flex gap-2 mt-2">
-								{#each goal.categories as category (category.id)}
-									<span
-										class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-										style="background-color: {category.color || '#E5E7EB'}20; color: {category.color || '#6B7280'}"
-									>
-										{category.name}
-									</span>
-								{/each}
-							</div>
-						{/if}
-					</div>
+					<h1 class="text-2xl font-bold text-gray-900 {goal.isCompleted ? 'line-through opacity-60' : ''}">
+						{goal.title}
+					</h1>
 					<div class="flex items-center gap-2">
 						{#if goal.isCompleted}
 							<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">

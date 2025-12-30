@@ -1,5 +1,3 @@
-import type { Category } from './category';
-
 export interface Goal {
 	id: string;
 	title: string;
@@ -10,7 +8,6 @@ export interface Goal {
 	sortOrder: number;
 	taskCount: number;
 	completedTaskCount: number;
-	categories: Category[];
 	createdAt: string;
 	updatedAt: string;
 }
@@ -19,12 +16,10 @@ export interface CreateGoalRequest {
 	title: string;
 	description?: string;
 	targetDate?: string;
-	categoryIds?: string[];
 }
 
 export interface UpdateGoalRequest {
 	title: string;
 	description?: string;
 	targetDate?: string;
-	categoryIds?: string[];
 }
