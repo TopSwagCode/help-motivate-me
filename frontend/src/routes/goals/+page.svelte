@@ -2,12 +2,20 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
-	import { getGoals } from '$lib/api/goals';
+	import { getGoals, createGoal } from '$lib/api/goals';
 	import type { Goal } from '$lib/types';
 
 	let goals = $state<Goal[]>([]);
 	let loading = $state(true);
 	let error = $state('');
+
+	// Modal state
+	let showModal = $state(false);
+	let modalTitle = $state('');
+	let modalDescription = $state('');
+	let modalTargetDate = $state('');
+	let modalLoading = $state(false);
+	let modalError = $state('');
 
 	onMount(async () => {
 		if (!$auth.initialized) {
@@ -30,18 +38,59 @@
 
 	const completedGoals = $derived(goals.filter((g) => g.isCompleted));
 	const activeGoals = $derived(goals.filter((g) => !g.isCompleted));
+
+	function openModal() {
+		modalTitle = '';
+		modalDescription = '';
+		modalTargetDate = '';
+		modalError = '';
+		showModal = true;
+	}
+
+	function closeModal() {
+		showModal = false;
+		modalTitle = '';
+		modalDescription = '';
+		modalTargetDate = '';
+		modalError = '';
+	}
+
+	async function handleSubmit(e: Event) {
+		e.preventDefault();
+		modalError = '';
+		modalLoading = true;
+
+		try {
+			const goal = await createGoal({
+				title: modalTitle,
+				description: modalDescription || undefined,
+				targetDate: modalTargetDate || undefined
+			});
+			
+			// Add new goal to the list
+			goals = [...goals, goal];
+			
+			closeModal();
+			
+			// Navigate to the new goal detail page
+			goto(`/goals/${goal.id}`);
+		} catch (e) {
+			modalError = e instanceof Error ? e.message : 'Failed to create goal';
+			modalLoading = false;
+		}
+	}
 </script>
 
 <div class="min-h-screen bg-gray-50">
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 		<div class="flex justify-between items-center mb-8">
 			<h1 class="text-2xl font-bold text-gray-900">My Goals</h1>
-			<a href="/goals/new" class="btn-primary">
+			<button onclick={openModal} class="btn-primary">
 				<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
 				</svg>
 				New Goal
-			</a>
+			</button>
 		</div>
 
 		{#if loading}
@@ -61,7 +110,7 @@
 				</div>
 				<h3 class="text-lg font-medium text-gray-900 mb-2">No goals yet</h3>
 				<p class="text-gray-500 mb-6">Get started by creating your first goal.</p>
-				<a href="/goals/new" class="btn-primary">Create your first goal</a>
+				<button onclick={openModal} class="btn-primary">Create your first goal</button>
 			</div>
 		{:else}
 			<!-- Active Goals -->
@@ -122,4 +171,89 @@
 			{/if}
 		{/if}
 	</main>
+
+	<!-- Create Goal Modal -->
+	{#if showModal}
+		<div
+			class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+			role="dialog"
+			aria-modal="true"
+		>
+			<div class="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+				<div class="p-6">
+					<div class="flex items-center justify-between mb-6">
+						<h2 class="text-xl font-semibold text-gray-900">New Goal</h2>
+						<button onclick={closeModal} class="text-gray-400 hover:text-gray-600">
+							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M6 18L18 6M6 6l12 12"
+								/>
+							</svg>
+						</button>
+					</div>
+
+					<form onsubmit={handleSubmit} class="space-y-4">
+						{#if modalError}
+							<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+								{modalError}
+							</div>
+						{/if}
+
+						<div>
+							<label for="modal-title" class="label">Goal Title *</label>
+							<input
+								id="modal-title"
+								type="text"
+								bind:value={modalTitle}
+								required
+								maxlength="255"
+								placeholder="What do you want to achieve?"
+								class="input"
+								disabled={modalLoading}
+							/>
+						</div>
+
+						<div>
+							<label for="modal-description" class="label">Description</label>
+							<textarea
+								id="modal-description"
+								bind:value={modalDescription}
+								rows="3"
+								placeholder="Add more details about your goal..."
+								class="input"
+								disabled={modalLoading}
+							></textarea>
+						</div>
+
+						<div>
+							<label for="modal-targetDate" class="label">Target Date</label>
+							<input
+								id="modal-targetDate"
+								type="date"
+								bind:value={modalTargetDate}
+								class="input"
+								disabled={modalLoading}
+							/>
+						</div>
+
+						<div class="flex gap-3 pt-4">
+							<button
+								type="submit"
+								disabled={modalLoading || !modalTitle.trim()}
+								class="btn-primary flex-1"
+							>
+								{modalLoading ? 'Creating...' : 'Create Goal'}
+							</button>
+							<button type="button" onclick={closeModal} class="btn-secondary" disabled={modalLoading}>
+								Cancel
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	{/if}
 </div>
