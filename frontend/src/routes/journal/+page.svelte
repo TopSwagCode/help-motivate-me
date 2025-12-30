@@ -1,0 +1,695 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { auth } from '$lib/stores/auth';
+	import {
+		getJournalEntries,
+		createJournalEntry,
+		updateJournalEntry,
+		deleteJournalEntry,
+		uploadJournalImage,
+		deleteJournalImage,
+		getLinkableHabitStacks,
+		getLinkableTasks
+	} from '$lib/api/journal';
+	import type {
+		JournalEntry,
+		JournalImage,
+		LinkableHabitStack,
+		LinkableTask
+	} from '$lib/types';
+
+	let entries = $state<JournalEntry[]>([]);
+	let loading = $state(true);
+	let error = $state('');
+
+	// Linkable items for dropdowns
+	let habitStacks = $state<LinkableHabitStack[]>([]);
+	let tasks = $state<LinkableTask[]>([]);
+
+	// Create/Edit modal state
+	let showModal = $state(false);
+	let editingEntry = $state<JournalEntry | null>(null);
+	let modalTitle = $state('');
+	let modalDescription = $state('');
+	let modalEntryDate = $state('');
+	let modalLinkType = $state<'none' | 'habitStack' | 'task'>('none');
+	let modalHabitStackId = $state('');
+	let modalTaskId = $state('');
+	let modalLoading = $state(false);
+	let modalError = $state('');
+
+	// Image upload state
+	let pendingImages = $state<File[]>([]);
+	let uploadingImages = $state(false);
+
+	// Image lightbox state
+	let lightboxImages = $state<JournalImage[]>([]);
+	let lightboxIndex = $state(0);
+	let showLightbox = $state(false);
+
+	const isEditing = $derived(editingEntry !== null);
+
+	onMount(async () => {
+		if (!$auth.initialized) {
+			await auth.init();
+		}
+
+		if (!$auth.user) {
+			goto('/auth/login');
+			return;
+		}
+
+		await loadData();
+	});
+
+	async function loadData() {
+		try {
+			const [entriesData, stacksData, tasksData] = await Promise.all([
+				getJournalEntries(),
+				getLinkableHabitStacks(),
+				getLinkableTasks()
+			]);
+			entries = entriesData;
+			habitStacks = stacksData;
+			tasks = tasksData;
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to load journal';
+		} finally {
+			loading = false;
+		}
+	}
+
+	function openCreateModal() {
+		editingEntry = null;
+		modalTitle = '';
+		modalDescription = '';
+		modalEntryDate = new Date().toISOString().split('T')[0];
+		modalLinkType = 'none';
+		modalHabitStackId = '';
+		modalTaskId = '';
+		pendingImages = [];
+		modalError = '';
+		showModal = true;
+	}
+
+	function openEditModal(entry: JournalEntry) {
+		editingEntry = entry;
+		modalTitle = entry.title;
+		modalDescription = entry.description || '';
+		modalEntryDate = entry.entryDate;
+
+		if (entry.habitStackId) {
+			modalLinkType = 'habitStack';
+			modalHabitStackId = entry.habitStackId;
+			modalTaskId = '';
+		} else if (entry.taskItemId) {
+			modalLinkType = 'task';
+			modalTaskId = entry.taskItemId;
+			modalHabitStackId = '';
+		} else {
+			modalLinkType = 'none';
+			modalHabitStackId = '';
+			modalTaskId = '';
+		}
+
+		pendingImages = [];
+		modalError = '';
+		showModal = true;
+	}
+
+	function closeModal() {
+		showModal = false;
+		editingEntry = null;
+		modalError = '';
+		pendingImages = [];
+	}
+
+	function handleFileSelect(e: Event) {
+		const input = e.target as HTMLInputElement;
+		if (input.files) {
+			const newFiles = Array.from(input.files);
+			const currentCount = (editingEntry?.images.length || 0) + pendingImages.length;
+			const availableSlots = 5 - currentCount;
+
+			if (newFiles.length > availableSlots) {
+				modalError = `Can only add ${availableSlots} more image(s)`;
+				pendingImages = [...pendingImages, ...newFiles.slice(0, availableSlots)];
+			} else {
+				pendingImages = [...pendingImages, ...newFiles];
+			}
+		}
+		input.value = '';
+	}
+
+	function removePendingImage(index: number) {
+		pendingImages = pendingImages.filter((_, i) => i !== index);
+	}
+
+	async function handleSubmit() {
+		if (!modalTitle.trim()) {
+			modalError = 'Title is required';
+			return;
+		}
+
+		modalLoading = true;
+		modalError = '';
+
+		try {
+			const data = {
+				title: modalTitle.trim(),
+				description: modalDescription.trim() || undefined,
+				entryDate: modalEntryDate,
+				habitStackId:
+					modalLinkType === 'habitStack' && modalHabitStackId ? modalHabitStackId : undefined,
+				taskItemId: modalLinkType === 'task' && modalTaskId ? modalTaskId : undefined
+			};
+
+			let savedEntry: JournalEntry;
+
+			if (isEditing && editingEntry) {
+				savedEntry = await updateJournalEntry(editingEntry.id, data);
+				entries = entries.map((e) => (e.id === savedEntry.id ? savedEntry : e));
+			} else {
+				savedEntry = await createJournalEntry(data);
+				entries = [savedEntry, ...entries];
+			}
+
+			// Upload pending images
+			if (pendingImages.length > 0) {
+				uploadingImages = true;
+				for (const file of pendingImages) {
+					try {
+						const image = await uploadJournalImage(savedEntry.id, file);
+						savedEntry = { ...savedEntry, images: [...savedEntry.images, image] };
+					} catch (e) {
+						console.error('Failed to upload image:', e);
+					}
+				}
+				entries = entries.map((e) => (e.id === savedEntry.id ? savedEntry : e));
+				uploadingImages = false;
+			}
+
+			closeModal();
+		} catch (e) {
+			modalError = e instanceof Error ? e.message : 'Failed to save entry';
+		} finally {
+			modalLoading = false;
+		}
+	}
+
+	async function handleDeleteImage(entry: JournalEntry, image: JournalImage) {
+		if (!confirm('Delete this image?')) return;
+
+		try {
+			await deleteJournalImage(entry.id, image.id);
+			const updatedEntry = {
+				...entry,
+				images: entry.images.filter((i) => i.id !== image.id)
+			};
+			entries = entries.map((e) => (e.id === entry.id ? updatedEntry : e));
+			if (editingEntry?.id === entry.id) {
+				editingEntry = updatedEntry;
+			}
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to delete image';
+		}
+	}
+
+	async function handleDelete(id: string) {
+		if (!confirm('Are you sure you want to delete this journal entry?')) return;
+
+		try {
+			await deleteJournalEntry(id);
+			entries = entries.filter((e) => e.id !== id);
+			if (editingEntry?.id === id) {
+				closeModal();
+			}
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to delete entry';
+		}
+	}
+
+	function formatDate(dateStr: string): string {
+		return new Date(dateStr + 'T12:00:00').toLocaleDateString('en-US', {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric'
+		});
+	}
+
+	function openLightbox(images: JournalImage[], index: number, event: Event) {
+		event.stopPropagation();
+		lightboxImages = images;
+		lightboxIndex = index;
+		showLightbox = true;
+	}
+
+	function closeLightbox() {
+		showLightbox = false;
+		lightboxImages = [];
+		lightboxIndex = 0;
+	}
+
+	function nextImage() {
+		if (lightboxIndex < lightboxImages.length - 1) {
+			lightboxIndex++;
+		}
+	}
+
+	function prevImage() {
+		if (lightboxIndex > 0) {
+			lightboxIndex--;
+		}
+	}
+
+	function handleLightboxKeydown(event: KeyboardEvent) {
+		if (event.key === 'Escape') {
+			closeLightbox();
+		} else if (event.key === 'ArrowRight') {
+			nextImage();
+		} else if (event.key === 'ArrowLeft') {
+			prevImage();
+		}
+	}
+</script>
+
+<div class="min-h-screen bg-gray-50">
+	<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+		<div class="flex items-center justify-between mb-6">
+			<h1 class="text-2xl font-bold text-gray-900">Journal</h1>
+			<button onclick={openCreateModal} class="btn-primary text-sm">New Entry</button>
+		</div>
+
+		{#if loading}
+			<div class="flex justify-center py-12">
+				<div
+					class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full"
+				></div>
+			</div>
+		{:else if error}
+			<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+				{error}
+				<button onclick={() => (error = '')} class="float-right text-red-500 hover:text-red-700"
+					>&times;</button
+				>
+			</div>
+		{:else if entries.length === 0}
+			<div class="card p-12 text-center">
+				<div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+					<svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+						/>
+					</svg>
+				</div>
+				<h3 class="text-lg font-medium text-gray-900 mb-2">No journal entries yet</h3>
+				<p class="text-gray-500 mb-6">Start documenting your journey by creating your first entry.</p>
+				<button onclick={openCreateModal} class="btn-primary">Create Entry</button>
+			</div>
+		{:else}
+			<div class="space-y-4">
+				{#each entries as entry (entry.id)}
+					<button
+						type="button"
+						onclick={() => openEditModal(entry)}
+						class="card p-5 text-left w-full hover:shadow-md transition-shadow"
+					>
+						<div class="flex items-start justify-between mb-2">
+							<div>
+								<h3 class="font-semibold text-gray-900 text-lg">{entry.title}</h3>
+								<p class="text-sm text-gray-500">{formatDate(entry.entryDate)}</p>
+							</div>
+							{#if entry.habitStackName || entry.taskItemTitle}
+								<span class="text-xs px-2 py-1 rounded-full bg-primary-50 text-primary-700">
+									{entry.habitStackName || entry.taskItemTitle}
+								</span>
+							{/if}
+						</div>
+
+						{#if entry.description}
+							<p class="text-gray-600 text-sm line-clamp-3 mb-3">{entry.description}</p>
+						{/if}
+
+						{#if entry.images.length > 0}
+							<div class="flex gap-2 mt-3 overflow-x-auto pb-2">
+								{#each entry.images as image, idx (image.id)}
+									<button
+										type="button"
+										onclick={(e) => openLightbox(entry.images, idx, e)}
+										class="flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg"
+									>
+										<img
+											src={image.url}
+											alt={image.fileName}
+											class="w-20 h-20 object-cover rounded-lg hover:opacity-80 transition-opacity"
+										/>
+									</button>
+								{/each}
+							</div>
+						{/if}
+					</button>
+				{/each}
+			</div>
+		{/if}
+	</main>
+
+	<!-- Create/Edit Modal -->
+	{#if showModal}
+		<div
+			class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+			role="dialog"
+			aria-modal="true"
+		>
+			<div class="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+				<div class="p-6">
+					<div class="flex items-center justify-between mb-6">
+						<h2 class="text-xl font-semibold text-gray-900">
+							{isEditing ? 'Edit Entry' : 'New Entry'}
+						</h2>
+						<button onclick={closeModal} class="text-gray-400 hover:text-gray-600">
+							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M6 18L18 6M6 6l12 12"
+								/>
+							</svg>
+						</button>
+					</div>
+
+					{#if modalError}
+						<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+							{modalError}
+						</div>
+					{/if}
+
+					<div class="space-y-4">
+						<div>
+							<label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+							<input
+								type="text"
+								id="title"
+								bind:value={modalTitle}
+								placeholder="What happened today?"
+								maxlength="255"
+								class="input"
+							/>
+						</div>
+
+						<div>
+							<label for="entryDate" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+							<input type="date" id="entryDate" bind:value={modalEntryDate} class="input" />
+						</div>
+
+						<div>
+							<label for="description" class="block text-sm font-medium text-gray-700 mb-1"
+								>Description</label
+							>
+							<textarea
+								id="description"
+								bind:value={modalDescription}
+								rows="4"
+								placeholder="Write about your experience..."
+								class="input"
+							></textarea>
+						</div>
+
+						<div>
+							<label class="block text-sm font-medium text-gray-700 mb-2">Link to</label>
+							<div class="flex gap-2 mb-2">
+								<button
+									type="button"
+									onclick={() => {
+										modalLinkType = 'none';
+										modalHabitStackId = '';
+										modalTaskId = '';
+									}}
+									class="px-3 py-1.5 rounded-full text-sm font-medium border-2 transition-colors {modalLinkType ===
+									'none'
+										? 'border-primary-500 bg-primary-50 text-primary-700'
+										: 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'}"
+								>
+									None
+								</button>
+								<button
+									type="button"
+									onclick={() => {
+										modalLinkType = 'habitStack';
+										modalTaskId = '';
+									}}
+									class="px-3 py-1.5 rounded-full text-sm font-medium border-2 transition-colors {modalLinkType ===
+									'habitStack'
+										? 'border-primary-500 bg-primary-50 text-primary-700'
+										: 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'}"
+								>
+									Habit Stack
+								</button>
+								<button
+									type="button"
+									onclick={() => {
+										modalLinkType = 'task';
+										modalHabitStackId = '';
+									}}
+									class="px-3 py-1.5 rounded-full text-sm font-medium border-2 transition-colors {modalLinkType ===
+									'task'
+										? 'border-primary-500 bg-primary-50 text-primary-700'
+										: 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'}"
+								>
+									Task
+								</button>
+							</div>
+
+							{#if modalLinkType === 'habitStack'}
+								<select bind:value={modalHabitStackId} class="input">
+									<option value="">Select a habit stack...</option>
+									{#each habitStacks as stack (stack.id)}
+										<option value={stack.id}>{stack.name}</option>
+									{/each}
+								</select>
+							{:else if modalLinkType === 'task'}
+								<select bind:value={modalTaskId} class="input">
+									<option value="">Select a task...</option>
+									{#each tasks as task (task.id)}
+										<option value={task.id}>{task.goalTitle} - {task.title}</option>
+									{/each}
+								</select>
+							{/if}
+						</div>
+
+						<!-- Images Section -->
+						<div>
+							<label class="block text-sm font-medium text-gray-700 mb-2">Images</label>
+
+							<!-- Existing images (edit mode) -->
+							{#if isEditing && editingEntry && editingEntry.images.length > 0}
+								<div class="flex flex-wrap gap-2 mb-3">
+									{#each editingEntry.images as image (image.id)}
+										<div class="relative group">
+											<img
+												src={image.url}
+												alt={image.fileName}
+												class="w-20 h-20 object-cover rounded-lg"
+											/>
+											<button
+												type="button"
+												onclick={() => handleDeleteImage(editingEntry!, image)}
+												class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+											>
+												<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path
+														stroke-linecap="round"
+														stroke-linejoin="round"
+														stroke-width="2"
+														d="M6 18L18 6M6 6l12 12"
+													/>
+												</svg>
+											</button>
+										</div>
+									{/each}
+								</div>
+							{/if}
+
+							<!-- Pending images -->
+							{#if pendingImages.length > 0}
+								<div class="flex flex-wrap gap-2 mb-3">
+									{#each pendingImages as file, index (index)}
+										<div class="relative group">
+											<img
+												src={URL.createObjectURL(file)}
+												alt={file.name}
+												class="w-20 h-20 object-cover rounded-lg opacity-70"
+											/>
+											<button
+												type="button"
+												onclick={() => removePendingImage(index)}
+												class="absolute -top-2 -right-2 w-6 h-6 bg-gray-500 text-white rounded-full flex items-center justify-center"
+											>
+												<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path
+														stroke-linecap="round"
+														stroke-linejoin="round"
+														stroke-width="2"
+														d="M6 18L18 6M6 6l12 12"
+													/>
+												</svg>
+											</button>
+											<span
+												class="absolute bottom-1 left-1 text-xs bg-black bg-opacity-50 text-white px-1 rounded"
+												>New</span
+											>
+										</div>
+									{/each}
+								</div>
+							{/if}
+
+							<!-- Upload button -->
+							{#if (editingEntry?.images.length || 0) + pendingImages.length < 5}
+								<label
+									class="flex items-center justify-center w-full h-20 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition-colors"
+								>
+									<div class="text-center">
+										<svg
+											class="w-6 h-6 mx-auto text-gray-400"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M12 4v16m8-8H4"
+											/>
+										</svg>
+										<span class="text-xs text-gray-500">Add images</span>
+									</div>
+									<input
+										type="file"
+										accept="image/jpeg,image/png,image/gif,image/webp"
+										multiple
+										onchange={handleFileSelect}
+										class="hidden"
+									/>
+								</label>
+							{/if}
+							<p class="text-xs text-gray-500 mt-1">Max 5 images, 5MB each</p>
+						</div>
+					</div>
+
+					<div class="flex justify-between gap-3 mt-6 pt-4 border-t border-gray-200">
+						<div>
+							{#if isEditing && editingEntry}
+								<button
+									type="button"
+									onclick={() => handleDelete(editingEntry!.id)}
+									class="text-red-600 hover:text-red-700 text-sm"
+								>
+									Delete
+								</button>
+							{/if}
+						</div>
+						<div class="flex gap-3">
+							<button
+								type="button"
+								onclick={closeModal}
+								class="btn-secondary"
+								disabled={modalLoading || uploadingImages}
+							>
+								Cancel
+							</button>
+							<button
+								type="button"
+								onclick={handleSubmit}
+								class="btn-primary"
+								disabled={modalLoading || uploadingImages}
+							>
+								{#if modalLoading}
+									Saving...
+								{:else if uploadingImages}
+									Uploading...
+								{:else}
+									{isEditing ? 'Save Changes' : 'Create Entry'}
+								{/if}
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+	<!-- Image Lightbox -->
+	{#if showLightbox && lightboxImages.length > 0}
+		<div
+			class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-[60]"
+			role="dialog"
+			aria-modal="true"
+			aria-label="Image viewer"
+			onclick={closeLightbox}
+			onkeydown={handleLightboxKeydown}
+			tabindex="-1"
+		>
+			<!-- Close button -->
+			<button
+				onclick={closeLightbox}
+				class="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
+				aria-label="Close"
+			>
+				<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+				</svg>
+			</button>
+
+			<!-- Previous button -->
+			{#if lightboxIndex > 0}
+				<button
+					onclick={(e) => { e.stopPropagation(); prevImage(); }}
+					class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 p-2 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70"
+					aria-label="Previous image"
+				>
+					<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+					</svg>
+				</button>
+			{/if}
+
+			<!-- Image -->
+			<div
+				class="max-w-[90vw] max-h-[90vh] flex items-center justify-center"
+				onclick={(e) => e.stopPropagation()}
+			>
+				<img
+					src={lightboxImages[lightboxIndex].url}
+					alt={lightboxImages[lightboxIndex].fileName}
+					class="max-w-full max-h-[90vh] object-contain rounded-lg"
+				/>
+			</div>
+
+			<!-- Next button -->
+			{#if lightboxIndex < lightboxImages.length - 1}
+				<button
+					onclick={(e) => { e.stopPropagation(); nextImage(); }}
+					class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 p-2 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70"
+					aria-label="Next image"
+				>
+					<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+					</svg>
+				</button>
+			{/if}
+
+			<!-- Image counter -->
+			{#if lightboxImages.length > 1}
+				<div class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm bg-black bg-opacity-50 px-3 py-1 rounded-full">
+					{lightboxIndex + 1} / {lightboxImages.length}
+				</div>
+			{/if}
+		</div>
+	{/if}
+</div>

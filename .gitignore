@@ -1,0 +1,69 @@
+# Backend - .NET / C#
+backend/**/bin/
+backend/**/obj/
+backend/.vs/
+backend/*.user
+backend/*.suo
+backend/**/*.DotSettings.user
+backend/**/*.sln.iml
+
+# .NET specific
+backend/**/*.cache
+backend/**/project.lock.json
+backend/**/project.fragment.lock.json
+backend/**/*.nuget.props
+backend/**/*.nuget.targets
+backend/**/artifacts/
+
+# Test results
+backend/**/TestResults/
+backend/**/*.trx
+backend/**/*.coverage
+
+# Frontend - Node.js / Svelte
+frontend/node_modules/
+frontend/.svelte-kit/
+frontend/build/
+frontend/dist/
+frontend/.output/
+frontend/.vercel/
+frontend/.netlify/
+
+# Environment files
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Frontend build artifacts
+frontend/package-lock.json
+frontend/yarn.lock
+frontend/pnpm-lock.yaml
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.rider/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
+.temp/
+.tmp/
+*.tmp
+.cache/
