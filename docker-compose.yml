@@ -1,0 +1,102 @@
+services:
+  # Dependencies
+  postgres:
+    image: postgres:16-alpine
+    container_name: helpmotivateme-db
+    environment:
+      POSTGRES_DB: helpmotivateme
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - helpmotivateme-network
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: helpmotivateme-mailpit
+    restart: unless-stopped
+    ports:
+      - "8025:8025"  # Web UI
+      - "1025:1025"  # SMTP
+    networks:
+      - helpmotivateme-network
+
+  localstack:
+    image: localstack/localstack:latest
+    container_name: helpmotivateme-localstack
+    restart: unless-stopped
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3
+      - EAGER_SERVICE_LOADING=1
+      - AWS_DEFAULT_REGION=us-east-1
+    volumes:
+      - localstack_data:/var/lib/localstack
+      - ./backend/init-localstack.sh:/etc/localstack/init/ready.d/init-localstack.sh
+    networks:
+      - helpmotivateme-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: helpmotivateme-backend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5001
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=helpmotivateme;Username=postgres;Password=postgres
+      - Smtp__Host=mailpit
+      - Smtp__Port=1025
+      - Smtp__FromEmail=noreply@helpmotivateme.com
+      - Smtp__FromName=Help Motivate Me
+      - AWS__ServiceURL=http://localstack:4566
+      - AWS__Region=us-east-1
+      - AWS__AccessKey=test
+      - AWS__SecretKey=test
+      - AWS__S3BucketName=helpmotivateme-uploads
+    ports:
+      - "5001:5001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+      localstack:
+        condition: service_started
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: helpmotivateme-frontend
+    environment:
+      - VITE_API_URL=http://localhost:5001
+    ports:
+      - "5173:3000"
+    depends_on:
+      - backend
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  localstack_data:
+
+networks:
+  helpmotivateme-network:
+    driver: bridge

@@ -342,7 +342,7 @@ Frontend                    Backend                        GitHub
 2. Create new OAuth App:
    - **Application name**: Help Motivate Me
    - **Homepage URL**: `http://localhost:5173`
-   - **Authorization callback URL**: `http://localhost:5000/signin-github`
+   - **Authorization callback URL**: `http://localhost:5001/signin-github`
 3. Copy Client ID and Client Secret
 4. Add to `appsettings.Development.json`:
 
@@ -447,7 +447,7 @@ cd backend
 dotnet run --project src/HelpMotivateMe.Api
 ```
 
-API available at `http://localhost:5000`
+API available at `http://localhost:5001`
 
 ### 4. Start Frontend
 
@@ -464,7 +464,7 @@ App available at `http://localhost:5173`
 | Service | URL |
 |---------|-----|
 | Frontend | http://localhost:5173 |
-| Backend API | http://localhost:5000 |
+| Backend API | http://localhost:5001 |
 | PostgreSQL | localhost:5432 |
 
 ---

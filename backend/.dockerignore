@@ -1,0 +1,46 @@
+# Build output
+**/bin/
+**/obj/
+**/out/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+**/.vs/
+**/.vscode/
+**/.idea/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+
+# Docker
+docker-compose.yml
+Dockerfile
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local data
+*.db
+*.sqlite

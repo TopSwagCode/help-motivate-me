@@ -48,7 +48,7 @@ cd backend
 dotnet run --project src/HelpMotivateMe.Api
 ```
 
-**Backend API will be available at:** `http://localhost:5000`
+**Backend API will be available at:** `http://localhost:5001`
 
 **Note:** The first run may take a few moments as it:
 - Restores NuGet packages
@@ -57,7 +57,7 @@ dotnet run --project src/HelpMotivateMe.Api
 
 You should see output indicating:
 - Database migrations applied
-- API listening on `http://localhost:5000`
+- API listening on `http://localhost:5001`
 
 ### 3. Start the Frontend
 
@@ -92,7 +92,7 @@ Once all services are running:
 - Useful for testing email login, password resets, etc.
 
 ### API Documentation
-- In development mode, OpenAPI documentation is available at `http://localhost:5000/openapi`
+- In development mode, OpenAPI documentation is available at `http://localhost:5001/openapi`
 
 ### Database Access
 Connect to PostgreSQL using your favorite database client:
@@ -174,7 +174,7 @@ To enable GitHub OAuth login:
 2. Create a new OAuth App:
    - **Application name:** Help Motivate Me (Local)
    - **Homepage URL:** `http://localhost:5173`
-   - **Authorization callback URL:** `http://localhost:5000/signin-github`
+   - **Authorization callback URL:** `http://localhost:5001/signin-github`
 3. Copy the Client ID and Client Secret
 4. Update `backend/src/HelpMotivateMe.Api/appsettings.Development.json`:
    ```json

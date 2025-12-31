@@ -19,6 +19,23 @@ A comprehensive habit tracking and identity-based motivation application built w
 
 ## Getting Started
 
+### Option 1: Docker Compose (Easiest)
+
+Run the entire stack with one command:
+
+```bash
+docker compose up --build
+```
+
+This starts everything:
+- Frontend at http://localhost:5173
+- Backend API at http://localhost:5001
+- PostgreSQL, Mailpit, and LocalStack
+
+See [DOCKER.md](DOCKER.md) for detailed Docker documentation.
+
+### Option 2: Local Development (Recommended for active development)
+
 ### 1. Start Development Services
 
 ```bash
@@ -44,7 +61,7 @@ dotnet ef database update --project src/HelpMotivateMe.Infrastructure --startup-
 
 1. Create a GitHub OAuth App at [GitHub Developer Settings](https://github.com/settings/developers)
    - Homepage URL: `http://localhost:5173`
-   - Authorization callback URL: `http://localhost:5000/signin-github`
+   - Authorization callback URL: `http://localhost:5001/signin-github`
 2. Update `backend/src/HelpMotivateMe.Api/appsettings.Development.json`:
 
 ```json
@@ -65,7 +82,7 @@ cd backend
 dotnet run --project src/HelpMotivateMe.Api
 ```
 
-API available at `http://localhost:5000` (with OpenAPI/Swagger at `/openapi` in development)
+API available at `http://localhost:5001` (with OpenAPI/Swagger at `/openapi` in development)
 
 ### 5. Start the Frontend
 
@@ -246,14 +263,14 @@ dotnet publish src/HelpMotivateMe.Api -c Release -o publish
 ### Frontend
 Create `.env` file:
 ```env
-VITE_API_URL=http://localhost:5000
+VITE_API_URL=http://localhost:5001
 ```
 
 ## Development Tools
 
 - **Mailpit**: View sent emails at `http://localhost:8025`
 - **LocalStack**: S3-compatible storage for local development
-- **OpenAPI**: API documentation at `http://localhost:5000/openapi` (dev mode)
+- **OpenAPI**: API documentation at `http://localhost:5001/openapi` (dev mode)
 
 ## Contributing
 
