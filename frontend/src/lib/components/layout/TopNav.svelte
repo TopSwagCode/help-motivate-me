@@ -1,12 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
-
-	function handleLogout() {
-		auth.logout();
-		goto('/');
-	}
+	import UserDropdown from './UserDropdown.svelte';
 
 	// Helper to check if route is active
 	function isActive(path: string): boolean {
@@ -77,15 +72,7 @@
 
 			<!-- User Menu -->
 			<div class="flex items-center gap-3">
-				<span class="hidden sm:block text-sm text-gray-600">
-					{$auth.user?.displayName || $auth.user?.username}
-				</span>
-				<button
-					onclick={handleLogout}
-					class="text-sm text-gray-500 hover:text-gray-700 px-2 py-1 rounded hover:bg-gray-100"
-				>
-					Sign out
-				</button>
+				<UserDropdown />
 			</div>
 		</div>
 

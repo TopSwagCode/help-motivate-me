@@ -1,0 +1,1 @@
+We need to make landing page more smooth and inviting.

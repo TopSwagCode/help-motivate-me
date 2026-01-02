@@ -6,5 +6,7 @@ public record UserResponse(
     string Email,
     string? DisplayName,
     DateTime CreatedAt,
-    IEnumerable<string> LinkedProviders
+    IEnumerable<string> LinkedProviders,
+    bool HasPassword,
+    string MembershipTier
 );

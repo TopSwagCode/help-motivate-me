@@ -1,0 +1,1 @@
+We want to make tasks, goals, identity reuseable across pages and also make it so onboarding can be done as part of single onboarding wizard that takes you through everything you need getting started.

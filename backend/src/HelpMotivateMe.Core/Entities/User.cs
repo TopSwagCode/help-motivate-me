@@ -1,3 +1,5 @@
+using HelpMotivateMe.Core.Enums;
+
 namespace HelpMotivateMe.Core.Entities;
 
 public class User
@@ -10,6 +12,7 @@ public class User
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public MembershipTier MembershipTier { get; set; } = MembershipTier.Free;
 
     // Navigation properties
     public ICollection<UserExternalLogin> ExternalLogins { get; set; } = [];

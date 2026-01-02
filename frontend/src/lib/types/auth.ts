@@ -1,3 +1,5 @@
+export type MembershipTier = 'Free' | 'Plus' | 'Pro';
+
 export interface User {
 	id: string;
 	username: string;
@@ -5,6 +7,8 @@ export interface User {
 	displayName: string | null;
 	createdAt: string;
 	linkedProviders: string[];
+	hasPassword: boolean;
+	membershipTier: MembershipTier;
 }
 
 export interface LoginRequest {
@@ -17,4 +21,17 @@ export interface RegisterRequest {
 	email: string;
 	password: string;
 	displayName?: string;
+}
+
+export interface UpdateProfileRequest {
+	displayName?: string;
+}
+
+export interface ChangePasswordRequest {
+	currentPassword: string;
+	newPassword: string;
+}
+
+export interface UpdateMembershipRequest {
+	tier: MembershipTier;
 }

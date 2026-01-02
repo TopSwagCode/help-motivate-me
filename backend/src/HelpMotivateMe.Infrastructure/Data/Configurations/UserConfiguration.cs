@@ -1,4 +1,5 @@
 using HelpMotivateMe.Core.Entities;
+using HelpMotivateMe.Core.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -24,5 +25,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.IsActive).HasDefaultValue(true);
         builder.Property(u => u.CreatedAt).HasDefaultValueSql("NOW()");
         builder.Property(u => u.UpdatedAt).HasDefaultValueSql("NOW()");
+        builder.Property(u => u.MembershipTier)
+            .HasDefaultValue(MembershipTier.Free)
+            .HasConversion<string>()
+            .HasMaxLength(20);
     }
 }

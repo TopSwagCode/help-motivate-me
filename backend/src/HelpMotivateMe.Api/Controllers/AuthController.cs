@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using HelpMotivateMe.Core.DTOs.Auth;
 using HelpMotivateMe.Core.Entities;
+using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication;
@@ -325,6 +326,85 @@ public class AuthController : ControllerBase
         return Ok(MapToResponse(token.User));
     }
 
+    [HttpPatch("profile")]
+    [Authorize]
+    public async Task<ActionResult<UserResponse>> UpdateProfile([FromBody] UpdateProfileRequest request)
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
+
+        var user = await _db.Users
+            .Include(u => u.ExternalLogins)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user == null) return NotFound();
+
+        user.DisplayName = string.IsNullOrWhiteSpace(request.DisplayName)
+            ? null
+            : request.DisplayName.Trim();
+        user.UpdatedAt = DateTime.UtcNow;
+
+        await _db.SaveChangesAsync();
+        return Ok(MapToResponse(user));
+    }
+
+    [HttpPost("change-password")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
+
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        if (user == null) return NotFound();
+
+        if (user.PasswordHash == null)
+        {
+            return BadRequest(new { message = "Cannot change password. Account uses external authentication only." });
+        }
+
+        if (!VerifyPassword(request.CurrentPassword, user.PasswordHash))
+        {
+            return BadRequest(new { message = "Current password is incorrect" });
+        }
+
+        if (string.IsNullOrEmpty(request.NewPassword) || request.NewPassword.Length < 8)
+        {
+            return BadRequest(new { message = "New password must be at least 8 characters" });
+        }
+
+        user.PasswordHash = HashPassword(request.NewPassword);
+        user.UpdatedAt = DateTime.UtcNow;
+
+        await _db.SaveChangesAsync();
+        return NoContent();
+    }
+
+    [HttpPatch("membership")]
+    [Authorize]
+    public async Task<ActionResult<UserResponse>> UpdateMembership([FromBody] UpdateMembershipRequest request)
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
+
+        var user = await _db.Users
+            .Include(u => u.ExternalLogins)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user == null) return NotFound();
+
+        if (!Enum.TryParse<MembershipTier>(request.Tier, true, out var tier))
+        {
+            return BadRequest(new { message = "Invalid membership tier. Must be Free, Plus, or Pro." });
+        }
+
+        user.MembershipTier = tier;
+        user.UpdatedAt = DateTime.UtcNow;
+
+        await _db.SaveChangesAsync();
+        return Ok(MapToResponse(user));
+    }
+
     private async Task SignInUser(User user)
     {
         var claims = new List<Claim>
@@ -361,7 +441,9 @@ public class AuthController : ControllerBase
             user.Email,
             user.DisplayName,
             user.CreatedAt,
-            user.ExternalLogins.Select(e => e.Provider)
+            user.ExternalLogins.Select(e => e.Provider),
+            user.PasswordHash != null,
+            user.MembershipTier.ToString()
         );
     }
 

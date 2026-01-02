@@ -1,0 +1,1 @@
+We want to createa a fully deployments with backups and all, that works on Hetzner instance and backups to Hetzner storage box. Also we want it to be able to easy pick a point in time to restore backups.
