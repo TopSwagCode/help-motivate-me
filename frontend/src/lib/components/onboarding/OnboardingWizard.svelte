@@ -50,9 +50,10 @@
 
 		<!-- Progress indicator -->
 		<div class="mb-8">
-			<div class="flex items-center justify-between mb-2">
-				{#each steps as step}
-					<div class="flex items-center">
+			<div class="flex items-center justify-center mb-4">
+				{#each steps as step, index}
+					<!-- Step circle -->
+					<div class="flex flex-col items-center">
 						<div
 							class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors {currentStep >= step.number
 								? 'bg-primary-600 text-white'
@@ -66,23 +67,20 @@
 								{step.number}
 							{/if}
 						</div>
-						{#if step.number < totalSteps}
-							<div
-								class="hidden sm:block w-24 h-1 mx-2 {currentStep > step.number
-									? 'bg-primary-600'
-									: 'bg-gray-200'}"
-							></div>
-						{/if}
+						<span
+							class="mt-2 text-sm font-medium {currentStep >= step.number ? 'text-primary-600' : 'text-gray-400'}"
+						>
+							{step.title}
+						</span>
 					</div>
-				{/each}
-			</div>
-			<div class="flex justify-between text-sm">
-				{#each steps as step}
-					<div
-						class="text-center {currentStep >= step.number ? 'text-primary-600' : 'text-gray-400'}"
-					>
-						<span class="hidden sm:inline">{step.title}</span>
-					</div>
+					<!-- Connecting line (not after last step) -->
+					{#if index < steps.length - 1}
+						<div
+							class="w-16 sm:w-24 h-1 mx-2 mb-6 transition-colors {currentStep > step.number
+								? 'bg-primary-600'
+								: 'bg-gray-200'}"
+						></div>
+					{/if}
 				{/each}
 			</div>
 		</div>
