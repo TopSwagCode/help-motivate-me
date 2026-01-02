@@ -9,6 +9,7 @@ export interface User {
 	linkedProviders: string[];
 	hasPassword: boolean;
 	membershipTier: MembershipTier;
+	hasCompletedOnboarding: boolean;
 }
 
 export interface LoginRequest {

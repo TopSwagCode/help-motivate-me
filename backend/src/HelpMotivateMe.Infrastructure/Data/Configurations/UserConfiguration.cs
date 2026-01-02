@@ -29,5 +29,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasDefaultValue(MembershipTier.Free)
             .HasConversion<string>()
             .HasMaxLength(20);
+        builder.Property(u => u.HasCompletedOnboarding).HasDefaultValue(false);
     }
 }

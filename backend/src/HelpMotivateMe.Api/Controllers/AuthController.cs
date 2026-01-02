@@ -405,6 +405,26 @@ public class AuthController : ControllerBase
         return Ok(MapToResponse(user));
     }
 
+    [HttpPost("complete-onboarding")]
+    [Authorize]
+    public async Task<ActionResult<UserResponse>> CompleteOnboarding()
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
+
+        var user = await _db.Users
+            .Include(u => u.ExternalLogins)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user == null) return NotFound();
+
+        user.HasCompletedOnboarding = true;
+        user.UpdatedAt = DateTime.UtcNow;
+
+        await _db.SaveChangesAsync();
+        return Ok(MapToResponse(user));
+    }
+
     private async Task SignInUser(User user)
     {
         var claims = new List<Claim>
@@ -443,7 +463,8 @@ public class AuthController : ControllerBase
             user.CreatedAt,
             user.ExternalLogins.Select(e => e.Provider),
             user.PasswordHash != null,
-            user.MembershipTier.ToString()
+            user.MembershipTier.ToString(),
+            user.HasCompletedOnboarding
         );
     }
 

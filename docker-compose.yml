@@ -39,10 +39,10 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5001
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=helpmotivateme;Username=postgres;Password=postgres
-      - Smtp__Host=mailpit
-      - Smtp__Port=1025
-      - Smtp__FromEmail=noreply@helpmotivateme.com
-      - Smtp__FromName=Help Motivate Me
+      - Email__SmtpHost=mailpit
+      - Email__SmtpPort=1025
+      - Email__FromAddress=noreply@helpmotivateme.com
+      - Email__FromName=Help Motivate Me
       - LocalStorage__BasePath=/app/uploads
       - LocalStorage__BaseUrl=http://localhost:5001
     ports:

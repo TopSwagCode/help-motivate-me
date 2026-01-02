@@ -13,6 +13,7 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public MembershipTier MembershipTier { get; set; } = MembershipTier.Free;
+    public bool HasCompletedOnboarding { get; set; } = false;
 
     // Navigation properties
     public ICollection<UserExternalLogin> ExternalLogins { get; set; } = [];

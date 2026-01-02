@@ -3,7 +3,8 @@
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
 	import { getGoals, createGoal } from '$lib/api/goals';
-	import type { Goal } from '$lib/types';
+	import type { Goal, CreateGoalRequest } from '$lib/types';
+	import GoalForm from '$lib/components/goals/GoalForm.svelte';
 
 	let goals = $state<Goal[]>([]);
 	let loading = $state(true);
@@ -11,11 +12,6 @@
 
 	// Modal state
 	let showModal = $state(false);
-	let modalTitle = $state('');
-	let modalDescription = $state('');
-	let modalTargetDate = $state('');
-	let modalLoading = $state(false);
-	let modalError = $state('');
 
 	onMount(async () => {
 		if (!$auth.initialized) {
@@ -40,44 +36,18 @@
 	const activeGoals = $derived(goals.filter((g) => !g.isCompleted));
 
 	function openModal() {
-		modalTitle = '';
-		modalDescription = '';
-		modalTargetDate = '';
-		modalError = '';
 		showModal = true;
 	}
 
 	function closeModal() {
 		showModal = false;
-		modalTitle = '';
-		modalDescription = '';
-		modalTargetDate = '';
-		modalError = '';
 	}
 
-	async function handleSubmit(e: Event) {
-		e.preventDefault();
-		modalError = '';
-		modalLoading = true;
-
-		try {
-			const goal = await createGoal({
-				title: modalTitle,
-				description: modalDescription || undefined,
-				targetDate: modalTargetDate || undefined
-			});
-			
-			// Add new goal to the list
-			goals = [...goals, goal];
-			
-			closeModal();
-			
-			// Navigate to the new goal detail page
-			goto(`/goals/${goal.id}`);
-		} catch (e) {
-			modalError = e instanceof Error ? e.message : 'Failed to create goal';
-			modalLoading = false;
-		}
+	async function handleCreateGoal(data: CreateGoalRequest) {
+		const goal = await createGoal(data);
+		goals = [...goals, goal];
+		closeModal();
+		goto(`/goals/${goal.id}`);
 	}
 </script>
 
@@ -183,7 +153,7 @@
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-6">
 						<h2 class="text-xl font-semibold text-gray-900">New Goal</h2>
-						<button onclick={closeModal} class="text-gray-400 hover:text-gray-600">
+						<button onclick={closeModal} class="text-gray-400 hover:text-gray-600" aria-label="Close">
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
 									stroke-linecap="round"
@@ -195,63 +165,7 @@
 						</button>
 					</div>
 
-					<form onsubmit={handleSubmit} class="space-y-4">
-						{#if modalError}
-							<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-								{modalError}
-							</div>
-						{/if}
-
-						<div>
-							<label for="modal-title" class="label">Goal Title *</label>
-							<input
-								id="modal-title"
-								type="text"
-								bind:value={modalTitle}
-								required
-								maxlength="255"
-								placeholder="What do you want to achieve?"
-								class="input"
-								disabled={modalLoading}
-							/>
-						</div>
-
-						<div>
-							<label for="modal-description" class="label">Description</label>
-							<textarea
-								id="modal-description"
-								bind:value={modalDescription}
-								rows="3"
-								placeholder="Add more details about your goal..."
-								class="input"
-								disabled={modalLoading}
-							></textarea>
-						</div>
-
-						<div>
-							<label for="modal-targetDate" class="label">Target Date</label>
-							<input
-								id="modal-targetDate"
-								type="date"
-								bind:value={modalTargetDate}
-								class="input"
-								disabled={modalLoading}
-							/>
-						</div>
-
-						<div class="flex gap-3 pt-4">
-							<button
-								type="submit"
-								disabled={modalLoading || !modalTitle.trim()}
-								class="btn-primary flex-1"
-							>
-								{modalLoading ? 'Creating...' : 'Create Goal'}
-							</button>
-							<button type="button" onclick={closeModal} class="btn-secondary" disabled={modalLoading}>
-								Cancel
-							</button>
-						</div>
-					</form>
+					<GoalForm onsubmit={handleCreateGoal} oncancel={closeModal} />
 				</div>
 			</div>
 		</div>
