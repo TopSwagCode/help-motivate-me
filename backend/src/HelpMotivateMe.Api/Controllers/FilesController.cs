@@ -55,8 +55,7 @@ public class FilesController : ControllerBase
                 contentType = "application/octet-stream";
             }
 
-            var fileStream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            return File(fileStream, contentType, enableRangeProcessing: true);
+            return PhysicalFile(fullPath, contentType, enableRangeProcessing: true);
         }
         catch (Exception ex)
         {
