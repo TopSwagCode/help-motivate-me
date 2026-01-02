@@ -381,14 +381,16 @@
 								</div>
 
 							{#if stack.items.length > 0}
-								<div class="space-y-2">
+								<div class="relative ml-2">
 									{#each stack.items as item, i (item.id)}
-										<div class="relative pl-6">
-											{#if i > 0}
-												<div class="absolute left-2 -top-2 w-0.5 h-4 bg-gray-200"></div>
+										<div class="relative pl-6 pb-2 last:pb-0">
+											<!-- Vertical connecting line -->
+											{#if i < stack.items.length - 1}
+												<div class="absolute left-[7px] top-4 bottom-0 w-0.5 bg-gray-200"></div>
 											{/if}
+											<!-- Step circle -->
 											<div
-												class="absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 border-primary-500 bg-white flex items-center justify-center"
+												class="absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 border-primary-500 bg-white flex items-center justify-center z-10"
 											>
 												<span class="text-[10px] font-medium text-primary-600">{i + 1}</span>
 											</div>
@@ -653,14 +655,16 @@
 								Habits in Stack ({editingStack.items.length})
 							</h3>
 							{#if editingStack.items.length > 0}
-								<div class="space-y-3">
+								<div class="relative ml-2">
 									{#each editingStack.items as item, i (item.id)}
-										<div class="relative pl-6">
-											{#if i > 0}
-												<div class="absolute left-2 -top-3 w-0.5 h-6 bg-primary-200"></div>
+										<div class="relative pl-6 pb-3 last:pb-0">
+											<!-- Vertical connecting line -->
+											{#if i < editingStack.items.length - 1}
+												<div class="absolute left-[7px] top-4 bottom-0 w-0.5 bg-primary-200"></div>
 											{/if}
+											<!-- Step circle -->
 											<div
-												class="absolute left-0 top-2 w-4 h-4 rounded-full bg-primary-100 border-2 border-primary-500 flex items-center justify-center"
+												class="absolute left-0 top-2 w-4 h-4 rounded-full bg-primary-100 border-2 border-primary-500 flex items-center justify-center z-10"
 											>
 												<span class="text-[10px] font-medium text-primary-700">{i + 1}</span>
 											</div>
