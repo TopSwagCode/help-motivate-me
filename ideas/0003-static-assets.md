@@ -1,0 +1,1 @@
+We want to get rid of localstack again, and just store all assets locally. For now to keep deployments easy. Furthermore we want to keep S3 like interface, so we can switch back to S3 like storage when scaling starts being an issue "lol".
