@@ -19,7 +19,6 @@ public class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
             .HasConversion<string>()
             .HasMaxLength(20)
             .HasDefaultValue(Core.Enums.TaskItemStatus.Pending);
-        builder.Property(t => t.IsRepeatable).HasDefaultValue(false);
         builder.Property(t => t.SortOrder).HasDefaultValue(0);
         builder.Property(t => t.CreatedAt).HasDefaultValueSql("NOW()");
         builder.Property(t => t.UpdatedAt).HasDefaultValueSql("NOW()");
@@ -36,11 +35,6 @@ public class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
             .WithMany(t => t.Subtasks)
             .HasForeignKey(t => t.ParentTaskId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasOne(t => t.RepeatSchedule)
-            .WithMany(r => r.Tasks)
-            .HasForeignKey(t => t.RepeatScheduleId)
-            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(t => t.Identity)
             .WithMany(i => i.Tasks)

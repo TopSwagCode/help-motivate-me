@@ -16,28 +16,6 @@ public class AnalyticsControllerTests : IntegrationTestBase
     #region Streaks Endpoint Tests
 
     [Fact]
-    public async Task GetStreaks_ReturnsOnlyRepeatableTasks()
-    {
-        // Arrange
-        var user = await DataBuilder.CreateUserAsync();
-        var goal = await DataBuilder.CreateGoalAsync(user.Id);
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
-
-        // Create repeatable task
-        await DataBuilder.CreateRepeatableTaskAsync(goal.Id, RepeatFrequency.Daily, 1, today);
-        // Create non-repeatable task
-        await DataBuilder.CreateTaskAsync(goal.Id, "One-time task");
-
-        // Act
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.GetFromJsonAsync<StreakSummaryResponse>("/api/analytics/streaks");
-
-        // Assert
-        response.Should().NotBeNull();
-        response!.TotalHabits.Should().Be(1);
-    }
-
-    [Fact]
     public async Task GetStreaks_ReturnsEmptyForNewUser()
     {
         // Arrange

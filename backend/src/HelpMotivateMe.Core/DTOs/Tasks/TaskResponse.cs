@@ -11,8 +11,6 @@ public record TaskResponse(
     TaskItemStatus Status,
     DateOnly? DueDate,
     DateOnly? CompletedAt,
-    bool IsRepeatable,
-    RepeatScheduleResponse? RepeatSchedule,
     int SortOrder,
     IEnumerable<TaskResponse> Subtasks,
     Guid? IdentityId,
@@ -20,12 +18,4 @@ public record TaskResponse(
     string? IdentityIcon,
     DateTime CreatedAt,
     DateTime UpdatedAt
-);
-
-public record RepeatScheduleResponse(
-    RepeatFrequency Frequency,
-    int IntervalValue,
-    int[]? DaysOfWeek,
-    int? DayOfMonth,
-    DateOnly? NextOccurrence
 );

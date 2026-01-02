@@ -49,53 +49,55 @@ builder.Services.AddCors(options =>
 
 // Authentication
 builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-})
-.AddCookie(options =>
-{
-    options.Cookie.Name = ".HelpMotivateMe.Auth";
-    options.Cookie.HttpOnly = true;
-    options.Cookie.SameSite = builder.Environment.IsDevelopment()
-        ? SameSiteMode.Lax
-        : SameSiteMode.None;
-    options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
-        ? CookieSecurePolicy.SameAsRequest
-        : CookieSecurePolicy.Always;
-    options.ExpireTimeSpan = TimeSpan.FromDays(30);
-    options.SlidingExpiration = true;
+    {
+        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    })
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = ".HelpMotivateMe.Auth";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = builder.Environment.IsDevelopment()
+            ? SameSiteMode.Lax
+            : SameSiteMode.None;
+        options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+            ? CookieSecurePolicy.SameAsRequest
+            : CookieSecurePolicy.Always;
+        options.ExpireTimeSpan = TimeSpan.FromDays(30);
+        options.SlidingExpiration = true;
 
-    // API responses instead of redirects
-    options.Events.OnRedirectToLogin = context =>
-    {
-        context.Response.StatusCode = 401;
-        return Task.CompletedTask;
-    };
-    options.Events.OnRedirectToAccessDenied = context =>
-    {
-        context.Response.StatusCode = 403;
-        return Task.CompletedTask;
-    };
-})
-.AddGitHub(options =>
-{
-    options.ClientId = builder.Configuration["OAuth:GitHub:ClientId"] ?? "";
-    options.ClientSecret = builder.Configuration["OAuth:GitHub:ClientSecret"] ?? "";
-    options.Scope.Add("user:email");
-    options.SaveTokens = true;
-    options.CallbackPath = "/signin-github";
-
-    options.Events.OnCreatingTicket = context =>
-    {
-        if (context.Principal?.Identity is ClaimsIdentity identity)
+        // API responses instead of redirects
+        options.Events.OnRedirectToLogin = context =>
         {
-            identity.AddClaim(new Claim("urn:github:login", context.User.GetProperty("login").GetString() ?? ""));
-            identity.AddClaim(new Claim("urn:github:avatar", context.User.GetProperty("avatar_url").GetString() ?? ""));
-        }
-        return Task.CompletedTask;
-    };
-});
+            context.Response.StatusCode = 401;
+            return Task.CompletedTask;
+        };
+        options.Events.OnRedirectToAccessDenied = context =>
+        {
+            context.Response.StatusCode = 403;
+            return Task.CompletedTask;
+        };
+    })
+    .AddGitHub(options =>
+    {
+        options.ClientId = builder.Configuration["OAuth:GitHub:ClientId"] ?? "";
+        options.ClientSecret = builder.Configuration["OAuth:GitHub:ClientSecret"] ?? "";
+        options.Scope.Add("user:email");
+        options.SaveTokens = true;
+        options.CallbackPath = "/signin-github";
+
+        options.Events.OnCreatingTicket = context =>
+        {
+            if (context.Principal?.Identity is ClaimsIdentity identity)
+            {
+                identity.AddClaim(new Claim("urn:github:login", context.User.GetProperty("login").GetString() ?? ""));
+                identity.AddClaim(new Claim("urn:github:avatar",
+                    context.User.GetProperty("avatar_url").GetString() ?? ""));
+            }
+
+            return Task.CompletedTask;
+        };
+    });
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

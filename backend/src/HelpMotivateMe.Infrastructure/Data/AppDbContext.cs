@@ -13,7 +13,6 @@ public class AppDbContext : DbContext
     public DbSet<UserExternalLogin> UserExternalLogins => Set<UserExternalLogin>();
     public DbSet<Goal> Goals => Set<Goal>();
     public DbSet<TaskItem> TaskItems => Set<TaskItem>();
-    public DbSet<RepeatSchedule> RepeatSchedules => Set<RepeatSchedule>();
     public DbSet<Identity> Identities => Set<Identity>();
     public DbSet<HabitStack> HabitStacks => Set<HabitStack>();
     public DbSet<HabitStackItem> HabitStackItems => Set<HabitStackItem>();

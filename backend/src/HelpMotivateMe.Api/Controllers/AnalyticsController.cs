@@ -25,11 +25,10 @@ public class AnalyticsController : ControllerBase
     {
         var userId = GetUserId();
 
-        // Get all repeatable tasks
+        // Get all tasks
         var tasks = await _db.TaskItems
             .Include(t => t.Goal)
-            .Include(t => t.RepeatSchedule)
-            .Where(t => t.Goal.UserId == userId && t.IsRepeatable)
+            .Where(t => t.Goal.UserId == userId)
             .ToListAsync();
 
         // Without TaskCompletion, we can only show basic stats

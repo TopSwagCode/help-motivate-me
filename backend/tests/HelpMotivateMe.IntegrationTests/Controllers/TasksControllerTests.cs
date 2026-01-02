@@ -101,68 +101,14 @@ public class TasksControllerTests : IntegrationTestBase
 
     #region Repeat Scheduling Tests
 
-    [Fact]
-    public async Task CompleteRepeatableTask_Daily_CalculatesNextOccurrence()
-    {
-        // Arrange
-        var user = await DataBuilder.CreateUserAsync();
-        var goal = await DataBuilder.CreateGoalAsync(user.Id);
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
-        var task = await DataBuilder.CreateRepeatableTaskAsync(goal.Id, RepeatFrequency.Daily, intervalValue: 1, startDate: today);
+    // [Fact] - REMOVED: Repeatable task feature has been removed
+    // public async Task CompleteRepeatableTask_Daily_CalculatesNextOccurrence()
 
-        // Act
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.PatchAsync($"/api/tasks/{task.Id}/complete", user.Id);
+    // [Fact] - REMOVED: Repeatable task feature has been removed  
+    // public async Task CompleteRepeatableTask_Weekly_CalculatesNextOccurrence()
 
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var completed = await response.Content.ReadFromJsonAsync<TaskResponse>();
-
-        // After completion, task should reset to Pending with next occurrence
-        completed!.Status.Should().Be("Pending");
-        completed.RepeatSchedule.Should().NotBeNull();
-        completed.RepeatSchedule!.NextOccurrence.Should().Be(today.AddDays(1));
-    }
-
-    [Fact]
-    public async Task CompleteRepeatableTask_Weekly_CalculatesNextOccurrence()
-    {
-        // Arrange
-        var user = await DataBuilder.CreateUserAsync();
-        var goal = await DataBuilder.CreateGoalAsync(user.Id);
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
-        var task = await DataBuilder.CreateRepeatableTaskAsync(goal.Id, RepeatFrequency.Weekly, intervalValue: 2, startDate: today);
-
-        // Act
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.PatchAsync($"/api/tasks/{task.Id}/complete", user.Id);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var completed = await response.Content.ReadFromJsonAsync<TaskResponse>();
-
-        completed!.RepeatSchedule!.NextOccurrence.Should().Be(today.AddDays(14)); // 2 weeks
-    }
-
-    [Fact]
-    public async Task CompleteRepeatableTask_Monthly_CalculatesNextOccurrence()
-    {
-        // Arrange
-        var user = await DataBuilder.CreateUserAsync();
-        var goal = await DataBuilder.CreateGoalAsync(user.Id);
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
-        var task = await DataBuilder.CreateRepeatableTaskAsync(goal.Id, RepeatFrequency.Monthly, intervalValue: 1, startDate: today);
-
-        // Act
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.PatchAsync($"/api/tasks/{task.Id}/complete", user.Id);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var completed = await response.Content.ReadFromJsonAsync<TaskResponse>();
-
-        completed!.RepeatSchedule!.NextOccurrence.Should().Be(today.AddMonths(1));
-    }
+    // [Fact] - REMOVED: Repeatable task feature has been removed
+    // public async Task CompleteRepeatableTask_Monthly_CalculatesNextOccurrence()
 
     [Fact]
     public async Task CompleteNonRepeatableTask_MarksAsCompleted()
@@ -479,26 +425,8 @@ public class TasksControllerTests : IntegrationTestBase
         task2Response!.CompletedAt.Should().Be(clientDate);
     }
 
-    [Fact]
-    public async Task CompleteRepeatableTask_WithClientDate_CalculatesNextFromProvidedDate()
-    {
-        // Arrange
-        var user = await DataBuilder.CreateUserAsync();
-        var goal = await DataBuilder.CreateGoalAsync(user.Id);
-        var clientDate = new DateOnly(2025, 6, 15);
-        var task = await DataBuilder.CreateRepeatableTaskAsync(goal.Id, RepeatFrequency.Daily, intervalValue: 1, startDate: clientDate);
-
-        // Act
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.PatchAsync($"/api/tasks/{task.Id}/complete?date={clientDate:yyyy-MM-dd}", null);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var completed = await response.Content.ReadFromJsonAsync<TaskResponse>();
-
-        // After completion, next occurrence should be clientDate + 1 day
-        completed!.RepeatSchedule!.NextOccurrence.Should().Be(clientDate.AddDays(1));
-    }
+    // [Fact] - REMOVED: Repeatable task feature has been removed
+    // public async Task CompleteRepeatableTask_WithClientDate_CalculatesNextFromProvidedDate()
 
     #endregion
 }
@@ -513,8 +441,6 @@ public record TaskResponse(
     string Status,
     DateOnly? DueDate,
     DateOnly? CompletedAt,
-    bool IsRepeatable,
-    RepeatScheduleResponse? RepeatSchedule,
     int SortOrder,
     IEnumerable<TaskResponse>? Subtasks,
     Guid? IdentityId,
@@ -524,13 +450,8 @@ public record TaskResponse(
     DateTime UpdatedAt
 );
 
-public record RepeatScheduleResponse(
-    string Frequency,
-    int IntervalValue,
-    int[]? DaysOfWeek,
-    int? DayOfMonth,
-    DateOnly? NextOccurrence
-);
+// REMOVED: RepeatScheduleResponse - repeatable task feature has been removed
+// public record RepeatScheduleResponse(...)
 
 public record CompleteMultipleTasksResponse(
     int CompletedCount,

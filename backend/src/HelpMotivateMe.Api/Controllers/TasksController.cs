@@ -33,10 +33,8 @@ public class TasksController : ControllerBase
         }
 
         var tasks = await _db.TaskItems
-            .Include(t => t.RepeatSchedule)
             .Include(t => t.Identity)
             .Include(t => t.Subtasks)
-                .ThenInclude(s => s.RepeatSchedule)
             .Include(t => t.Subtasks)
                 .ThenInclude(s => s.Identity)
             .Where(t => t.GoalId == goalId && t.ParentTaskId == null)
@@ -54,10 +52,8 @@ public class TasksController : ControllerBase
 
         var task = await _db.TaskItems
             .Include(t => t.Goal)
-            .Include(t => t.RepeatSchedule)
             .Include(t => t.Identity)
             .Include(t => t.Subtasks)
-                .ThenInclude(s => s.RepeatSchedule)
             .Include(t => t.Subtasks)
                 .ThenInclude(s => s.Identity)
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);
@@ -88,23 +84,8 @@ public class TasksController : ControllerBase
             Title = request.Title,
             Description = request.Description,
             DueDate = request.DueDate,
-            IsRepeatable = request.IsRepeatable,
             IdentityId = request.IdentityId
         };
-
-        if (request.IsRepeatable && request.RepeatSchedule != null)
-        {
-            task.RepeatSchedule = new RepeatSchedule
-            {
-                Frequency = request.RepeatSchedule.Frequency,
-                IntervalValue = request.RepeatSchedule.IntervalValue,
-                DaysOfWeek = request.RepeatSchedule.DaysOfWeek,
-                DayOfMonth = request.RepeatSchedule.DayOfMonth,
-                StartDate = request.RepeatSchedule.StartDate ?? DateOnly.FromDateTime(DateTime.UtcNow),
-                EndDate = request.RepeatSchedule.EndDate,
-                NextOccurrence = request.RepeatSchedule.StartDate ?? DateOnly.FromDateTime(DateTime.UtcNow)
-            };
-        }
 
         // Set sort order
         var maxSortOrder = await _db.TaskItems
@@ -146,23 +127,8 @@ public class TasksController : ControllerBase
             Title = request.Title,
             Description = request.Description,
             DueDate = request.DueDate,
-            IsRepeatable = request.IsRepeatable,
             IdentityId = request.IdentityId
         };
-
-        if (request.IsRepeatable && request.RepeatSchedule != null)
-        {
-            subtask.RepeatSchedule = new RepeatSchedule
-            {
-                Frequency = request.RepeatSchedule.Frequency,
-                IntervalValue = request.RepeatSchedule.IntervalValue,
-                DaysOfWeek = request.RepeatSchedule.DaysOfWeek,
-                DayOfMonth = request.RepeatSchedule.DayOfMonth,
-                StartDate = request.RepeatSchedule.StartDate ?? DateOnly.FromDateTime(DateTime.UtcNow),
-                EndDate = request.RepeatSchedule.EndDate,
-                NextOccurrence = request.RepeatSchedule.StartDate ?? DateOnly.FromDateTime(DateTime.UtcNow)
-            };
-        }
 
         // Set sort order
         var maxSortOrder = await _db.TaskItems
@@ -190,7 +156,6 @@ public class TasksController : ControllerBase
 
         var task = await _db.TaskItems
             .Include(t => t.Goal)
-            .Include(t => t.RepeatSchedule)
             .Include(t => t.Identity)
             .Include(t => t.Subtasks)
                 .ThenInclude(s => s.Identity)
@@ -204,29 +169,8 @@ public class TasksController : ControllerBase
         task.Title = request.Title;
         task.Description = request.Description;
         task.DueDate = request.DueDate;
-        task.IsRepeatable = request.IsRepeatable;
         task.IdentityId = request.IdentityId;
         task.UpdatedAt = DateTime.UtcNow;
-
-        if (request.IsRepeatable && request.RepeatSchedule != null)
-        {
-            if (task.RepeatSchedule == null)
-            {
-                task.RepeatSchedule = new RepeatSchedule();
-            }
-
-            task.RepeatSchedule.Frequency = request.RepeatSchedule.Frequency;
-            task.RepeatSchedule.IntervalValue = request.RepeatSchedule.IntervalValue;
-            task.RepeatSchedule.DaysOfWeek = request.RepeatSchedule.DaysOfWeek;
-            task.RepeatSchedule.DayOfMonth = request.RepeatSchedule.DayOfMonth;
-            task.RepeatSchedule.StartDate = request.RepeatSchedule.StartDate ?? task.RepeatSchedule.StartDate;
-            task.RepeatSchedule.EndDate = request.RepeatSchedule.EndDate;
-        }
-        else if (!request.IsRepeatable && task.RepeatSchedule != null)
-        {
-            _db.RepeatSchedules.Remove(task.RepeatSchedule);
-            task.RepeatSchedule = null;
-        }
 
         await _db.SaveChangesAsync();
 
@@ -274,10 +218,8 @@ public class TasksController : ControllerBase
 
         var task = await _db.TaskItems
             .Include(t => t.Goal)
-            .Include(t => t.RepeatSchedule)
             .Include(t => t.Identity)
             .Include(t => t.Subtasks)
-                .ThenInclude(s => s.RepeatSchedule)
             .Include(t => t.Subtasks)
                 .ThenInclude(s => s.Identity)
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);
@@ -298,17 +240,7 @@ public class TasksController : ControllerBase
             // Complete
             task.Status = TaskItemStatus.Completed;
             task.CompletedAt = targetDate;
-
-            // Handle repeatable tasks
-            if (task.IsRepeatable && task.RepeatSchedule != null)
-            {
-                task.RepeatSchedule.LastCompleted = DateTime.UtcNow;
-                task.RepeatSchedule.NextOccurrence = CalculateNextOccurrence(task.RepeatSchedule);
-
-                // Reset task for next occurrence
-                task.Status = TaskItemStatus.Pending;
-                task.CompletedAt = null;
-            }
+            
         }
 
         task.UpdatedAt = DateTime.UtcNow;
@@ -328,7 +260,6 @@ public class TasksController : ControllerBase
 
         var tasks = await _db.TaskItems
             .Include(t => t.Goal)
-            .Include(t => t.RepeatSchedule)
             .Where(t => request.TaskIds.Contains(t.Id) && t.Goal.UserId == userId)
             .ToListAsync();
 
@@ -341,16 +272,7 @@ public class TasksController : ControllerBase
                 task.Status = TaskItemStatus.Completed;
                 task.CompletedAt = targetDate;
                 task.UpdatedAt = DateTime.UtcNow;
-
-                // Handle repeatable tasks
-                if (task.IsRepeatable && task.RepeatSchedule != null)
-                {
-                    task.RepeatSchedule.LastCompleted = DateTime.UtcNow;
-                    task.RepeatSchedule.NextOccurrence = CalculateNextOccurrence(task.RepeatSchedule);
-                    task.Status = TaskItemStatus.Pending;
-                    task.CompletedAt = null;
-                }
-
+                
                 completedCount++;
             }
         }
@@ -367,10 +289,8 @@ public class TasksController : ControllerBase
 
         var task = await _db.TaskItems
             .Include(t => t.Goal)
-            .Include(t => t.RepeatSchedule)
             .Include(t => t.Identity)
             .Include(t => t.Subtasks)
-                .ThenInclude(s => s.RepeatSchedule)
             .Include(t => t.Subtasks)
                 .ThenInclude(s => s.Identity)
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);
@@ -419,7 +339,6 @@ public class TasksController : ControllerBase
 
         var task = await _db.TaskItems
             .Include(t => t.Goal)
-            .Include(t => t.RepeatSchedule)
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);
 
         if (task == null)
@@ -450,25 +369,9 @@ public class TasksController : ControllerBase
             IsTinyHabit = true,
             EstimatedMinutes = 2,
             FullVersionTaskId = task.Id,
-            IsRepeatable = task.IsRepeatable,
             IdentityId = task.IdentityId,
             SortOrder = maxSortOrder + 1
         };
-
-        // Copy repeat schedule if exists
-        if (task.IsRepeatable && task.RepeatSchedule != null)
-        {
-            tinyTask.RepeatSchedule = new RepeatSchedule
-            {
-                Frequency = task.RepeatSchedule.Frequency,
-                IntervalValue = task.RepeatSchedule.IntervalValue,
-                DaysOfWeek = task.RepeatSchedule.DaysOfWeek,
-                DayOfMonth = task.RepeatSchedule.DayOfMonth,
-                StartDate = DateOnly.FromDateTime(DateTime.UtcNow),
-                EndDate = task.RepeatSchedule.EndDate,
-                NextOccurrence = DateOnly.FromDateTime(DateTime.UtcNow)
-            };
-        }
 
         _db.TaskItems.Add(tinyTask);
         await _db.SaveChangesAsync();
@@ -482,19 +385,6 @@ public class TasksController : ControllerBase
         return Guid.Parse(userIdClaim!);
     }
 
-    private static DateOnly CalculateNextOccurrence(RepeatSchedule schedule)
-    {
-        var current = schedule.NextOccurrence ?? DateOnly.FromDateTime(DateTime.UtcNow);
-
-        return schedule.Frequency switch
-        {
-            RepeatFrequency.Daily => current.AddDays(schedule.IntervalValue),
-            RepeatFrequency.Weekly => current.AddDays(7 * schedule.IntervalValue),
-            RepeatFrequency.Monthly => current.AddMonths(schedule.IntervalValue),
-            _ => current.AddDays(1)
-        };
-    }
-
     private static TaskResponse MapToResponse(TaskItem task)
     {
         return new TaskResponse(
@@ -506,15 +396,6 @@ public class TasksController : ControllerBase
             task.Status,
             task.DueDate,
             task.CompletedAt,
-            task.IsRepeatable,
-            task.RepeatSchedule != null
-                ? new RepeatScheduleResponse(
-                    task.RepeatSchedule.Frequency,
-                    task.RepeatSchedule.IntervalValue,
-                    task.RepeatSchedule.DaysOfWeek,
-                    task.RepeatSchedule.DayOfMonth,
-                    task.RepeatSchedule.NextOccurrence)
-                : null,
             task.SortOrder,
             task.Subtasks.OrderBy(s => s.SortOrder).Select(MapToResponse),
             task.IdentityId,

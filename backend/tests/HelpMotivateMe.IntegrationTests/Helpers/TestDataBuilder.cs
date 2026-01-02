@@ -89,15 +89,7 @@ public class TestDataBuilder
         int intervalValue = 1,
         DateOnly? startDate = null)
     {
-        var schedule = new RepeatSchedule
-        {
-            Id = Guid.NewGuid(),
-            Frequency = frequency,
-            IntervalValue = intervalValue,
-            StartDate = startDate ?? DateOnly.FromDateTime(DateTime.UtcNow),
-            NextOccurrence = startDate ?? DateOnly.FromDateTime(DateTime.UtcNow)
-        };
-        _db.RepeatSchedules.Add(schedule);
+
 
         var task = new TaskItem
         {
@@ -105,8 +97,6 @@ public class TestDataBuilder
             GoalId = goalId,
             Title = _faker.Lorem.Sentence(3),
             Status = TaskItemStatus.Pending,
-            IsRepeatable = true,  // Important: mark as repeatable
-            RepeatScheduleId = schedule.Id,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -199,7 +189,6 @@ public class TestDataBuilder
         _db.HabitStackItems.RemoveRange(_db.HabitStackItems);
         _db.HabitStacks.RemoveRange(_db.HabitStacks);
         _db.TaskItems.RemoveRange(_db.TaskItems);
-        _db.RepeatSchedules.RemoveRange(_db.RepeatSchedules);
         _db.Goals.RemoveRange(_db.Goals);
         _db.Identities.RemoveRange(_db.Identities);
         _db.UserExternalLogins.RemoveRange(_db.UserExternalLogins);
