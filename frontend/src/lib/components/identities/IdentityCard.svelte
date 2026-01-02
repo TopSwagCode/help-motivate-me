@@ -11,7 +11,8 @@
 
 <button
 	type="button"
-	class="card-hover p-4 text-left w-full"
+	class="card-hover p-4 text-left w-full border-l-4"
+	style="border-left-color: {identity.color || '#6366f1'}"
 	onclick={onclick}
 >
 	<div class="flex items-start gap-3">

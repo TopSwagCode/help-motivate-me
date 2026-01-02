@@ -431,7 +431,8 @@ public class AuthController : ControllerBase
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Name, user.Username),
-            new(ClaimTypes.Email, user.Email)
+            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.Role, user.Role.ToString())
         };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -464,7 +465,8 @@ public class AuthController : ControllerBase
             user.ExternalLogins.Select(e => e.Provider),
             user.PasswordHash != null,
             user.MembershipTier.ToString(),
-            user.HasCompletedOnboarding
+            user.HasCompletedOnboarding,
+            user.Role.ToString()
         );
     }
 

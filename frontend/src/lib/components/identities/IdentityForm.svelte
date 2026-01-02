@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { Identity, CreateIdentityRequest, UpdateIdentityRequest } from '$lib/types';
+	import EmojiPicker from '$lib/components/shared/EmojiPicker.svelte';
+	import ColorPicker from '$lib/components/shared/ColorPicker.svelte';
 
 	interface Props {
 		identity?: Identity;
@@ -15,8 +17,6 @@
 	let icon = $state(identity?.icon ?? '');
 	let loading = $state(false);
 	let error = $state('');
-
-	const commonIcons = ['💪', '🧠', '📚', '🏃', '🧘', '💼', '🎯', '⭐', '🌱', '❤️'];
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
@@ -72,30 +72,9 @@
 		></textarea>
 	</div>
 
-	<div>
-		<label class="label">Icon (optional)</label>
-		<div class="flex flex-wrap gap-2">
-			{#each commonIcons as emoji}
-				<button
-					type="button"
-					class="w-10 h-10 text-xl rounded-lg border-2 transition-colors {icon === emoji
-						? 'border-primary-500 bg-primary-50'
-						: 'border-gray-200 hover:border-gray-300'}"
-					onclick={() => (icon = icon === emoji ? '' : emoji)}
-				>
-					{emoji}
-				</button>
-			{/each}
-		</div>
-	</div>
+	<EmojiPicker value={icon} onchange={(emoji) => (icon = emoji)} />
 
-	<div>
-		<label for="color" class="label">Color</label>
-		<div class="flex items-center gap-3">
-			<input id="color" type="color" bind:value={color} class="w-10 h-10 rounded cursor-pointer" />
-			<span class="text-sm text-gray-500">{color}</span>
-		</div>
-	</div>
+	<ColorPicker value={color} onchange={(newColor) => (color = newColor)} />
 
 	<div class="flex gap-3 pt-4">
 		<button type="submit" disabled={loading || !name.trim()} class="btn-primary flex-1">

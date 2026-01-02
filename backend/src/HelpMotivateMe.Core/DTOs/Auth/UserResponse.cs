@@ -9,5 +9,6 @@ public record UserResponse(
     IEnumerable<string> LinkedProviders,
     bool HasPassword,
     string MembershipTier,
-    bool HasCompletedOnboarding
+    bool HasCompletedOnboarding,
+    string Role
 );

@@ -30,5 +30,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasConversion<string>()
             .HasMaxLength(20);
         builder.Property(u => u.HasCompletedOnboarding).HasDefaultValue(false);
+        builder.Property(u => u.Role)
+            .HasDefaultValue(UserRole.User)
+            .HasConversion<string>()
+            .HasMaxLength(20);
     }
 }
