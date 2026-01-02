@@ -29,22 +29,6 @@ services:
     networks:
       - helpmotivateme-network
 
-  localstack:
-    image: localstack/localstack:latest
-    container_name: helpmotivateme-localstack
-    restart: unless-stopped
-    ports:
-      - "4566:4566"
-    environment:
-      - SERVICES=s3
-      - EAGER_SERVICE_LOADING=1
-      - AWS_DEFAULT_REGION=us-east-1
-    volumes:
-      - localstack_data:/var/lib/localstack
-      - ./backend/init-localstack.sh:/etc/localstack/init/ready.d/init-localstack.sh
-    networks:
-      - helpmotivateme-network
-
   # Backend API
   backend:
     build:
@@ -59,19 +43,16 @@ services:
       - Smtp__Port=1025
       - Smtp__FromEmail=noreply@helpmotivateme.com
       - Smtp__FromName=Help Motivate Me
-      - AWS__ServiceURL=http://localstack:4566
-      - AWS__Region=us-east-1
-      - AWS__AccessKey=test
-      - AWS__SecretKey=test
-      - AWS__S3BucketName=helpmotivateme-uploads
+      - LocalStorage__BasePath=/app/uploads
+      - LocalStorage__BaseUrl=http://localhost:5001
     ports:
       - "5001:5001"
+    volumes:
+      - uploads_data:/app/uploads
     depends_on:
       postgres:
         condition: service_healthy
       mailpit:
-        condition: service_started
-      localstack:
         condition: service_started
     networks:
       - helpmotivateme-network
@@ -95,7 +76,7 @@ services:
 
 volumes:
   postgres_data:
-  localstack_data:
+  uploads_data:
 
 networks:
   helpmotivateme-network:
