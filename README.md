@@ -272,6 +272,25 @@ VITE_API_URL=http://localhost:5001
 - **LocalStack**: S3-compatible storage for local development
 - **OpenAPI**: API documentation at `http://localhost:5001/openapi` (dev mode)
 
+## Backup & Restore
+
+The application includes a comprehensive backup and restore system:
+
+- **Automated Backups**: Scheduled daily backups of database and uploaded files
+- **Manual Backups**: One-command backup creation (`./backup-now.sh`)
+- **Easy Restore**: Simple restore from any backup (`./backup-restore.sh latest`)
+- **Retention Management**: Automatic cleanup based on age and count
+- **Remote Storage**: Optional Hetzner Storage Box integration for offsite backups
+
+Quick commands:
+```bash
+./backup-now.sh              # Create backup now
+./backup-list.sh             # List all backups
+./backup-restore.sh latest   # Restore latest backup
+```
+
+See [BACKUP.md](BACKUP.md) for complete documentation and [BACKUP-TEST.md](BACKUP-TEST.md) for testing guide.
+
 ## Contributing
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed architecture documentation and design decisions.

@@ -74,3 +74,8 @@ yarn-error.log*
 # Local file storage
 backend/uploads/
 uploads/
+
+# Backups
+backup.env
+*.tar.gz
+*.dump

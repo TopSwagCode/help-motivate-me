@@ -74,9 +74,57 @@ services:
       - helpmotivateme-network
     restart: unless-stopped
 
+  # Backup Service
+  backup:
+    build:
+      context: ./backup
+      dockerfile: Dockerfile
+    container_name: helpmotivateme-backup
+    environment:
+      # PostgreSQL Connection
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=helpmotivateme
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      
+      # Retention Policy
+      - RETENTION_DAYS=30          # Delete backups older than 30 days
+      - MAX_BACKUPS=10             # Keep only 10 most recent backups
+      
+      # Backup Schedule (cron format: minute hour day month weekday)
+      # Default: Every hour
+      - BACKUP_SCHEDULE=0 * * * *
+      
+      # Remote Backup (Hetzner Storage Box)
+      # Set REMOTE_BACKUP_ENABLED=true to enable remote backups
+      - REMOTE_BACKUP_ENABLED=false
+      # - HETZNER_USER=your-username
+      # - HETZNER_HOST=your-username.your-storagebox.de
+      # - HETZNER_PORT=23
+      # - HETZNER_REMOTE_PATH=/backups/helpmotivateme
+      # - CLEANUP_REMOTE=true
+      
+      # Timezone
+      - TZ=UTC
+    volumes:
+      - postgres_data:/var/lib/postgresql/data:ro  # Read-only access to database files
+      - uploads_data:/uploads                       # Read-write access for backup and restore
+      - backup_data:/backups                        # Backup storage
+      # Mount SSH key for Hetzner (if using remote backup)
+      # - ~/.ssh/id_rsa:/root/.ssh/id_rsa:ro
+      # - ~/.ssh/known_hosts:/root/.ssh/known_hosts:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   uploads_data:
+  backup_data:
 
 networks:
   helpmotivateme-network:
