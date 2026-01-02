@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tick } from 'svelte';
 	import type { CreateHabitStackRequest, HabitStackItemRequest } from '$lib/types';
 
 	interface Props {
@@ -14,8 +15,9 @@
 	]);
 	let loading = $state(false);
 	let error = $state('');
+	let formContainerRef = $state<HTMLElement | null>(null);
 
-	function addItem() {
+	async function addItem() {
 		const lastItem = items[items.length - 1];
 		items = [
 			...items,
@@ -24,6 +26,38 @@
 				habitDescription: ''
 			}
 		];
+		
+		// Wait for DOM update, then scroll and focus
+		await tick();
+		
+		// Scroll to absolute bottom
+		if (formContainerRef) {
+			setTimeout(() => {
+				if (formContainerRef) {
+					formContainerRef.scrollTo({
+						top: formContainerRef.scrollHeight + 1000, // Extra padding to ensure bottom
+						behavior: 'smooth'
+					});
+				}
+			}, 50);
+		}
+		
+		// Focus the new "I will..." input
+		const newIndex = items.length - 1;
+		const habitInput = document.querySelector(
+			`#habit-input-${newIndex}`
+		) as HTMLInputElement;
+		if (habitInput) {
+			habitInput.focus();
+		}
+	}
+
+	function handleItemKeyPress(e: KeyboardEvent, index: number) {
+		// If Enter is pressed in the last habit's "I will..." field, add another habit
+		if (e.key === 'Enter' && index === items.length - 1) {
+			e.preventDefault();
+			addItem();
+		}
 	}
 
 	function removeItem(index: number) {
@@ -62,7 +96,7 @@
 	}
 </script>
 
-<form onsubmit={handleSubmit} class="space-y-6">
+<form bind:this={formContainerRef} onsubmit={handleSubmit} class="space-y-6">
 	{#if error}
 		<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
 			{error}
@@ -104,9 +138,11 @@
 							<div>
 								<label class="block text-xs font-medium text-gray-500 mb-1">I will...</label>
 								<input
+									id="habit-input-{i}"
 									type="text"
 									value={item.habitDescription}
 									oninput={(e) => updateItem(i, 'habitDescription', (e.target as HTMLInputElement).value)}
+									onkeydown={(e) => handleItemKeyPress(e, i)}
 									placeholder="drink a glass of water"
 									class="input text-sm"
 								/>

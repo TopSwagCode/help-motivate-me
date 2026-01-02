@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
 	import {
@@ -26,6 +26,7 @@
 	let createItems = $state<HabitStackItemRequest[]>([{ cueDescription: '', habitDescription: '' }]);
 	let createLoading = $state(false);
 	let createError = $state('');
+	let createContainerRef = $state<HTMLDivElement | null>(null);
 
 	// Edit popup state
 	let showEditPopup = $state(false);
@@ -38,6 +39,7 @@
 	// Add item state
 	let newItemCue = $state('');
 	let newItemHabit = $state('');
+	let newItemHabitInputRef = $state<HTMLInputElement | null>(null);
 	let addingItem = $state(false);
 
 	// Reorder popup state
@@ -84,7 +86,7 @@
 		createError = '';
 	}
 
-	function addCreateItem() {
+	async function addCreateItem() {
 		const lastItem = createItems[createItems.length - 1];
 		createItems = [
 			...createItems,
@@ -93,6 +95,39 @@
 				habitDescription: ''
 			}
 		];
+		
+		// Wait for DOM update, then scroll and focus
+		await tick();
+		
+		// Scroll to absolute bottom of the container
+		if (createContainerRef) {
+			// Use a timeout to ensure content is fully rendered
+			setTimeout(() => {
+				if (createContainerRef) {
+					createContainerRef.scrollTo({
+						top: createContainerRef.scrollHeight + 1000, // Extra padding to ensure bottom
+						behavior: 'smooth'
+					});
+				}
+			}, 50);
+		}
+		
+		// Focus the new "I will..." input
+		const newIndex = createItems.length - 1;
+		const habitInput = document.querySelector(
+			`#create-habit-input-${newIndex}`
+		) as HTMLInputElement;
+		if (habitInput) {
+			habitInput.focus();
+		}
+	}
+
+	function handleCreateItemKeyPress(e: KeyboardEvent, index: number) {
+		// If Enter is pressed in the last habit's "I will..." field, add another habit
+		if (e.key === 'Enter' && index === createItems.length - 1) {
+			e.preventDefault();
+			addCreateItem();
+		}
 	}
 
 	function removeCreateItem(index: number) {
@@ -194,10 +229,24 @@
 			editingStack = updated;
 			newItemCue = '';
 			newItemHabit = '';
+			
+			// Wait for DOM update, then focus the "I will..." input for next item
+			await tick();
+			if (newItemHabitInputRef) {
+				newItemHabitInputRef.focus();
+			}
 		} catch (e) {
 			editError = e instanceof Error ? e.message : 'Failed to add item';
 		} finally {
 			addingItem = false;
+		}
+	}
+
+	function handleEditItemKeyPress(e: KeyboardEvent, field: 'cue' | 'habit') {
+		// If Enter is pressed in the "I will..." field and both fields are filled, add the item
+		if (e.key === 'Enter' && field === 'habit' && newItemCue.trim() && newItemHabit.trim()) {
+			e.preventDefault();
+			handleAddItem();
 		}
 	}
 
@@ -438,7 +487,10 @@
 	<!-- Create Popup -->
 	{#if showCreatePopup}
 		<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-			<div class="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+			<div 
+				bind:this={createContainerRef}
+				class="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto"
+			>
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-6">
 						<h2 class="text-xl font-semibold text-gray-900">Create Habit Stack</h2>
@@ -514,6 +566,7 @@
 														>I will...</label
 													>
 													<input
+														id="create-habit-input-{i}"
 														type="text"
 														value={item.habitDescription}
 														oninput={(e) =>
@@ -522,6 +575,7 @@
 																'habitDescription',
 																(e.target as HTMLInputElement).value
 															)}
+														onkeydown={(e) => handleCreateItemKeyPress(e, i)}
 														placeholder="drink a glass of water"
 														class="input text-sm"
 													/>
@@ -722,6 +776,7 @@
 									<input
 										type="text"
 										bind:value={newItemCue}
+										onkeydown={(e) => handleEditItemKeyPress(e, 'cue')}
 										placeholder={editingStack.items.length > 0
 											? editingStack.items[editingStack.items.length - 1].habitDescription
 											: 'previous habit'}
@@ -731,8 +786,10 @@
 								<div>
 									<label class="block text-xs font-medium text-gray-500 mb-1">I will...</label>
 									<input
+										bind:this={newItemHabitInputRef}
 										type="text"
 										bind:value={newItemHabit}
+										onkeydown={(e) => handleEditItemKeyPress(e, 'habit')}
 										placeholder="new habit"
 										class="input text-sm"
 									/>
