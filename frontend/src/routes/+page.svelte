@@ -71,6 +71,11 @@
 
 	<!-- Footer -->
 	<footer class="py-6 px-4 text-center text-sm text-gray-500 border-t border-gray-200">
+		<div class="mb-3">
+			<a href="/faq" class="text-primary-600 hover:text-primary-700 font-medium">
+				Frequently Asked Questions
+			</a>
+		</div>
 		<p>&copy; {new Date().getFullYear()} Help Motivate Me. All rights reserved.</p>
 	</footer>
 </div>

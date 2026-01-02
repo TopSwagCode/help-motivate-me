@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Amazon.S3;
 using AspNet.Security.OAuth.GitHub;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
@@ -17,20 +16,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Email Service
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 
-// S3 Storage Service
-var s3Config = new AmazonS3Config();
-if (builder.Configuration.GetValue<bool>("S3:UseLocalStack"))
-{
-    s3Config.ServiceURL = builder.Configuration["S3:ServiceUrl"];
-    s3Config.ForcePathStyle = true;
-}
-
-builder.Services.AddSingleton<IAmazonS3>(sp => new AmazonS3Client(
-    builder.Configuration["S3:AccessKey"],
-    builder.Configuration["S3:SecretKey"],
-    s3Config
-));
-builder.Services.AddSingleton<IStorageService, S3StorageService>();
+// Local File Storage Service
+builder.Services.AddSingleton<IStorageService, LocalFileStorageService>();
 
 // CORS
 builder.Services.AddCors(options =>

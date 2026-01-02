@@ -29,22 +29,6 @@ services:
     networks:
       - helpmotivateme-network
 
-  localstack:
-    image: localstack/localstack:latest
-    container_name: helpmotivateme-localstack
-    restart: unless-stopped
-    ports:
-      - "4566:4566"
-    environment:
-      - SERVICES=s3
-      - EAGER_SERVICE_LOADING=1
-      - AWS_DEFAULT_REGION=us-east-1
-    volumes:
-      - localstack_data:/var/lib/localstack
-      - ./backend/init-localstack.sh:/etc/localstack/init/ready.d/init-localstack.sh
-    networks:
-      - helpmotivateme-network
-
   # Backend API
   backend:
     build:
@@ -55,23 +39,20 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5001
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=helpmotivateme;Username=postgres;Password=postgres
-      - Smtp__Host=mailpit
-      - Smtp__Port=1025
-      - Smtp__FromEmail=noreply@helpmotivateme.com
-      - Smtp__FromName=Help Motivate Me
-      - AWS__ServiceURL=http://localstack:4566
-      - AWS__Region=us-east-1
-      - AWS__AccessKey=test
-      - AWS__SecretKey=test
-      - AWS__S3BucketName=helpmotivateme-uploads
+      - Email__SmtpHost=mailpit
+      - Email__SmtpPort=1025
+      - Email__FromAddress=noreply@helpmotivateme.com
+      - Email__FromName=Help Motivate Me
+      - LocalStorage__BasePath=/app/uploads
+      - LocalStorage__BaseUrl=http://localhost:5001
     ports:
       - "5001:5001"
+    volumes:
+      - uploads_data:/app/uploads
     depends_on:
       postgres:
         condition: service_healthy
       mailpit:
-        condition: service_started
-      localstack:
         condition: service_started
     networks:
       - helpmotivateme-network
@@ -93,9 +74,57 @@ services:
       - helpmotivateme-network
     restart: unless-stopped
 
+  # Backup Service
+  backup:
+    build:
+      context: ./backup
+      dockerfile: Dockerfile
+    container_name: helpmotivateme-backup
+    environment:
+      # PostgreSQL Connection
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=helpmotivateme
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      
+      # Retention Policy
+      - RETENTION_DAYS=30          # Delete backups older than 30 days
+      - MAX_BACKUPS=10             # Keep only 10 most recent backups
+      
+      # Backup Schedule (cron format: minute hour day month weekday)
+      # Default: Every hour
+      - BACKUP_SCHEDULE=0 * * * *
+      
+      # Remote Backup (Hetzner Storage Box)
+      # Set REMOTE_BACKUP_ENABLED=true to enable remote backups
+      - REMOTE_BACKUP_ENABLED=false
+      # - HETZNER_USER=your-username
+      # - HETZNER_HOST=your-username.your-storagebox.de
+      # - HETZNER_PORT=23
+      # - HETZNER_REMOTE_PATH=/backups/helpmotivateme
+      # - CLEANUP_REMOTE=true
+      
+      # Timezone
+      - TZ=UTC
+    volumes:
+      - postgres_data:/var/lib/postgresql/data:ro  # Read-only access to database files
+      - uploads_data:/uploads                       # Read-write access for backup and restore
+      - backup_data:/backups                        # Backup storage
+      # Mount SSH key for Hetzner (if using remote backup)
+      # - ~/.ssh/id_rsa:/root/.ssh/id_rsa:ro
+      # - ~/.ssh/known_hosts:/root/.ssh/known_hosts:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
 volumes:
   postgres_data:
-  localstack_data:
+  uploads_data:
+  backup_data:
 
 networks:
   helpmotivateme-network:

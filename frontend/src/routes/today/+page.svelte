@@ -1,17 +1,20 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { auth } from '$lib/stores/auth';
 	import { getTodayView } from '$lib/api/today';
 	import { completeStackItem, completeAllStackItems } from '$lib/api/habitStacks';
 	import { completeTask, postponeTask, updateTask, completeMultipleTasks } from '$lib/api/tasks';
 	import { getIdentities } from '$lib/api/identities';
+	import WelcomePopup from '$lib/components/onboarding/WelcomePopup.svelte';
 	import type { TodayView, TodayTask, Identity } from '$lib/types';
 
 	let todayData = $state<TodayView | null>(null);
 	let identities = $state<Identity[]>([]);
 	let loading = $state(true);
 	let error = $state('');
+	let showWelcomePopup = $state(false);
 
 	// Current date being viewed (use local date, not UTC)
 	function getLocalDateString(date: Date = new Date()): string {
@@ -59,8 +62,19 @@
 			return;
 		}
 
+		// Check if we should show welcome popup (from onboarding completion)
+		if ($page.url.searchParams.get('welcome') === 'true') {
+			showWelcomePopup = true;
+			// Clear the URL param without reloading
+			window.history.replaceState({}, '', '/today');
+		}
+
 		await loadToday();
 	});
+
+	function closeWelcomePopup() {
+		showWelcomePopup = false;
+	}
 
 	async function loadToday() {
 		loading = true;
@@ -1003,5 +1017,10 @@
 				</div>
 			</div>
 		</div>
+	{/if}
+
+	<!-- Welcome Popup (shown after onboarding completion) -->
+	{#if showWelcomePopup}
+		<WelcomePopup onclose={closeWelcomePopup} />
 	{/if}
 </div>

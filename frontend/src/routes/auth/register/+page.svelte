@@ -131,5 +131,11 @@
 				</button>
 			</form>
 		</div>
+
+		<div class="mt-6 text-center text-sm text-gray-500">
+			<p>
+				Need help? Check out our <a href="/faq" class="text-primary-600 hover:text-primary-500 font-medium">FAQ</a>
+			</p>
+		</div>
 	</div>
 </div>

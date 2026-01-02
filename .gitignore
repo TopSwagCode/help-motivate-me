@@ -70,3 +70,12 @@ yarn-error.log*
 .tmp/
 *.tmp
 .cache/
+
+# Local file storage
+backend/uploads/
+uploads/
+
+# Backups
+backup.env
+*.tar.gz
+*.dump

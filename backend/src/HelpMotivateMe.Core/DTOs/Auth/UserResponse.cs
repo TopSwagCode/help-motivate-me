@@ -8,5 +8,6 @@ public record UserResponse(
     DateTime CreatedAt,
     IEnumerable<string> LinkedProviders,
     bool HasPassword,
-    string MembershipTier
+    string MembershipTier,
+    bool HasCompletedOnboarding
 );

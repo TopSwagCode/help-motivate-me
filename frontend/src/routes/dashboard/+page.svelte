@@ -13,6 +13,12 @@
 			return;
 		}
 
+		// Check if user needs onboarding
+		if (!$auth.user.hasCompletedOnboarding) {
+			goto('/onboarding');
+			return;
+		}
+
 		// Redirect to Today as the default view
 		goto('/today');
 	});
