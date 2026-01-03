@@ -1,4 +1,30 @@
 services:
+  # Traefik Reverse Proxy
+  traefik:
+    image: traefik:v3.0
+    container_name: helpmotivateme-traefik
+    command:
+      # Enable the Dashboard (optional, for debugging)
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      # Docker provider
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=helpmotivateme-network"
+      # Entrypoints
+      - "--entrypoints.web.address=:80"
+      # Logging
+      - "--log.level=INFO"
+      - "--accesslog=true"
+    ports:
+      - "80:80"       # HTTP - Main entry point for ngrok
+      - "8080:8080"   # Traefik Dashboard (optional)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
   # Dependencies
   postgres:
     image: postgres:16-alpine
@@ -24,8 +50,17 @@ services:
     container_name: helpmotivateme-mailpit
     restart: unless-stopped
     ports:
-      - "8025:8025"  # Web UI
-      - "1025:1025"  # SMTP
+      - "8025:8025"  # Direct access for local development
+    expose:
+      - "1025"  # SMTP (internal only)
+    environment:
+      - MP_WEBROOT=/mail  # Set base path for Mailpit UI
+    labels:
+      - "traefik.enable=true"
+      # Route /mail to mailpit web UI
+      - "traefik.http.routers.mailpit.rule=PathPrefix(`/mail`)"
+      - "traefik.http.routers.mailpit.entrypoints=web"
+      - "traefik.http.services.mailpit.loadbalancer.server.port=8025"
     networks:
       - helpmotivateme-network
 
@@ -44,11 +79,17 @@ services:
       - Email__FromAddress=noreply@helpmotivateme.com
       - Email__FromName=Help Motivate Me
       - LocalStorage__BasePath=/app/uploads
-      - LocalStorage__BaseUrl=http://localhost:5001
-    ports:
-      - "5001:5001"
+      - LocalStorage__BaseUrl=/api/files
+    expose:
+      - "5001"
     volumes:
       - uploads_data:/app/uploads
+    labels:
+      - "traefik.enable=true"
+      # Route /api/* to backend
+      - "traefik.http.routers.backend.rule=PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.entrypoints=web"
+      - "traefik.http.services.backend.loadbalancer.server.port=5001"
     depends_on:
       postgres:
         condition: service_healthy
@@ -63,11 +104,18 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=
     container_name: helpmotivateme-frontend
-    environment:
-      - VITE_API_URL=http://localhost:5001
-    ports:
-      - "5173:3000"
+    expose:
+      - "3000"
+    labels:
+      - "traefik.enable=true"
+      # Route everything else to frontend (lowest priority)
+      - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
+      - "traefik.http.routers.frontend.priority=1"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
     depends_on:
       - backend
     networks:
