@@ -12,11 +12,15 @@ public class JournalEntry
     public Guid? HabitStackId { get; set; }
     public Guid? TaskItemId { get; set; }
 
+    // Author of the entry (null for entries created before this feature, defaults to UserId for owner entries)
+    public Guid? AuthorUserId { get; set; }
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation properties
     public User User { get; set; } = null!;
+    public User? Author { get; set; }
     public HabitStack? HabitStack { get; set; }
     public TaskItem? TaskItem { get; set; }
     public ICollection<JournalImage> Images { get; set; } = [];

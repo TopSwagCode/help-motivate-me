@@ -68,6 +68,14 @@
 				>
 					Analytics
 				</a>
+				<a
+					href="/buddies"
+					class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {isActive('/buddies')
+						? 'bg-primary-100 text-primary-700'
+						: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
+				>
+					Buddies
+				</a>
 			</nav>
 
 			<!-- User Menu -->
@@ -125,6 +133,14 @@
 					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 			>
 				Analytics
+			</a>
+			<a
+				href="/buddies"
+				class="px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors {isActive('/buddies')
+					? 'bg-primary-100 text-primary-700'
+					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
+			>
+				Buddies
 			</a>
 		</nav>
 	</div>

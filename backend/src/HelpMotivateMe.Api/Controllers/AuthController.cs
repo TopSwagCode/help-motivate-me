@@ -425,6 +425,53 @@ public class AuthController : ControllerBase
         return Ok(MapToResponse(user));
     }
 
+    [HttpPost("login-with-buddy-token")]
+    public async Task<ActionResult<BuddyLoginResponse>> LoginWithBuddyToken([FromBody] LoginWithTokenRequest request)
+    {
+        var token = await _db.BuddyInviteTokens
+            .Include(t => t.BuddyUser)
+                .ThenInclude(u => u.ExternalLogins)
+            .Include(t => t.InviterUser)
+            .FirstOrDefaultAsync(t => t.Token == request.Token);
+
+        if (token == null)
+        {
+            return Unauthorized(new { message = "Invalid or expired invite link" });
+        }
+
+        if (token.UsedAt.HasValue)
+        {
+            return Unauthorized(new { message = "This invite link has already been used" });
+        }
+
+        if (token.ExpiresAt < DateTime.UtcNow)
+        {
+            return Unauthorized(new { message = "This invite link has expired" });
+        }
+
+        if (!token.BuddyUser.IsActive)
+        {
+            return Unauthorized(new { message = "Account is disabled" });
+        }
+
+        // Mark token as used
+        token.UsedAt = DateTime.UtcNow;
+
+        // Mark onboarding as complete for the buddy (skip onboarding for buddy login)
+        token.BuddyUser.HasCompletedOnboarding = true;
+        token.BuddyUser.UpdatedAt = DateTime.UtcNow;
+
+        await _db.SaveChangesAsync();
+
+        await SignInUser(token.BuddyUser);
+
+        return Ok(new BuddyLoginResponse(
+            MapToResponse(token.BuddyUser),
+            token.InviterUserId,
+            token.InviterUser.DisplayName ?? token.InviterUser.Username
+        ));
+    }
+
     private async Task SignInUser(User user)
     {
         var claims = new List<Claim>
