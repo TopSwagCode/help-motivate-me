@@ -5,9 +5,23 @@ using HelpMotivateMe.Infrastructure.Data;
 using HelpMotivateMe.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure forwarded headers for proxy support (Traefik/ngrok)
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | 
+                               ForwardedHeaders.XForwardedProto | 
+                               ForwardedHeaders.XForwardedHost;
+    options.KnownIPNetworks.Clear();
+    options.KnownProxies.Clear();
+    
+    // Trust all proxies (ngrok/Traefik)
+    options.ForwardLimit = null;
+});
 
 // Database
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -71,7 +85,7 @@ builder.Services.AddAuthentication(options =>
         options.ClientSecret = builder.Configuration["OAuth:GitHub:ClientSecret"] ?? "";
         options.Scope.Add("user:email");
         options.SaveTokens = true;
-        options.CallbackPath = "/signin-github";
+        options.CallbackPath = "/api/signin-github";
 
         options.Events.OnCreatingTicket = context =>
         {
@@ -95,13 +109,30 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+// Use forwarded headers from Traefik/ngrok
+app.UseForwardedHeaders();
+
+// Force HTTPS scheme when behind proxy (ngrok)
+app.Use(async (context, next) =>
+{
+    // If not localhost and not already HTTPS, force HTTPS scheme
+    if (!context.Request.Host.Host.Contains("localhost") && 
+        context.Request.Scheme != "https")
+    {
+        context.Request.Scheme = "https";
+    }
+    await next();
+});
+
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+// Don't use HTTPS redirection when behind a proxy (Traefik/ngrok handles HTTPS)
+// app.UseHttpsRedirection();
+
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();

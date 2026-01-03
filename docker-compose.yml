@@ -73,6 +73,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5001
+      - ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=helpmotivateme;Username=postgres;Password=postgres
       - Email__SmtpHost=mailpit
       - Email__SmtpPort=1025
@@ -80,6 +81,7 @@ services:
       - Email__FromName=Help Motivate Me
       - LocalStorage__BasePath=/app/uploads
       - LocalStorage__BaseUrl=/api/files
+      - FrontendUrl=https://8175f826ee97.ngrok-free.app
     expose:
       - "5001"
     volumes:

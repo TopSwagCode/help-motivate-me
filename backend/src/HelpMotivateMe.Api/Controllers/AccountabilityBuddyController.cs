@@ -135,7 +135,7 @@ public class AccountabilityBuddyController : ControllerBase
         await _db.SaveChangesAsync();
 
         // Build invite URL
-        var frontendUrl = _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
+        var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
         var inviteUrl = $"{frontendUrl}/auth/buddy-invite?token={token}";
 
         // Send invite email
@@ -316,7 +316,7 @@ public class AccountabilityBuddyController : ControllerBase
         await _db.SaveChangesAsync();
 
         // Send notification email to the target user
-        var frontendUrl = _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
+        var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
         var journalUrl = $"{frontendUrl}/journal";
         var authorName = author.DisplayName ?? author.Username;
 

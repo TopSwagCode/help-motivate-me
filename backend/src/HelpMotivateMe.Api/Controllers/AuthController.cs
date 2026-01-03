@@ -112,7 +112,8 @@ public class AuthController : ControllerBase
     [HttpGet("external/{provider}")]
     public IActionResult ExternalLogin(string provider)
     {
-        var redirectUrl = $"{_configuration["Cors:AllowedOrigins:0"]}/auth/callback";
+        var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
+        var redirectUrl = $"{frontendUrl}/auth/callback";
         var properties = new AuthenticationProperties
         {
             RedirectUri = $"/api/auth/callback/{provider}?returnUrl={Uri.EscapeDataString(redirectUrl)}"
@@ -280,7 +281,7 @@ public class AuthController : ControllerBase
         await _db.SaveChangesAsync();
 
         // Build login URL
-        var frontendUrl = _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
+        var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
         var loginUrl = $"{frontendUrl}/auth/login?token={token}";
 
         // Send email
