@@ -7,6 +7,8 @@ export interface JournalEntry {
 	habitStackName: string | null;
 	taskItemId: string | null;
 	taskItemTitle: string | null;
+	authorUserId: string | null;
+	authorDisplayName: string | null;
 	images: JournalImage[];
 	createdAt: string;
 	updatedAt: string;

@@ -352,6 +352,15 @@
 								{/each}
 							</div>
 						{/if}
+
+						<!-- Author Attribution (for buddy entries) -->
+						{#if entry.authorDisplayName && entry.authorUserId && entry.authorUserId !== $auth.user?.id}
+							<div class="flex justify-end mt-3 pt-3 border-t border-gray-100">
+								<span class="text-xs text-gray-500 italic">
+									— {entry.authorDisplayName}
+								</span>
+							</div>
+						{/if}
 					</button>
 				{/each}
 			</div>

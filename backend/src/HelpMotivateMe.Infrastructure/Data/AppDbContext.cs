@@ -20,6 +20,8 @@ public class AppDbContext : DbContext
     public DbSet<EmailLoginToken> EmailLoginTokens => Set<EmailLoginToken>();
     public DbSet<JournalEntry> JournalEntries => Set<JournalEntry>();
     public DbSet<JournalImage> JournalImages => Set<JournalImage>();
+    public DbSet<AccountabilityBuddy> AccountabilityBuddies => Set<AccountabilityBuddy>();
+    public DbSet<BuddyInviteToken> BuddyInviteTokens => Set<BuddyInviteToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

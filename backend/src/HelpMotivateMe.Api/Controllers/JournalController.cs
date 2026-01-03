@@ -35,6 +35,7 @@ public class JournalController : ControllerBase
         var entries = await _db.JournalEntries
             .Include(j => j.HabitStack)
             .Include(j => j.TaskItem)
+            .Include(j => j.Author)
             .Include(j => j.Images.OrderBy(i => i.SortOrder))
             .Where(j => j.UserId == userId)
             .OrderByDescending(j => j.EntryDate)
@@ -52,6 +53,7 @@ public class JournalController : ControllerBase
         var entry = await _db.JournalEntries
             .Include(j => j.HabitStack)
             .Include(j => j.TaskItem)
+            .Include(j => j.Author)
             .Include(j => j.Images.OrderBy(i => i.SortOrder))
             .FirstOrDefaultAsync(j => j.Id == id && j.UserId == userId);
 
@@ -93,7 +95,8 @@ public class JournalController : ControllerBase
             Description = request.Description,
             EntryDate = request.EntryDate,
             HabitStackId = request.HabitStackId,
-            TaskItemId = request.TaskItemId
+            TaskItemId = request.TaskItemId,
+            AuthorUserId = userId  // Owner is the author of their own entries
         };
 
         _db.JournalEntries.Add(entry);
@@ -306,6 +309,8 @@ public class JournalController : ControllerBase
             entry.HabitStack?.Name,
             entry.TaskItemId,
             entry.TaskItem?.Title,
+            entry.AuthorUserId,
+            entry.Author != null ? entry.Author.DisplayName ?? entry.Author.Username : null,
             entry.Images.Select(i => new JournalImageResponse(
                 i.Id,
                 i.FileName,

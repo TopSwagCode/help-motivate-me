@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+const API_BASE = import.meta.env.VITE_API_URL !== undefined ? import.meta.env.VITE_API_URL : '';
 
 export class ApiError extends Error {
 	constructor(
@@ -94,6 +94,21 @@ export async function apiDelete<T>(endpoint: string): Promise<T> {
 			'Content-Type': 'application/json',
 			'X-CSRF': '1'
 		}
+	});
+	return handleResponse<T>(response);
+}
+
+export async function apiUpload<T>(endpoint: string, file: File): Promise<T> {
+	const formData = new FormData();
+	formData.append('file', file);
+
+	const response = await fetch(`${API_BASE}/api${endpoint}`, {
+		method: 'POST',
+		credentials: 'include',
+		headers: {
+			'X-CSRF': '1'
+		},
+		body: formData
 	});
 	return handleResponse<T>(response);
 }

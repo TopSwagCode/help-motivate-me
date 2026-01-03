@@ -79,3 +79,8 @@ uploads/
 backup.env
 *.tar.gz
 *.dump
+
+# ngrok
+ngrok.yml
+ngrok
+ngrok.exe

@@ -1,0 +1,36 @@
+Here’s a short, clear implementation plan without code, focused on using SQL + multiple app instances:
+
+⸻
+
+Plan: Keep users logged in across restarts and multiple instances
+	1.	Use a shared key store
+	•	Configure ASP.NET Core Data Protection to store its keys in a shared SQL database.
+	•	Reuse the same database you already use for EF Core.
+	2.	Ensure all app instances share identity
+	•	Set the same application name for Data Protection on every instance.
+	•	Use the same authentication scheme and cookie name everywhere.
+	3.	Make authentication cookies persistent
+	•	Issue persistent cookies so logins survive browser restarts.
+	•	Set a reasonable expiration period and enable sliding expiration if desired.
+	4.	Deploy safely
+	•	Use rolling deployments so at least one instance is always running.
+	•	Do not delete or reset the Data Protection key table during deployments.
+	5.	Avoid breaking changes
+	•	Do not change the application name, cookie name, or auth configuration between deployments.
+	•	Keep system clocks in sync across servers.
+	6.	Validate
+	•	Log in on one instance.
+	•	Restart or deploy the app.
+	•	Confirm the user remains authenticated across instances.
+
+⸻
+
+Result
+	•	Users stay logged in across restarts and deployments
+	•	Authentication works seamlessly with multiple app instances
+	•	No dependency on sticky sessions or load balancer affinity
+
+If you want, I can also provide:
+	•	A deployment checklist
+	•	A risk checklist (what causes forced logouts)
+	•	A short architecture diagram (text-based)

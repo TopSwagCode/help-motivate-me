@@ -115,13 +115,17 @@ public class LocalFileStorageService : IStorageService
     {
         // For local storage, return a direct URL to the file serving endpoint
         // The URL format will be: {baseUrl}/api/files/{key}
-        return $"{_baseUrl.TrimEnd('/')}/api/files/{key}";
+        // Strip any existing api/files/ prefix to handle legacy data
+        var cleanKey = key.StartsWith("api/files/") ? key.Substring("api/files/".Length) : key;
+        return $"{_baseUrl.TrimEnd('/')}/api/files/{cleanKey}";
     }
 
     private string GetFullPath(string key)
     {
+        // Strip any existing api/files/ prefix to handle legacy data
+        var cleanKey = key.StartsWith("api/files/") ? key.Substring("api/files/".Length) : key;
         // Normalize the key to prevent path traversal attacks
-        var normalizedKey = key.Replace("..", "").Replace("\\", "/");
+        var normalizedKey = cleanKey.Replace("..", "").Replace("\\", "/");
         return Path.Combine(_basePath, normalizedKey);
     }
 }

@@ -9,6 +9,8 @@ public record JournalEntryResponse(
     string? HabitStackName,
     Guid? TaskItemId,
     string? TaskItemTitle,
+    Guid? AuthorUserId,
+    string? AuthorDisplayName,
     IEnumerable<JournalImageResponse> Images,
     DateTime CreatedAt,
     DateTime UpdatedAt

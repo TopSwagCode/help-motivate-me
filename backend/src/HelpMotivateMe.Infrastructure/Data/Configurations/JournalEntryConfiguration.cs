@@ -37,6 +37,11 @@ public class JournalEntryConfiguration : IEntityTypeConfiguration<JournalEntry>
             .HasForeignKey(j => j.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasOne(j => j.Author)
+            .WithMany()
+            .HasForeignKey(j => j.AuthorUserId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         builder.HasOne(j => j.HabitStack)
             .WithMany()
             .HasForeignKey(j => j.HabitStackId)

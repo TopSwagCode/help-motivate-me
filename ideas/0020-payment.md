@@ -1,1 +1,1 @@
-polar payment provider needs to be added.
+polar payment provider needs to be added.https://polar.sh/
