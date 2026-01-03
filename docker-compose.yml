@@ -107,6 +107,9 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
+        # NOTE: VITE_API_URL is intentionally left empty.
+        # In this Traefik setup, an empty value makes the frontend use relative URLs
+        # for API requests so that Traefik can route them correctly.
         - VITE_API_URL=
     container_name: helpmotivateme-frontend
     expose:
