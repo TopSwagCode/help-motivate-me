@@ -29,6 +29,10 @@ public class AdminController : ControllerBase
         var totalUsers = await _db.Users.CountAsync();
         var activeUsers = await _db.Users.CountAsync(u => u.IsActive);
 
+        // Users logged in today (users who updated their record today - approximation via UpdatedAt)
+        var usersLoggedInToday = await _db.Users
+            .CountAsync(u => u.UpdatedAt >= today && u.UpdatedAt < tomorrow);
+
         // Membership tier breakdown
         var membershipStats = new MembershipStats(
             FreeUsers: await _db.Users.CountAsync(u => u.MembershipTier == MembershipTier.Free),
@@ -36,27 +40,58 @@ public class AdminController : ControllerBase
             ProUsers: await _db.Users.CountAsync(u => u.MembershipTier == MembershipTier.Pro)
         );
 
-        // Today's task stats
-        var tasksCreatedToday = await _db.TaskItems
-            .CountAsync(t => t.CreatedAt >= today && t.CreatedAt < tomorrow);
+        // Total task stats (all time)
+        var totalTasksCreated = await _db.TaskItems.CountAsync();
+        var totalTasksCompleted = await _db.TaskItems
+            .CountAsync(t => t.CompletedAt != null);
 
-        var tasksUpdatedToday = await _db.TaskItems
-            .CountAsync(t => t.UpdatedAt >= today && t.UpdatedAt < tomorrow && t.CreatedAt < today);
-
-        var tasksCompletedToday = await _db.TaskItems
-            .CountAsync(t => t.CompletedAt == DateOnly.FromDateTime(today));
-
-        var todayStats = new TodayStats(
-            TasksCreated: tasksCreatedToday,
-            TasksUpdated: tasksUpdatedToday,
-            TasksCompleted: tasksCompletedToday
+        var taskTotals = new TaskTotals(
+            TotalTasksCreated: totalTasksCreated,
+            TotalTasksCompleted: totalTasksCompleted
         );
 
         return Ok(new AdminStatsResponse(
             TotalUsers: totalUsers,
             ActiveUsers: activeUsers,
+            UsersLoggedInToday: usersLoggedInToday,
             MembershipStats: membershipStats,
-            TodayStats: todayStats
+            TaskTotals: taskTotals
+        ));
+    }
+
+    [HttpGet("stats/daily")]
+    public async Task<ActionResult<DailyStatsResponse>> GetDailyStats([FromQuery] string? date = null)
+    {
+        DateOnly targetDate;
+        if (!string.IsNullOrEmpty(date) && DateOnly.TryParse(date, out var parsedDate))
+        {
+            targetDate = parsedDate;
+        }
+        else
+        {
+            targetDate = DateOnly.FromDateTime(DateTime.UtcNow);
+        }
+
+        var targetDateTime = targetDate.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+        var nextDay = targetDateTime.AddDays(1);
+
+        // Tasks created on this date
+        var tasksCreated = await _db.TaskItems
+            .CountAsync(t => t.CreatedAt >= targetDateTime && t.CreatedAt < nextDay);
+
+        // Tasks completed on this date
+        var tasksCompleted = await _db.TaskItems
+            .CountAsync(t => t.CompletedAt == targetDate);
+
+        // Tasks due on this date
+        var tasksDue = await _db.TaskItems
+            .CountAsync(t => t.DueDate == targetDate);
+
+        return Ok(new DailyStatsResponse(
+            Date: targetDate.ToString("yyyy-MM-dd"),
+            TasksCreated: tasksCreated,
+            TasksCompleted: tasksCompleted,
+            TasksDue: tasksDue
         ));
     }
 

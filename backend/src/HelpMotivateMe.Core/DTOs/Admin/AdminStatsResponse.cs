@@ -3,8 +3,9 @@ namespace HelpMotivateMe.Core.DTOs.Admin;
 public record AdminStatsResponse(
     int TotalUsers,
     int ActiveUsers,
+    int UsersLoggedInToday,
     MembershipStats MembershipStats,
-    TodayStats TodayStats
+    TaskTotals TaskTotals
 );
 
 public record MembershipStats(
@@ -13,8 +14,14 @@ public record MembershipStats(
     int ProUsers
 );
 
-public record TodayStats(
+public record TaskTotals(
+    int TotalTasksCreated,
+    int TotalTasksCompleted
+);
+
+public record DailyStatsResponse(
+    string Date,
     int TasksCreated,
-    int TasksUpdated,
-    int TasksCompleted
+    int TasksCompleted,
+    int TasksDue
 );

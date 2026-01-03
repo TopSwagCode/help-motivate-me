@@ -3,8 +3,9 @@ import type { MembershipTier, UserRole } from './auth';
 export interface AdminStats {
 	totalUsers: number;
 	activeUsers: number;
+	usersLoggedInToday: number;
 	membershipStats: MembershipStats;
-	todayStats: TodayStats;
+	taskTotals: TaskTotals;
 }
 
 export interface MembershipStats {
@@ -13,10 +14,16 @@ export interface MembershipStats {
 	proUsers: number;
 }
 
-export interface TodayStats {
+export interface TaskTotals {
+	totalTasksCreated: number;
+	totalTasksCompleted: number;
+}
+
+export interface DailyStats {
+	date: string;
 	tasksCreated: number;
-	tasksUpdated: number;
 	tasksCompleted: number;
+	tasksDue: number;
 }
 
 export interface AdminUser {
@@ -28,7 +35,7 @@ export interface AdminUser {
 	membershipTier: MembershipTier;
 	role: UserRole;
 	createdAt: string;
-	lastActiveAt: string | null;
+	updatedAt: string;
 }
 
 export interface UpdateRoleRequest {

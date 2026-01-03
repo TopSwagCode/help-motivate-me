@@ -1,8 +1,13 @@
 import { apiGet, apiPatch } from './client';
-import type { AdminStats, AdminUser, UpdateRoleRequest } from '$lib/types';
+import type { AdminStats, AdminUser, DailyStats, UpdateRoleRequest } from '$lib/types';
 
 export async function getAdminStats(): Promise<AdminStats> {
 	return apiGet<AdminStats>('/admin/stats');
+}
+
+export async function getDailyStats(date?: string): Promise<DailyStats> {
+	const endpoint = date ? `/admin/stats/daily?date=${date}` : '/admin/stats/daily';
+	return apiGet<DailyStats>(endpoint);
 }
 
 export async function getAdminUsers(params?: {

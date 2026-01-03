@@ -2,13 +2,23 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
-	import { getAdminStats, getAdminUsers, toggleUserActive, updateUserRole } from '$lib/api/admin';
-	import type { AdminStats, AdminUser, UserRole } from '$lib/types';
+	import {
+		getAdminStats,
+		getAdminUsers,
+		getDailyStats,
+		toggleUserActive,
+		updateUserRole
+	} from '$lib/api/admin';
+	import type { AdminStats, AdminUser, DailyStats, UserRole } from '$lib/types';
 
 	let stats = $state<AdminStats | null>(null);
+	let dailyStats = $state<DailyStats | null>(null);
 	let users = $state<AdminUser[]>([]);
 	let loading = $state(true);
 	let error = $state('');
+
+	// Date picker state
+	let selectedDate = $state(new Date().toISOString().split('T')[0]);
 
 	// Filters
 	let searchQuery = $state('');
@@ -42,13 +52,26 @@
 		error = '';
 
 		try {
-			const [statsData, usersData] = await Promise.all([getAdminStats(), loadUsers()]);
+			const [statsData, dailyStatsData, usersData] = await Promise.all([
+				getAdminStats(),
+				getDailyStats(selectedDate),
+				loadUsers()
+			]);
 			stats = statsData;
+			dailyStats = dailyStatsData;
 			users = usersData;
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Failed to load admin data';
 		} finally {
 			loading = false;
+		}
+	}
+
+	async function loadDailyStats() {
+		try {
+			dailyStats = await getDailyStats(selectedDate);
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to load daily stats';
 		}
 	}
 
@@ -106,6 +129,23 @@
 		}
 	}
 
+	function navigateDate(direction: 'prev' | 'next') {
+		const date = new Date(selectedDate);
+		date.setDate(date.getDate() + (direction === 'next' ? 1 : -1));
+		selectedDate = date.toISOString().split('T')[0];
+		loadDailyStats();
+	}
+
+	function formatDisplayDate(dateStr: string): string {
+		const date = new Date(dateStr);
+		return date.toLocaleDateString('en-US', {
+			weekday: 'short',
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric'
+		});
+	}
+
 	function formatDate(dateStr: string): string {
 		return new Date(dateStr).toLocaleDateString('en-US', {
 			year: 'numeric',
@@ -123,6 +163,10 @@
 			default:
 				return 'bg-gray-100 text-gray-700';
 		}
+	}
+
+	function isToday(dateStr: string): boolean {
+		return dateStr === new Date().toISOString().split('T')[0];
 	}
 </script>
 
@@ -151,8 +195,8 @@
 				>
 			</div>
 		{:else if stats}
-			<!-- Stats Cards -->
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+			<!-- Row 1: Total Users - Membership Tiers - Users Logged In Today -->
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
 				<!-- Total Users -->
 				<div class="card p-6">
 					<div class="flex items-center justify-between">
@@ -181,24 +225,24 @@
 					</p>
 				</div>
 
-				<!-- Membership Breakdown -->
+				<!-- Membership Tiers -->
 				<div class="card p-6">
 					<div class="flex items-center justify-between">
 						<div>
 							<p class="text-sm text-gray-500">Membership Tiers</p>
-							<div class="flex gap-3 mt-1">
-								<span class="text-sm">
-									<span class="font-semibold text-gray-900">{stats.membershipStats.freeUsers}</span>
-									<span class="text-gray-500">Free</span>
-								</span>
-								<span class="text-sm">
-									<span class="font-semibold text-blue-600">{stats.membershipStats.plusUsers}</span>
-									<span class="text-gray-500">Plus</span>
-								</span>
-								<span class="text-sm">
-									<span class="font-semibold text-purple-600">{stats.membershipStats.proUsers}</span>
-									<span class="text-gray-500">Pro</span>
-								</span>
+							<div class="flex gap-4 mt-2">
+								<div class="text-center">
+									<p class="text-xl font-bold text-gray-900">{stats.membershipStats.freeUsers}</p>
+									<p class="text-xs text-gray-500">Free</p>
+								</div>
+								<div class="text-center">
+									<p class="text-xl font-bold text-blue-600">{stats.membershipStats.plusUsers}</p>
+									<p class="text-xs text-gray-500">Plus</p>
+								</div>
+								<div class="text-center">
+									<p class="text-xl font-bold text-purple-600">{stats.membershipStats.proUsers}</p>
+									<p class="text-xs text-gray-500">Pro</p>
+								</div>
 							</div>
 						</div>
 						<div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
@@ -219,16 +263,45 @@
 					</div>
 				</div>
 
-				<!-- Tasks Created Today -->
+				<!-- Users Logged In Today -->
 				<div class="card p-6">
 					<div class="flex items-center justify-between">
 						<div>
-							<p class="text-sm text-gray-500">Tasks Today</p>
-							<p class="text-2xl font-bold text-gray-900">{stats.todayStats.tasksCreated}</p>
+							<p class="text-sm text-gray-500">Users Logged In Today</p>
+							<p class="text-2xl font-bold text-gray-900">{stats.usersLoggedInToday}</p>
 						</div>
 						<div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
 							<svg
 								class="w-6 h-6 text-blue-600"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+								/>
+							</svg>
+						</div>
+					</div>
+					<p class="text-sm text-gray-500 mt-2">active today</p>
+				</div>
+			</div>
+
+			<!-- Row 2: Total Tasks Created - Total Tasks Completed -->
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+				<!-- Total Tasks Created -->
+				<div class="card p-6">
+					<div class="flex items-center justify-between">
+						<div>
+							<p class="text-sm text-gray-500">Total Tasks Created</p>
+							<p class="text-2xl font-bold text-gray-900">{stats.taskTotals.totalTasksCreated}</p>
+						</div>
+						<div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
+							<svg
+								class="w-6 h-6 text-indigo-600"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24"
@@ -242,15 +315,17 @@
 							</svg>
 						</div>
 					</div>
-					<p class="text-sm text-gray-500 mt-2">created today</p>
+					<p class="text-sm text-gray-500 mt-2">all time</p>
 				</div>
 
-				<!-- Tasks Completed Today -->
+				<!-- Total Tasks Completed -->
 				<div class="card p-6">
 					<div class="flex items-center justify-between">
 						<div>
-							<p class="text-sm text-gray-500">Completed Today</p>
-							<p class="text-2xl font-bold text-green-600">{stats.todayStats.tasksCompleted}</p>
+							<p class="text-sm text-gray-500">Total Tasks Completed</p>
+							<p class="text-2xl font-bold text-green-600">
+								{stats.taskTotals.totalTasksCompleted}
+							</p>
 						</div>
 						<div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
 							<svg
@@ -268,10 +343,125 @@
 							</svg>
 						</div>
 					</div>
-					<p class="text-sm text-gray-500 mt-2">
-						{stats.todayStats.tasksUpdated} updated
-					</p>
+					<p class="text-sm text-gray-500 mt-2">all time</p>
 				</div>
+			</div>
+
+			<!-- Row 3: Daily Stats with Date Picker -->
+			<div class="card p-6 mb-8">
+				<div class="flex items-center justify-between mb-6">
+					<h3 class="text-lg font-semibold text-gray-900">Daily Statistics</h3>
+					<div class="flex items-center gap-2">
+						<button
+							onclick={() => navigateDate('prev')}
+							class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+							aria-label="Previous day"
+						>
+							<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+							</svg>
+						</button>
+						<input
+							type="date"
+							bind:value={selectedDate}
+							onchange={loadDailyStats}
+							class="input text-center"
+						/>
+						<button
+							onclick={() => navigateDate('next')}
+							class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+							disabled={isToday(selectedDate)}
+							class:opacity-50={isToday(selectedDate)}
+							class:cursor-not-allowed={isToday(selectedDate)}
+							aria-label="Next day"
+						>
+							<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+							</svg>
+						</button>
+					</div>
+				</div>
+
+				<p class="text-sm text-gray-500 mb-4">{formatDisplayDate(selectedDate)}</p>
+
+				{#if dailyStats}
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+						<!-- Tasks Created on Date -->
+						<div class="bg-gray-50 rounded-lg p-4">
+							<div class="flex items-center gap-3">
+								<div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+									<svg
+										class="w-5 h-5 text-blue-600"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M12 4v16m8-8H4"
+										/>
+									</svg>
+								</div>
+								<div>
+									<p class="text-2xl font-bold text-gray-900">{dailyStats.tasksCreated}</p>
+									<p class="text-sm text-gray-500">Tasks Created</p>
+								</div>
+							</div>
+						</div>
+
+						<!-- Tasks Completed on Date -->
+						<div class="bg-gray-50 rounded-lg p-4">
+							<div class="flex items-center gap-3">
+								<div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+									<svg
+										class="w-5 h-5 text-green-600"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M5 13l4 4L19 7"
+										/>
+									</svg>
+								</div>
+								<div>
+									<p class="text-2xl font-bold text-green-600">{dailyStats.tasksCompleted}</p>
+									<p class="text-sm text-gray-500">Tasks Completed</p>
+								</div>
+							</div>
+						</div>
+
+						<!-- Tasks Due on Date -->
+						<div class="bg-gray-50 rounded-lg p-4">
+							<div class="flex items-center gap-3">
+								<div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+									<svg
+										class="w-5 h-5 text-orange-600"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+										/>
+									</svg>
+								</div>
+								<div>
+									<p class="text-2xl font-bold text-orange-600">{dailyStats.tasksDue}</p>
+									<p class="text-sm text-gray-500">Tasks Due</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				{/if}
 			</div>
 
 			<!-- Users Table -->
@@ -381,7 +571,7 @@
 											value={user.role}
 											onchange={(e) =>
 												handleRoleChange(user, (e.target as HTMLSelectElement).value as UserRole)}
-											class="text-sm border border-gray-300 rounded px-2 py-1"
+											class="text-sm border border-gray-300 rounded py-1"
 										>
 											<option value="User">User</option>
 											<option value="Admin">Admin</option>
