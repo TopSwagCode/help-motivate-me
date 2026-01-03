@@ -339,6 +339,93 @@ public class AccountabilityBuddyController : ControllerBase
         ));
     }
 
+    /// <summary>
+    /// Upload an image to a buddy's journal entry (only if you authored the entry).
+    /// </summary>
+    [HttpPost("{targetUserId:guid}/journal/{entryId:guid}/images")]
+    public async Task<ActionResult<BuddyJournalImageResponse>> UploadBuddyJournalImage(
+        Guid targetUserId,
+        Guid entryId,
+        IFormFile file)
+    {
+        var userId = GetUserId();
+
+        // Verify buddy relationship exists
+        var isBuddy = await _db.AccountabilityBuddies
+            .AnyAsync(ab => ab.UserId == targetUserId && ab.BuddyUserId == userId);
+
+        if (!isBuddy)
+        {
+            return Forbid();
+        }
+
+        // Get the journal entry and verify the current user authored it
+        var entry = await _db.JournalEntries
+            .Include(j => j.Images)
+            .FirstOrDefaultAsync(j => j.Id == entryId && j.UserId == targetUserId);
+
+        if (entry == null)
+        {
+            return NotFound(new { message = "Journal entry not found" });
+        }
+
+        // Only allow uploading images to entries you authored
+        if (entry.AuthorUserId != userId)
+        {
+            return Forbid();
+        }
+
+        // Check image count limit
+        if (entry.Images.Count >= 5)
+        {
+            return BadRequest(new { message = "Maximum of 5 images per entry allowed" });
+        }
+
+        // Validate file
+        if (file == null || file.Length == 0)
+        {
+            return BadRequest(new { message = "No file provided" });
+        }
+
+        var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
+        if (!allowedTypes.Contains(file.ContentType))
+        {
+            return BadRequest(new { message = "Invalid file type. Allowed: JPEG, PNG, GIF, WebP" });
+        }
+
+        if (file.Length > 5 * 1024 * 1024) // 5MB
+        {
+            return BadRequest(new { message = "File size must be less than 5MB" });
+        }
+
+        // Upload to storage
+        var extension = Path.GetExtension(file.FileName);
+        var s3Key = $"journal/{targetUserId}/{entryId}/{Guid.NewGuid()}{extension}";
+
+        using var stream = file.OpenReadStream();
+        await _storage.UploadAsync(stream, s3Key, file.ContentType);
+
+        // Create image record
+        var image = new JournalImage
+        {
+            JournalEntryId = entryId,
+            FileName = file.FileName,
+            S3Key = s3Key,
+            ContentType = file.ContentType,
+            SortOrder = entry.Images.Count
+        };
+
+        _db.JournalImages.Add(image);
+        await _db.SaveChangesAsync();
+
+        return Ok(new BuddyJournalImageResponse(
+            image.Id,
+            image.FileName,
+            _storage.GetPresignedUrl(image.S3Key),
+            image.SortOrder
+        ));
+    }
+
     // Helper methods copied from TodayController for consistency
     private async Task<List<TodayHabitStackResponse>> GetTodayHabitStacks(Guid userId, DateOnly targetDate)
     {

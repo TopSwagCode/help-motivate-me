@@ -1,9 +1,10 @@
-import { apiGet, apiPost, apiDelete } from './client';
+import { apiGet, apiPost, apiDelete, apiUpload } from './client';
 import type {
 	BuddyRelationshipsResponse,
 	BuddyResponse,
 	BuddyTodayViewResponse,
 	BuddyJournalEntry,
+	BuddyJournalImage,
 	CreateBuddyJournalEntryRequest,
 	BuddyLoginResponse
 } from '$lib/types';
@@ -42,4 +43,12 @@ export async function createBuddyJournalEntry(
 
 export async function loginWithBuddyToken(token: string): Promise<BuddyLoginResponse> {
 	return apiPost<BuddyLoginResponse>('/auth/login-with-buddy-token', { token });
+}
+
+export async function uploadBuddyJournalImage(
+	userId: string,
+	entryId: string,
+	file: File
+): Promise<BuddyJournalImage> {
+	return apiUpload<BuddyJournalImage>(`/buddies/${userId}/journal/${entryId}/images`, file);
 }

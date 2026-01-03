@@ -27,8 +27,10 @@ public class FilesController : ControllerBase
             return BadRequest("File path is required");
         }
 
+        // Strip any existing api/files/ prefix to handle legacy data with bad keys
+        var cleanPath = filepath.StartsWith("api/files/") ? filepath.Substring("api/files/".Length) : filepath;
         // Normalize the path to prevent directory traversal attacks
-        var normalizedPath = filepath.Replace("..", "").Replace("\\", "/");
+        var normalizedPath = cleanPath.Replace("..", "").Replace("\\", "/");
         var fullPath = Path.Combine(_basePath, normalizedPath);
 
         // Ensure the resolved path is still within the base path (security check)

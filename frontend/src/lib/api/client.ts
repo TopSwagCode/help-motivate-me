@@ -98,6 +98,21 @@ export async function apiDelete<T>(endpoint: string): Promise<T> {
 	return handleResponse<T>(response);
 }
 
+export async function apiUpload<T>(endpoint: string, file: File): Promise<T> {
+	const formData = new FormData();
+	formData.append('file', file);
+
+	const response = await fetch(`${API_BASE}/api${endpoint}`, {
+		method: 'POST',
+		credentials: 'include',
+		headers: {
+			'X-CSRF': '1'
+		},
+		body: formData
+	});
+	return handleResponse<T>(response);
+}
+
 export function getOAuthUrl(provider: string): string {
 	return `${API_BASE}/api/auth/external/${provider}`;
 }

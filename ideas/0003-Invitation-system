@@ -1,0 +1,9 @@
+I want a waitlist feature on landing page. Users should be able to sign up to wait list. This waitlist is a table in the database with Email and name.
+
+As part of this feature I want a feature flag / env. variable to disable new users being created from signup flow and email inv, github login.
+
+So if user tries to login with email link. There should be a redirect to waitlist page, telling user that he doesn't have an account and he has option to signup wait list. Prefil waitlist email input with email, they tried to login with.
+
+Similar on callback from github / social logins, logic where user is normally created there should instead be a redirect to waitlist page with querystring parameters email and username. These should then be set in waitlist input fields for email and name.
+
+There should be some basic text saying currently in closed beta and people are invited in as we go and testing the product. Telling them thank you for showing interest.
