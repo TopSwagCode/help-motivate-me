@@ -1,4 +1,5 @@
 export type MembershipTier = 'Free' | 'Plus' | 'Pro';
+export type UserRole = 'User' | 'Admin';
 
 export interface User {
 	id: string;
@@ -10,6 +11,7 @@ export interface User {
 	hasPassword: boolean;
 	membershipTier: MembershipTier;
 	hasCompletedOnboarding: boolean;
+	role: UserRole;
 }
 
 export interface LoginRequest {
