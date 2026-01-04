@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 import type { User, LoginRequest, RegisterRequest } from '$lib/types';
-import { apiGet, apiPost, getOAuthUrl } from '$lib/api/client';
+import { apiGet, apiPost, getOAuthUrl, ApiError } from '$lib/api/client';
 
 interface AuthState {
 	user: User | null;
@@ -53,7 +53,8 @@ function createAuthStore() {
 				update((state) => ({ ...state, loading: false }));
 				return {
 					success: false,
-					error: error instanceof Error ? error.message : 'Registration failed'
+					error: error instanceof Error ? error.message : 'Registration failed',
+					code: error instanceof ApiError ? error.code : undefined
 				};
 			}
 		},

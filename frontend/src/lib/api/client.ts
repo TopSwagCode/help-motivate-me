@@ -3,7 +3,9 @@ const API_BASE = import.meta.env.VITE_API_URL !== undefined ? import.meta.env.VI
 export class ApiError extends Error {
 	constructor(
 		public status: number,
-		message: string
+		message: string,
+		public code?: string,
+		public data?: Record<string, unknown>
 	) {
 		super(message);
 		this.name = 'ApiError';
@@ -19,13 +21,17 @@ async function handleResponse<T>(response: Response): Promise<T> {
 
 		const errorText = await response.text();
 		let errorMessage = `HTTP ${response.status}`;
+		let errorCode: string | undefined;
+		let errorData: Record<string, unknown> | undefined;
 		try {
 			const errorJson = JSON.parse(errorText);
 			errorMessage = errorJson.message || errorJson.title || errorMessage;
+			errorCode = errorJson.code;
+			errorData = errorJson;
 		} catch {
 			errorMessage = errorText || errorMessage;
 		}
-		throw new ApiError(response.status, errorMessage);
+		throw new ApiError(response.status, errorMessage, errorCode, errorData);
 	}
 
 	if (response.status === 204) {

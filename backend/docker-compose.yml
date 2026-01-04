@@ -24,5 +24,26 @@ services:
       - "8025:8025"  # Web UI
       - "1025:1025"  # SMTP
 
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: helpmotivateme-api
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=helpmotivateme;Username=postgres;Password=postgres
+      - Auth__AllowSignups=false
+      - FrontendUrl=http://localhost:5173
+      - Cors__AllowedOrigins__0=http://localhost:5173
+      - Smtp__Host=mailpit
+      - Smtp__Port=1025
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+
 volumes:
   postgres_data:

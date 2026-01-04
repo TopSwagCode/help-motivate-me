@@ -22,6 +22,8 @@ public class AppDbContext : DbContext
     public DbSet<JournalImage> JournalImages => Set<JournalImage>();
     public DbSet<AccountabilityBuddy> AccountabilityBuddies => Set<AccountabilityBuddy>();
     public DbSet<BuddyInviteToken> BuddyInviteTokens => Set<BuddyInviteToken>();
+    public DbSet<WaitlistEntry> WaitlistEntries => Set<WaitlistEntry>();
+    public DbSet<WhitelistEntry> WhitelistEntries => Set<WhitelistEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
