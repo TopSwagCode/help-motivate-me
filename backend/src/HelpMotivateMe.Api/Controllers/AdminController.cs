@@ -1,5 +1,9 @@
+using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.Admin;
+using HelpMotivateMe.Core.DTOs.Waitlist;
+using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
+using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +17,14 @@ namespace HelpMotivateMe.Api.Controllers;
 public class AdminController : ControllerBase
 {
     private readonly AppDbContext _db;
+    private readonly IConfiguration _configuration;
+    private readonly IEmailService _emailService;
 
-    public AdminController(AppDbContext db)
+    public AdminController(AppDbContext db, IConfiguration configuration, IEmailService emailService)
     {
         _db = db;
+        _configuration = configuration;
+        _emailService = emailService;
     }
 
     [HttpGet("stats")]
@@ -208,6 +216,244 @@ public class AdminController : ControllerBase
             user.CreatedAt,
             user.UpdatedAt
         ));
+    }
+
+    // ==================== Settings ====================
+
+    [HttpGet("settings")]
+    public ActionResult<SignupSettingsResponse> GetSettings()
+    {
+        var allowSignups = !bool.TryParse(_configuration["Auth:AllowSignups"], out var allowed) || allowed;
+        return Ok(new SignupSettingsResponse(allowSignups));
+    }
+
+    // ==================== Waitlist Management ====================
+
+    [HttpGet("waitlist")]
+    public async Task<ActionResult<IEnumerable<WaitlistEntryResponse>>> GetWaitlist(
+        [FromQuery] string? search = null,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 50)
+    {
+        var query = _db.WaitlistEntries.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var searchLower = search.ToLower();
+            query = query.Where(w =>
+                w.Email.ToLower().Contains(searchLower) ||
+                w.Name.ToLower().Contains(searchLower));
+        }
+
+        var totalCount = await query.CountAsync();
+
+        var entries = await query
+            .OrderByDescending(w => w.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(w => new WaitlistEntryResponse(w.Id, w.Email, w.Name, w.CreatedAt))
+            .ToListAsync();
+
+        Response.Headers.Append("X-Total-Count", totalCount.ToString());
+        Response.Headers.Append("X-Page", page.ToString());
+        Response.Headers.Append("X-Page-Size", pageSize.ToString());
+
+        return Ok(entries);
+    }
+
+    [HttpDelete("waitlist/{id}")]
+    public async Task<IActionResult> RemoveFromWaitlist(Guid id)
+    {
+        var entry = await _db.WaitlistEntries.FindAsync(id);
+        if (entry == null)
+        {
+            return NotFound(new { message = "Waitlist entry not found" });
+        }
+
+        _db.WaitlistEntries.Remove(entry);
+        await _db.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    [HttpPost("waitlist/{id}/approve")]
+    public async Task<ActionResult<WhitelistEntryResponse>> ApproveWaitlistEntry(Guid id)
+    {
+        var waitlistEntry = await _db.WaitlistEntries.FindAsync(id);
+        if (waitlistEntry == null)
+        {
+            return NotFound(new { message = "Waitlist entry not found" });
+        }
+
+        // Check if already on whitelist
+        var existingWhitelist = await _db.WhitelistEntries
+            .FirstOrDefaultAsync(w => w.Email.ToLower() == waitlistEntry.Email.ToLower());
+
+        if (existingWhitelist != null)
+        {
+            // Remove from waitlist and return existing whitelist entry
+            _db.WaitlistEntries.Remove(waitlistEntry);
+            await _db.SaveChangesAsync();
+
+            var addedByUser = existingWhitelist.AddedByUserId.HasValue
+                ? await _db.Users.FindAsync(existingWhitelist.AddedByUserId.Value)
+                : null;
+
+            return Ok(new WhitelistEntryResponse(
+                existingWhitelist.Id,
+                existingWhitelist.Email,
+                existingWhitelist.AddedAt,
+                addedByUser?.Username,
+                existingWhitelist.InvitedAt
+            ));
+        }
+
+        var currentUserId = GetUserId();
+
+        // Create whitelist entry
+        var whitelistEntry = new WhitelistEntry
+        {
+            Email = waitlistEntry.Email,
+            AddedByUserId = currentUserId,
+            InvitedAt = DateTime.UtcNow
+        };
+
+        _db.WhitelistEntries.Add(whitelistEntry);
+        _db.WaitlistEntries.Remove(waitlistEntry);
+        await _db.SaveChangesAsync();
+
+        // Send invite email
+        var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
+        var loginUrl = $"{frontendUrl}/auth/login";
+        await _emailService.SendWhitelistInviteAsync(waitlistEntry.Email, loginUrl);
+
+        var currentUser = currentUserId.HasValue
+            ? await _db.Users.FindAsync(currentUserId.Value)
+            : null;
+
+        return Ok(new WhitelistEntryResponse(
+            whitelistEntry.Id,
+            whitelistEntry.Email,
+            whitelistEntry.AddedAt,
+            currentUser?.Username,
+            whitelistEntry.InvitedAt
+        ));
+    }
+
+    // ==================== Whitelist Management ====================
+
+    [HttpGet("whitelist")]
+    public async Task<ActionResult<IEnumerable<WhitelistEntryResponse>>> GetWhitelist(
+        [FromQuery] string? search = null,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 50)
+    {
+        var query = _db.WhitelistEntries
+            .Include(w => w.AddedByUser)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var searchLower = search.ToLower();
+            query = query.Where(w => w.Email.ToLower().Contains(searchLower));
+        }
+
+        var totalCount = await query.CountAsync();
+
+        var entries = await query
+            .OrderByDescending(w => w.AddedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(w => new WhitelistEntryResponse(
+                w.Id,
+                w.Email,
+                w.AddedAt,
+                w.AddedByUser != null ? w.AddedByUser.Username : null,
+                w.InvitedAt
+            ))
+            .ToListAsync();
+
+        Response.Headers.Append("X-Total-Count", totalCount.ToString());
+        Response.Headers.Append("X-Page", page.ToString());
+        Response.Headers.Append("X-Page-Size", pageSize.ToString());
+
+        return Ok(entries);
+    }
+
+    [HttpPost("whitelist")]
+    public async Task<ActionResult<WhitelistEntryResponse>> AddToWhitelist([FromBody] InviteUserRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email))
+        {
+            return BadRequest(new { message = "Email is required" });
+        }
+
+        var email = request.Email.ToLowerInvariant().Trim();
+
+        // Check if already on whitelist
+        var existingEntry = await _db.WhitelistEntries.FirstOrDefaultAsync(w => w.Email.ToLower() == email);
+        if (existingEntry != null)
+        {
+            return BadRequest(new { message = "Email is already on the whitelist" });
+        }
+
+        var currentUserId = GetUserId();
+
+        var entry = new WhitelistEntry
+        {
+            Email = email,
+            AddedByUserId = currentUserId,
+            InvitedAt = DateTime.UtcNow
+        };
+
+        _db.WhitelistEntries.Add(entry);
+        await _db.SaveChangesAsync();
+
+        // Send invite email
+        var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
+        var loginUrl = $"{frontendUrl}/auth/login";
+        await _emailService.SendWhitelistInviteAsync(email, loginUrl);
+
+        // Remove from waitlist if exists
+        var waitlistEntry = await _db.WaitlistEntries.FirstOrDefaultAsync(w => w.Email.ToLower() == email);
+        if (waitlistEntry != null)
+        {
+            _db.WaitlistEntries.Remove(waitlistEntry);
+            await _db.SaveChangesAsync();
+        }
+
+        var currentUser = currentUserId.HasValue
+            ? await _db.Users.FindAsync(currentUserId.Value)
+            : null;
+
+        return Ok(new WhitelistEntryResponse(
+            entry.Id,
+            entry.Email,
+            entry.AddedAt,
+            currentUser?.Username,
+            entry.InvitedAt
+        ));
+    }
+
+    [HttpDelete("whitelist/{id}")]
+    public async Task<IActionResult> RemoveFromWhitelist(Guid id)
+    {
+        var entry = await _db.WhitelistEntries.FindAsync(id);
+        if (entry == null)
+        {
+            return NotFound(new { message = "Whitelist entry not found" });
+        }
+
+        _db.WhitelistEntries.Remove(entry);
+        await _db.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    private Guid? GetUserId()
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return Guid.TryParse(userIdClaim, out var userId) ? userId : null;
     }
 }
 

@@ -82,6 +82,7 @@ services:
       - LocalStorage__BasePath=/app/uploads
       - LocalStorage__BaseUrl=/api/files
       - FrontendUrl=https://8175f826ee97.ngrok-free.app
+      - Auth__AllowSignups=false
     expose:
       - "5001"
     volumes:

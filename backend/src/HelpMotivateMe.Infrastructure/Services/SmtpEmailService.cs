@@ -188,6 +188,134 @@ Keep up the great work! Your buddy is cheering you on."
         await SendMessageAsync(message);
     }
 
+    public async Task SendWaitlistConfirmationAsync(string email, string name)
+    {
+        var message = new MimeMessage();
+        message.From.Add(new MailboxAddress(
+            _configuration["Email:FromName"] ?? "Help Motivate Me",
+            _configuration["Email:FromAddress"] ?? "noreply@helpmotivateme.local"
+        ));
+        message.To.Add(new MailboxAddress(name, email));
+        message.Subject = "You're on the waitlist! - Help Motivate Me";
+
+        var builder = new BodyBuilder
+        {
+            HtmlBody = $@"
+                <html>
+                <body style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+                    <h1 style='color: #4F46E5;'>You're on the Waitlist!</h1>
+
+                    <p>Hi {name},</p>
+
+                    <p>Thank you for your interest in Help Motivate Me! We're currently in closed beta as we refine the experience.</p>
+
+                    <p>You've been added to our waitlist and we'll notify you as soon as a spot opens up. We're inviting users in batches as we continue testing and improving the product.</p>
+
+                    <div style='background-color: #F3F4F6; padding: 16px; border-radius: 8px; margin: 20px 0;'>
+                        <p style='margin: 0; font-weight: bold;'>What is Help Motivate Me?</p>
+                        <p style='margin: 10px 0 0 0;'>A productivity app that helps you set meaningful goals, break them into actionable tasks, and build habits that lead to success.</p>
+                    </div>
+
+                    <p>We appreciate your patience and look forward to welcoming you soon!</p>
+
+                    <p style='color: #666; font-size: 14px; margin-top: 30px;'>
+                        Best regards,<br/>
+                        The Help Motivate Me Team
+                    </p>
+                </body>
+                </html>",
+            TextBody = $@"You're on the Waitlist!
+
+Hi {name},
+
+Thank you for your interest in Help Motivate Me! We're currently in closed beta as we refine the experience.
+
+You've been added to our waitlist and we'll notify you as soon as a spot opens up. We're inviting users in batches as we continue testing and improving the product.
+
+What is Help Motivate Me?
+A productivity app that helps you set meaningful goals, break them into actionable tasks, and build habits that lead to success.
+
+We appreciate your patience and look forward to welcoming you soon!
+
+Best regards,
+The Help Motivate Me Team"
+        };
+
+        message.Body = builder.ToMessageBody();
+        await SendMessageAsync(message);
+    }
+
+    public async Task SendWhitelistInviteAsync(string email, string loginUrl)
+    {
+        var message = new MimeMessage();
+        message.From.Add(new MailboxAddress(
+            _configuration["Email:FromName"] ?? "Help Motivate Me",
+            _configuration["Email:FromAddress"] ?? "noreply@helpmotivateme.local"
+        ));
+        message.To.Add(new MailboxAddress(email, email));
+        message.Subject = "You've been invited to Help Motivate Me!";
+
+        var builder = new BodyBuilder
+        {
+            HtmlBody = $@"
+                <html>
+                <body style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+                    <h1 style='color: #4F46E5;'>Welcome to Help Motivate Me!</h1>
+
+                    <p>Great news! You've been granted access to Help Motivate Me.</p>
+
+                    <p>We're excited to have you join our community of goal-setters and habit-builders. You can now create your account and start your productivity journey.</p>
+
+                    <p style='margin: 30px 0;'>
+                        <a href='{loginUrl}'
+                           style='background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                            Get Started
+                        </a>
+                    </p>
+
+                    <div style='background-color: #F3F4F6; padding: 16px; border-radius: 8px; margin: 20px 0;'>
+                        <p style='margin: 0; font-weight: bold;'>What you can do with Help Motivate Me:</p>
+                        <ul style='margin: 10px 0 0 0; padding-left: 20px;'>
+                            <li>Set meaningful goals and track your progress</li>
+                            <li>Break down tasks into manageable steps</li>
+                            <li>Build daily, weekly, and monthly habits</li>
+                            <li>Journal your journey and reflect on your growth</li>
+                        </ul>
+                    </div>
+
+                    <p style='color: #666; font-size: 14px;'>
+                        If the button doesn't work, copy and paste this link into your browser:<br/>
+                        <a href='{loginUrl}' style='color: #4F46E5;'>{loginUrl}</a>
+                    </p>
+
+                    <p style='color: #666; font-size: 14px; margin-top: 30px;'>
+                        Welcome aboard!<br/>
+                        The Help Motivate Me Team
+                    </p>
+                </body>
+                </html>",
+            TextBody = $@"Welcome to Help Motivate Me!
+
+Great news! You've been granted access to Help Motivate Me.
+
+We're excited to have you join our community of goal-setters and habit-builders. You can now create your account and start your productivity journey.
+
+Get started here: {loginUrl}
+
+What you can do with Help Motivate Me:
+- Set meaningful goals and track your progress
+- Break down tasks into manageable steps
+- Build daily, weekly, and monthly habits
+- Journal your journey and reflect on your growth
+
+Welcome aboard!
+The Help Motivate Me Team"
+        };
+
+        message.Body = builder.ToMessageBody();
+        await SendMessageAsync(message);
+    }
+
     private async Task SendMessageAsync(MimeMessage message)
     {
         using var client = new SmtpClient();

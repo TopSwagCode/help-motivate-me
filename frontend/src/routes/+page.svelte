@@ -1,12 +1,36 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
+	import { signupForWaitlist } from '$lib/api/waitlist';
+
+	let waitlistEmail = $state('');
+	let waitlistName = $state('');
+	let waitlistLoading = $state(false);
+	let waitlistSuccess = $state(false);
+	let waitlistError = $state('');
 
 	function handleGetStarted() {
 		if ($auth.user) {
 			goto('/dashboard');
 		} else {
 			goto('/auth/login');
+		}
+	}
+
+	async function handleWaitlistSubmit(e: Event) {
+		e.preventDefault();
+		if (!waitlistEmail.trim() || !waitlistName.trim()) return;
+
+		waitlistLoading = true;
+		waitlistError = '';
+
+		try {
+			await signupForWaitlist({ email: waitlistEmail.trim(), name: waitlistName.trim() });
+			waitlistSuccess = true;
+		} catch (err) {
+			waitlistError = err instanceof Error ? err.message : 'Failed to join waitlist';
+		} finally {
+			waitlistLoading = false;
 		}
 	}
 </script>
@@ -33,6 +57,59 @@
 			</div>
 		</div>
 	</main>
+
+	<!-- Waitlist Signup Section -->
+	<section class="py-12 px-4 sm:px-6 lg:px-8 bg-primary-50 border-t border-primary-100">
+		<div class="max-w-xl mx-auto text-center">
+			<div class="inline-flex items-center gap-2 px-3 py-1 bg-primary-100 rounded-full text-primary-700 text-sm font-medium mb-4">
+				<span class="w-2 h-2 bg-primary-500 rounded-full"></span>
+				Closed Beta
+			</div>
+			<h2 class="text-2xl font-bold text-gray-900 mb-2">Join the Waitlist</h2>
+			<p class="text-gray-600 mb-6">
+				We're currently in closed beta. Sign up to get notified when we open to the public.
+			</p>
+
+			{#if waitlistSuccess}
+				<div class="bg-green-50 border border-green-200 text-green-700 px-6 py-4 rounded-lg">
+					<div class="flex items-center justify-center gap-2 mb-1">
+						<svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+						</svg>
+						<span class="font-semibold">You're on the list!</span>
+					</div>
+					<p class="text-sm">We'll send you an email when access becomes available.</p>
+				</div>
+			{:else}
+				<form onsubmit={handleWaitlistSubmit} class="flex flex-col sm:flex-row gap-3">
+					<input
+						type="text"
+						placeholder="Your name"
+						bind:value={waitlistName}
+						required
+						class="input flex-1"
+					/>
+					<input
+						type="email"
+						placeholder="Your email"
+						bind:value={waitlistEmail}
+						required
+						class="input flex-1"
+					/>
+					<button
+						type="submit"
+						disabled={waitlistLoading}
+						class="btn-primary whitespace-nowrap px-6"
+					>
+						{waitlistLoading ? 'Joining...' : 'Join Waitlist'}
+					</button>
+				</form>
+				{#if waitlistError}
+					<p class="text-red-600 text-sm mt-2">{waitlistError}</p>
+				{/if}
+			{/if}
+		</div>
+	</section>
 
 	<!-- Features Preview -->
 	<section class="py-16 px-4 sm:px-6 lg:px-8 bg-white border-t border-gray-200">

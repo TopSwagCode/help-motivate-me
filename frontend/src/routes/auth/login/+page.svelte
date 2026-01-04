@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import { auth } from '$lib/stores/auth';
 	import { requestLoginLink, loginWithToken } from '$lib/api/auth';
+	import { ApiError } from '$lib/api/client';
 
 	let username = $state('');
 	let password = $state('');
@@ -23,8 +24,13 @@
 				const user = await loginWithToken(token);
 				auth.setUser(user);
 				goto('/dashboard');
-			} catch (err: any) {
-				error = err.message || 'Invalid or expired login link';
+			} catch (err: unknown) {
+				if (err instanceof ApiError && err.code === 'not_whitelisted') {
+					const userEmail = err.data?.email as string;
+					goto(`/waitlist?email=${encodeURIComponent(userEmail || '')}`);
+					return;
+				}
+				error = err instanceof Error ? err.message : 'Invalid or expired login link';
 				loading = false;
 			}
 		}
@@ -53,8 +59,13 @@
 		try {
 			await requestLoginLink(email);
 			emailLinkSent = true;
-		} catch (err: any) {
-			error = err.message || 'Failed to send login link';
+		} catch (err: unknown) {
+			if (err instanceof ApiError && err.code === 'not_whitelisted') {
+				const userEmail = err.data?.email as string;
+				goto(`/waitlist?email=${encodeURIComponent(userEmail || email)}`);
+				return;
+			}
+			error = err instanceof Error ? err.message : 'Failed to send login link';
 		} finally {
 			emailLinkLoading = false;
 		}

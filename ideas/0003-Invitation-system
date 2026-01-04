@@ -8,6 +8,11 @@ Similar on callback from github / social logins, logic where user is normally cr
 
 There should be some basic text saying currently in closed beta and people are invited in as we go and testing the product. Telling them thank you for showing interest.
 
-On the admin dashboard there should be a new section for waitlist and and input field for invite user to whitelist.
+On the admin dashboard there should be a new section for waitlist, whitelist and and input field for invite user to whitelist.
+
+There should also be a button on the waitlist to single click add them to whitelist.
 
 Invite user / signup should be a whitelist of emails that are allowed to signup. So on admin page there should also be a list of whitelisted users. 
+
+when a user is invited, there should be a greeting mail sent to them telling them they have gotten access. 
+

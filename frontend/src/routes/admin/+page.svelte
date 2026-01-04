@@ -7,15 +7,30 @@
 		getAdminUsers,
 		getDailyStats,
 		toggleUserActive,
-		updateUserRole
+		updateUserRole,
+		getAdminSettings,
+		getWaitlist,
+		removeFromWaitlist,
+		approveWaitlistEntry,
+		getWhitelist,
+		addToWhitelist,
+		removeFromWhitelist
 	} from '$lib/api/admin';
 	import type { AdminStats, AdminUser, DailyStats, UserRole } from '$lib/types';
+	import type { WaitlistEntry, WhitelistEntry } from '$lib/types/waitlist';
 
 	let stats = $state<AdminStats | null>(null);
 	let dailyStats = $state<DailyStats | null>(null);
 	let users = $state<AdminUser[]>([]);
+	let waitlistEntries = $state<WaitlistEntry[]>([]);
+	let whitelistEntries = $state<WhitelistEntry[]>([]);
+	let allowSignups = $state(true);
 	let loading = $state(true);
 	let error = $state('');
+
+	// Invite form
+	let inviteEmail = $state('');
+	let inviteLoading = $state(false);
 
 	// Date picker state
 	let selectedDate = $state(new Date().toISOString().split('T')[0]);
@@ -52,14 +67,20 @@
 		error = '';
 
 		try {
-			const [statsData, dailyStatsData, usersData] = await Promise.all([
+			const [statsData, dailyStatsData, usersData, settingsData, waitlistData, whitelistData] = await Promise.all([
 				getAdminStats(),
 				getDailyStats(selectedDate),
-				loadUsers()
+				loadUsers(),
+				getAdminSettings(),
+				getWaitlist(),
+				getWhitelist()
 			]);
 			stats = statsData;
 			dailyStats = dailyStatsData;
 			users = usersData;
+			allowSignups = settingsData.allowSignups;
+			waitlistEntries = waitlistData;
+			whitelistEntries = whitelistData;
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Failed to load admin data';
 		} finally {
@@ -167,6 +188,51 @@
 
 	function isToday(dateStr: string): boolean {
 		return dateStr === new Date().toISOString().split('T')[0];
+	}
+
+	// Waitlist/Whitelist handlers
+	async function handleApproveWaitlist(entry: WaitlistEntry) {
+		try {
+			const newWhitelistEntry = await approveWaitlistEntry(entry.id);
+			waitlistEntries = waitlistEntries.filter((w) => w.id !== entry.id);
+			whitelistEntries = [newWhitelistEntry, ...whitelistEntries];
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to approve waitlist entry';
+		}
+	}
+
+	async function handleRemoveFromWaitlist(entry: WaitlistEntry) {
+		try {
+			await removeFromWaitlist(entry.id);
+			waitlistEntries = waitlistEntries.filter((w) => w.id !== entry.id);
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to remove from waitlist';
+		}
+	}
+
+	async function handleRemoveFromWhitelist(entry: WhitelistEntry) {
+		try {
+			await removeFromWhitelist(entry.id);
+			whitelistEntries = whitelistEntries.filter((w) => w.id !== entry.id);
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to remove from whitelist';
+		}
+	}
+
+	async function handleInviteUser(e: Event) {
+		e.preventDefault();
+		if (!inviteEmail.trim()) return;
+
+		inviteLoading = true;
+		try {
+			const newEntry = await addToWhitelist(inviteEmail.trim());
+			whitelistEntries = [newEntry, ...whitelistEntries];
+			inviteEmail = '';
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Failed to invite user';
+		} finally {
+			inviteLoading = false;
+		}
 	}
 </script>
 
@@ -611,6 +677,197 @@
 							{/each}
 						</tbody>
 					</table>
+				</div>
+			</div>
+
+			<!-- Access Control Section Header -->
+			<div class="mt-8 mb-4">
+				<h2 class="text-xl font-bold text-gray-900">Access Control</h2>
+				<p class="text-gray-500 mt-1">
+					{#if allowSignups}
+						<span class="inline-flex items-center gap-1.5">
+							<span class="w-2 h-2 bg-green-500 rounded-full"></span>
+							Open signups enabled
+						</span>
+					{:else}
+						<span class="inline-flex items-center gap-1.5">
+							<span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+							Closed beta - whitelist required
+						</span>
+					{/if}
+				</p>
+			</div>
+
+			<!-- Invite User Section -->
+			<div class="card p-6 mb-4">
+				<h3 class="text-lg font-semibold text-gray-900 mb-4">Invite User</h3>
+				<form onsubmit={handleInviteUser} class="flex gap-4">
+					<input
+						type="email"
+						placeholder="Enter email address..."
+						bind:value={inviteEmail}
+						required
+						class="input flex-1"
+					/>
+					<button
+						type="submit"
+						disabled={inviteLoading || !inviteEmail.trim()}
+						class="btn-primary whitespace-nowrap"
+					>
+						{inviteLoading ? 'Sending...' : 'Send Invite'}
+					</button>
+				</form>
+				<p class="text-sm text-gray-500 mt-2">
+					Adds the email to the whitelist and sends an invite email.
+				</p>
+			</div>
+
+			<!-- Waitlist and Whitelist Tables -->
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+				<!-- Waitlist Table -->
+				<div class="card">
+					<div class="p-6 border-b border-gray-200">
+						<div class="flex items-center justify-between">
+							<h3 class="text-lg font-semibold text-gray-900">Waitlist</h3>
+							<span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">
+								{waitlistEntries.length} pending
+							</span>
+						</div>
+						<p class="text-sm text-gray-500 mt-1">Users waiting for access</p>
+					</div>
+
+					<div class="overflow-x-auto max-h-96 overflow-y-auto">
+						<table class="w-full">
+							<thead class="bg-gray-50 sticky top-0">
+								<tr>
+									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Email
+									</th>
+									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Name
+									</th>
+									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Date
+									</th>
+									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Actions
+									</th>
+								</tr>
+							</thead>
+							<tbody class="bg-white divide-y divide-gray-200">
+								{#each waitlistEntries as entry (entry.id)}
+									<tr class="hover:bg-gray-50">
+										<td class="px-4 py-3 text-sm text-gray-900 max-w-[150px] truncate" title={entry.email}>
+											{entry.email}
+										</td>
+										<td class="px-4 py-3 text-sm text-gray-500 max-w-[100px] truncate" title={entry.name}>
+											{entry.name}
+										</td>
+										<td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
+											{formatDate(entry.createdAt)}
+										</td>
+										<td class="px-4 py-3 text-sm whitespace-nowrap">
+											<div class="flex gap-2">
+												<button
+													onclick={() => handleApproveWaitlist(entry)}
+													class="text-green-600 hover:text-green-800 font-medium"
+													title="Approve and send invite"
+												>
+													Approve
+												</button>
+												<button
+													onclick={() => handleRemoveFromWaitlist(entry)}
+													class="text-red-600 hover:text-red-800 font-medium"
+													title="Remove from waitlist"
+												>
+													Remove
+												</button>
+											</div>
+										</td>
+									</tr>
+								{:else}
+									<tr>
+										<td colspan="4" class="px-4 py-8 text-center text-gray-500">
+											No waitlist entries
+										</td>
+									</tr>
+								{/each}
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- Whitelist Table -->
+				<div class="card">
+					<div class="p-6 border-b border-gray-200">
+						<div class="flex items-center justify-between">
+							<h3 class="text-lg font-semibold text-gray-900">Whitelist</h3>
+							<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">
+								{whitelistEntries.length} approved
+							</span>
+						</div>
+						<p class="text-sm text-gray-500 mt-1">Emails allowed to sign up</p>
+					</div>
+
+					<div class="overflow-x-auto max-h-96 overflow-y-auto">
+						<table class="w-full">
+							<thead class="bg-gray-50 sticky top-0">
+								<tr>
+									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Email
+									</th>
+									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Added
+									</th>
+									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Invited
+									</th>
+									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Actions
+									</th>
+								</tr>
+							</thead>
+							<tbody class="bg-white divide-y divide-gray-200">
+								{#each whitelistEntries as entry (entry.id)}
+									<tr class="hover:bg-gray-50">
+										<td class="px-4 py-3 text-sm text-gray-900 max-w-[150px] truncate" title={entry.email}>
+											{entry.email}
+										</td>
+										<td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
+											<div>
+												<p>{formatDate(entry.addedAt)}</p>
+												{#if entry.addedByUsername}
+													<p class="text-xs text-gray-400">by {entry.addedByUsername}</p>
+												{/if}
+											</div>
+										</td>
+										<td class="px-4 py-3 text-sm whitespace-nowrap">
+											{#if entry.invitedAt}
+												<span class="text-green-600" title={formatDate(entry.invitedAt)}>Sent</span>
+											{:else}
+												<span class="text-gray-400">-</span>
+											{/if}
+										</td>
+										<td class="px-4 py-3 text-sm whitespace-nowrap">
+											<button
+												onclick={() => handleRemoveFromWhitelist(entry)}
+												class="text-red-600 hover:text-red-800 font-medium"
+												title="Remove from whitelist"
+											>
+												Remove
+											</button>
+										</td>
+									</tr>
+								{:else}
+									<tr>
+										<td colspan="4" class="px-4 py-8 text-center text-gray-500">
+											No whitelist entries
+										</td>
+									</tr>
+								{/each}
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		{/if}

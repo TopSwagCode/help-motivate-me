@@ -31,6 +31,16 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<ActionResult<UserResponse>> Register([FromBody] RegisterRequest request)
     {
+        // Check if signups are allowed
+        if (!IsSignupAllowed())
+        {
+            var isWhitelisted = await IsEmailWhitelisted(request.Email);
+            if (!isWhitelisted)
+            {
+                return StatusCode(403, new { code = "signup_disabled", message = "Signups are currently disabled. Please join the waitlist." });
+            }
+        }
+
         if (await _db.Users.AnyAsync(u => u.Username == request.Username))
         {
             return BadRequest(new { message = "Username already exists" });
@@ -161,6 +171,20 @@ public class AuthController : ControllerBase
 
             if (user == null)
             {
+                // Check if signups are allowed for new users
+                if (!IsSignupAllowed())
+                {
+                    var userEmail = email ?? $"{externalId}@{provider}.local";
+                    var isWhitelisted = await IsEmailWhitelisted(userEmail);
+                    if (!isWhitelisted)
+                    {
+                        // Redirect to waitlist page with user info
+                        var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
+                        var waitlistUrl = $"{frontendUrl}/waitlist?email={Uri.EscapeDataString(userEmail)}&name={Uri.EscapeDataString(name ?? "")}&provider={Uri.EscapeDataString(provider)}";
+                        return Redirect(waitlistUrl);
+                    }
+                }
+
                 // Create new user
                 user = new User
                 {
@@ -243,6 +267,16 @@ public class AuthController : ControllerBase
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
         if (user == null)
         {
+            // Check if signups are allowed for new users
+            if (!IsSignupAllowed())
+            {
+                var isWhitelisted = await IsEmailWhitelisted(email);
+                if (!isWhitelisted)
+                {
+                    return StatusCode(403, new { code = "not_whitelisted", email = email, message = "You don't have an account yet. Please join the waitlist." });
+                }
+            }
+
             // Auto-create account for new users
             user = new User
             {
@@ -557,5 +591,16 @@ public class AuthController : ControllerBase
         var computedHash = Rfc2898DeriveBytes.Pbkdf2(password, salt, 100000, HashAlgorithmName.SHA256, 32);
 
         return CryptographicOperations.FixedTimeEquals(hash, computedHash);
+    }
+
+    private bool IsSignupAllowed()
+    {
+        // Default to true if not configured
+        return !bool.TryParse(_configuration["Auth:AllowSignups"], out var allowed) || allowed;
+    }
+
+    private async Task<bool> IsEmailWhitelisted(string email)
+    {
+        return await _db.WhitelistEntries.AnyAsync(w => w.Email.ToLower() == email.ToLower());
     }
 }
