@@ -16,7 +16,7 @@ public class SmtpEmailService : IEmailService
 
     public async Task SendLoginLinkAsync(string email, string loginUrl)
     {
-        var message = new MimeMessage();
+        using var message = new MimeMessage();
         message.From.Add(new MailboxAddress(
             _configuration["Email:FromName"] ?? "Help Motivate Me",
             _configuration["Email:FromAddress"] ?? "noreply@helpmotivateme.local"
@@ -62,7 +62,7 @@ If you didn't request this login link, you can safely ignore this email."
 
     public async Task SendBuddyInviteAsync(string email, string inviterName, string loginUrl)
     {
-        var message = new MimeMessage();
+        using var message = new MimeMessage();
         message.From.Add(new MailboxAddress(
             _configuration["Email:FromName"] ?? "Help Motivate Me",
             _configuration["Email:FromAddress"] ?? "noreply@helpmotivateme.local"
@@ -139,7 +139,7 @@ This link will expire in 7 days."
 
     public async Task SendBuddyJournalNotificationAsync(string email, string buddyName, string entryTitle, string journalUrl)
     {
-        var message = new MimeMessage();
+        using var message = new MimeMessage();
         message.From.Add(new MailboxAddress(
             _configuration["Email:FromName"] ?? "Help Motivate Me",
             _configuration["Email:FromAddress"] ?? "noreply@helpmotivateme.local"
@@ -190,7 +190,7 @@ Keep up the great work! Your buddy is cheering you on."
 
     public async Task SendWaitlistConfirmationAsync(string email, string name)
     {
-        var message = new MimeMessage();
+        using var message = new MimeMessage();
         message.From.Add(new MailboxAddress(
             _configuration["Email:FromName"] ?? "Help Motivate Me",
             _configuration["Email:FromAddress"] ?? "noreply@helpmotivateme.local"
@@ -247,7 +247,7 @@ The Help Motivate Me Team"
 
     public async Task SendWhitelistInviteAsync(string email, string loginUrl)
     {
-        var message = new MimeMessage();
+        using var message = new MimeMessage();
         message.From.Add(new MailboxAddress(
             _configuration["Email:FromName"] ?? "Help Motivate Me",
             _configuration["Email:FromAddress"] ?? "noreply@helpmotivateme.local"
