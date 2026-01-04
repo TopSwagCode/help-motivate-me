@@ -5,3 +5,9 @@ This sounds like an awesome job for minimalworkers!!!
 Placeholder users are created automatically when inviting someone who doesn't have an account. However, there's no rate limiting or validation to prevent abuse. A malicious user could spam invitations to create numerous placeholder accounts. Consider adding rate limiting or requiring email verification before creating placeholder users.
 
 The file path sanitization uses StartsWith and Substring which could be error-prone. Consider using Path.Combine or more robust path manipulation methods to handle the legacy data cleanup more safely.
+
+Disposable 'MimeMessage' is created but not disposed.
+var message = new MimeMessage();
+
+
+Fix username / email. Right now default usernames are kinda strange. Fix to not default a username, but let users pick one at signup / login first time.
