@@ -203,14 +203,22 @@ public class JournalController : ControllerBase
             return BadRequest(new { message = $"Maximum {MaxImagesPerEntry} images allowed per entry" });
         }
 
-        if (!AllowedContentTypes.Contains(file.ContentType))
+        // Validate file exists and has content
+        if (file == null || file.Length == 0)
         {
-            return BadRequest(new { message = "Invalid file type. Allowed: jpg, png, gif, webp" });
+            return BadRequest(new { message = "No file provided or file is empty" });
         }
 
+        // Validate file size first (strict check)
         if (file.Length > MaxImageSizeBytes)
         {
-            return BadRequest(new { message = $"File too large. Maximum size: {MaxImageSizeBytes / 1024 / 1024}MB" });
+            return BadRequest(new { message = $"File too large ({file.Length / 1024 / 1024:F2}MB). Maximum size: {MaxImageSizeBytes / 1024 / 1024}MB. Please compress the image before uploading." });
+        }
+
+        // Validate content type
+        if (!AllowedContentTypes.Contains(file.ContentType))
+        {
+            return BadRequest(new { message = "Invalid file type. Allowed: JPEG, PNG, GIF, WebP" });
         }
 
         var fileExtension = Path.GetExtension(file.FileName);

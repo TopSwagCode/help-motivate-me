@@ -381,21 +381,24 @@ public class AccountabilityBuddyController : ControllerBase
             return BadRequest(new { message = "Maximum of 5 images per entry allowed" });
         }
 
-        // Validate file
+        // Validate file exists and has content
         if (file == null || file.Length == 0)
         {
-            return BadRequest(new { message = "No file provided" });
+            return BadRequest(new { message = "No file provided or file is empty" });
         }
 
+        // Validate file size first (strict check)
+        const long maxFileSize = 5 * 1024 * 1024; // 5MB
+        if (file.Length > maxFileSize)
+        {
+            return BadRequest(new { message = $"File too large ({file.Length / 1024 / 1024:F2}MB). Maximum size: {maxFileSize / 1024 / 1024}MB. Please compress the image before uploading." });
+        }
+
+        // Validate content type
         var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
         if (!allowedTypes.Contains(file.ContentType))
         {
             return BadRequest(new { message = "Invalid file type. Allowed: JPEG, PNG, GIF, WebP" });
-        }
-
-        if (file.Length > 5 * 1024 * 1024) // 5MB
-        {
-            return BadRequest(new { message = "File size must be less than 5MB" });
         }
 
         // Upload to storage
@@ -412,6 +415,7 @@ public class AccountabilityBuddyController : ControllerBase
             FileName = file.FileName,
             S3Key = s3Key,
             ContentType = file.ContentType,
+            FileSizeBytes = file.Length,
             SortOrder = entry.Images.Count
         };
 

@@ -9,6 +9,7 @@
 		createBuddyJournalEntry,
 		uploadBuddyJournalImage
 	} from '$lib/api/buddies';
+	import { processMultipleImages, formatFileSize } from '$lib/utils/imageProcessing';
 	import type { BuddyTodayViewResponse, BuddyJournalEntry } from '$lib/types';
 
 	// Tab state
@@ -37,6 +38,8 @@
 	let modalError = $state('');
 	let pendingImages = $state<File[]>([]);
 	let uploadingImages = $state(false);
+	let processingImages = $state(false);
+	let imageProcessWarnings = $state<string[]>([]);
 
 	function getLocalDateString(): string {
 		const now = new Date();
@@ -162,6 +165,7 @@
 		modalDescription = '';
 		modalError = '';
 		pendingImages = [];
+		imageProcessWarnings = [];
 		showModal = true;
 	}
 
@@ -169,22 +173,68 @@
 		showModal = false;
 		modalError = '';
 		pendingImages = [];
+		imageProcessWarnings = [];
 	}
 
-	function handleFileSelect(e: Event) {
+	async function handleFileSelect(e: Event) {
 		const input = e.target as HTMLInputElement;
-		if (input.files) {
-			const newFiles = Array.from(input.files);
-			const availableSlots = 5 - pendingImages.length;
-
-			if (newFiles.length > availableSlots) {
-				modalError = `Can only add ${availableSlots} more image(s)`;
-				pendingImages = [...pendingImages, ...newFiles.slice(0, availableSlots)];
-			} else {
-				pendingImages = [...pendingImages, ...newFiles];
-			}
+		if (!input.files || input.files.length === 0) {
+			return;
 		}
-		input.value = '';
+
+		const newFiles = Array.from(input.files);
+		const availableSlots = 5 - pendingImages.length;
+
+		if (newFiles.length > availableSlots) {
+			modalError = `Can only add ${availableSlots} more image(s)`;
+			input.value = '';
+			return;
+		}
+
+		processingImages = true;
+		modalError = '';
+		imageProcessWarnings = [];
+
+		try {
+			const { processed, errors } = await processMultipleImages(newFiles);
+
+			if (errors.length > 0) {
+				modalError = errors.map(e => `${e.fileName}: ${e.error}`).join('\n');
+			}
+
+			if (processed.length > 0) {
+				// Collect warnings from processed images
+				const warnings = processed
+					.filter(p => p.warning)
+					.map(p => p.warning!);
+				
+				if (warnings.length > 0) {
+					imageProcessWarnings = warnings;
+				}
+
+				// Add successfully processed files
+				const processedFiles = processed.map(p => p.file);
+				pendingImages = [...pendingImages, ...processedFiles];
+
+				// Show compression info for significantly compressed images
+				const significantlySaved = processed.filter(
+					p => p.wasProcessed && p.originalSize - p.newSize > 100 * 1024 // > 100KB saved
+				);
+
+				if (significantlySaved.length > 0) {
+					console.log('Image compression results:');
+					significantlySaved.forEach(p => {
+						const savedKB = ((p.originalSize - p.newSize) / 1024).toFixed(0);
+						console.log(`  ${p.file.name}: saved ${savedKB} KB (${formatFileSize(p.originalSize)} → ${formatFileSize(p.newSize)})`);
+					});
+				}
+			}
+		} catch (error) {
+			modalError = error instanceof Error ? error.message : 'Failed to process images';
+		} finally {
+			processingImages = false;
+			input.value = '';
+		}
 	}
 
 	function removePendingImage(index: number) {
@@ -595,9 +645,17 @@
 
 					{#if modalError}
 						<div
-							class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4"
+							class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4 whitespace-pre-line"
 						>
 							{modalError}
+						</div>
+					{/if}
+
+					{#if imageProcessWarnings.length > 0}
+						<div class="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg text-sm mb-4">
+							{#each imageProcessWarnings as warning}
+								<p class="mb-1 last:mb-0">{warning}</p>
+							{/each}
 						</div>
 					{/if}
 
@@ -663,34 +721,42 @@
 							<!-- Upload button -->
 							{#if pendingImages.length < 5}
 								<label
-									class="flex items-center justify-center w-full h-20 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition-colors"
+									class="flex items-center justify-center w-full h-20 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition-colors {processingImages ? 'opacity-50 cursor-wait' : ''}"
 								>
 									<div class="text-center">
-										<svg
-											class="w-6 h-6 mx-auto text-gray-400"
-											fill="none"
-											stroke="currentColor"
-											viewBox="0 0 24 24"
-										>
-											<path
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												stroke-width="2"
-												d="M12 4v16m8-8H4"
-											/>
-										</svg>
-										<span class="text-xs text-gray-500">Add images</span>
+										{#if processingImages}
+											<div class="animate-spin w-6 h-6 mx-auto border-2 border-primary-600 border-t-transparent rounded-full"></div>
+											<span class="text-xs text-gray-500 mt-1">Processing...</span>
+										{:else}
+											<svg
+												class="w-6 h-6 mx-auto text-gray-400"
+												fill="none"
+												stroke="currentColor"
+												viewBox="0 0 24 24"
+											>
+												<path
+													stroke-linecap="round"
+													stroke-linejoin="round"
+													stroke-width="2"
+													d="M12 4v16m8-8H4"
+												/>
+											</svg>
+											<span class="text-xs text-gray-500">Add images</span>
+										{/if}
 									</div>
 									<input
 										type="file"
 										accept="image/jpeg,image/png,image/gif,image/webp"
 										multiple
 										onchange={handleFileSelect}
+										disabled={processingImages}
 										class="hidden"
 									/>
 								</label>
 							{/if}
-							<p class="text-xs text-gray-500 mt-1">Max 5 images, 5MB each</p>
+							<p class="text-xs text-gray-500 mt-1">
+								Images are automatically compressed to WebP. Max 5 images, 5MB each. GIFs kept as-is.
+							</p>
 						</div>
 					</div>
 
