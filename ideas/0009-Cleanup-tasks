@@ -6,8 +6,5 @@ Placeholder users are created automatically when inviting someone who doesn't ha
 
 The file path sanitization uses StartsWith and Substring which could be error-prone. Consider using Path.Combine or more robust path manipulation methods to handle the legacy data cleanup more safely.
 
-Disposable 'MimeMessage' is created but not disposed.
-var message = new MimeMessage();
-
 
 Fix username / email. Right now default usernames are kinda strange. Fix to not default a username, but let users pick one at signup / login first time.
