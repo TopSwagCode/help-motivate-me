@@ -10,7 +10,7 @@
 		uploadBuddyJournalImage
 	} from '$lib/api/buddies';
 	import { processMultipleImages, formatFileSize } from '$lib/utils/imageProcessing';
-	import type { BuddyTodayViewResponse, BuddyJournalEntry } from '$lib/types';
+	import type { BuddyTodayViewResponse, BuddyJournalEntry, BuddyJournalImage } from '$lib/types/buddy';
 
 	// Tab state
 	let activeTab = $state<'today' | 'journal'>('today');
@@ -40,6 +40,11 @@
 	let uploadingImages = $state(false);
 	let processingImages = $state(false);
 	let imageProcessWarnings = $state<string[]>([]);
+
+	// Image lightbox state
+	let lightboxImages = $state<BuddyJournalImage[]>([]);
+	let lightboxIndex = $state(0);
+	let showLightbox = $state(false);
 
 	function getLocalDateString(): string {
 		const now = new Date();
@@ -277,6 +282,42 @@
 			modalError = e instanceof Error ? e.message : 'Failed to create entry';
 		} finally {
 			modalLoading = false;
+		}
+	}
+
+	// Lightbox functions
+	function openLightbox(images: BuddyJournalImage[], index: number, event: Event) {
+		event.stopPropagation();
+		lightboxImages = images;
+		lightboxIndex = index;
+		showLightbox = true;
+	}
+
+	function closeLightbox() {
+		showLightbox = false;
+		lightboxImages = [];
+		lightboxIndex = 0;
+	}
+
+	function nextImage() {
+		if (lightboxIndex < lightboxImages.length - 1) {
+			lightboxIndex++;
+		}
+	}
+
+	function prevImage() {
+		if (lightboxIndex > 0) {
+			lightboxIndex--;
+		}
+	}
+
+	function handleLightboxKeydown(event: KeyboardEvent) {
+		if (event.key === 'Escape') {
+			closeLightbox();
+		} else if (event.key === 'ArrowRight') {
+			nextImage();
+		} else if (event.key === 'ArrowLeft') {
+			prevImage();
 		}
 	}
 
@@ -593,12 +634,18 @@
 
 									{#if entry.images.length > 0}
 										<div class="flex gap-2 mt-3 overflow-x-auto pb-2">
-											{#each entry.images as image (image.id)}
-												<img
-													src={image.url}
-													alt={image.fileName}
-													class="w-20 h-20 object-cover rounded-lg"
-												/>
+											{#each entry.images as image, idx (image.id)}
+												<button
+													type="button"
+													onclick={(e) => openLightbox(entry.images, idx, e)}
+													class="flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg"
+												>
+													<img
+														src={image.url}
+														alt={image.fileName}
+														class="w-20 h-20 object-cover rounded-lg hover:opacity-80 transition-opacity"
+													/>
+												</button>
 											{/each}
 										</div>
 									{/if}
@@ -786,6 +833,75 @@
 					</div>
 				</div>
 			</div>
+		</div>
+	{/if}
+
+	<!-- Image Lightbox -->
+	{#if showLightbox && lightboxImages.length > 0}
+		<div
+			class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-[60]"
+			role="dialog"
+			aria-modal="true"
+			aria-label="Image viewer"
+			onclick={closeLightbox}
+			onkeydown={handleLightboxKeydown}
+			tabindex="-1"
+		>
+			<!-- Close button -->
+			<button
+				onclick={closeLightbox}
+				class="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
+				aria-label="Close"
+			>
+				<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+				</svg>
+			</button>
+
+			<!-- Previous button -->
+			{#if lightboxIndex > 0}
+				<button
+					onclick={(e) => { e.stopPropagation(); prevImage(); }}
+					class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 p-2 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70"
+					aria-label="Previous image"
+				>
+					<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+					</svg>
+				</button>
+			{/if}
+
+			<!-- Image -->
+			<div
+				class="max-w-[90vw] max-h-[90vh] flex items-center justify-center"
+				onclick={(e) => e.stopPropagation()}
+			>
+				<img
+					src={lightboxImages[lightboxIndex].url}
+					alt={lightboxImages[lightboxIndex].fileName}
+					class="max-w-full max-h-[90vh] object-contain rounded-lg"
+				/>
+			</div>
+
+			<!-- Next button -->
+			{#if lightboxIndex < lightboxImages.length - 1}
+				<button
+					onclick={(e) => { e.stopPropagation(); nextImage(); }}
+					class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 p-2 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70"
+					aria-label="Next image"
+				>
+					<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+					</svg>
+				</button>
+			{/if}
+
+			<!-- Image counter -->
+			{#if lightboxImages.length > 1}
+				<div class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm bg-black bg-opacity-50 px-3 py-1 rounded-full">
+					{lightboxIndex + 1} / {lightboxImages.length}
+				</div>
+			{/if}
 		</div>
 	{/if}
 </div>
