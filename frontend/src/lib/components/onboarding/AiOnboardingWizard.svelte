@@ -34,29 +34,29 @@
 	}
 </script>
 
-<div class="min-h-screen bg-gradient-to-b from-primary-50 to-white flex flex-col">
-	<div class="max-w-2xl mx-auto px-4 py-6 w-full flex-shrink-0">
+<div class="h-[100dvh] bg-gradient-to-b from-primary-50 to-white flex flex-col overflow-hidden">
+	<div class="max-w-2xl mx-auto px-3 sm:px-4 py-3 sm:py-6 w-full flex-shrink-0">
 		<!-- Header with skip button -->
-		<div class="flex justify-between items-center mb-6">
-			<h1 class="text-xl font-bold text-gray-900">AI-Assisted Setup</h1>
+		<div class="flex justify-between items-center mb-4 sm:mb-6">
+			<h1 class="text-lg sm:text-xl font-bold text-gray-900">AI-Assisted Setup</h1>
 			<button onclick={onskip} class="text-sm text-gray-500 hover:text-gray-700">
 				Skip for now
 			</button>
 		</div>
 
 		<!-- Progress indicator -->
-		<div class="mb-6">
+		<div class="mb-4 sm:mb-6">
 			<div class="flex items-center justify-center">
 				{#each steps as step, index}
 					<!-- Step circle -->
 					<div class="flex flex-col items-center">
 						<div
-							class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors {currentStep >= step.number
+							class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium transition-colors {currentStep >= step.number
 								? 'bg-primary-600 text-white'
 								: 'bg-gray-200 text-gray-500'}"
 						>
 							{#if currentStep > step.number}
-								<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+								<svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
 									<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
 								</svg>
 							{:else}
@@ -64,7 +64,7 @@
 							{/if}
 						</div>
 						<span
-							class="mt-2 text-xs font-medium {currentStep >= step.number ? 'text-primary-600' : 'text-gray-400'}"
+							class="mt-1 sm:mt-2 text-[10px] sm:text-xs font-medium {currentStep >= step.number ? 'text-primary-600' : 'text-gray-400'}"
 						>
 							{step.title}
 						</span>
@@ -72,7 +72,7 @@
 					<!-- Connecting line (not after last step) -->
 					{#if index < steps.length - 1}
 						<div
-							class="w-12 sm:w-20 h-1 mx-2 mb-6 transition-colors {currentStep > step.number
+							class="w-8 sm:w-20 h-0.5 sm:h-1 mx-1 sm:mx-2 mb-5 sm:mb-6 transition-colors {currentStep > step.number
 								? 'bg-primary-600'
 								: 'bg-gray-200'}"
 						></div>
@@ -83,7 +83,7 @@
 	</div>
 
 	<!-- Step content - takes remaining height -->
-	<div class="flex-1 max-w-2xl mx-auto w-full px-4 pb-4 min-h-0">
+	<div class="flex-1 max-w-2xl mx-auto w-full px-2 sm:px-4 pb-2 sm:pb-4 min-h-0">
 		<div class="card h-full flex flex-col overflow-hidden">
 			{#if currentStep === 1}
 				<ChatIdentityStep onnext={nextStep} onskip={nextStep} />
@@ -96,8 +96,8 @@
 	</div>
 
 	<!-- Step indicator text -->
-	<div class="max-w-2xl mx-auto px-4 py-3 w-full">
-		<p class="text-center text-sm text-gray-500">
+	<div class="max-w-2xl mx-auto px-4 py-2 sm:py-3 w-full flex-shrink-0">
+		<p class="text-center text-xs sm:text-sm text-gray-500">
 			Step {currentStep} of {totalSteps}: {steps[currentStep - 1].description}
 		</p>
 	</div>

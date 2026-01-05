@@ -25,11 +25,68 @@ export interface TranscriptionResponse {
 
 export type OnboardingStep = 'identity' | 'habitStack' | 'goal';
 
+/**
+ * Get contextual information to send with AI requests.
+ * This helps the AI understand temporal references like "next week", "tomorrow", etc.
+ */
+export function getAiContext(): Record<string, unknown> {
+	const now = new Date();
+	const locale = navigator.language || 'en-US';
+	
+	// Get timezone info
+	const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+	
+	// Format dates for clarity
+	const dateFormatter = new Intl.DateTimeFormat(locale, {
+		weekday: 'long',
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric'
+	});
+	
+	// Get day of week (0 = Sunday, 6 = Saturday)
+	const dayOfWeek = now.getDay();
+	const daysUntilWeekend = dayOfWeek === 0 ? 6 : (6 - dayOfWeek);
+	const daysUntilMonday = dayOfWeek === 0 ? 1 : (8 - dayOfWeek) % 7 || 7;
+	
+	// Calculate some useful dates
+	const nextWeek = new Date(now);
+	nextWeek.setDate(now.getDate() + 7);
+	
+	const nextMonth = new Date(now);
+	nextMonth.setMonth(now.getMonth() + 1);
+	
+	const endOfYear = new Date(now.getFullYear(), 11, 31);
+	
+	return {
+		currentDate: now.toISOString().split('T')[0], // YYYY-MM-DD
+		currentDateFormatted: dateFormatter.format(now),
+		currentYear: now.getFullYear(),
+		currentMonth: now.getMonth() + 1, // 1-12
+		currentDayOfMonth: now.getDate(),
+		dayOfWeek: now.toLocaleDateString(locale, { weekday: 'long' }),
+		timeZone,
+		locale,
+		// Helpful for relative date references
+		daysUntilWeekend,
+		daysUntilNextMonday: daysUntilMonday,
+		nextWeekDate: nextWeek.toISOString().split('T')[0],
+		nextMonthDate: nextMonth.toISOString().split('T')[0],
+		endOfYearDate: endOfYear.toISOString().split('T')[0]
+	};
+}
+
 export async function* streamOnboardingChat(
 	messages: ChatMessage[],
 	step: OnboardingStep,
-	context?: Record<string, unknown>
+	additionalContext?: Record<string, unknown>
 ): AsyncGenerator<ChatStreamChunk> {
+	// Always include base AI context (current date, etc.) merged with any additional context
+	const context = {
+		...getAiContext(),
+		...additionalContext
+	};
+	
 	const response = await fetch(`${API_BASE}/api/ai/onboarding/chat`, {
 		method: 'POST',
 		credentials: 'include',
@@ -79,10 +136,14 @@ export async function* streamOnboardingChat(
 				let extractedData: ExtractedData | null = null;
 
 				if (rawExtracted) {
+					const rawData = rawExtracted.Data ?? rawExtracted.data ?? {};
+					// Type can be at root level OR inside the data dictionary (backend puts it in data)
+					const extractedType = rawExtracted.Type ?? rawExtracted.type ?? rawData.type ?? rawData.Type;
+					
 					extractedData = {
 						action: rawExtracted.Action ?? rawExtracted.action ?? '',
-						type: rawExtracted.Type ?? rawExtracted.type,
-						data: rawExtracted.Data ?? rawExtracted.data ?? {},
+						type: extractedType,
+						data: rawData,
 						suggestedActions: rawExtracted.SuggestedActions ?? rawExtracted.suggestedActions ?? []
 					};
 				}

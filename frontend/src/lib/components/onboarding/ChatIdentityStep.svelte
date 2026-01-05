@@ -10,7 +10,13 @@
 
 	let { onnext, onskip }: Props = $props();
 
-	let createdCount = $state(0);
+	interface CreatedItem {
+		name: string;
+		icon: string;
+		color: string;
+	}
+
+	let createdItems = $state<CreatedItem[]>([]);
 
 	const initialMessage = `Hi! I'm here to help you define your identity - who you want to become.
 
@@ -26,34 +32,74 @@ So tell me, who do you want to become? What kind of person do you aspire to be?`
 	async function handleExtractedData(data: ExtractedData) {
 		if (data.action === 'create' && data.type === 'identity') {
 			const identityData = data.data as Record<string, unknown>;
-			await createIdentity({
-				name: String(identityData.name || ''),
-				description: String(identityData.description || ''),
-				icon: String(identityData.icon || ''),
-				color: String(identityData.color || '#6366f1')
-			});
-			createdCount++;
+			
+			// Support both array format (items) and legacy single item format
+			const items = identityData.items as Array<Record<string, unknown>> | undefined;
+			
+			if (items && Array.isArray(items)) {
+				// New format: multiple items in array
+				for (const item of items) {
+					await createIdentity({
+						name: String(item.name || ''),
+						description: String(item.description || ''),
+						icon: String(item.icon || ''),
+						color: String(item.color || '#6366f1')
+					});
+					createdItems = [...createdItems, {
+						name: String(item.name || 'Identity'),
+						icon: String(item.icon || '🎯'),
+						color: String(item.color || '#6366f1')
+					}];
+				}
+			} else {
+				// Legacy format: single item at root level
+				await createIdentity({
+					name: String(identityData.name || ''),
+					description: String(identityData.description || ''),
+					icon: String(identityData.icon || ''),
+					color: String(identityData.color || '#6366f1')
+				});
+				createdItems = [...createdItems, {
+					name: String(identityData.name || 'Identity'),
+					icon: String(identityData.icon || '🎯'),
+					color: String(identityData.color || '#6366f1')
+				}];
+			}
 		}
 	}
 </script>
 
 <div class="h-full flex flex-col">
-	<div class="p-4 border-b bg-white">
-		<div class="flex items-center gap-3">
-			<div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-				<span class="text-xl">🎯</span>
+	<div class="p-3 sm:p-4 border-b bg-white flex-shrink-0">
+		<div class="flex items-center gap-2 sm:gap-3">
+			<div class="w-8 h-8 sm:w-10 sm:h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+				<span class="text-lg sm:text-xl">🎯</span>
 			</div>
-			<div>
-				<h2 class="font-semibold text-gray-900">Define Your Identity</h2>
-				<p class="text-sm text-gray-500">
-					{#if createdCount > 0}
-						{createdCount} {createdCount === 1 ? 'identity' : 'identities'} created
+			<div class="flex-1 min-w-0">
+				<h2 class="font-semibold text-gray-900 text-sm sm:text-base">Define Your Identity</h2>
+				<p class="text-xs sm:text-sm text-gray-500 truncate">
+					{#if createdItems.length > 0}
+						{createdItems.length} {createdItems.length === 1 ? 'identity' : 'identities'} created
 					{:else}
 						Who do you want to become?
 					{/if}
 				</p>
 			</div>
 		</div>
+		<!-- Created items list -->
+		{#if createdItems.length > 0}
+			<div class="mt-2 sm:mt-3 flex flex-wrap gap-1.5 sm:gap-2 max-h-16 overflow-y-auto">
+				{#each createdItems as item}
+					<div 
+						class="flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium"
+						style="background-color: {item.color}20; color: {item.color}"
+					>
+						<span>{item.icon}</span>
+						<span class="truncate max-w-[100px] sm:max-w-[150px]">{item.name}</span>
+					</div>
+				{/each}
+			</div>
+		{/if}
 	</div>
 
 	<div class="flex-1 overflow-hidden">
