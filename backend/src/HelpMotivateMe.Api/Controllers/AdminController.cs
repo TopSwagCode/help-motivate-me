@@ -136,12 +136,23 @@ public class AdminController : ControllerBase
         // Get total count for pagination info
         var totalCount = await query.CountAsync();
 
+        // Get AI usage stats grouped by user
+        var aiUsageStats = await _db.AiUsageLogs
+            .GroupBy(a => a.UserId)
+            .Select(g => new { UserId = g.Key, CallsCount = g.Count(), TotalCost = g.Sum(a => a.EstimatedCostUsd) })
+            .ToDictionaryAsync(x => x.UserId, x => new { x.CallsCount, x.TotalCost });
+
         // Apply pagination and ordering
         var users = await query
             .OrderByDescending(u => u.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(u => new AdminUserResponse(
+            .ToListAsync();
+
+        var result = users.Select(u =>
+        {
+            aiUsageStats.TryGetValue(u.Id, out var usage);
+            return new AdminUserResponse(
                 u.Id,
                 u.Username,
                 u.Email,
@@ -150,15 +161,17 @@ public class AdminController : ControllerBase
                 u.MembershipTier.ToString(),
                 u.Role.ToString(),
                 u.CreatedAt,
-                u.UpdatedAt
-            ))
-            .ToListAsync();
+                u.UpdatedAt,
+                usage?.CallsCount ?? 0,
+                usage?.TotalCost ?? 0m
+            );
+        }).ToList();
 
         Response.Headers.Append("X-Total-Count", totalCount.ToString());
         Response.Headers.Append("X-Page", page.ToString());
         Response.Headers.Append("X-Page-Size", pageSize.ToString());
 
-        return Ok(users);
+        return Ok(result);
     }
 
     [HttpPatch("users/{userId}/toggle-active")]
@@ -174,6 +187,12 @@ public class AdminController : ControllerBase
         user.UpdatedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
 
+        var aiUsage = await _db.AiUsageLogs
+            .Where(a => a.UserId == userId)
+            .GroupBy(a => a.UserId)
+            .Select(g => new { CallsCount = g.Count(), TotalCost = g.Sum(a => a.EstimatedCostUsd) })
+            .FirstOrDefaultAsync();
+
         return Ok(new AdminUserResponse(
             user.Id,
             user.Username,
@@ -183,7 +202,9 @@ public class AdminController : ControllerBase
             user.MembershipTier.ToString(),
             user.Role.ToString(),
             user.CreatedAt,
-            user.UpdatedAt
+            user.UpdatedAt,
+            aiUsage?.CallsCount ?? 0,
+            aiUsage?.TotalCost ?? 0m
         ));
     }
 
@@ -205,6 +226,12 @@ public class AdminController : ControllerBase
         user.UpdatedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
 
+        var aiUsage = await _db.AiUsageLogs
+            .Where(a => a.UserId == userId)
+            .GroupBy(a => a.UserId)
+            .Select(g => new { CallsCount = g.Count(), TotalCost = g.Sum(a => a.EstimatedCostUsd) })
+            .FirstOrDefaultAsync();
+
         return Ok(new AdminUserResponse(
             user.Id,
             user.Username,
@@ -214,7 +241,9 @@ public class AdminController : ControllerBase
             user.MembershipTier.ToString(),
             user.Role.ToString(),
             user.CreatedAt,
-            user.UpdatedAt
+            user.UpdatedAt,
+            aiUsage?.CallsCount ?? 0,
+            aiUsage?.TotalCost ?? 0m
         ));
     }
 

@@ -1,0 +1,140 @@
+<script lang="ts">
+	import ChatOnboarding from './ChatOnboarding.svelte';
+	import { createHabitStack } from '$lib/api/habitStacks';
+	import type { ExtractedData } from '$lib/api/ai';
+
+	interface Props {
+		onnext: () => void;
+		onskip: () => void;
+		onback: () => void;
+	}
+
+	let { onnext, onskip, onback }: Props = $props();
+
+	interface CreatedItem {
+		name: string;
+		habitCount: number;
+	}
+
+	let createdItems = $state<CreatedItem[]>([]);
+
+	const initialMessage = `Great! Now let's build some habit stacks.
+
+Habit stacking is one of the most effective ways to build new habits. The idea is simple: link a new habit to an existing one using this formula:
+
+"After I [CURRENT HABIT], I will [NEW HABIT]"
+
+For example, a morning routine might look like:
+• After I wake up, I will make my bed
+• After I make my bed, I will do 5 minutes of stretching
+• After I stretch, I will drink a glass of water
+
+You can chain multiple habits together to create powerful routines!
+
+What daily routines do you have? What new habits would you like to build into them?`;
+
+	interface HabitItem {
+		cueDescription: string;
+		habitDescription: string;
+	}
+
+	interface StackData {
+		name: string;
+		description?: string;
+		triggerCue: string;
+		habits?: HabitItem[];
+		items?: HabitItem[]; // Legacy format support
+	}
+
+	async function handleExtractedData(data: ExtractedData) {
+		if (data.action === 'create' && data.type === 'habitStack') {
+			const stackData = data.data as Record<string, unknown>;
+			
+			// New format: stacks array containing multiple habit stacks
+			const stacks = stackData.stacks as StackData[] | undefined;
+			
+			if (stacks && Array.isArray(stacks)) {
+				// New format: multiple stacks in one create action
+				for (const stack of stacks) {
+					const habits = stack.habits || stack.items || [];
+					await createHabitStack({
+						name: String(stack.name || ''),
+						description: String(stack.description || ''),
+						triggerCue: String(stack.triggerCue || ''),
+						items: habits.map((item) => ({
+							cueDescription: item.cueDescription,
+							habitDescription: item.habitDescription
+						}))
+					});
+					createdItems = [...createdItems, {
+						name: String(stack.name || 'Habit Stack'),
+						habitCount: habits.length
+					}];
+				}
+			} else {
+				// Legacy format: single stack at root level
+				const habits = (stackData.habits as HabitItem[]) || (stackData.items as HabitItem[]) || [];
+
+				await createHabitStack({
+					name: String(stackData.name || ''),
+					description: String(stackData.description || ''),
+					triggerCue: String(stackData.triggerCue || ''),
+					items: habits.map((item) => ({
+						cueDescription: item.cueDescription,
+						habitDescription: item.habitDescription
+					}))
+				});
+				createdItems = [...createdItems, {
+					name: String(stackData.name || 'Habit Stack'),
+					habitCount: habits.length
+				}];
+			}
+		}
+	}
+</script>
+
+<div class="h-full flex flex-col">
+	<div class="p-3 sm:p-4 border-b bg-white flex-shrink-0">
+		<div class="flex items-center gap-2 sm:gap-3">
+			<div class="w-8 h-8 sm:w-10 sm:h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+				<span class="text-lg sm:text-xl">🔗</span>
+			</div>
+			<div class="flex-1 min-w-0">
+				<h2 class="font-semibold text-gray-900 text-sm sm:text-base">Build Habit Stacks</h2>
+				<p class="text-xs sm:text-sm text-gray-500 truncate">
+					{#if createdItems.length > 0}
+						{createdItems.length} habit {createdItems.length === 1 ? 'stack' : 'stacks'} created
+					{:else}
+						Chain habits together for powerful routines
+					{/if}
+				</p>
+			</div>
+		</div>
+		<!-- Created items list -->
+		{#if createdItems.length > 0}
+			<div class="mt-2 sm:mt-3 flex flex-wrap gap-1.5 sm:gap-2 max-h-16 overflow-y-auto">
+				{#each createdItems as item}
+					<div 
+						class="flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium bg-amber-100 text-amber-700"
+					>
+						<span>🔗</span>
+						<span class="truncate max-w-[80px] sm:max-w-[120px]">{item.name}</span>
+						<span class="text-amber-500">({item.habitCount})</span>
+					</div>
+				{/each}
+			</div>
+		{/if}
+	</div>
+
+	<div class="flex-1 overflow-hidden">
+		<ChatOnboarding
+			step="habitStack"
+			{initialMessage}
+			onExtractedData={handleExtractedData}
+			onSkip={onskip}
+			onNext={onnext}
+			onBack={onback}
+			showBack={true}
+		/>
+	</div>
+</div>

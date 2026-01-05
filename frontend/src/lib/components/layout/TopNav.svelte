@@ -60,14 +60,14 @@
 				>
 					Identities
 				</a>
-				<a
+				<!--<a
 					href="/analytics"
 					class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {isActive('/analytics')
 						? 'bg-primary-100 text-primary-700'
 						: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 				>
 					Analytics
-				</a>
+				</a>-->
 				<a
 					href="/buddies"
 					class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {isActive('/buddies')
