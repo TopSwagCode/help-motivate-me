@@ -24,6 +24,7 @@ public class AppDbContext : DbContext
     public DbSet<BuddyInviteToken> BuddyInviteTokens => Set<BuddyInviteToken>();
     public DbSet<WaitlistEntry> WaitlistEntries => Set<WaitlistEntry>();
     public DbSet<WhitelistEntry> WhitelistEntries => Set<WhitelistEntry>();
+    public DbSet<AiUsageLog> AiUsageLogs => Set<AiUsageLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -597,6 +597,14 @@
 									>Joined</th
 								>
 								<th
+									class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+									>AI Calls</th
+								>
+								<th
+									class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+									>AI Cost</th
+								>
+								<th
 									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
 									>Actions</th
 								>
@@ -659,6 +667,16 @@
 									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 										{formatDate(user.createdAt)}
 									</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+										{user.aiCallsCount}
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm text-right">
+										{#if user.aiTotalCostUsd > 0}
+											<span class="text-amber-600 font-medium">${user.aiTotalCostUsd.toFixed(4)}</span>
+										{:else}
+											<span class="text-gray-400">-</span>
+										{/if}
+									</td>
 									<td class="px-6 py-4 whitespace-nowrap text-sm">
 										<button
 											onclick={() => handleToggleActive(user)}
@@ -670,7 +688,7 @@
 								</tr>
 							{:else}
 								<tr>
-									<td colspan="7" class="px-6 py-8 text-center text-gray-500">
+									<td colspan="9" class="px-6 py-8 text-center text-gray-500">
 										No users found
 									</td>
 								</tr>

@@ -36,6 +36,8 @@ export interface AdminUser {
 	role: UserRole;
 	createdAt: string;
 	updatedAt: string;
+	aiCallsCount: number;
+	aiTotalCostUsd: number;
 }
 
 export interface UpdateRoleRequest {

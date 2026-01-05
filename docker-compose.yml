@@ -83,6 +83,7 @@ services:
       - LocalStorage__BaseUrl=/api/files
       - FrontendUrl=https://8175f826ee97.ngrok-free.app
       - Auth__AllowSignups=false
+      - OpenAI__ApiKey=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
     expose:
       - "5001"
     volumes:
