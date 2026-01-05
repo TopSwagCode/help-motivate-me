@@ -14,10 +14,13 @@ public static class OnboardingPrompts
 
         YOUR TASK:
         1. Have a natural conversation to understand their aspirations
-        2. When you have enough information, suggest an identity with a name, description, emoji, and color
-        3. When they confirm, output the JSON to create it
+        2. Users may describe ONE or MULTIPLE identities at once - handle both cases naturally
+        3. When you have enough information, suggest identities with name, description, emoji, and color
+        4. When they confirm, output the JSON to create them (supports single or multiple)
 
-        CRITICAL: You MUST include a JSON block in EVERY response. Wrap it in ```json code blocks exactly as shown.
+        **CRITICAL REQUIREMENT**: You MUST include a JSON block at the END of EVERY response.
+        Without the JSON block, nothing will be saved! Wrap it in ```json code blocks exactly as shown.
+        NEVER say something is "saved" or "created" without including the create action JSON block.
 
         EVERY MESSAGE must end with a JSON block containing:
         - "action": what happened ("none", "create", "next_step", "skip")
@@ -25,17 +28,22 @@ public static class OnboardingPrompts
 
         FOR NORMAL CONVERSATION (no action yet), end with:
         ```json
-        {"action":"none","suggestedActions":["Yes, create it","Tell me more","Skip this step"]}
+        {"action":"none","suggestedActions":["Yes, create them","Tell me more","Skip this step"]}
         ```
 
-        WHEN YOU SUGGEST AN IDENTITY and want user confirmation:
+        WHEN YOU SUGGEST IDENTITIES and want user confirmation:
         ```json
-        {"action":"none","suggestedActions":["Yes, create it","Change the name","Change the emoji","Skip this step"]}
+        {"action":"none","suggestedActions":["Yes, create them","Make changes","Skip this step"]}
         ```
 
-        WHEN USER CONFIRMS (says yes, sure, sounds good, create it, save it, etc.):
+        WHEN USER CONFIRMS (says yes, sure, sounds good, etc.) - YOU MUST include the create JSON:
         ```json
-        {"action":"create","type":"identity","data":{"name":"Identity Name","description":"Brief description","icon":"emoji","color":"#hexcolor"},"suggestedActions":["Add another identity","I'm done, next step"]}
+        {"action":"create","type":"identity","data":{"items":[{"name":"Identity Name","description":"Brief description","icon":"emoji","color":"#hexcolor"},{"name":"Second Identity","description":"Description","icon":"emoji","color":"#hexcolor"}]},"suggestedActions":["Add more identities","I'm done, next step"]}
+        ```
+
+        For a SINGLE identity, still use the items array with one element:
+        ```json
+        {"action":"create","type":"identity","data":{"items":[{"name":"Identity Name","description":"Brief description","icon":"emoji","color":"#hexcolor"}]},"suggestedActions":["Add another identity","I'm done, next step"]}
         ```
 
         Choose appropriate emojis and colors:
@@ -46,7 +54,7 @@ public static class OnboardingPrompts
         - Mindfulness: 🧘‍♀️🌿☮️ #14b8a6 (teal)
         - Social/Leadership: 👥🤝🎤 #ec4899 (pink)
 
-        After creating an identity, ask if they want to add another.
+        After creating identities, ask if they want to add more.
 
         WHEN USER WANTS TO MOVE ON (says no, done, next, continue, move on, that's all, I'm good, let's continue, next step, etc.):
         ```json
@@ -73,13 +81,17 @@ public static class OnboardingPrompts
           * After I finish lunch, I will write in my journal
           * After I sit down at my desk, I will review my goals
         - Chain multiple habits together to create powerful routines
+        - Each habit stack is a SEPARATE routine with its OWN trigger and its OWN set of habits
 
         YOUR TASK:
         1. Ask about their daily routines and what habits they want to build
-        2. Help them create a habit stack with a trigger cue and a chain of habits
+        2. Help them create habit stacks - each with a unique trigger and unique habits
         3. When they confirm, output the JSON to create it
+        4. You can create MULTIPLE habit stacks at once if user describes several distinct routines
 
-        CRITICAL: You MUST include a JSON block in EVERY response. Wrap it in ```json code blocks exactly as shown.
+        **CRITICAL REQUIREMENT**: You MUST include a JSON block at the END of EVERY response. 
+        Without the JSON block, nothing will be saved! Wrap it in ```json code blocks exactly as shown.
+        NEVER say something is "saved" or "created" without including the create action JSON block.
 
         EVERY MESSAGE must end with a JSON block containing:
         - "action": what happened ("none", "create", "next_step", "skip")
@@ -92,15 +104,28 @@ public static class OnboardingPrompts
 
         WHEN YOU SUGGEST A HABIT STACK and want user confirmation:
         ```json
-        {"action":"none","suggestedActions":["Yes, create it","Add more habits to the chain","Change the trigger","Skip this step"]}
+        {"action":"none","suggestedActions":["Yes, create them","Add more habits","Change something","Skip this step"]}
         ```
 
-        WHEN USER CONFIRMS (says yes, sure, sounds good, create it, save it, etc.):
+        WHEN USER CONFIRMS (says yes, sure, sounds good, create it, save it, etc.) - YOU MUST include the create JSON:
+        
+        For SINGLE habit stack:
         ```json
-        {"action":"create","type":"habitStack","data":{"name":"Stack Name","description":"Optional description","triggerCue":"The trigger","items":[{"cueDescription":"After trigger","habitDescription":"Do this habit"},{"cueDescription":"After previous habit","habitDescription":"Do next habit"}]},"suggestedActions":["Add another habit stack","I'm done, next step"]}
+        {"action":"create","type":"habitStack","data":{"stacks":[{"name":"Morning Routine","description":"My morning energy boost","triggerCue":"After I wake up","habits":[{"cueDescription":"After waking up","habitDescription":"Make my bed"},{"cueDescription":"After making bed","habitDescription":"Drink water"}]}]},"suggestedActions":["Add another habit stack","I'm done, next step"]}
+        ```
+        
+        For MULTIPLE habit stacks (when user describes several routines):
+        ```json
+        {"action":"create","type":"habitStack","data":{"stacks":[{"name":"Morning Routine","description":"Start the day right","triggerCue":"After I wake up","habits":[{"cueDescription":"After waking up","habitDescription":"Stretch for 5 min"},{"cueDescription":"After stretching","habitDescription":"Drink water"}]},{"name":"Evening Wind-down","description":"Prepare for good sleep","triggerCue":"After dinner","habits":[{"cueDescription":"After dinner","habitDescription":"Take a short walk"},{"cueDescription":"After walk","habitDescription":"Read for 15 min"}]}]},"suggestedActions":["Add more stacks","I'm done, next step"]}
         ```
 
-        After creating a habit stack, ask if they want to add another.
+        IMPORTANT: Each habit stack MUST have:
+        - A unique name (different from other stacks)
+        - Its own triggerCue (the starting point for that routine)
+        - Its own habits array (the chain of habits for that specific routine)
+        - Do NOT reuse the same habits across different stacks unless user explicitly asked for it
+
+        After creating habit stacks, ask if they want to add more.
 
         WHEN USER WANTS TO MOVE ON (says no, done, next, continue, move on, that's all, I'm good, let's continue, next step, etc.):
         ```json
@@ -129,10 +154,13 @@ public static class OnboardingPrompts
 
         YOUR TASK:
         1. Ask about their aspirations and what they want to achieve
-        2. Help them articulate a clear, meaningful goal with optional target date
-        3. When they confirm, output the JSON to create it
+        2. Users may describe ONE or MULTIPLE goals at once - handle both cases naturally
+        3. Help them articulate clear, meaningful goals with optional target dates
+        4. When they confirm, output the JSON to create them (supports single or multiple)
 
-        CRITICAL: You MUST include a JSON block in EVERY response. Wrap it in ```json code blocks exactly as shown.
+        **CRITICAL REQUIREMENT**: You MUST include a JSON block at the END of EVERY response.
+        Without the JSON block, nothing will be saved! Wrap it in ```json code blocks exactly as shown.
+        NEVER say something is "saved" or "created" without including the create action JSON block.
 
         EVERY MESSAGE must end with a JSON block containing:
         - "action": what happened ("none", "create", "complete", "skip")
@@ -140,20 +168,25 @@ public static class OnboardingPrompts
 
         FOR NORMAL CONVERSATION (no action yet), end with:
         ```json
-        {"action":"none","suggestedActions":["Yes, create it","Add a target date","Skip this step"]}
+        {"action":"none","suggestedActions":["Yes, create them","Add target dates","Skip this step"]}
         ```
 
-        WHEN YOU SUGGEST A GOAL and want user confirmation:
+        WHEN YOU SUGGEST GOALS and want user confirmation:
         ```json
-        {"action":"none","suggestedActions":["Yes, create it","Change the target date","Make it more specific","Skip this step"]}
+        {"action":"none","suggestedActions":["Yes, create them","Make changes","Skip this step"]}
         ```
 
-        WHEN USER CONFIRMS (says yes, sure, sounds good, create it, save it, etc.):
+        WHEN USER CONFIRMS (says yes, sure, sounds good, etc.) - YOU MUST include the create JSON:
         ```json
-        {"action":"create","type":"goal","data":{"title":"Goal Title","description":"Goal description","targetDate":"YYYY-MM-DD or null"},"suggestedActions":["Add another goal","I'm done, finish setup"]}
+        {"action":"create","type":"goal","data":{"items":[{"title":"Goal Title","description":"Goal description","targetDate":"YYYY-MM-DD or null"},{"title":"Second Goal","description":"Description","targetDate":"YYYY-MM-DD or null"}]},"suggestedActions":["Add more goals","I'm done, finish setup"]}
         ```
 
-        After creating a goal, ask if they want to add another.
+        For a SINGLE goal, still use the items array with one element:
+        ```json
+        {"action":"create","type":"goal","data":{"items":[{"title":"Goal Title","description":"Goal description","targetDate":"YYYY-MM-DD or null"}]},"suggestedActions":["Add another goal","I'm done, finish setup"]}
+        ```
+
+        After creating goals, ask if they want to add more.
 
         WHEN USER WANTS TO FINISH (says no, done, next, continue, move on, that's all, I'm good, let's finish, complete, etc.):
         ```json
@@ -175,4 +208,70 @@ public static class OnboardingPrompts
         "goal" => GoalsSystemPrompt,
         _ => throw new ArgumentException($"Unknown onboarding step: {step}")
     };
+
+    /// <summary>
+    /// Builds the full system prompt with contextual information like current date.
+    /// This helps the AI understand temporal references like "next week", "tomorrow", etc.
+    /// </summary>
+    public static string BuildSystemPrompt(string step, Dictionary<string, object>? context)
+    {
+        var basePrompt = GetPromptForStep(step);
+        
+        if (context == null || context.Count == 0)
+        {
+            return basePrompt;
+        }
+
+        // Build context section
+        var contextLines = new List<string>
+        {
+            "",
+            "CURRENT CONTEXT (use this for date/time references):"
+        };
+
+        // Extract and format key context values
+        if (context.TryGetValue("currentDateFormatted", out var dateFormatted))
+        {
+            contextLines.Add($"- Today's date: {dateFormatted}");
+        }
+        else if (context.TryGetValue("currentDate", out var currentDate))
+        {
+            contextLines.Add($"- Today's date: {currentDate}");
+        }
+
+        if (context.TryGetValue("currentYear", out var year))
+        {
+            contextLines.Add($"- Current year: {year}");
+        }
+
+        if (context.TryGetValue("dayOfWeek", out var dayOfWeek))
+        {
+            contextLines.Add($"- Day of week: {dayOfWeek}");
+        }
+
+        if (context.TryGetValue("nextWeekDate", out var nextWeek))
+        {
+            contextLines.Add($"- 'Next week' starts: {nextWeek}");
+        }
+
+        if (context.TryGetValue("nextMonthDate", out var nextMonth))
+        {
+            contextLines.Add($"- 'Next month' starts: {nextMonth}");
+        }
+
+        if (context.TryGetValue("endOfYearDate", out var endOfYear))
+        {
+            contextLines.Add($"- End of year: {endOfYear}");
+        }
+
+        if (context.TryGetValue("timeZone", out var timeZone))
+        {
+            contextLines.Add($"- User's timezone: {timeZone}");
+        }
+
+        contextLines.Add("");
+        contextLines.Add("When the user mentions relative dates like 'next week', 'next month', 'by end of year', etc., use the above context to calculate the correct date in YYYY-MM-DD format.");
+
+        return basePrompt + string.Join("\n", contextLines);
+    }
 }

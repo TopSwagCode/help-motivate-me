@@ -33,7 +33,7 @@ public class AiController : ControllerBase
 
         try
         {
-            var systemPrompt = OnboardingPrompts.GetPromptForStep(request.Step);
+            var systemPrompt = OnboardingPrompts.BuildSystemPrompt(request.Step, request.Context);
 
             await foreach (var chunk in _openAiService.StreamChatCompletionAsync(
                 request.Messages,
