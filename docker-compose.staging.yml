@@ -1,0 +1,181 @@
+# Docker Compose for Staging/Preprod Environment
+# Uses Let's Encrypt STAGING certificates (not trusted by browsers, but useful for testing)
+# 
+# Usage:
+# 1. Copy .env.staging.example to .env.staging and configure
+# 2. docker compose -f docker-compose.staging.yml --env-file .env.staging up -d
+
+services:
+  # Traefik Reverse Proxy with Let's Encrypt Staging
+  traefik:
+    image: traefik:v3.0
+    container_name: helpmotivateme-traefik
+    command:
+      # Enable the Dashboard
+      - "--api.dashboard=true"
+      # Docker provider
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=helpmotivateme-network"
+      # Entrypoints
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      # HTTP to HTTPS redirect
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      # Let's Encrypt STAGING (for testing - certificates won't be trusted by browsers)
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=${LETSENCRYPT_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      # Logging
+      - "--log.level=INFO"
+      - "--accesslog=true"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt_data:/letsencrypt
+    networks:
+      - helpmotivateme-network
+    labels:
+      # Dashboard
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.${DOMAIN}`)"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_DASHBOARD_AUTH}"
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: helpmotivateme-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-helpmotivateme}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
+  # Mailpit for email testing (optional in staging, can be removed for real SMTP)
+  mailpit:
+    image: axllent/mailpit
+    container_name: helpmotivateme-mailpit
+    restart: unless-stopped
+    expose:
+      - "8025"
+      - "1025"
+    environment:
+      - MP_WEBROOT=/mail
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mailpit.rule=Host(`${DOMAIN}`) && PathPrefix(`/mail`)"
+      - "traefik.http.routers.mailpit.entrypoints=websecure"
+      - "traefik.http.routers.mailpit.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mailpit.loadbalancer.server.port=8025"
+    networks:
+      - helpmotivateme-network
+
+  # Backend API
+  backend:
+    image: ghcr.io/${GITHUB_REPOSITORY}-backend:${IMAGE_TAG:-latest}
+    container_name: helpmotivateme-backend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Staging
+      - ASPNETCORE_URLS=http://+:5001
+      - ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=${POSTGRES_DB:-helpmotivateme};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD}
+      - Email__SmtpHost=${SMTP_HOST:-mailpit}
+      - Email__SmtpPort=${SMTP_PORT:-1025}
+      - Email__FromAddress=${SMTP_FROM:-noreply@helpmotivateme.com}
+      - Email__FromName=Help Motivate Me
+      - LocalStorage__BasePath=/app/uploads
+      - LocalStorage__BaseUrl=/api/files
+      - FrontendUrl=https://${DOMAIN}
+      - Auth__AllowSignups=${ALLOW_SIGNUPS:-false}
+      - OpenAI__ApiKey=${OPENAI_API_KEY}
+    expose:
+      - "5001"
+    volumes:
+      - uploads_data:/app/uploads
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`${DOMAIN}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.backend.loadbalancer.server.port=5001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
+  # Frontend
+  frontend:
+    image: ghcr.io/${GITHUB_REPOSITORY}-frontend:${IMAGE_TAG:-latest}
+    container_name: helpmotivateme-frontend
+    expose:
+      - "3000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.frontend.priority=1"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+    depends_on:
+      - backend
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
+  # Backup Service
+  backup:
+    build:
+      context: ./backup
+      dockerfile: Dockerfile
+    container_name: helpmotivateme-backup
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB:-helpmotivateme}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-30}
+      - MAX_BACKUPS=${BACKUP_MAX_BACKUPS:-10}
+      - BACKUP_SCHEDULE=${BACKUP_SCHEDULE:-0 * * * *}
+      - REMOTE_BACKUP_ENABLED=${REMOTE_BACKUP_ENABLED:-false}
+      - TZ=UTC
+    volumes:
+      - postgres_data:/var/lib/postgresql/data:ro
+      - uploads_data:/uploads
+      - backup_data:/backups
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  uploads_data:
+  backup_data:
+  letsencrypt_data:
+
+networks:
+  helpmotivateme-network:
+    driver: bridge

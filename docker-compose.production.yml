@@ -1,0 +1,182 @@
+# Docker Compose for Production Environment
+# Uses Let's Encrypt PRODUCTION certificates for helpmotivate.me
+# 
+# Usage:
+# 1. Copy .env.production.example to .env.production and configure
+# 2. docker compose -f docker-compose.production.yml --env-file .env.production up -d
+
+services:
+  # Traefik Reverse Proxy with Let's Encrypt Production
+  traefik:
+    image: traefik:v3.0
+    container_name: helpmotivateme-traefik
+    command:
+      # Enable the Dashboard
+      - "--api.dashboard=true"
+      # Docker provider
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=helpmotivateme-network"
+      # Entrypoints
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      # HTTP to HTTPS redirect
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      # Let's Encrypt PRODUCTION
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=${LETSENCRYPT_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      # NOTE: No caserver = production Let's Encrypt by default
+      # Logging
+      - "--log.level=WARN"
+      - "--accesslog=true"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt_data:/letsencrypt
+    networks:
+      - helpmotivateme-network
+    labels:
+      # Dashboard (protected with basic auth)
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.helpmotivate.me`)"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_DASHBOARD_AUTH}"
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: helpmotivateme-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-helpmotivateme}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
+  # Backend API
+  backend:
+    image: ghcr.io/${GITHUB_REPOSITORY}-backend:${IMAGE_TAG:-latest}
+    container_name: helpmotivateme-backend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5001
+      - ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=${POSTGRES_DB:-helpmotivateme};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD}
+      - Email__SmtpHost=${SMTP_HOST}
+      - Email__SmtpPort=${SMTP_PORT:-587}
+      - Email__SmtpUsername=${SMTP_USERNAME}
+      - Email__SmtpPassword=${SMTP_PASSWORD}
+      - Email__FromAddress=${SMTP_FROM:-noreply@helpmotivate.me}
+      - Email__FromName=Help Motivate Me
+      - LocalStorage__BasePath=/app/uploads
+      - LocalStorage__BaseUrl=/api/files
+      - FrontendUrl=https://helpmotivate.me
+      - Auth__AllowSignups=${ALLOW_SIGNUPS:-false}
+      - OpenAI__ApiKey=${OPENAI_API_KEY}
+    expose:
+      - "5001"
+    volumes:
+      - uploads_data:/app/uploads
+    labels:
+      - "traefik.enable=true"
+      # Route /api/* to backend for both www and non-www
+      - "traefik.http.routers.backend.rule=Host(`helpmotivate.me`, `www.helpmotivate.me`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.backend.loadbalancer.server.port=5001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
+  # Frontend
+  frontend:
+    image: ghcr.io/${GITHUB_REPOSITORY}-frontend:${IMAGE_TAG:-latest}
+    container_name: helpmotivateme-frontend
+    expose:
+      - "3000"
+    labels:
+      - "traefik.enable=true"
+      # Main domain
+      - "traefik.http.routers.frontend.rule=Host(`helpmotivate.me`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.frontend.priority=1"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+      # www redirect to non-www
+      - "traefik.http.routers.frontend-www.rule=Host(`www.helpmotivate.me`)"
+      - "traefik.http.routers.frontend-www.entrypoints=websecure"
+      - "traefik.http.routers.frontend-www.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.frontend-www.middlewares=www-redirect"
+      - "traefik.http.middlewares.www-redirect.redirectregex.regex=^https://www\\.helpmotivate\\.me/(.*)"
+      - "traefik.http.middlewares.www-redirect.redirectregex.replacement=https://helpmotivate.me/$${1}"
+      - "traefik.http.middlewares.www-redirect.redirectregex.permanent=true"
+    depends_on:
+      - backend
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
+  # Backup Service
+  backup:
+    build:
+      context: ./backup
+      dockerfile: Dockerfile
+    container_name: helpmotivateme-backup
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB:-helpmotivateme}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-30}
+      - MAX_BACKUPS=${BACKUP_MAX_BACKUPS:-10}
+      - BACKUP_SCHEDULE=${BACKUP_SCHEDULE:-0 */6 * * *}
+      - REMOTE_BACKUP_ENABLED=${REMOTE_BACKUP_ENABLED:-true}
+      - HETZNER_USER=${HETZNER_USER}
+      - HETZNER_HOST=${HETZNER_HOST}
+      - HETZNER_PORT=${HETZNER_PORT:-23}
+      - HETZNER_REMOTE_PATH=${HETZNER_REMOTE_PATH:-/backups/helpmotivateme}
+      - CLEANUP_REMOTE=${CLEANUP_REMOTE:-true}
+      - TZ=UTC
+    volumes:
+      - postgres_data:/var/lib/postgresql/data:ro
+      - uploads_data:/uploads
+      - backup_data:/backups
+      # SSH keys for Hetzner Storage Box
+      - ${SSH_KEY_PATH:-~/.ssh/id_rsa}:/root/.ssh/id_rsa:ro
+      - ${SSH_KNOWN_HOSTS_PATH:-~/.ssh/known_hosts}:/root/.ssh/known_hosts:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  uploads_data:
+  backup_data:
+  letsencrypt_data:
+
+networks:
+  helpmotivateme-network:
+    driver: bridge
