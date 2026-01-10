@@ -2,7 +2,7 @@ using System.Security.Claims;
 using AspNet.Security.OAuth.GitHub;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
-using HelpMotivateMe.Infrastructure.Data.Seeders;
+using HelpMotivateMe.Api.Services;
 using HelpMotivateMe.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -146,12 +146,53 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Apply migrations on startup in development
-if (app.Environment.IsDevelopment())
+// Apply migrations on startup with lock to prevent race conditions
+using (var scope = app.Services.CreateScope())
 {
-    using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+    // Use PostgreSQL advisory lock to ensure only one instance runs migrations
+    var connection = db.Database.GetDbConnection();
+    await connection.OpenAsync();
+
+    try
+    {
+        // Try to acquire advisory lock (lock id: 1)
+        await using var lockCommand = connection.CreateCommand();
+        lockCommand.CommandText = "SELECT pg_try_advisory_lock(1)";
+        var acquired = (bool)(await lockCommand.ExecuteScalarAsync())!;
+
+        if (acquired)
+        {
+            logger.LogInformation("Acquired migration lock, applying migrations...");
+            db.Database.Migrate();
+            logger.LogInformation("Migrations applied successfully");
+
+            // Release the lock
+            await using var unlockCommand = connection.CreateCommand();
+            unlockCommand.CommandText = "SELECT pg_advisory_unlock(1)";
+            await unlockCommand.ExecuteScalarAsync();
+        }
+        else
+        {
+            logger.LogInformation("Another instance is running migrations, waiting...");
+            // Wait for migrations to complete by trying to get a blocking lock
+            await using var waitCommand = connection.CreateCommand();
+            waitCommand.CommandText = "SELECT pg_advisory_lock(1)";
+            await waitCommand.ExecuteScalarAsync();
+
+            // Release immediately - we just wanted to wait
+            await using var unlockCommand = connection.CreateCommand();
+            unlockCommand.CommandText = "SELECT pg_advisory_unlock(1)";
+            await unlockCommand.ExecuteScalarAsync();
+            logger.LogInformation("Migrations completed by another instance");
+        }
+    }
+    finally
+    {
+        await connection.CloseAsync();
+    }
 }
 
 app.Run();

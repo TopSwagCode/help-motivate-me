@@ -1,11 +1,9 @@
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
+using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
-namespace HelpMotivateMe.Infrastructure.Data.Seeders;
+namespace HelpMotivateMe.Api.Services;
 
 public class AdminUserSeeder : IHostedService
 {
