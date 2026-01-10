@@ -1,15 +1,16 @@
 # Production Deployment Guide
 
-This guide explains how to set up GitHub Container Registry (GHCR) and deploy Help Motivate Me to staging and production environments.
+This guide explains how to set up GitHub Container Registry (GHCR) and deploy Help Motivate Me to local, staging, and production environments.
 
 ## Table of Contents
 1. [GitHub Container Registry Setup](#github-container-registry-setup)
 2. [GitHub Actions Workflow](#github-actions-workflow)
-3. [Server Prerequisites](#server-prerequisites)
-4. [Staging Deployment](#staging-deployment)
-5. [Production Deployment](#production-deployment)
-6. [DNS Configuration](#dns-configuration)
-7. [Troubleshooting](#troubleshooting)
+3. [Local Development with GHCR Images](#local-development-with-ghcr-images)
+4. [Server Prerequisites](#server-prerequisites)
+5. [Staging Deployment](#staging-deployment)
+6. [Production Deployment](#production-deployment)
+7. [DNS Configuration](#dns-configuration)
+8. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -88,6 +89,50 @@ git push origin v1.0.0
 
 ---
 
+## Local Development with GHCR Images
+
+Use this setup when you want to quickly test pre-built images locally without building from source.
+
+### 1. Authenticate with GHCR (one-time setup)
+
+```bash
+# Login to GHCR with your PAT
+echo "YOUR_PAT_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+```
+
+### 2. Configure Environment
+
+```bash
+# Copy example env file
+cp .env.local.example .env.local
+
+# Edit if needed (defaults work out of the box)
+nano .env.local
+```
+
+### 3. Start Services
+
+```bash
+# Pull latest images and start
+docker compose -f docker-compose.local.yml --env-file .env.local pull
+docker compose -f docker-compose.local.yml --env-file .env.local up -d
+```
+
+### 4. Access the Application
+
+- **Frontend:** http://localhost
+- **Traefik Dashboard:** http://localhost:8080
+- **Mailpit (emails):** http://localhost:8025 or http://localhost/mail
+- **API:** http://localhost/api
+
+### 5. Stop Services
+
+```bash
+docker compose -f docker-compose.local.yml --env-file .env.local down
+```
+
+---
+
 ## Server Prerequisites
 
 ### Required Software
@@ -116,6 +161,7 @@ echo "YOUR_PAT_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-
 # Example:
 echo "ghp_xxxxxxxxxxxx" | docker login ghcr.io -u TopSwagCode --password-stdin
 ```
+
 
 ---
 
@@ -356,6 +402,9 @@ Before going live:
 ## Quick Reference
 
 ```bash
+# Start local (using GHCR images)
+docker compose -f docker-compose.local.yml --env-file .env.local up -d
+
 # Start staging
 docker compose -f docker-compose.staging.yml --env-file .env.staging up -d
 

@@ -8,13 +8,17 @@
 services:
   # Traefik Reverse Proxy with Let's Encrypt Production
   traefik:
-    image: traefik:v3.0
+    image: traefik:v2.11
     container_name: helpmotivateme-traefik
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DOCKER_API_VERSION=1.52
     command:
       # Enable the Dashboard
       - "--api.dashboard=true"
       # Docker provider
       - "--providers.docker=true"
+      - "--providers.docker.endpoint=unix:///run/docker.sock"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network=helpmotivateme-network"
       # Entrypoints
@@ -35,7 +39,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock
       - letsencrypt_data:/letsencrypt
     networks:
       - helpmotivateme-network
@@ -69,10 +73,10 @@ services:
       - helpmotivateme-network
     restart: unless-stopped
 
-  # Backend API
-  backend:
+  # Backend API - Instance 1
+  backend-1:
     image: ghcr.io/${GITHUB_REPOSITORY}-backend:${IMAGE_TAG:-latest}
-    container_name: helpmotivateme-backend
+    container_name: helpmotivateme-backend-1
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:5001
@@ -89,6 +93,8 @@ services:
       - FrontendUrl=https://helpmotivate.me
       - Auth__AllowSignups=${ALLOW_SIGNUPS:-false}
       - OpenAI__ApiKey=${OPENAI_API_KEY}
+      - OAuth__GitHub__ClientId=${GITHUB_OAUTH_CLIENT_ID}
+      - OAuth__GitHub__ClientSecret=${GITHUB_OAUTH_CLIENT_SECRET}
     expose:
       - "5001"
     volumes:
@@ -100,6 +106,10 @@ services:
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
       - "traefik.http.services.backend.loadbalancer.server.port=5001"
+      # Health check configuration
+      - "traefik.http.services.backend.loadbalancer.healthcheck.path=/api/health"
+      - "traefik.http.services.backend.loadbalancer.healthcheck.interval=10s"
+      - "traefik.http.services.backend.loadbalancer.healthcheck.timeout=3s"
     depends_on:
       postgres:
         condition: service_healthy
@@ -107,10 +117,98 @@ services:
       - helpmotivateme-network
     restart: unless-stopped
 
-  # Frontend
-  frontend:
+  # Backend API - Instance 2
+  backend-2:
+    image: ghcr.io/${GITHUB_REPOSITORY}-backend:${IMAGE_TAG:-latest}
+    container_name: helpmotivateme-backend-2
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5001
+      - ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=${POSTGRES_DB:-helpmotivateme};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD}
+      - Email__SmtpHost=${SMTP_HOST}
+      - Email__SmtpPort=${SMTP_PORT:-587}
+      - Email__SmtpUsername=${SMTP_USERNAME}
+      - Email__SmtpPassword=${SMTP_PASSWORD}
+      - Email__FromAddress=${SMTP_FROM:-noreply@helpmotivate.me}
+      - Email__FromName=Help Motivate Me
+      - LocalStorage__BasePath=/app/uploads
+      - LocalStorage__BaseUrl=/api/files
+      - FrontendUrl=https://helpmotivate.me
+      - Auth__AllowSignups=${ALLOW_SIGNUPS:-false}
+      - OpenAI__ApiKey=${OPENAI_API_KEY}
+      - OAuth__GitHub__ClientId=${GITHUB_OAUTH_CLIENT_ID}
+      - OAuth__GitHub__ClientSecret=${GITHUB_OAUTH_CLIENT_SECRET}
+    expose:
+      - "5001"
+    volumes:
+      - uploads_data:/app/uploads
+    labels:
+      - "traefik.enable=true"
+      # Route /api/* to backend for both www and non-www
+      - "traefik.http.routers.backend.rule=Host(`helpmotivate.me`, `www.helpmotivate.me`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.backend.loadbalancer.server.port=5001"
+      # Health check configuration
+      - "traefik.http.services.backend.loadbalancer.healthcheck.path=/api/health"
+      - "traefik.http.services.backend.loadbalancer.healthcheck.interval=10s"
+      - "traefik.http.services.backend.loadbalancer.healthcheck.timeout=3s"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
+  # Backend API - Instance 3
+  backend-3:
+    image: ghcr.io/${GITHUB_REPOSITORY}-backend:${IMAGE_TAG:-latest}
+    container_name: helpmotivateme-backend-3
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5001
+      - ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=${POSTGRES_DB:-helpmotivateme};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD}
+      - Email__SmtpHost=${SMTP_HOST}
+      - Email__SmtpPort=${SMTP_PORT:-587}
+      - Email__SmtpUsername=${SMTP_USERNAME}
+      - Email__SmtpPassword=${SMTP_PASSWORD}
+      - Email__FromAddress=${SMTP_FROM:-noreply@helpmotivate.me}
+      - Email__FromName=Help Motivate Me
+      - LocalStorage__BasePath=/app/uploads
+      - LocalStorage__BaseUrl=/api/files
+      - FrontendUrl=https://helpmotivate.me
+      - Auth__AllowSignups=${ALLOW_SIGNUPS:-false}
+      - OpenAI__ApiKey=${OPENAI_API_KEY}
+      - OAuth__GitHub__ClientId=${GITHUB_OAUTH_CLIENT_ID}
+      - OAuth__GitHub__ClientSecret=${GITHUB_OAUTH_CLIENT_SECRET}
+    expose:
+      - "5001"
+    volumes:
+      - uploads_data:/app/uploads
+    labels:
+      - "traefik.enable=true"
+      # Route /api/* to backend for both www and non-www
+      - "traefik.http.routers.backend.rule=Host(`helpmotivate.me`, `www.helpmotivate.me`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.backend.loadbalancer.server.port=5001"
+      # Health check configuration
+      - "traefik.http.services.backend.loadbalancer.healthcheck.path=/api/health"
+      - "traefik.http.services.backend.loadbalancer.healthcheck.interval=10s"
+      - "traefik.http.services.backend.loadbalancer.healthcheck.timeout=3s"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
+  # Frontend - Instance 1
+  frontend-1:
     image: ghcr.io/${GITHUB_REPOSITORY}-frontend:${IMAGE_TAG:-latest}
-    container_name: helpmotivateme-frontend
+    container_name: helpmotivateme-frontend-1
     expose:
       - "3000"
     labels:
@@ -121,6 +219,10 @@ services:
       - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
       - "traefik.http.routers.frontend.priority=1"
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+      # Health check configuration
+      - "traefik.http.services.frontend.loadbalancer.healthcheck.path=/"
+      - "traefik.http.services.frontend.loadbalancer.healthcheck.interval=10s"
+      - "traefik.http.services.frontend.loadbalancer.healthcheck.timeout=3s"
       # www redirect to non-www
       - "traefik.http.routers.frontend-www.rule=Host(`www.helpmotivate.me`)"
       - "traefik.http.routers.frontend-www.entrypoints=websecure"
@@ -130,7 +232,77 @@ services:
       - "traefik.http.middlewares.www-redirect.redirectregex.replacement=https://helpmotivate.me/$${1}"
       - "traefik.http.middlewares.www-redirect.redirectregex.permanent=true"
     depends_on:
-      - backend
+      - backend-1
+      - backend-2
+      - backend-3
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
+  # Frontend - Instance 2
+  frontend-2:
+    image: ghcr.io/${GITHUB_REPOSITORY}-frontend:${IMAGE_TAG:-latest}
+    container_name: helpmotivateme-frontend-2
+    expose:
+      - "3000"
+    labels:
+      - "traefik.enable=true"
+      # Main domain
+      - "traefik.http.routers.frontend.rule=Host(`helpmotivate.me`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.frontend.priority=1"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+      # Health check configuration
+      - "traefik.http.services.frontend.loadbalancer.healthcheck.path=/"
+      - "traefik.http.services.frontend.loadbalancer.healthcheck.interval=10s"
+      - "traefik.http.services.frontend.loadbalancer.healthcheck.timeout=3s"
+      # www redirect to non-www
+      - "traefik.http.routers.frontend-www.rule=Host(`www.helpmotivate.me`)"
+      - "traefik.http.routers.frontend-www.entrypoints=websecure"
+      - "traefik.http.routers.frontend-www.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.frontend-www.middlewares=www-redirect"
+      - "traefik.http.middlewares.www-redirect.redirectregex.regex=^https://www\\.helpmotivate\\.me/(.*)"
+      - "traefik.http.middlewares.www-redirect.redirectregex.replacement=https://helpmotivate.me/$${1}"
+      - "traefik.http.middlewares.www-redirect.redirectregex.permanent=true"
+    depends_on:
+      - backend-1
+      - backend-2
+      - backend-3
+    networks:
+      - helpmotivateme-network
+    restart: unless-stopped
+
+  # Frontend - Instance 3
+  frontend-3:
+    image: ghcr.io/${GITHUB_REPOSITORY}-frontend:${IMAGE_TAG:-latest}
+    container_name: helpmotivateme-frontend-3
+    expose:
+      - "3000"
+    labels:
+      - "traefik.enable=true"
+      # Main domain
+      - "traefik.http.routers.frontend.rule=Host(`helpmotivate.me`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.frontend.priority=1"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+      # Health check configuration
+      - "traefik.http.services.frontend.loadbalancer.healthcheck.path=/"
+      - "traefik.http.services.frontend.loadbalancer.healthcheck.interval=10s"
+      - "traefik.http.services.frontend.loadbalancer.healthcheck.timeout=3s"
+      # www redirect to non-www
+      - "traefik.http.routers.frontend-www.rule=Host(`www.helpmotivate.me`)"
+      - "traefik.http.routers.frontend-www.entrypoints=websecure"
+      - "traefik.http.routers.frontend-www.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.frontend-www.middlewares=www-redirect"
+      - "traefik.http.middlewares.www-redirect.redirectregex.regex=^https://www\\.helpmotivate\\.me/(.*)"
+      - "traefik.http.middlewares.www-redirect.redirectregex.replacement=https://helpmotivate.me/$${1}"
+      - "traefik.http.middlewares.www-redirect.redirectregex.permanent=true"
+    depends_on:
+      - backend-1
+      - backend-2
+      - backend-3
     networks:
       - helpmotivateme-network
     restart: unless-stopped

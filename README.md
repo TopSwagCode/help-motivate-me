@@ -294,3 +294,26 @@ See [BACKUP.md](BACKUP.md) for complete documentation and [BACKUP-TEST.md](BACKU
 ## Contributing
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed architecture documentation and design decisions.
+
+
+## Secrets :
+https://github.com/settings/tokens
+docker login ghcr.io -u topswagcode
+password: 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
+
+
+Github local oauth credentials:
+clientid: Ov23li2JlCdG6ZPhzTSy
+secret: 67b0cbc6965f00e2846dd4a4f69c0034d976f64d
+
+ngrok / now staging / preprod:
+"ClientId": "Ov23liKssGLVm7pfQPe7",
+"ClientSecret": "377de3e05cbf9b8d9ce1d2589713d212a5eb21e1"
+
+
+K0765354823
+#TopSwagCode2024
+
+docker exec helpmotivateme-db \
+  psql -U postgres -d helpmotivateme \
+  -c "UPDATE users SET \"Role\" = 'Admin' WHERE \"Email\" = 'joshua.ryder@outlook.com';"

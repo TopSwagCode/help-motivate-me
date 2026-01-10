@@ -2,6 +2,7 @@ using System.Security.Claims;
 using AspNet.Security.OAuth.GitHub;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
+using HelpMotivateMe.Infrastructure.Data.Seeders;
 using HelpMotivateMe.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -35,6 +36,9 @@ builder.Services.AddSingleton<IStorageService, LocalFileStorageService>();
 
 // OpenAI Service
 builder.Services.AddHttpClient<IOpenAiService, OpenAiService>();
+
+// Database Seeder
+builder.Services.AddHostedService<AdminUserSeeder>();
 
 // CORS
 builder.Services.AddCors(options =>

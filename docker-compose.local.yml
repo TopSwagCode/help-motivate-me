@@ -1,53 +1,39 @@
-# Docker Compose for Staging/Preprod Environment
-# Uses Let's Encrypt STAGING certificates (not trusted by browsers, but useful for testing)
+# Docker Compose for Local Development using GitHub Container Registry Images
+# Uses HTTP only (no SSL) for local development
 # 
 # Usage:
-# 1. Copy .env.staging.example to .env.staging and configure
-# 2. docker compose -f docker-compose.staging.yml --env-file .env.staging up -d
+# 1. Copy .env.local.example to .env.local and configure
+# 2. docker compose -f docker-compose.local.yml --env-file .env.local up -d
 
 services:
-  # Traefik Reverse Proxy with Let's Encrypt Staging
+  # Traefik Reverse Proxy (HTTP only for local dev)
   traefik:
     image: traefik:v3.0
     container_name: helpmotivateme-traefik
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DOCKER_API_VERSION=1.52
     command:
       # Enable the Dashboard
+      - "--api.insecure=true"
       - "--api.dashboard=true"
       # Docker provider
       - "--providers.docker=true"
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network=helpmotivateme-network"
       # Entrypoints
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      # HTTP to HTTPS redirect
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      # Let's Encrypt STAGING (for testing - certificates won't be trusted by browsers)
-      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.email=${LETSENCRYPT_EMAIL}"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       # Logging
       - "--log.level=INFO"
       - "--accesslog=true"
     ports:
-      - "80:80"
-      - "443:443"
+      - "80:80"       # HTTP
+      - "8080:8080"   # Traefik Dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - letsencrypt_data:/letsencrypt
     networks:
       - helpmotivateme-network
-    labels:
-      # Dashboard
-      - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`traefik.${DOMAIN}`)"
-      - "traefik.http.routers.dashboard.entrypoints=websecure"
-      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.dashboard.service=api@internal"
-      - "traefik.http.routers.dashboard.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_DASHBOARD_AUTH}"
     restart: unless-stopped
 
   # PostgreSQL Database
@@ -57,7 +43,9 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-helpmotivateme}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -69,21 +57,21 @@ services:
       - helpmotivateme-network
     restart: unless-stopped
 
-  # Mailpit for email testing (optional in staging, can be removed for real SMTP)
+  # Mailpit for email testing
   mailpit:
     image: axllent/mailpit
     container_name: helpmotivateme-mailpit
     restart: unless-stopped
+    ports:
+      - "8025:8025"  # Direct access for viewing emails
     expose:
-      - "8025"
-      - "1025"
+      - "1025"  # SMTP (internal only)
     environment:
       - MP_WEBROOT=/mail
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.mailpit.rule=Host(`${DOMAIN}`) && PathPrefix(`/mail`)"
-      - "traefik.http.routers.mailpit.entrypoints=websecure"
-      - "traefik.http.routers.mailpit.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.mailpit.rule=PathPrefix(`/mail`)"
+      - "traefik.http.routers.mailpit.entrypoints=web"
       - "traefik.http.services.mailpit.loadbalancer.server.port=8025"
     networks:
       - helpmotivateme-network
@@ -93,32 +81,35 @@ services:
     image: ghcr.io/${GITHUB_REPOSITORY}-backend:${IMAGE_TAG:-latest}
     container_name: helpmotivateme-backend
     environment:
-      - ASPNETCORE_ENVIRONMENT=Staging
+      - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5001
       - ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
-      - ConnectionStrings__DefaultConnection=Host=postgres;Database=${POSTGRES_DB:-helpmotivateme};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD}
-      - Email__SmtpHost=${SMTP_HOST:-mailpit}
-      - Email__SmtpPort=${SMTP_PORT:-1025}
-      - Email__FromAddress=${SMTP_FROM:-noreply@helpmotivateme.com}
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=${POSTGRES_DB:-helpmotivateme};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}
+      - Email__SmtpHost=mailpit
+      - Email__SmtpPort=1025
+      - Email__FromAddress=noreply@helpmotivateme.com
       - Email__FromName=Help Motivate Me
       - LocalStorage__BasePath=/app/uploads
       - LocalStorage__BaseUrl=/api/files
-      - FrontendUrl=https://${DOMAIN}
-      - Auth__AllowSignups=${ALLOW_SIGNUPS:-false}
+      - FrontendUrl=http://localhost
+      - Auth__AllowSignups=${ALLOW_SIGNUPS:-true}
       - OpenAI__ApiKey=${OPENAI_API_KEY}
+      - OAuth__GitHub__ClientId=${GITHUB_OAUTH_CLIENT_ID}
+      - OAuth__GitHub__ClientSecret=${GITHUB_OAUTH_CLIENT_SECRET}
     expose:
       - "5001"
     volumes:
       - uploads_data:/app/uploads
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`${DOMAIN}`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.backend.entrypoints=websecure"
-      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.backend.rule=PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.entrypoints=web"
       - "traefik.http.services.backend.loadbalancer.server.port=5001"
     depends_on:
       postgres:
         condition: service_healthy
+      mailpit:
+        condition: service_started
     networks:
       - helpmotivateme-network
     restart: unless-stopped
@@ -131,9 +122,8 @@ services:
       - "3000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.frontend.entrypoints=websecure"
-      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
       - "traefik.http.routers.frontend.priority=1"
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
     depends_on:
@@ -153,11 +143,11 @@ services:
       - POSTGRES_PORT=5432
       - POSTGRES_DB=${POSTGRES_DB:-helpmotivateme}
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
       - RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-30}
       - MAX_BACKUPS=${BACKUP_MAX_BACKUPS:-10}
       - BACKUP_SCHEDULE=${BACKUP_SCHEDULE:-0 * * * *}
-      - REMOTE_BACKUP_ENABLED=${REMOTE_BACKUP_ENABLED:-false}
+      - REMOTE_BACKUP_ENABLED=false
       - TZ=UTC
     volumes:
       - postgres_data:/var/lib/postgresql/data:ro
@@ -174,7 +164,6 @@ volumes:
   postgres_data:
   uploads_data:
   backup_data:
-  letsencrypt_data:
 
 networks:
   helpmotivateme-network:
