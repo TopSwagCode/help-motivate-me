@@ -1,9 +1,9 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-# Install EF tools first
+# Install EF tools and set PATH
 RUN dotnet tool install --global dotnet-ef
-ENV PATH="$PATH:/root/.dotnet/tools"
+ENV PATH="${PATH}:/root/.dotnet/tools"
 
 # Copy project files
 COPY src/HelpMotivateMe.Api/HelpMotivateMe.Api.csproj src/HelpMotivateMe.Api/
@@ -18,10 +18,8 @@ COPY src/ src/
 
 # Generate migration if none exist, then build
 WORKDIR /src/src/HelpMotivateMe.Api
-RUN if [ ! -d "../HelpMotivateMe.Infrastructure/Migrations" ] || [ -z "$(ls -A ../HelpMotivateMe.Infrastructure/Migrations 2>/dev/null)" ]; then \
-      dotnet ef migrations add InitialCreate --project ../HelpMotivateMe.Infrastructure; \
-    fi
+RUN /root/.dotnet/tools/dotnet-ef migrations add InitialCreate --project ../HelpMotivateMe.Infrastructure || true
 RUN dotnet build -c Release
 
 # Entry point runs migrations
-ENTRYPOINT ["dotnet", "ef", "database", "update", "--project", "../HelpMotivateMe.Infrastructure", "--no-build", "-c", "Release"]
+ENTRYPOINT ["/root/.dotnet/tools/dotnet-ef", "database", "update", "--project", "../HelpMotivateMe.Infrastructure", "--no-build", "-c", "Release"]
