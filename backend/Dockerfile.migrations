@@ -5,6 +5,9 @@ WORKDIR /src
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="${PATH}:/root/.dotnet/tools"
 
+# Install PostgreSQL client for database creation
+RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/apt/lists/*
+
 # Copy project files
 COPY src/HelpMotivateMe.Api/HelpMotivateMe.Api.csproj src/HelpMotivateMe.Api/
 COPY src/HelpMotivateMe.Core/HelpMotivateMe.Core.csproj src/HelpMotivateMe.Core/
@@ -20,5 +23,9 @@ COPY src/ src/
 WORKDIR /src/src/HelpMotivateMe.Api
 RUN dotnet build -c Release
 
-# Entry point runs migrations
-ENTRYPOINT ["/root/.dotnet/tools/dotnet-ef", "database", "update", "--project", "../HelpMotivateMe.Infrastructure", "--no-build", "--configuration", "Release"]
+# Copy migration script
+COPY run-migrations.sh /run-migrations.sh
+RUN chmod +x /run-migrations.sh
+
+# Entry point creates database if needed, then runs migrations
+ENTRYPOINT ["/run-migrations.sh"]
