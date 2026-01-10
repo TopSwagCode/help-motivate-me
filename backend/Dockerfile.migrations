@@ -22,4 +22,4 @@ RUN /root/.dotnet/tools/dotnet-ef migrations add InitialCreate --project ../Help
 RUN dotnet build -c Release
 
 # Entry point runs migrations
-ENTRYPOINT ["/root/.dotnet/tools/dotnet-ef", "database", "update", "--project", "../HelpMotivateMe.Infrastructure", "--no-build", "-c", "Release"]
+ENTRYPOINT ["/root/.dotnet/tools/dotnet-ef", "database", "update", "--project", "../HelpMotivateMe.Infrastructure", "--no-build", "--configuration", "Release"]
