@@ -6,6 +6,7 @@ using HelpMotivateMe.Api.Services;
 using HelpMotivateMe.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,11 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 // Database
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Data Protection - store keys in database for persistence across restarts and multiple instances
+builder.Services.AddDataProtection()
+    .SetApplicationName("HelpMotivateMe")
+    .PersistKeysToDbContext<AppDbContext>();
 
 // Email Service
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();

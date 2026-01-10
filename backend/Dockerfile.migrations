@@ -16,9 +16,8 @@ RUN dotnet restore src/HelpMotivateMe.Api/HelpMotivateMe.Api.csproj
 # Copy source
 COPY src/ src/
 
-# Generate migration if none exist, then build
+# Build the project (migrations are already in the repository)
 WORKDIR /src/src/HelpMotivateMe.Api
-RUN /root/.dotnet/tools/dotnet-ef migrations add InitialCreate --project ../HelpMotivateMe.Infrastructure || true
 RUN dotnet build -c Release
 
 # Entry point runs migrations

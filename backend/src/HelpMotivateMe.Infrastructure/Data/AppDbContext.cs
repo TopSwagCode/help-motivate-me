@@ -1,9 +1,10 @@
 using HelpMotivateMe.Core.Entities;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HelpMotivateMe.Infrastructure.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext : DbContext, IDataProtectionKeyContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -25,6 +26,9 @@ public class AppDbContext : DbContext
     public DbSet<WaitlistEntry> WaitlistEntries => Set<WaitlistEntry>();
     public DbSet<WhitelistEntry> WhitelistEntries => Set<WhitelistEntry>();
     public DbSet<AiUsageLog> AiUsageLogs => Set<AiUsageLog>();
+
+    // Data Protection keys for persistent authentication across restarts and instances
+    public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
