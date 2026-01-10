@@ -1,6 +1,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
+# Install EF tools first
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+
 # Copy project files
 COPY src/HelpMotivateMe.Api/HelpMotivateMe.Api.csproj src/HelpMotivateMe.Api/
 COPY src/HelpMotivateMe.Core/HelpMotivateMe.Core.csproj src/HelpMotivateMe.Core/
@@ -9,14 +13,15 @@ COPY src/HelpMotivateMe.Infrastructure/HelpMotivateMe.Infrastructure.csproj src/
 # Restore
 RUN dotnet restore src/HelpMotivateMe.Api/HelpMotivateMe.Api.csproj
 
-# Copy source and build
+# Copy source
 COPY src/ src/
-RUN dotnet build src/HelpMotivateMe.Api/HelpMotivateMe.Api.csproj -c Release
 
-# Install EF tools
-RUN dotnet tool install --global dotnet-ef
-ENV PATH="$PATH:/root/.dotnet/tools"
+# Generate migration if none exist, then build
+WORKDIR /src/src/HelpMotivateMe.Api
+RUN if [ ! -d "../HelpMotivateMe.Infrastructure/Migrations" ] || [ -z "$(ls -A ../HelpMotivateMe.Infrastructure/Migrations 2>/dev/null)" ]; then \
+      dotnet ef migrations add InitialCreate --project ../HelpMotivateMe.Infrastructure; \
+    fi
+RUN dotnet build -c Release
 
 # Entry point runs migrations
-WORKDIR /src/src/HelpMotivateMe.Api
 ENTRYPOINT ["dotnet", "ef", "database", "update", "--project", "../HelpMotivateMe.Infrastructure", "--no-build", "-c", "Release"]
