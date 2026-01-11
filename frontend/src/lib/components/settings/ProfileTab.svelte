@@ -1,9 +1,12 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
 	import { updateProfile } from '$lib/api/settings';
+	import { resetOnboarding } from '$lib/api/onboarding';
 
 	let displayName = $state($auth.user?.displayName ?? '');
 	let loading = $state(false);
+	let resetLoading = $state(false);
 	let error = $state('');
 	let success = $state('');
 
@@ -23,6 +26,24 @@
 			error = e instanceof Error ? e.message : 'Failed to update profile';
 		} finally {
 			loading = false;
+		}
+	}
+
+	async function handleResetOnboarding() {
+		if (!confirm('Are you sure you want to restart the onboarding process? This will take you through the setup wizard again.')) {
+			return;
+		}
+
+		resetLoading = true;
+		error = '';
+
+		try {
+			const updatedUser = await resetOnboarding();
+			auth.updateUser(updatedUser);
+			goto('/onboarding');
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to reset onboarding';
+			resetLoading = false;
 		}
 	}
 </script>
@@ -103,5 +124,20 @@
 		{:else}
 			<p class="text-sm text-gray-500">No external accounts linked</p>
 		{/if}
+	</div>
+
+	<!-- Onboarding Section -->
+	<div class="mt-8 pt-6 border-t border-gray-200">
+		<h3 class="text-md font-medium text-gray-900 mb-2">Onboarding</h3>
+		<p class="text-sm text-gray-500 mb-3">
+			Restart the setup wizard to update your identities, goals, and habit stacks.
+		</p>
+		<button
+			onclick={handleResetOnboarding}
+			disabled={resetLoading}
+			class="btn-secondary text-sm"
+		>
+			{resetLoading ? 'Resetting...' : 'Restart Onboarding'}
+		</button>
 	</div>
 </div>
