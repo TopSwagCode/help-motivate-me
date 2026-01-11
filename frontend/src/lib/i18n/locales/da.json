@@ -247,12 +247,20 @@
 	},
 	"goals": {
 		"title": "Mål",
+		"pageTitle": "Mine mål",
+		"newGoal": "Nyt mål",
 		"empty": "Ingen mål endnu. Opret dit første mål for at komme i gang!",
+		"emptyTitle": "Ingen mål endnu",
+		"emptyDescription": "Kom i gang ved at oprette dit første mål.",
+		"createFirst": "Opret dit første mål",
 		"create": "Opret mål",
 		"edit": "Rediger mål",
 		"delete": "Slet mål",
 		"complete": "Marker som fuldført",
 		"uncomplete": "Marker som ufuldført",
+		"activeGoals": "Aktive mål",
+		"completedGoals": "Fuldførte",
+		"tasks": "opgaver",
 		"form": {
 			"title": "Måltitel",
 			"titlePlaceholder": "Hvad vil du opnå?",
@@ -264,10 +272,22 @@
 	},
 	"identities": {
 		"title": "Identiteter",
+		"pageTitle": "Mine identiteter",
+		"newIdentity": "Ny identitet",
 		"empty": "Ingen identiteter endnu. Definer hvem du vil blive!",
+		"emptyTitle": "Ingen identiteter endnu",
+		"emptyDescription": "Opret din første identitet for at begynde at opbygge vaner.",
+		"createFirst": "Opret identitet",
 		"create": "Opret identitet",
 		"edit": "Rediger identitet",
 		"delete": "Slet identitet",
+		"deleteConfirm": "Er du sikker på, at du vil slette denne identitet?",
+		"infoCard": {
+			"title": "Identitetsbaserede vaner",
+			"description": "Identitetsbaserede vaner fokuserer på hvem du bliver, ikke bare hvad du gør. Hver lille handling er en stemme for den type person, du vil være, og konsistens omformer langsomt, hvordan du ser dig selv. Når dine vaner stemmer overens med din identitet, føles fremskridt naturligt i stedet for tvunget.",
+			"createTitle": "Opret dine egne identiteter",
+			"createDescription": "I stedet for at jagte resultater, definer de identiteter, du vil leve efter - såsom \"Jeg er en person, der lærer dagligt\" eller \"Jeg er en person, der holder løfter til mig selv.\" Lad dine vaner blive bevis på, at disse identiteter er sande."
+		},
 		"form": {
 			"name": "Identitetsnavn",
 			"namePlaceholder": "f.eks., En sund person",
@@ -280,10 +300,28 @@
 	},
 	"habitStacks": {
 		"title": "Vanestakke",
+		"pageTitle": "Vanestakke",
+		"newStack": "Ny stak",
 		"empty": "Ingen vanestakke endnu. Opret din første rutine!",
+		"emptyTitle": "Ingen vanestakke endnu",
+		"emptyDescription": "Opret din første vanestak for at kæde vaner sammen.",
+		"createFirst": "Opret vanestak",
 		"create": "Opret vanestak",
 		"edit": "Rediger vanestak",
 		"delete": "Slet vanestak",
+		"deleteConfirm": "Er du sikker på, at du vil slette denne vanestak?",
+		"deleteItemConfirm": "Slet denne vane fra stakken?",
+		"inactive": "Inaktiv",
+		"habits": "vaner",
+		"habit": "vane",
+		"noHabitsYet": "Ingen vaner i denne stak endnu",
+		"dayStreak": "dages stribe",
+		"infoCard": {
+			"title": "Vanestabling",
+			"description": "Vanestabling virker ved at knytte en ny vane til noget, du allerede gør. Ved at forankre små forbedringer til eksisterende rutiner reducerer du friktion og gør konsistens nemmere. Over tid danner disse sammenkædede handlinger kraftfulde daglige rytmer, der kører næsten automatisk.",
+			"createTitle": "Byg dine egne vanestakke",
+			"createDescription": "Start med vaner, der allerede sker hver dag, og beslut derefter hvilken positiv handling du vil følge dem med. Simple regler som \"Efter jeg afslutter X, vil jeg gøre Y\" omdanner almindelige øjeblikke til pålidelige signaler for bedre adfærd."
+		},
 		"form": {
 			"name": "Staknavn",
 			"namePlaceholder": "f.eks., Morgenrutine",
@@ -298,21 +336,87 @@
 		"chain": {
 			"after": "Efter jeg",
 			"iWill": "Vil jeg"
+		},
+		"createPopup": {
+			"title": "Opret vanestak",
+			"habitChain": "Vanekæde",
+			"afterI": "Efter jeg...",
+			"iWillDo": "Vil jeg...",
+			"addAnother": "Tilføj endnu en vane",
+			"remove": "Fjern",
+			"creating": "Opretter...",
+			"createStack": "Opret stak",
+			"placeholderCue": "vågner",
+			"placeholderHabit": "drikke et glas vand",
+			"placeholderPreviousHabit": "forrige vane"
+		},
+		"editPopup": {
+			"title": "Rediger vanestak",
+			"active": "Aktiv",
+			"saveChanges": "Gem ændringer",
+			"saving": "Gemmer...",
+			"habitsInStack": "Vaner i stakken",
+			"addNewHabit": "Tilføj ny vane",
+			"adding": "Tilføjer...",
+			"addHabit": "Tilføj vane",
+			"deleteStack": "Slet vanestak"
+		},
+		"reorderPopup": {
+			"title": "Omarranger stakke",
+			"description": "Træk elementer eller brug pilene til at omordne dine vanestakke.",
+			"saving": "Gemmer...",
+			"saveOrder": "Gem rækkefølge"
+		},
+		"errors": {
+			"stackNameRequired": "Staknavn er påkrævet",
+			"atLeastOneHabit": "Mindst én komplet vaneelement er påkrævet"
 		}
 	},
 	"journal": {
 		"title": "Dagbog",
+		"pageTitle": "Dagbog",
+		"newEntry": "Nyt indlæg",
 		"empty": "Ingen dagbogsindlæg endnu. Begynd at reflektere over din rejse!",
+		"emptyTitle": "Ingen dagbogsindlæg endnu",
+		"emptyDescription": "Begynd at dokumentere din rejse ved at oprette dit første indlæg.",
+		"createFirst": "Opret indlæg",
 		"create": "Nyt indlæg",
 		"edit": "Rediger indlæg",
 		"delete": "Slet indlæg",
+		"deleteConfirm": "Er du sikker på, at du vil slette dette dagbogsindlæg?",
+		"deleteImageConfirm": "Slet dette billede?",
 		"form": {
 			"title": "Indlægstitel",
-			"titlePlaceholder": "Giv dit indlæg en titel...",
+			"titlePlaceholder": "Hvad skete der i dag?",
 			"content": "Indhold",
 			"contentPlaceholder": "Skriv dine tanker...",
 			"date": "Dato",
-			"submit": "Gem indlæg"
+			"description": "Beskrivelse",
+			"descriptionPlaceholder": "Skriv om din oplevelse...",
+			"submit": "Gem indlæg",
+			"linkTo": "Link til",
+			"none": "Ingen",
+			"habitStack": "Vanestak",
+			"task": "Opgave",
+			"selectHabitStack": "Vælg en vanestak...",
+			"selectTask": "Vælg en opgave..."
+		},
+		"images": {
+			"title": "Billeder",
+			"addImages": "Tilføj billeder",
+			"processing": "Behandler...",
+			"new": "Ny",
+			"imageNote": "Billeder komprimeres automatisk til WebP. Maks 5 billeder, 5MB hver. GIF'er bevares.",
+			"canOnlyAdd": "Kan kun tilføje {count} flere billede(r)"
+		},
+		"modal": {
+			"newEntry": "Nyt indlæg",
+			"editEntry": "Rediger indlæg",
+			"titleRequired": "Titel er påkrævet",
+			"saving": "Gemmer...",
+			"uploading": "Uploader...",
+			"saveChanges": "Gem ændringer",
+			"createEntry": "Opret indlæg"
 		}
 	},
 	"today": {
@@ -325,23 +429,109 @@
 		"noTasks": "Ingen opgaver i dag. Nyd din dag!",
 		"habitStacks": "Vanestakke",
 		"tasks": "Opgaver",
-		"journal": "Dagbog"
+		"journal": "Dagbog",
+		"jumpToToday": "Gå til i dag",
+		"identityVotes": "Identitetsstemmer",
+		"completeAll": "Fuldfør alle",
+		"completed": "Fuldført",
+		"noPendingTasks": "Ingen ventende opgaver for denne dag",
+		"noCompletedTasks": "Ingen fuldførte opgaver endnu",
+		"allClear": "Alt klart!",
+		"allClearDescription": "Ingen vanestakke eller opgaver for denne dag. Opret nogle vanestakke for at opbygge din rutine.",
+		"createHabitStack": "Opret vanestak",
+		"postponeTask": "Udskyd opgave",
+		"newDueDate": "Ny forfaldsdato",
+		"editTask": "Rediger opgave",
+		"taskTitle": "Titel",
+		"taskTitlePlaceholder": "Opgavetitel",
+		"taskDescription": "Beskrivelse",
+		"taskDescriptionPlaceholder": "Tilføj en beskrivelse...",
+		"dueDate": "Forfaldsdato",
+		"identity": "Identitet",
+		"noIdentity": "Ingen identitet",
+		"snooze1Week": "Udskyd 1 uge",
+		"movedOutsideView": "Flyttet udenfor 7-dages visning",
+		"dayStreak": "dages stribe",
+		"dates": {
+			"today": "I dag",
+			"tomorrow": "I morgen",
+			"yesterday": "I går",
+			"daysAgo": "{count} dage siden",
+			"noDate": "Ingen dato"
+		}
 	},
 	"analytics": {
 		"title": "Analyse",
+		"pageTitle": "Analyse",
 		"streak": {
 			"current": "Nuværende stribe",
 			"longest": "Længste stribe",
 			"days": "dage"
 		},
 		"completionRate": "Fuldførelsesrate",
-		"tasksCompleted": "Opgaver fuldført"
+		"tasksCompleted": "Opgaver fuldført",
+		"summary": {
+			"totalHabits": "Totale vaner",
+			"activeStreaks": "Aktive striber",
+			"longestStreak": "Længste stribe"
+		},
+		"rates": {
+			"title": "Fuldførelsesrater",
+			"daily": "Daglig",
+			"weekly": "Ugentlig",
+			"monthly": "Månedlig",
+			"totalCompletions": "Totale fuldførelser",
+			"missedDays": "Manglende dage"
+		},
+		"heatmap": {
+			"title": "Aktivitet (Sidste 90 dage)",
+			"less": "Mindre",
+			"more": "Mere",
+			"completion": "fuldførelse",
+			"completions": "fuldførelser"
+		},
+		"streaks": {
+			"title": "Vanestriber",
+			"longest": "Længste",
+			"last": "Sidst"
+		},
+		"empty": {
+			"title": "Ingen stribedata endnu",
+			"description": "Fuldfør gentagne opgaver for at begynde at opbygge striber.",
+			"goToDashboard": "Gå til dashboard"
+		}
 	},
 	"buddies": {
 		"title": "Ansvarsvenner",
+		"pageTitle": "Ansvarsvenner",
 		"empty": "Ingen venner endnu. Inviter nogen til at hjælpe dig med at holde dig ansvarlig!",
-		"invite": "Inviter ven",
-		"inviteDescription": "Send en invitation til nogen, der kan hjælpe dig med at holde dig ansvarlig",
+		"invite": {
+			"title": "Inviter en ny ansvarsven",
+			"description": "Indtast e-mailadressen på en person, du gerne vil have til at hjælpe dig med at holde dig ansvarlig. De modtager en e-mailinvitation med instruktioner om, hvordan de kan se dine fremskridt.",
+			"placeholder": "ven@eksempel.dk",
+			"send": "Send invitation",
+			"sending": "Sender...",
+			"success": "Invitation sendt!",
+			"emailRequired": "Indtast venligst en e-mailadresse"
+		},
+		"myBuddies": {
+			"title": "Mine ansvarsvenner",
+			"description": "Disse personer kan se dine daglige fremskridt og efterlade opmuntrende noter i din dagbog.",
+			"empty": "Du har ikke tilføjet nogen ansvarsvenner endnu.",
+			"emptyHint": "Inviter nogen ved hjælp af formularen ovenfor!",
+			"added": "Tilføjet",
+			"remove": "Fjern",
+			"removeConfirm": "Er du sikker på, at du vil fjerne denne ansvarsven?"
+		},
+		"buddyingFor": {
+			"title": "Jeg er ansvarsven for",
+			"description": "Disse personer har tilføjet dig som deres ansvarsven. Du kan se deres fremskridt og opmuntre dem!",
+			"empty": "Ingen har tilføjet dig som deres ansvarsven endnu.",
+			"since": "Siden",
+			"visit": "Besøg",
+			"leave": "Forlad",
+			"leaveConfirm": "Er du sikker på, at du vil stoppe med at være {name}s ansvarsven?"
+		},
 		"email": "E-mailadresse",
 		"sendInvite": "Send invitation",
 		"pending": "Afventende invitationer",
@@ -353,5 +543,101 @@
 		"unauthorized": "Log venligst ind for at fortsætte.",
 		"notFound": "Den anmodede ressource blev ikke fundet.",
 		"validation": "Tjek venligst dit input og prøv igen."
+	},
+	"admin": {
+		"title": "Admin Dashboard",
+		"subtitle": "Systemoversigt og brugeradministration",
+		"stats": {
+			"totalUsers": "Totale brugere",
+			"activeUsers": "aktive",
+			"membershipTiers": "Medlemsniveauer",
+			"usersLoggedInToday": "Brugere logget ind i dag",
+			"activeToday": "aktive i dag",
+			"totalTasksCreated": "Totale opgaver oprettet",
+			"totalTasksCompleted": "Totale opgaver fuldført",
+			"allTime": "alt tid",
+			"daily": {
+				"title": "Daglig statistik",
+				"tasksCreated": "Opgaver oprettet",
+				"tasksCompleted": "Opgaver fuldført",
+				"tasksDue": "Opgaver forfaldne"
+			}
+		},
+		"tiers": {
+			"free": "Gratis",
+			"plus": "Plus",
+			"pro": "Pro"
+		},
+		"users": {
+			"title": "Brugere",
+			"searchPlaceholder": "Søg brugere...",
+			"allTiers": "Alle niveauer",
+			"allStatus": "Alle status",
+			"active": "Aktiv",
+			"inactive": "Inaktiv",
+			"user": "Bruger",
+			"email": "E-mail",
+			"tier": "Niveau",
+			"role": "Rolle",
+			"status": "Status",
+			"joined": "Oprettet",
+			"aiCalls": "AI-kald",
+			"aiCost": "AI-omkostning",
+			"actions": "Handlinger",
+			"activate": "Aktiver",
+			"deactivate": "Deaktiver",
+			"noUsers": "Ingen brugere fundet",
+			"roleUser": "Bruger",
+			"roleAdmin": "Admin"
+		},
+		"accessControl": {
+			"title": "Adgangskontrol",
+			"openSignups": "Åbne tilmeldinger aktiveret",
+			"closedBeta": "Lukket beta - whitelist påkrævet"
+		},
+		"invite": {
+			"title": "Inviter bruger",
+			"placeholder": "Indtast e-mailadresse...",
+			"send": "Send invitation",
+			"sending": "Sender...",
+			"description": "Tilføjer e-mailen til whitelisten og sender en invitations-e-mail."
+		},
+		"waitlist": {
+			"title": "Venteliste",
+			"pending": "afventer",
+			"description": "Brugere der venter på adgang",
+			"email": "E-mail",
+			"name": "Navn",
+			"date": "Dato",
+			"actions": "Handlinger",
+			"approve": "Godkend",
+			"remove": "Fjern",
+			"empty": "Ingen ventelisteposter"
+		},
+		"whitelist": {
+			"title": "Whitelist",
+			"approved": "godkendt",
+			"description": "E-mails der må tilmelde sig",
+			"email": "E-mail",
+			"added": "Tilføjet",
+			"invited": "Inviteret",
+			"actions": "Handlinger",
+			"remove": "Fjern",
+			"sent": "Sendt",
+			"by": "af",
+			"empty": "Ingen whitelistposter"
+		},
+		"errors": {
+			"loadFailed": "Kunne ikke indlæse admin-data",
+			"dailyStatsFailed": "Kunne ikke indlæse daglig statistik",
+			"searchFailed": "Kunne ikke søge brugere",
+			"filterFailed": "Kunne ikke filtrere brugere",
+			"updateUserFailed": "Kunne ikke opdatere bruger",
+			"updateRoleFailed": "Kunne ikke opdatere brugerrolle",
+			"approveFailed": "Kunne ikke godkende ventelistepost",
+			"removeWaitlistFailed": "Kunne ikke fjerne fra venteliste",
+			"removeWhitelistFailed": "Kunne ikke fjerne fra whitelist",
+			"inviteFailed": "Kunne ikke invitere bruger"
+		}
 	}
 }

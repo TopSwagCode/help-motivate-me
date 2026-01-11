@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using HelpMotivateMe.Core.DTOs.Waitlist;
 using HelpMotivateMe.Core.Entities;
+using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -62,8 +63,8 @@ public class WaitlistController : ControllerBase
         _db.WaitlistEntries.Add(entry);
         await _db.SaveChangesAsync();
 
-        // Send confirmation email
-        await _emailService.SendWaitlistConfirmationAsync(email, name);
+        // Send confirmation email (default to English for non-registered users)
+        await _emailService.SendWaitlistConfirmationAsync(email, name, Language.English);
 
         return Ok(new { message = "Thank you for your interest! We'll notify you when a spot opens up." });
     }

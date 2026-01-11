@@ -2,6 +2,8 @@
 	import { onMount, tick } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
+	import { t } from 'svelte-i18n';
+	import { get } from 'svelte/store';
 	import {
 		getHabitStacks,
 		createHabitStack,
@@ -146,7 +148,7 @@
 
 	async function handleCreate() {
 		if (!createName.trim()) {
-			createError = 'Stack name is required';
+			createError = get(t)('habitStacks.errors.stackNameRequired');
 			return;
 		}
 
@@ -154,7 +156,7 @@
 			(item) => item.cueDescription.trim() && item.habitDescription.trim()
 		);
 		if (validItems.length === 0) {
-			createError = 'At least one complete habit item is required';
+			createError = get(t)('habitStacks.errors.atLeastOneHabit');
 			return;
 		}
 
@@ -195,7 +197,7 @@
 
 	async function handleSaveEdit() {
 		if (!editingStack || !editName.trim()) {
-			editError = 'Stack name is required';
+			editError = get(t)('habitStacks.errors.stackNameRequired');
 			return;
 		}
 
@@ -252,7 +254,7 @@
 
 	async function handleDeleteItem(itemId: string) {
 		if (!editingStack) return;
-		if (!confirm('Delete this habit from the stack?')) return;
+		if (!confirm(get(t)('habitStacks.deleteItemConfirm'))) return;
 
 		try {
 			await deleteStackItem(itemId);
@@ -266,7 +268,7 @@
 	}
 
 	async function handleDelete(id: string) {
-		if (!confirm('Are you sure you want to delete this habit stack?')) return;
+		if (!confirm(get(t)('habitStacks.deleteConfirm'))) return;
 
 		try {
 			await deleteHabitStack(id);
@@ -355,13 +357,13 @@
 	<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 		<!-- Page Header -->
 		<div class="flex items-center justify-between mb-6">
-			<h1 class="text-2xl font-bold text-gray-900">Habit Stacks</h1>
+			<h1 class="text-2xl font-bold text-gray-900">{$t('habitStacks.pageTitle')}</h1>
 			<div class="flex items-center gap-2">
 				{#if stacks.length > 1}
 					<button
 						onclick={openReorderPopup}
 						class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-						title="Reorder stacks"
+						title={$t('habitStacks.reorderPopup.title')}
 					>
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -369,7 +371,7 @@
 						</svg>
 					</button>
 				{/if}
-				<button onclick={openCreatePopup} class="btn-primary text-sm">New Stack</button>
+				<button onclick={openCreatePopup} class="btn-primary text-sm">{$t('habitStacks.newStack')}</button>
 			</div>
 		</div>
 
@@ -389,22 +391,17 @@
 		{:else}
 			<!-- Info Card -->
 			<div class="card p-6 mb-6 bg-gradient-to-r from-purple-50 to-pink-50">
-			<h2 class="font-semibold text-gray-900 mb-2">Habit Stacking</h2>
-			<p class="text-sm text-gray-600 mb-4">
-				Habit stacking works by attaching a new habit to something you already do.
-				By anchoring small improvements to existing routines, you reduce friction
-				and make consistency easier. Over time, these linked actions form powerful
-				daily rhythms that run almost automatically.
-			</p>
-
-			<div class="mt-4 border-t border-pink-100 pt-4">
-				<h3 class="text-sm font-medium text-gray-800 mb-1">Build Your Own Habit Stacks</h3>
-				<p class="text-sm text-gray-600">
-				Start with habits that already happen every day, then decide what positive
-				action you want to follow them with. Simple rules like “After I finish X,
-				I will do Y” turn ordinary moments into reliable cues for better behavior.
+				<h2 class="font-semibold text-gray-900 mb-2">{$t('habitStacks.infoCard.title')}</h2>
+				<p class="text-sm text-gray-600 mb-4">
+					{$t('habitStacks.infoCard.description')}
 				</p>
-			</div>
+
+				<div class="mt-4 border-t border-pink-100 pt-4">
+					<h3 class="text-sm font-medium text-gray-800 mb-1">{$t('habitStacks.infoCard.createTitle')}</h3>
+					<p class="text-sm text-gray-600">
+						{$t('habitStacks.infoCard.createDescription')}
+					</p>
+				</div>
 			</div>
 
 			{#if stacks.length > 0}
@@ -420,11 +417,11 @@
 									<div class="flex items-center gap-2">
 										{#if !stack.isActive}
 											<span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600"
-												>Inactive</span
+												>{$t('habitStacks.inactive')}</span
 											>
 										{/if}
 										<span class="text-sm text-gray-500"
-											>{stack.items.length} habit{stack.items.length !== 1 ? 's' : ''}</span
+											>{stack.items.length} {stack.items.length !== 1 ? $t('habitStacks.habits') : $t('habitStacks.habit')}</span
 										>
 									</div>
 								</div>
@@ -445,18 +442,18 @@
 											</div>
 											<div class="bg-gray-50 rounded-lg p-3">
 												<p class="text-sm text-gray-500">
-													<span class="font-medium text-gray-700">After I</span>
+													<span class="font-medium text-gray-700">{$t('habitStacks.chain.after')}</span>
 													{item.cueDescription}
 												</p>
 												<p class="text-gray-900 mt-0.5">
-													<span class="font-medium text-primary-600">I will</span>
+													<span class="font-medium text-primary-600">{$t('habitStacks.chain.iWill')}</span>
 													{item.habitDescription}
 												</p>
 												{#if item.currentStreak > 0}
 													<span
 														class="inline-flex items-center gap-1 text-xs text-orange-600 mt-1"
 													>
-														{getStreakEmoji(item.currentStreak)} {item.currentStreak} day streak
+														{getStreakEmoji(item.currentStreak)} {item.currentStreak} {$t('habitStacks.dayStreak')}
 													</span>
 												{/if}
 											</div>
@@ -464,7 +461,7 @@
 									{/each}
 								</div>
 							{:else}
-								<p class="text-sm text-gray-500 italic">No habits in this stack yet</p>
+								<p class="text-sm text-gray-500 italic">{$t('habitStacks.noHabitsYet')}</p>
 							{/if}
 						</button>
 					{/each}
@@ -476,9 +473,9 @@
 					>
 						<span class="text-3xl">🔗</span>
 					</div>
-					<h3 class="text-lg font-medium text-gray-900 mb-2">No habit stacks yet</h3>
-					<p class="text-gray-500 mb-6">Create your first habit stack to chain habits together.</p>
-					<button onclick={openCreatePopup} class="btn-primary">Create Habit Stack</button>
+					<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('habitStacks.emptyTitle')}</h3>
+					<p class="text-gray-500 mb-6">{$t('habitStacks.emptyDescription')}</p>
+					<button onclick={openCreatePopup} class="btn-primary">{$t('habitStacks.createFirst')}</button>
 				</div>
 			{/if}
 		{/if}
@@ -493,7 +490,7 @@
 			>
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-6">
-						<h2 class="text-xl font-semibold text-gray-900">Create Habit Stack</h2>
+						<h2 class="text-xl font-semibold text-gray-900">{$t('habitStacks.createPopup.title')}</h2>
 						<button onclick={closeCreatePopup} class="text-gray-400 hover:text-gray-600">
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
@@ -517,19 +514,19 @@
 					<div class="space-y-6">
 						<div>
 							<label for="createName" class="block text-sm font-medium text-gray-700 mb-1"
-								>Stack Name</label
+								>{$t('habitStacks.form.name')}</label
 							>
 							<input
 								type="text"
 								id="createName"
 								bind:value={createName}
-								placeholder="Morning Routine"
+								placeholder={$t('habitStacks.form.namePlaceholder')}
 								class="input"
 							/>
 						</div>
 
 						<div>
-							<label class="block text-sm font-medium text-gray-700 mb-3">Habit Chain</label>
+							<label class="block text-sm font-medium text-gray-700 mb-3">{$t('habitStacks.createPopup.habitChain')}</label>
 							<div class="space-y-4">
 								{#each createItems as item, i (i)}
 									<div
@@ -546,7 +543,7 @@
 											<div class="space-y-3">
 												<div>
 													<label class="block text-xs font-medium text-gray-500 mb-1"
-														>After I...</label
+														>{$t('habitStacks.createPopup.afterI')}</label
 													>
 													<input
 														type="text"
@@ -557,13 +554,13 @@
 																'cueDescription',
 																(e.target as HTMLInputElement).value
 															)}
-														placeholder={i === 0 ? 'wake up' : 'previous habit'}
+														placeholder={i === 0 ? $t('habitStacks.createPopup.placeholderCue') : $t('habitStacks.createPopup.placeholderPreviousHabit')}
 														class="input text-sm"
 													/>
 												</div>
 												<div>
 													<label class="block text-xs font-medium text-gray-500 mb-1"
-														>I will...</label
+														>{$t('habitStacks.createPopup.iWillDo')}</label
 													>
 													<input
 														id="create-habit-input-{i}"
@@ -576,7 +573,7 @@
 																(e.target as HTMLInputElement).value
 															)}
 														onkeydown={(e) => handleCreateItemKeyPress(e, i)}
-														placeholder="drink a glass of water"
+														placeholder={$t('habitStacks.createPopup.placeholderHabit')}
 														class="input text-sm"
 													/>
 												</div>
@@ -587,7 +584,7 @@
 													onclick={() => removeCreateItem(i)}
 													class="mt-2 text-xs text-red-500 hover:text-red-700"
 												>
-													Remove
+													{$t('habitStacks.createPopup.remove')}
 												</button>
 											{/if}
 										</div>
@@ -608,7 +605,7 @@
 										d="M12 4v16m8-8H4"
 									/>
 								</svg>
-								Add another habit
+								{$t('habitStacks.createPopup.addAnother')}
 							</button>
 						</div>
 					</div>
@@ -620,7 +617,7 @@
 							class="btn-secondary"
 							disabled={createLoading}
 						>
-							Cancel
+							{$t('common.cancel')}
 						</button>
 						<button
 							type="button"
@@ -628,7 +625,7 @@
 							class="btn-primary"
 							disabled={createLoading}
 						>
-							{createLoading ? 'Creating...' : 'Create Stack'}
+							{createLoading ? $t('habitStacks.createPopup.creating') : $t('habitStacks.createPopup.createStack')}
 						</button>
 					</div>
 				</div>
@@ -642,7 +639,7 @@
 			<div class="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-6">
-						<h2 class="text-xl font-semibold text-gray-900">Edit Habit Stack</h2>
+						<h2 class="text-xl font-semibold text-gray-900">{$t('habitStacks.editPopup.title')}</h2>
 						<button onclick={closeEditPopup} class="text-gray-400 hover:text-gray-600">
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
@@ -668,13 +665,13 @@
 						<div class="space-y-4">
 							<div>
 								<label for="editName" class="block text-sm font-medium text-gray-700 mb-1"
-									>Stack Name</label
+									>{$t('habitStacks.form.name')}</label
 								>
 								<input type="text" id="editName" bind:value={editName} class="input" />
 							</div>
 
 							<div class="flex items-center justify-between">
-								<label for="editActive" class="text-sm font-medium text-gray-700">Active</label>
+								<label for="editActive" class="text-sm font-medium text-gray-700">{$t('habitStacks.editPopup.active')}</label>
 								<button
 									type="button"
 									id="editActive"
@@ -697,7 +694,7 @@
 								class="btn-primary w-full"
 								disabled={editLoading}
 							>
-								{editLoading ? 'Saving...' : 'Save Changes'}
+								{editLoading ? $t('habitStacks.editPopup.saving') : $t('habitStacks.editPopup.saveChanges')}
 							</button>
 						</div>
 
@@ -706,7 +703,7 @@
 						<!-- Existing Items -->
 						<div>
 							<h3 class="text-sm font-medium text-gray-700 mb-3">
-								Habits in Stack ({editingStack.items.length})
+								{$t('habitStacks.editPopup.habitsInStack')} ({editingStack.items.length})
 							</h3>
 							{#if editingStack.items.length > 0}
 								<div class="relative ml-2">
@@ -724,23 +721,23 @@
 											</div>
 											<div class="bg-gray-50 rounded-lg p-3 group relative">
 												<p class="text-sm text-gray-600">
-													<span class="font-medium text-gray-800">After I</span>
+													<span class="font-medium text-gray-800">{$t('habitStacks.chain.after')}</span>
 													{item.cueDescription}
 												</p>
 												<p class="text-gray-900 mt-1">
-													<span class="font-medium text-primary-600">I will</span>
+													<span class="font-medium text-primary-600">{$t('habitStacks.chain.iWill')}</span>
 													{item.habitDescription}
 												</p>
 												{#if item.currentStreak > 0}
 													<p class="text-xs text-orange-600 mt-2 flex items-center gap-1">
-														{getStreakEmoji(item.currentStreak)} {item.currentStreak} day streak
+														{getStreakEmoji(item.currentStreak)} {item.currentStreak} {$t('habitStacks.dayStreak')}
 													</p>
 												{/if}
 												<button
 													type="button"
 													onclick={() => handleDeleteItem(item.id)}
 													class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 text-gray-400 hover:text-red-500"
-													title="Delete item"
+													title={$t('common.delete')}
 												>
 													<svg
 														class="w-4 h-4"
@@ -761,7 +758,7 @@
 									{/each}
 								</div>
 							{:else}
-								<p class="text-sm text-gray-500 text-center py-4">No habits in this stack yet</p>
+								<p class="text-sm text-gray-500 text-center py-4">{$t('habitStacks.noHabitsYet')}</p>
 							{/if}
 						</div>
 
@@ -769,28 +766,28 @@
 
 						<!-- Add New Item -->
 						<div>
-							<h3 class="text-sm font-medium text-gray-700 mb-3">Add New Habit</h3>
+							<h3 class="text-sm font-medium text-gray-700 mb-3">{$t('habitStacks.editPopup.addNewHabit')}</h3>
 							<div class="bg-gray-50 rounded-lg p-4 space-y-3">
 								<div>
-									<label class="block text-xs font-medium text-gray-500 mb-1">After I...</label>
+									<label class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.afterI')}</label>
 									<input
 										type="text"
 										bind:value={newItemCue}
 										onkeydown={(e) => handleEditItemKeyPress(e, 'cue')}
 										placeholder={editingStack.items.length > 0
 											? editingStack.items[editingStack.items.length - 1].habitDescription
-											: 'previous habit'}
+											: $t('habitStacks.createPopup.placeholderPreviousHabit')}
 										class="input text-sm"
 									/>
 								</div>
 								<div>
-									<label class="block text-xs font-medium text-gray-500 mb-1">I will...</label>
+									<label class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.iWillDo')}</label>
 									<input
 										bind:this={newItemHabitInputRef}
 										type="text"
 										bind:value={newItemHabit}
 										onkeydown={(e) => handleEditItemKeyPress(e, 'habit')}
-										placeholder="new habit"
+										placeholder={$t('habitStacks.createPopup.placeholderHabit')}
 										class="input text-sm"
 									/>
 								</div>
@@ -800,7 +797,7 @@
 									class="btn-primary w-full text-sm"
 									disabled={addingItem || !newItemCue.trim() || !newItemHabit.trim()}
 								>
-									{addingItem ? 'Adding...' : 'Add Habit'}
+									{addingItem ? $t('habitStacks.editPopup.adding') : $t('habitStacks.editPopup.addHabit')}
 								</button>
 							</div>
 						</div>
@@ -814,7 +811,7 @@
 								onclick={() => handleDelete(editingStack!.id)}
 								class="w-full py-2 text-red-600 hover:text-red-700 text-sm font-medium"
 							>
-								Delete Habit Stack
+								{$t('habitStacks.editPopup.deleteStack')}
 							</button>
 						</div>
 					</div>
@@ -829,11 +826,11 @@
 			<div class="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-6">
-						<h2 class="text-xl font-semibold text-gray-900">Reorder Stacks</h2>
+						<h2 class="text-xl font-semibold text-gray-900">{$t('habitStacks.reorderPopup.title')}</h2>
 						<button
 							onclick={closeReorderPopup}
 							class="text-gray-400 hover:text-gray-600"
-							title="Close"
+							title={$t('common.close')}
 						>
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
@@ -846,7 +843,7 @@
 						</button>
 					</div>
 
-					<p class="text-sm text-gray-500 mb-4">Drag items or use arrows to reorder your habit stacks.</p>
+					<p class="text-sm text-gray-500 mb-4">{$t('habitStacks.reorderPopup.description')}</p>
 
 					<div class="space-y-2">
 						{#each reorderList as item, index (item.id)}
@@ -877,7 +874,6 @@
 										onclick={() => moveItemUp(index)}
 										disabled={index === 0}
 										class="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-										title="Move up"
 									>
 										<svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
@@ -888,7 +884,6 @@
 										onclick={() => moveItemDown(index)}
 										disabled={index === reorderList.length - 1}
 										class="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-										title="Move down"
 									>
 										<svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -906,7 +901,7 @@
 							class="btn-secondary"
 							disabled={reordering}
 						>
-							Cancel
+							{$t('common.cancel')}
 						</button>
 						<button
 							type="button"
@@ -914,7 +909,7 @@
 							class="btn-primary"
 							disabled={reordering}
 						>
-							{reordering ? 'Saving...' : 'Save Order'}
+							{reordering ? $t('habitStacks.reorderPopup.saving') : $t('habitStacks.reorderPopup.saveOrder')}
 						</button>
 					</div>
 				</div>

@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
+	import { t } from 'svelte-i18n';
+	import { get } from 'svelte/store';
 	import { getIdentities, createIdentity, updateIdentity, deleteIdentity } from '$lib/api/identities';
 	import IdentityCard from '$lib/components/identities/IdentityCard.svelte';
 	import IdentityForm from '$lib/components/identities/IdentityForm.svelte';
@@ -65,7 +67,7 @@
 	}
 
 	async function handleDelete(id: string) {
-		if (!confirm('Are you sure you want to delete this identity?')) return;
+		if (!confirm(get(t)('identities.deleteConfirm'))) return;
 
 		try {
 			await deleteIdentity(id);
@@ -83,9 +85,9 @@
 	<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 		<!-- Page Header -->
 		<div class="flex items-center justify-between mb-6">
-			<h1 class="text-2xl font-bold text-gray-900">My Identities</h1>
+			<h1 class="text-2xl font-bold text-gray-900">{$t('identities.pageTitle')}</h1>
 			<button onclick={openCreateModal} class="btn-primary text-sm">
-				New Identity
+				{$t('identities.newIdentity')}
 			</button>
 		</div>
 		{#if loading}
@@ -99,23 +101,18 @@
 		{:else}
 			<!-- Info Card -->
 			<div class="card p-6 mb-6 bg-gradient-to-r from-primary-50 to-indigo-50">
-  <h2 class="font-semibold text-gray-900 mb-2">Identity-Based Habits</h2>
-  <p class="text-sm text-gray-600 mb-4">
-    Identity-based habits focus on who you are becoming, not just what you’re doing.
-    Each small action is a vote for the type of person you want to be, and consistency
-    slowly reshapes how you see yourself. When your habits align with your identity,
-    progress feels natural instead of forced.
-  </p>
+				<h2 class="font-semibold text-gray-900 mb-2">{$t('identities.infoCard.title')}</h2>
+				<p class="text-sm text-gray-600 mb-4">
+					{$t('identities.infoCard.description')}
+				</p>
 
-  <div class="mt-4 border-t border-indigo-100 pt-4">
-    <h3 class="text-sm font-medium text-gray-800 mb-1">Create Your Own Identities</h3>
-    <p class="text-sm text-gray-600">
-      Instead of chasing outcomes, define the identities you want to live by—such as
-      “I am someone who learns daily” or “I am someone who keeps promises to myself.”
-      Let your habits become evidence that these identities are true.
-    </p>
-  </div>
-</div>
+				<div class="mt-4 border-t border-indigo-100 pt-4">
+					<h3 class="text-sm font-medium text-gray-800 mb-1">{$t('identities.infoCard.createTitle')}</h3>
+					<p class="text-sm text-gray-600">
+						{$t('identities.infoCard.createDescription')}
+					</p>
+				</div>
+			</div>
 
 			{#if identities.length > 0}
 				<div class="grid gap-4 sm:grid-cols-2">
@@ -134,9 +131,9 @@
 					<div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
 						<span class="text-3xl">🎯</span>
 					</div>
-					<h3 class="text-lg font-medium text-gray-900 mb-2">No identities yet</h3>
-					<p class="text-gray-500 mb-6">Create your first identity to start building habits.</p>
-					<button onclick={openCreateModal} class="btn-primary">Create Identity</button>
+					<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('identities.emptyTitle')}</h3>
+					<p class="text-gray-500 mb-6">{$t('identities.emptyDescription')}</p>
+					<button onclick={openCreateModal} class="btn-primary">{$t('identities.createFirst')}</button>
 				</div>
 			{/if}
 		{/if}
@@ -153,7 +150,7 @@
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-6">
 						<h2 class="text-xl font-semibold text-gray-900">
-							{isEditing ? 'Edit Identity' : 'New Identity'}
+							{isEditing ? $t('identities.edit') : $t('identities.newIdentity')}
 						</h2>
 						<button onclick={closeModal} class="text-gray-400 hover:text-gray-600">
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -180,7 +177,7 @@
 								onclick={() => handleDelete(editingIdentity!.id)}
 								class="text-red-600 hover:text-red-700 text-sm"
 							>
-								Delete Identity
+								{$t('identities.delete')}
 							</button>
 						</div>
 					{/if}

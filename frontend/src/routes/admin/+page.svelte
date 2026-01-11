@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
+	import { t, locale } from 'svelte-i18n';
+	import { get } from 'svelte/store';
 	import {
 		getAdminStats,
 		getAdminUsers,
@@ -159,7 +161,8 @@
 
 	function formatDisplayDate(dateStr: string): string {
 		const date = new Date(dateStr);
-		return date.toLocaleDateString('en-US', {
+		const currentLocale = get(locale) === 'da' ? 'da-DK' : 'en-US';
+		return date.toLocaleDateString(currentLocale, {
 			weekday: 'short',
 			year: 'numeric',
 			month: 'short',
@@ -168,7 +171,8 @@
 	}
 
 	function formatDate(dateStr: string): string {
-		return new Date(dateStr).toLocaleDateString('en-US', {
+		const currentLocale = get(locale) === 'da' ? 'da-DK' : 'en-US';
+		return new Date(dateStr).toLocaleDateString(currentLocale, {
 			year: 'numeric',
 			month: 'short',
 			day: 'numeric'
@@ -237,14 +241,14 @@
 </script>
 
 <svelte:head>
-	<title>Admin Dashboard - HelpMotivateMe</title>
+	<title>{$t('admin.title')} - {$t('common.appName')}</title>
 </svelte:head>
 
 <div class="min-h-screen bg-gray-50">
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 		<div class="mb-8">
-			<h1 class="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-			<p class="text-gray-500 mt-1">System overview and user management</p>
+			<h1 class="text-2xl font-bold text-gray-900">{$t('admin.title')}</h1>
+			<p class="text-gray-500 mt-1">{$t('admin.subtitle')}</p>
 		</div>
 
 		{#if loading}
@@ -267,7 +271,7 @@
 				<div class="card p-6">
 					<div class="flex items-center justify-between">
 						<div>
-							<p class="text-sm text-gray-500">Total Users</p>
+							<p class="text-sm text-gray-500">{$t('admin.stats.totalUsers')}</p>
 							<p class="text-2xl font-bold text-gray-900">{stats.totalUsers}</p>
 						</div>
 						<div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
@@ -287,7 +291,7 @@
 						</div>
 					</div>
 					<p class="text-sm text-gray-500 mt-2">
-						{stats.activeUsers} active
+						{stats.activeUsers} {$t('admin.stats.activeUsers')}
 					</p>
 				</div>
 
@@ -295,19 +299,19 @@
 				<div class="card p-6">
 					<div class="flex items-center justify-between">
 						<div>
-							<p class="text-sm text-gray-500">Membership Tiers</p>
+							<p class="text-sm text-gray-500">{$t('admin.stats.membershipTiers')}</p>
 							<div class="flex gap-4 mt-2">
 								<div class="text-center">
 									<p class="text-xl font-bold text-gray-900">{stats.membershipStats.freeUsers}</p>
-									<p class="text-xs text-gray-500">Free</p>
+									<p class="text-xs text-gray-500">{$t('admin.tiers.free')}</p>
 								</div>
 								<div class="text-center">
 									<p class="text-xl font-bold text-blue-600">{stats.membershipStats.plusUsers}</p>
-									<p class="text-xs text-gray-500">Plus</p>
+									<p class="text-xs text-gray-500">{$t('admin.tiers.plus')}</p>
 								</div>
 								<div class="text-center">
 									<p class="text-xl font-bold text-purple-600">{stats.membershipStats.proUsers}</p>
-									<p class="text-xs text-gray-500">Pro</p>
+									<p class="text-xs text-gray-500">{$t('admin.tiers.pro')}</p>
 								</div>
 							</div>
 						</div>
@@ -333,7 +337,7 @@
 				<div class="card p-6">
 					<div class="flex items-center justify-between">
 						<div>
-							<p class="text-sm text-gray-500">Users Logged In Today</p>
+							<p class="text-sm text-gray-500">{$t('admin.stats.usersLoggedInToday')}</p>
 							<p class="text-2xl font-bold text-gray-900">{stats.usersLoggedInToday}</p>
 						</div>
 						<div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
@@ -352,7 +356,7 @@
 							</svg>
 						</div>
 					</div>
-					<p class="text-sm text-gray-500 mt-2">active today</p>
+					<p class="text-sm text-gray-500 mt-2">{$t('admin.stats.activeToday')}</p>
 				</div>
 			</div>
 
@@ -362,7 +366,7 @@
 				<div class="card p-6">
 					<div class="flex items-center justify-between">
 						<div>
-							<p class="text-sm text-gray-500">Total Tasks Created</p>
+							<p class="text-sm text-gray-500">{$t('admin.stats.totalTasksCreated')}</p>
 							<p class="text-2xl font-bold text-gray-900">{stats.taskTotals.totalTasksCreated}</p>
 						</div>
 						<div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
@@ -381,14 +385,14 @@
 							</svg>
 						</div>
 					</div>
-					<p class="text-sm text-gray-500 mt-2">all time</p>
+					<p class="text-sm text-gray-500 mt-2">{$t('admin.stats.allTime')}</p>
 				</div>
 
 				<!-- Total Tasks Completed -->
 				<div class="card p-6">
 					<div class="flex items-center justify-between">
 						<div>
-							<p class="text-sm text-gray-500">Total Tasks Completed</p>
+							<p class="text-sm text-gray-500">{$t('admin.stats.totalTasksCompleted')}</p>
 							<p class="text-2xl font-bold text-green-600">
 								{stats.taskTotals.totalTasksCompleted}
 							</p>
@@ -409,14 +413,14 @@
 							</svg>
 						</div>
 					</div>
-					<p class="text-sm text-gray-500 mt-2">all time</p>
+					<p class="text-sm text-gray-500 mt-2">{$t('admin.stats.allTime')}</p>
 				</div>
 			</div>
 
 			<!-- Row 3: Daily Stats with Date Picker -->
 			<div class="card p-6 mb-8">
 				<div class="flex items-center justify-between mb-6">
-					<h3 class="text-lg font-semibold text-gray-900">Daily Statistics</h3>
+					<h3 class="text-lg font-semibold text-gray-900">{$t('admin.stats.daily.title')}</h3>
 					<div class="flex items-center gap-2">
 						<button
 							onclick={() => navigateDate('prev')}
@@ -472,7 +476,7 @@
 								</div>
 								<div>
 									<p class="text-2xl font-bold text-gray-900">{dailyStats.tasksCreated}</p>
-									<p class="text-sm text-gray-500">Tasks Created</p>
+									<p class="text-sm text-gray-500">{$t('admin.stats.daily.tasksCreated')}</p>
 								</div>
 							</div>
 						</div>
@@ -497,7 +501,7 @@
 								</div>
 								<div>
 									<p class="text-2xl font-bold text-green-600">{dailyStats.tasksCompleted}</p>
-									<p class="text-sm text-gray-500">Tasks Completed</p>
+									<p class="text-sm text-gray-500">{$t('admin.stats.daily.tasksCompleted')}</p>
 								</div>
 							</div>
 						</div>
@@ -522,7 +526,7 @@
 								</div>
 								<div>
 									<p class="text-2xl font-bold text-orange-600">{dailyStats.tasksDue}</p>
-									<p class="text-sm text-gray-500">Tasks Due</p>
+									<p class="text-sm text-gray-500">{$t('admin.stats.daily.tasksDue')}</p>
 								</div>
 							</div>
 						</div>
@@ -533,14 +537,14 @@
 			<!-- Users Table -->
 			<div class="card">
 				<div class="p-6 border-b border-gray-200">
-					<h2 class="text-lg font-semibold text-gray-900">Users</h2>
+					<h2 class="text-lg font-semibold text-gray-900">{$t('admin.users.title')}</h2>
 
 					<!-- Filters -->
 					<div class="mt-4 flex flex-wrap gap-4">
 						<div class="flex-1 min-w-[200px]">
 							<input
 								type="text"
-								placeholder="Search users..."
+								placeholder={$t('admin.users.searchPlaceholder')}
 								bind:value={searchQuery}
 								oninput={handleSearch}
 								class="input w-full"
@@ -551,19 +555,19 @@
 							onchange={handleFilterChange}
 							class="input w-auto"
 						>
-							<option value="">All Tiers</option>
-							<option value="Free">Free</option>
-							<option value="Plus">Plus</option>
-							<option value="Pro">Pro</option>
+							<option value="">{$t('admin.users.allTiers')}</option>
+							<option value="Free">{$t('admin.tiers.free')}</option>
+							<option value="Plus">{$t('admin.tiers.plus')}</option>
+							<option value="Pro">{$t('admin.tiers.pro')}</option>
 						</select>
 						<select
 							bind:value={activeFilter}
 							onchange={handleFilterChange}
 							class="input w-auto"
 						>
-							<option value="">All Status</option>
-							<option value="active">Active</option>
-							<option value="inactive">Inactive</option>
+							<option value="">{$t('admin.users.allStatus')}</option>
+							<option value="active">{$t('admin.users.active')}</option>
+							<option value="inactive">{$t('admin.users.inactive')}</option>
 						</select>
 					</div>
 				</div>
@@ -574,39 +578,39 @@
 							<tr>
 								<th
 									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-									>User</th
+									>{$t('admin.users.user')}</th
 								>
 								<th
 									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-									>Email</th
+									>{$t('admin.users.email')}</th
 								>
 								<th
 									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-									>Tier</th
+									>{$t('admin.users.tier')}</th
 								>
 								<th
 									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-									>Role</th
+									>{$t('admin.users.role')}</th
 								>
 								<th
 									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-									>Status</th
+									>{$t('admin.users.status')}</th
 								>
 								<th
 									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-									>Joined</th
+									>{$t('admin.users.joined')}</th
 								>
 								<th
 									class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-									>AI Calls</th
+									>{$t('admin.users.aiCalls')}</th
 								>
 								<th
 									class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-									>AI Cost</th
+									>{$t('admin.users.aiCost')}</th
 								>
 								<th
 									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-									>Actions</th
+									>{$t('admin.users.actions')}</th
 								>
 							</tr>
 						</thead>
@@ -647,20 +651,20 @@
 												handleRoleChange(user, (e.target as HTMLSelectElement).value as UserRole)}
 											class="text-sm border border-gray-300 rounded py-1"
 										>
-											<option value="User">User</option>
-											<option value="Admin">Admin</option>
+											<option value="User">{$t('admin.users.roleUser')}</option>
+											<option value="Admin">{$t('admin.users.roleAdmin')}</option>
 										</select>
 									</td>
 									<td class="px-6 py-4 whitespace-nowrap">
 										{#if user.isActive}
 											<span
 												class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700"
-												>Active</span
+												>{$t('admin.users.active')}</span
 											>
 										{:else}
 											<span
 												class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700"
-												>Inactive</span
+												>{$t('admin.users.inactive')}</span
 											>
 										{/if}
 									</td>
@@ -682,14 +686,14 @@
 											onclick={() => handleToggleActive(user)}
 											class="text-primary-600 hover:text-primary-800 font-medium"
 										>
-											{user.isActive ? 'Deactivate' : 'Activate'}
+											{user.isActive ? $t('admin.users.deactivate') : $t('admin.users.activate')}
 										</button>
 									</td>
 								</tr>
 							{:else}
 								<tr>
 									<td colspan="9" class="px-6 py-8 text-center text-gray-500">
-										No users found
+										{$t('admin.users.noUsers')}
 									</td>
 								</tr>
 							{/each}
@@ -700,17 +704,17 @@
 
 			<!-- Access Control Section Header -->
 			<div class="mt-8 mb-4">
-				<h2 class="text-xl font-bold text-gray-900">Access Control</h2>
+				<h2 class="text-xl font-bold text-gray-900">{$t('admin.accessControl.title')}</h2>
 				<p class="text-gray-500 mt-1">
 					{#if allowSignups}
 						<span class="inline-flex items-center gap-1.5">
 							<span class="w-2 h-2 bg-green-500 rounded-full"></span>
-							Open signups enabled
+							{$t('admin.accessControl.openSignups')}
 						</span>
 					{:else}
 						<span class="inline-flex items-center gap-1.5">
 							<span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
-							Closed beta - whitelist required
+							{$t('admin.accessControl.closedBeta')}
 						</span>
 					{/if}
 				</p>
@@ -718,11 +722,11 @@
 
 			<!-- Invite User Section -->
 			<div class="card p-6 mb-4">
-				<h3 class="text-lg font-semibold text-gray-900 mb-4">Invite User</h3>
+				<h3 class="text-lg font-semibold text-gray-900 mb-4">{$t('admin.invite.title')}</h3>
 				<form onsubmit={handleInviteUser} class="flex gap-4">
 					<input
 						type="email"
-						placeholder="Enter email address..."
+						placeholder={$t('admin.invite.placeholder')}
 						bind:value={inviteEmail}
 						required
 						class="input flex-1"
@@ -732,11 +736,11 @@
 						disabled={inviteLoading || !inviteEmail.trim()}
 						class="btn-primary whitespace-nowrap"
 					>
-						{inviteLoading ? 'Sending...' : 'Send Invite'}
+						{inviteLoading ? $t('admin.invite.sending') : $t('admin.invite.send')}
 					</button>
 				</form>
 				<p class="text-sm text-gray-500 mt-2">
-					Adds the email to the whitelist and sends an invite email.
+					{$t('admin.invite.description')}
 				</p>
 			</div>
 
@@ -746,12 +750,12 @@
 				<div class="card">
 					<div class="p-6 border-b border-gray-200">
 						<div class="flex items-center justify-between">
-							<h3 class="text-lg font-semibold text-gray-900">Waitlist</h3>
+							<h3 class="text-lg font-semibold text-gray-900">{$t('admin.waitlist.title')}</h3>
 							<span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">
-								{waitlistEntries.length} pending
+								{waitlistEntries.length} {$t('admin.waitlist.pending')}
 							</span>
 						</div>
-						<p class="text-sm text-gray-500 mt-1">Users waiting for access</p>
+						<p class="text-sm text-gray-500 mt-1">{$t('admin.waitlist.description')}</p>
 					</div>
 
 					<div class="overflow-x-auto max-h-96 overflow-y-auto">
@@ -759,16 +763,16 @@
 							<thead class="bg-gray-50 sticky top-0">
 								<tr>
 									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-										Email
+										{$t('admin.waitlist.email')}
 									</th>
 									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-										Name
+										{$t('admin.waitlist.name')}
 									</th>
 									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-										Date
+										{$t('admin.waitlist.date')}
 									</th>
 									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-										Actions
+										{$t('admin.waitlist.actions')}
 									</th>
 								</tr>
 							</thead>
@@ -789,16 +793,14 @@
 												<button
 													onclick={() => handleApproveWaitlist(entry)}
 													class="text-green-600 hover:text-green-800 font-medium"
-													title="Approve and send invite"
 												>
-													Approve
+													{$t('admin.waitlist.approve')}
 												</button>
 												<button
 													onclick={() => handleRemoveFromWaitlist(entry)}
 													class="text-red-600 hover:text-red-800 font-medium"
-													title="Remove from waitlist"
 												>
-													Remove
+													{$t('admin.waitlist.remove')}
 												</button>
 											</div>
 										</td>
@@ -806,7 +808,7 @@
 								{:else}
 									<tr>
 										<td colspan="4" class="px-4 py-8 text-center text-gray-500">
-											No waitlist entries
+											{$t('admin.waitlist.empty')}
 										</td>
 									</tr>
 								{/each}
@@ -819,12 +821,12 @@
 				<div class="card">
 					<div class="p-6 border-b border-gray-200">
 						<div class="flex items-center justify-between">
-							<h3 class="text-lg font-semibold text-gray-900">Whitelist</h3>
+							<h3 class="text-lg font-semibold text-gray-900">{$t('admin.whitelist.title')}</h3>
 							<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">
-								{whitelistEntries.length} approved
+								{whitelistEntries.length} {$t('admin.whitelist.approved')}
 							</span>
 						</div>
-						<p class="text-sm text-gray-500 mt-1">Emails allowed to sign up</p>
+						<p class="text-sm text-gray-500 mt-1">{$t('admin.whitelist.description')}</p>
 					</div>
 
 					<div class="overflow-x-auto max-h-96 overflow-y-auto">
@@ -832,16 +834,16 @@
 							<thead class="bg-gray-50 sticky top-0">
 								<tr>
 									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-										Email
+										{$t('admin.whitelist.email')}
 									</th>
 									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-										Added
+										{$t('admin.whitelist.added')}
 									</th>
 									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-										Invited
+										{$t('admin.whitelist.invited')}
 									</th>
 									<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-										Actions
+										{$t('admin.whitelist.actions')}
 									</th>
 								</tr>
 							</thead>
@@ -855,13 +857,13 @@
 											<div>
 												<p>{formatDate(entry.addedAt)}</p>
 												{#if entry.addedByUsername}
-													<p class="text-xs text-gray-400">by {entry.addedByUsername}</p>
+													<p class="text-xs text-gray-400">{$t('admin.whitelist.by')} {entry.addedByUsername}</p>
 												{/if}
 											</div>
 										</td>
 										<td class="px-4 py-3 text-sm whitespace-nowrap">
 											{#if entry.invitedAt}
-												<span class="text-green-600" title={formatDate(entry.invitedAt)}>Sent</span>
+												<span class="text-green-600" title={formatDate(entry.invitedAt)}>{$t('admin.whitelist.sent')}</span>
 											{:else}
 												<span class="text-gray-400">-</span>
 											{/if}
@@ -870,16 +872,15 @@
 											<button
 												onclick={() => handleRemoveFromWhitelist(entry)}
 												class="text-red-600 hover:text-red-800 font-medium"
-												title="Remove from whitelist"
 											>
-												Remove
+												{$t('admin.whitelist.remove')}
 											</button>
 										</td>
 									</tr>
 								{:else}
 									<tr>
 										<td colspan="4" class="px-4 py-8 text-center text-gray-500">
-											No whitelist entries
+											{$t('admin.whitelist.empty')}
 										</td>
 									</tr>
 								{/each}

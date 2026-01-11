@@ -3,6 +3,8 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { auth } from '$lib/stores/auth';
+	import { t, locale } from 'svelte-i18n';
+	import { get } from 'svelte/store';
 	import { getTodayView } from '$lib/api/today';
 	import { completeStackItem, completeAllStackItems } from '$lib/api/habitStacks';
 	import { completeTask, postponeTask, updateTask, completeMultipleTasks } from '$lib/api/tasks';
@@ -469,25 +471,12 @@
 
 	function formatDisplayDate(dateStr: string): string {
 		const date = new Date(dateStr);
-		const today = new Date();
-		today.setHours(0, 0, 0, 0);
-		const targetDate = new Date(dateStr);
-		targetDate.setHours(0, 0, 0, 0);
-
-		const diffDays = Math.round((targetDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-		// if (diffDays === 0) {
-		// 	return `Today - ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
-		// } else if (diffDays === -1) {
-		// 	return `Yesterday - ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
-		// } else if (diffDays === 1) {
-		// 	return `Tomorrow - ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
-		// }
-		return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+		const currentLocale = get(locale) === 'da' ? 'da-DK' : 'en-US';
+		return date.toLocaleDateString(currentLocale, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 	}
 
 	function formatRelativeDate(dateStr: string | null): string {
-		if (!dateStr) return 'No date';
+		if (!dateStr) return get(t)('today.dates.noDate');
 
 		const today = new Date();
 		today.setHours(0, 0, 0, 0);
@@ -496,14 +485,16 @@
 
 		const diffDays = Math.round((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
-		if (diffDays === 0) return 'Today';
-		if (diffDays === 1) return 'Tomorrow';
-		if (diffDays === -1) return 'Yesterday';
-		if (diffDays < 0) return `${Math.abs(diffDays)} days ago`;
+		if (diffDays === 0) return get(t)('today.dates.today');
+		if (diffDays === 1) return get(t)('today.dates.tomorrow');
+		if (diffDays === -1) return get(t)('today.dates.yesterday');
+		if (diffDays < 0) return get(t)('today.dates.daysAgo', { values: { count: Math.abs(diffDays) } });
+
+		const currentLocale = get(locale) === 'da' ? 'da-DK' : 'en-US';
 		if (diffDays < 7) {
-			return dueDate.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' });
+			return dueDate.toLocaleDateString(currentLocale, { weekday: 'short', day: 'numeric' });
 		}
-		return dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+		return dueDate.toLocaleDateString(currentLocale, { month: 'short', day: 'numeric' });
 	}
 
 	function getDueDateColor(dateStr: string | null): string {
@@ -587,7 +578,7 @@
 						onclick={goToToday}
 						class="px-4 py-1.5 text-sm text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg font-medium transition-colors"
 					>
-						Jump to Today
+						{$t('today.jumpToToday')}
 					</button>
 				</div>
 			{/if}
@@ -621,7 +612,7 @@
 			{#if todayData.identityFeedback.length > 0}
 				<section class="mb-8">
 					<h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-						<span>🎯</span> Identity Votes
+						<span>🎯</span> {$t('today.identityVotes')}
 					</h2>
 					<div class="grid gap-3 sm:grid-cols-2">
 						{#each todayData.identityFeedback as feedback (feedback.id)}
@@ -641,7 +632,7 @@
 			{#if todayData.habitStacks.length > 0}
 				<section class="mb-8">
 					<h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-						<span>🔗</span> Habit Stacks
+						<span>🔗</span> {$t('today.habitStacks')}
 					</h2>
 					<div class="space-y-4">
 						{#each todayData.habitStacks as stack (stack.id)}
@@ -668,9 +659,8 @@
 											<button
 												onclick={() => completeAllHabits(stack.id)}
 												class="px-2 py-1 text-xs font-medium text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-md transition-colors"
-												title="Complete all habits in this stack"
 											>
-												Complete All
+												{$t('today.completeAll')}
 											</button>
 										{/if}
 									</div>
@@ -725,15 +715,14 @@
 			<section class="mb-8">
 				<div class="flex items-center justify-between mb-4">
 					<h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-						<span>📋</span> Tasks ({todayData.upcomingTasks.length})
+						<span>📋</span> {$t('today.tasks')} ({todayData.upcomingTasks.length})
 					</h2>
 					{#if todayData.upcomingTasks.length > 0}
 						<button
 							onclick={completeAllTasks}
 							class="px-3 py-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-md transition-colors"
-							title="Complete all pending tasks"
 						>
-							Complete All
+							{$t('today.completeAll')}
 						</button>
 					{/if}
 				</div>
@@ -759,7 +748,7 @@
 								{#if removingAfterSnoozeIds.includes(task.id)}
 									<div class="absolute inset-0 flex items-center justify-center bg-gray-100/90 rounded-lg z-10">
 										<span class="text-gray-600 font-medium text-sm flex items-center gap-2">
-											📅 Moved outside 7-day view
+											📅 {$t('today.movedOutsideView')}
 										</span>
 									</div>
 								{/if}
@@ -826,7 +815,7 @@
 						{/each}
 					{:else}
 						<div class="p-6 text-center text-gray-400">
-							No pending tasks for this day
+							{$t('today.noPendingTasks')}
 						</div>
 					{/if}
 				</div>
@@ -835,7 +824,7 @@
 			<!-- Completed Tasks - Always visible -->
 			<section class="mb-8">
 				<h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-					<span>✅</span> Completed ({todayData.completedTasks.length})
+					<span>✅</span> {$t('today.completed')} ({todayData.completedTasks.length})
 				</h2>
 				<div class="card divide-y divide-gray-100">
 					{#if todayData.completedTasks.length > 0}
@@ -881,7 +870,7 @@
 						{/each}
 					{:else}
 						<div class="p-6 text-center text-gray-400">
-							No completed tasks yet
+							{$t('today.noCompletedTasks')}
 						</div>
 					{/if}
 				</div>
@@ -893,9 +882,9 @@
 					<div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
 						<span class="text-3xl">🌟</span>
 					</div>
-					<h3 class="text-lg font-medium text-gray-900 mb-2">All clear!</h3>
-					<p class="text-gray-500 mb-6">No habit stacks or tasks for this day. Create some habit stacks to build your routine.</p>
-					<a href="/habit-stacks" class="btn-primary">Create Habit Stack</a>
+					<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('today.allClear')}</h3>
+					<p class="text-gray-500 mb-6">{$t('today.allClearDescription')}</p>
+					<a href="/habit-stacks" class="btn-primary">{$t('today.createHabitStack')}</a>
 				</div>
 			{/if}
 		{/if}
@@ -905,11 +894,11 @@
 	{#if showPostponePopup && postponingTask}
 		<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
 			<div class="bg-white rounded-xl shadow-xl max-w-sm w-full p-6">
-				<h3 class="text-lg font-semibold text-gray-900 mb-4">Postpone Task</h3>
+				<h3 class="text-lg font-semibold text-gray-900 mb-4">{$t('today.postponeTask')}</h3>
 				<p class="text-gray-600 mb-4 truncate">{postponingTask.title}</p>
 
 				<div class="mb-6">
-					<label for="newDueDate" class="block text-sm font-medium text-gray-700 mb-2">New due date</label>
+					<label for="newDueDate" class="block text-sm font-medium text-gray-700 mb-2">{$t('today.newDueDate')}</label>
 					<input
 						type="date"
 						id="newDueDate"
@@ -924,13 +913,13 @@
 						onclick={closePostponePopup}
 						class="px-4 py-2 text-gray-600 hover:text-gray-800"
 					>
-						Cancel
+						{$t('common.cancel')}
 					</button>
 					<button
 						onclick={handlePostpone}
 						class="btn-primary"
 					>
-						Save
+						{$t('common.save')}
 					</button>
 				</div>
 			</div>
@@ -941,36 +930,36 @@
 	{#if showEditPopup && editingTask}
 		<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
 			<div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-				<h3 class="text-lg font-semibold text-gray-900 mb-4">Edit Task</h3>
+				<h3 class="text-lg font-semibold text-gray-900 mb-4">{$t('today.editTask')}</h3>
 
 				<div class="space-y-4">
 					<div>
-						<label for="editTitle" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+						<label for="editTitle" class="block text-sm font-medium text-gray-700 mb-1">{$t('today.taskTitle')}</label>
 						<input
 							type="text"
 							id="editTitle"
 							bind:value={editTitle}
 							class="input"
-							placeholder="Task title"
+							placeholder={$t('today.taskTitlePlaceholder')}
 						/>
 					</div>
 
 					<div>
 						<label for="editDescription" class="block text-sm font-medium text-gray-700 mb-1">
-							Description <span class="text-gray-400 font-normal">(optional)</span>
+							{$t('today.taskDescription')} <span class="text-gray-400 font-normal">({$t('common.optional')})</span>
 						</label>
 						<textarea
 							id="editDescription"
 							bind:value={editDescription}
 							rows="3"
 							class="input resize-none"
-							placeholder="Add a description..."
+							placeholder={$t('today.taskDescriptionPlaceholder')}
 						></textarea>
 					</div>
 
 					<div>
 						<label for="editDueDate" class="block text-sm font-medium text-gray-700 mb-1">
-							Due Date <span class="text-gray-400 font-normal">(optional)</span>
+							{$t('today.dueDate')} <span class="text-gray-400 font-normal">({$t('common.optional')})</span>
 						</label>
 						<input
 							type="date"
@@ -983,14 +972,14 @@
 					{#if identities.length > 0}
 						<div>
 							<label for="editIdentity" class="block text-sm font-medium text-gray-700 mb-1">
-								Identity <span class="text-gray-400 font-normal">(optional)</span>
+								{$t('today.identity')} <span class="text-gray-400 font-normal">({$t('common.optional')})</span>
 							</label>
 							<select
 								id="editIdentity"
 								bind:value={editIdentityId}
 								class="input w-full"
 							>
-								<option value="">No identity</option>
+								<option value="">{$t('today.noIdentity')}</option>
 								{#each identities as identity (identity.id)}
 									<option value={identity.id}>{identity.icon ? `${identity.icon} ` : ''}{identity.name}</option>
 								{/each}
@@ -1005,14 +994,14 @@
 						class="px-4 py-2 text-gray-600 hover:text-gray-800"
 						disabled={editSaving}
 					>
-						Cancel
+						{$t('common.cancel')}
 					</button>
 					<button
 						onclick={handleSaveEdit}
 						class="btn-primary"
 						disabled={editSaving || !editTitle.trim()}
 					>
-						{editSaving ? 'Saving...' : 'Save'}
+						{editSaving ? $t('common.saving') : $t('common.save')}
 					</button>
 				</div>
 			</div>

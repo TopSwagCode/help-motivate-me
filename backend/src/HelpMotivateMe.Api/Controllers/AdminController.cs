@@ -351,10 +351,10 @@ public class AdminController : ControllerBase
         _db.WaitlistEntries.Remove(waitlistEntry);
         await _db.SaveChangesAsync();
 
-        // Send invite email
+        // Send invite email (default to English for non-registered users)
         var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
         var loginUrl = $"{frontendUrl}/auth/login";
-        await _emailService.SendWhitelistInviteAsync(waitlistEntry.Email, loginUrl);
+        await _emailService.SendWhitelistInviteAsync(waitlistEntry.Email, loginUrl, Language.English);
 
         var currentUser = currentUserId.HasValue
             ? await _db.Users.FindAsync(currentUserId.Value)
@@ -438,10 +438,10 @@ public class AdminController : ControllerBase
         _db.WhitelistEntries.Add(entry);
         await _db.SaveChangesAsync();
 
-        // Send invite email
+        // Send invite email (default to English for non-registered users)
         var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
         var loginUrl = $"{frontendUrl}/auth/login";
-        await _emailService.SendWhitelistInviteAsync(email, loginUrl);
+        await _emailService.SendWhitelistInviteAsync(email, loginUrl, Language.English);
 
         // Remove from waitlist if exists
         var waitlistEntry = await _db.WaitlistEntries.FirstOrDefaultAsync(w => w.Email.ToLower() == email);

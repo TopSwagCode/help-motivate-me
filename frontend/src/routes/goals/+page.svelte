@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
+	import { t, locale } from 'svelte-i18n';
+	import { get } from 'svelte/store';
 	import { getGoals, createGoal } from '$lib/api/goals';
 	import type { Goal, CreateGoalRequest } from '$lib/types';
 	import GoalForm from '$lib/components/goals/GoalForm.svelte';
@@ -54,12 +56,12 @@
 <div class="min-h-screen bg-gray-50">
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 		<div class="flex justify-between items-center mb-8">
-			<h1 class="text-2xl font-bold text-gray-900">My Goals</h1>
+			<h1 class="text-2xl font-bold text-gray-900">{$t('goals.pageTitle')}</h1>
 			<button onclick={openModal} class="btn-primary">
 				<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
 				</svg>
-				New Goal
+				{$t('goals.newGoal')}
 			</button>
 		</div>
 
@@ -78,15 +80,15 @@
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 					</svg>
 				</div>
-				<h3 class="text-lg font-medium text-gray-900 mb-2">No goals yet</h3>
-				<p class="text-gray-500 mb-6">Get started by creating your first goal.</p>
-				<button onclick={openModal} class="btn-primary">Create your first goal</button>
+				<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('goals.emptyTitle')}</h3>
+				<p class="text-gray-500 mb-6">{$t('goals.emptyDescription')}</p>
+				<button onclick={openModal} class="btn-primary">{$t('goals.createFirst')}</button>
 			</div>
 		{:else}
 			<!-- Active Goals -->
 			{#if activeGoals.length > 0}
 				<section class="mb-8">
-					<h2 class="text-lg font-semibold text-gray-900 mb-4">Active Goals ({activeGoals.length})</h2>
+					<h2 class="text-lg font-semibold text-gray-900 mb-4">{$t('goals.activeGoals')} ({activeGoals.length})</h2>
 					<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						{#each activeGoals as goal (goal.id)}
 							<a href="/goals/{goal.id}" class="card-hover p-6 block">
@@ -98,11 +100,11 @@
 
 								<div class="flex items-center justify-between text-sm">
 									<span class="text-gray-500">
-										{goal.completedTaskCount}/{goal.taskCount} tasks
+										{goal.completedTaskCount}/{goal.taskCount} {$t('goals.tasks')}
 									</span>
 									{#if goal.targetDate}
 										<span class="text-gray-400">
-											{new Date(goal.targetDate + 'T12:00:00').toLocaleDateString()}
+											{new Date(goal.targetDate + 'T12:00:00').toLocaleDateString(get(locale) === 'da' ? 'da-DK' : 'en-US')}
 										</span>
 									{/if}
 								</div>
@@ -124,7 +126,7 @@
 			<!-- Completed Goals -->
 			{#if completedGoals.length > 0}
 				<section>
-					<h2 class="text-lg font-semibold text-gray-900 mb-4">Completed ({completedGoals.length})</h2>
+					<h2 class="text-lg font-semibold text-gray-900 mb-4">{$t('goals.completedGoals')} ({completedGoals.length})</h2>
 					<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						{#each completedGoals as goal (goal.id)}
 							<a href="/goals/{goal.id}" class="card-hover p-6 block opacity-60">
@@ -152,7 +154,7 @@
 			<div class="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-6">
-						<h2 class="text-xl font-semibold text-gray-900">New Goal</h2>
+						<h2 class="text-xl font-semibold text-gray-900">{$t('goals.newGoal')}</h2>
 						<button onclick={closeModal} class="text-gray-400 hover:text-gray-600" aria-label="Close">
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path

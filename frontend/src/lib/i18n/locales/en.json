@@ -247,12 +247,20 @@
 	},
 	"goals": {
 		"title": "Goals",
+		"pageTitle": "My Goals",
+		"newGoal": "New Goal",
 		"empty": "No goals yet. Create your first goal to get started!",
+		"emptyTitle": "No goals yet",
+		"emptyDescription": "Get started by creating your first goal.",
+		"createFirst": "Create your first goal",
 		"create": "Create Goal",
 		"edit": "Edit Goal",
 		"delete": "Delete Goal",
 		"complete": "Mark as Complete",
 		"uncomplete": "Mark as Incomplete",
+		"activeGoals": "Active Goals",
+		"completedGoals": "Completed",
+		"tasks": "tasks",
 		"form": {
 			"title": "Goal Title",
 			"titlePlaceholder": "What do you want to achieve?",
@@ -264,10 +272,22 @@
 	},
 	"identities": {
 		"title": "Identities",
+		"pageTitle": "My Identities",
+		"newIdentity": "New Identity",
 		"empty": "No identities yet. Define who you want to become!",
+		"emptyTitle": "No identities yet",
+		"emptyDescription": "Create your first identity to start building habits.",
+		"createFirst": "Create Identity",
 		"create": "Create Identity",
 		"edit": "Edit Identity",
 		"delete": "Delete Identity",
+		"deleteConfirm": "Are you sure you want to delete this identity?",
+		"infoCard": {
+			"title": "Identity-Based Habits",
+			"description": "Identity-based habits focus on who you are becoming, not just what you're doing. Each small action is a vote for the type of person you want to be, and consistency slowly reshapes how you see yourself. When your habits align with your identity, progress feels natural instead of forced.",
+			"createTitle": "Create Your Own Identities",
+			"createDescription": "Instead of chasing outcomes, define the identities you want to live by—such as \"I am someone who learns daily\" or \"I am someone who keeps promises to myself.\" Let your habits become evidence that these identities are true."
+		},
 		"form": {
 			"name": "Identity Name",
 			"namePlaceholder": "e.g., A Healthy Person",
@@ -280,10 +300,28 @@
 	},
 	"habitStacks": {
 		"title": "Habit Stacks",
+		"pageTitle": "Habit Stacks",
+		"newStack": "New Stack",
 		"empty": "No habit stacks yet. Create your first routine!",
+		"emptyTitle": "No habit stacks yet",
+		"emptyDescription": "Create your first habit stack to chain habits together.",
+		"createFirst": "Create Habit Stack",
 		"create": "Create Habit Stack",
 		"edit": "Edit Habit Stack",
 		"delete": "Delete Habit Stack",
+		"deleteConfirm": "Are you sure you want to delete this habit stack?",
+		"deleteItemConfirm": "Delete this habit from the stack?",
+		"inactive": "Inactive",
+		"habits": "habits",
+		"habit": "habit",
+		"noHabitsYet": "No habits in this stack yet",
+		"dayStreak": "day streak",
+		"infoCard": {
+			"title": "Habit Stacking",
+			"description": "Habit stacking works by attaching a new habit to something you already do. By anchoring small improvements to existing routines, you reduce friction and make consistency easier. Over time, these linked actions form powerful daily rhythms that run almost automatically.",
+			"createTitle": "Build Your Own Habit Stacks",
+			"createDescription": "Start with habits that already happen every day, then decide what positive action you want to follow them with. Simple rules like \"After I finish X, I will do Y\" turn ordinary moments into reliable cues for better behavior."
+		},
 		"form": {
 			"name": "Stack Name",
 			"namePlaceholder": "e.g., Morning Routine",
@@ -298,21 +336,87 @@
 		"chain": {
 			"after": "After I",
 			"iWill": "I will"
+		},
+		"createPopup": {
+			"title": "Create Habit Stack",
+			"habitChain": "Habit Chain",
+			"afterI": "After I...",
+			"iWillDo": "I will...",
+			"addAnother": "Add another habit",
+			"remove": "Remove",
+			"creating": "Creating...",
+			"createStack": "Create Stack",
+			"placeholderCue": "wake up",
+			"placeholderHabit": "drink a glass of water",
+			"placeholderPreviousHabit": "previous habit"
+		},
+		"editPopup": {
+			"title": "Edit Habit Stack",
+			"active": "Active",
+			"saveChanges": "Save Changes",
+			"saving": "Saving...",
+			"habitsInStack": "Habits in Stack",
+			"addNewHabit": "Add New Habit",
+			"adding": "Adding...",
+			"addHabit": "Add Habit",
+			"deleteStack": "Delete Habit Stack"
+		},
+		"reorderPopup": {
+			"title": "Reorder Stacks",
+			"description": "Drag items or use arrows to reorder your habit stacks.",
+			"saving": "Saving...",
+			"saveOrder": "Save Order"
+		},
+		"errors": {
+			"stackNameRequired": "Stack name is required",
+			"atLeastOneHabit": "At least one complete habit item is required"
 		}
 	},
 	"journal": {
 		"title": "Journal",
+		"pageTitle": "Journal",
+		"newEntry": "New Entry",
 		"empty": "No journal entries yet. Start reflecting on your journey!",
+		"emptyTitle": "No journal entries yet",
+		"emptyDescription": "Start documenting your journey by creating your first entry.",
+		"createFirst": "Create Entry",
 		"create": "New Entry",
 		"edit": "Edit Entry",
 		"delete": "Delete Entry",
+		"deleteConfirm": "Are you sure you want to delete this journal entry?",
+		"deleteImageConfirm": "Delete this image?",
 		"form": {
 			"title": "Entry Title",
-			"titlePlaceholder": "Give your entry a title...",
+			"titlePlaceholder": "What happened today?",
 			"content": "Content",
 			"contentPlaceholder": "Write your thoughts...",
 			"date": "Date",
-			"submit": "Save Entry"
+			"description": "Description",
+			"descriptionPlaceholder": "Write about your experience...",
+			"submit": "Save Entry",
+			"linkTo": "Link to",
+			"none": "None",
+			"habitStack": "Habit Stack",
+			"task": "Task",
+			"selectHabitStack": "Select a habit stack...",
+			"selectTask": "Select a task..."
+		},
+		"images": {
+			"title": "Images",
+			"addImages": "Add images",
+			"processing": "Processing...",
+			"new": "New",
+			"imageNote": "Images are automatically compressed to WebP. Max 5 images, 5MB each. GIFs kept as-is.",
+			"canOnlyAdd": "Can only add {count} more image(s)"
+		},
+		"modal": {
+			"newEntry": "New Entry",
+			"editEntry": "Edit Entry",
+			"titleRequired": "Title is required",
+			"saving": "Saving...",
+			"uploading": "Uploading...",
+			"saveChanges": "Save Changes",
+			"createEntry": "Create Entry"
 		}
 	},
 	"today": {
@@ -325,23 +429,109 @@
 		"noTasks": "No tasks for today. Enjoy your day!",
 		"habitStacks": "Habit Stacks",
 		"tasks": "Tasks",
-		"journal": "Journal"
+		"journal": "Journal",
+		"jumpToToday": "Jump to Today",
+		"identityVotes": "Identity Votes",
+		"completeAll": "Complete All",
+		"completed": "Completed",
+		"noPendingTasks": "No pending tasks for this day",
+		"noCompletedTasks": "No completed tasks yet",
+		"allClear": "All clear!",
+		"allClearDescription": "No habit stacks or tasks for this day. Create some habit stacks to build your routine.",
+		"createHabitStack": "Create Habit Stack",
+		"postponeTask": "Postpone Task",
+		"newDueDate": "New due date",
+		"editTask": "Edit Task",
+		"taskTitle": "Title",
+		"taskTitlePlaceholder": "Task title",
+		"taskDescription": "Description",
+		"taskDescriptionPlaceholder": "Add a description...",
+		"dueDate": "Due Date",
+		"identity": "Identity",
+		"noIdentity": "No identity",
+		"snooze1Week": "Snooze 1 week",
+		"movedOutsideView": "Moved outside 7-day view",
+		"dayStreak": "day streak",
+		"dates": {
+			"today": "Today",
+			"tomorrow": "Tomorrow",
+			"yesterday": "Yesterday",
+			"daysAgo": "{count} days ago",
+			"noDate": "No date"
+		}
 	},
 	"analytics": {
 		"title": "Analytics",
+		"pageTitle": "Analytics",
 		"streak": {
 			"current": "Current Streak",
 			"longest": "Longest Streak",
 			"days": "days"
 		},
 		"completionRate": "Completion Rate",
-		"tasksCompleted": "Tasks Completed"
+		"tasksCompleted": "Tasks Completed",
+		"summary": {
+			"totalHabits": "Total Habits",
+			"activeStreaks": "Active Streaks",
+			"longestStreak": "Longest Streak"
+		},
+		"rates": {
+			"title": "Completion Rates",
+			"daily": "Daily",
+			"weekly": "Weekly",
+			"monthly": "Monthly",
+			"totalCompletions": "Total Completions",
+			"missedDays": "Missed Days"
+		},
+		"heatmap": {
+			"title": "Activity (Last 90 Days)",
+			"less": "Less",
+			"more": "More",
+			"completion": "completion",
+			"completions": "completions"
+		},
+		"streaks": {
+			"title": "Habit Streaks",
+			"longest": "Longest",
+			"last": "Last"
+		},
+		"empty": {
+			"title": "No streak data yet",
+			"description": "Complete repeating tasks to start building streaks.",
+			"goToDashboard": "Go to Dashboard"
+		}
 	},
 	"buddies": {
 		"title": "Accountability Buddies",
+		"pageTitle": "Accountability Buddies",
 		"empty": "No buddies yet. Invite someone to help keep you accountable!",
-		"invite": "Invite Buddy",
-		"inviteDescription": "Send an invitation to someone who can help keep you accountable",
+		"invite": {
+			"title": "Invite a New Accountability Buddy",
+			"description": "Enter the email address of someone you'd like to help keep you accountable. They'll receive an email invitation with instructions on how to view your progress.",
+			"placeholder": "buddy@example.com",
+			"send": "Send Invite",
+			"sending": "Sending...",
+			"success": "Invitation sent successfully!",
+			"emailRequired": "Please enter an email address"
+		},
+		"myBuddies": {
+			"title": "My Accountability Buddies",
+			"description": "These people can view your daily progress and leave encouraging notes in your journal.",
+			"empty": "You haven't added any accountability buddies yet.",
+			"emptyHint": "Invite someone using the form above!",
+			"added": "Added",
+			"remove": "Remove",
+			"removeConfirm": "Are you sure you want to remove this accountability buddy?"
+		},
+		"buddyingFor": {
+			"title": "I'm Accountability Buddy For",
+			"description": "These people have added you as their accountability buddy. You can view their progress and encourage them!",
+			"empty": "No one has added you as their accountability buddy yet.",
+			"since": "Since",
+			"visit": "Visit",
+			"leave": "Leave",
+			"leaveConfirm": "Are you sure you want to stop being {name}'s accountability buddy?"
+		},
 		"email": "Email address",
 		"sendInvite": "Send Invite",
 		"pending": "Pending Invitations",
@@ -353,5 +543,101 @@
 		"unauthorized": "Please sign in to continue.",
 		"notFound": "The requested resource was not found.",
 		"validation": "Please check your input and try again."
+	},
+	"admin": {
+		"title": "Admin Dashboard",
+		"subtitle": "System overview and user management",
+		"stats": {
+			"totalUsers": "Total Users",
+			"activeUsers": "active",
+			"membershipTiers": "Membership Tiers",
+			"usersLoggedInToday": "Users Logged In Today",
+			"activeToday": "active today",
+			"totalTasksCreated": "Total Tasks Created",
+			"totalTasksCompleted": "Total Tasks Completed",
+			"allTime": "all time",
+			"daily": {
+				"title": "Daily Statistics",
+				"tasksCreated": "Tasks Created",
+				"tasksCompleted": "Tasks Completed",
+				"tasksDue": "Tasks Due"
+			}
+		},
+		"tiers": {
+			"free": "Free",
+			"plus": "Plus",
+			"pro": "Pro"
+		},
+		"users": {
+			"title": "Users",
+			"searchPlaceholder": "Search users...",
+			"allTiers": "All Tiers",
+			"allStatus": "All Status",
+			"active": "Active",
+			"inactive": "Inactive",
+			"user": "User",
+			"email": "Email",
+			"tier": "Tier",
+			"role": "Role",
+			"status": "Status",
+			"joined": "Joined",
+			"aiCalls": "AI Calls",
+			"aiCost": "AI Cost",
+			"actions": "Actions",
+			"activate": "Activate",
+			"deactivate": "Deactivate",
+			"noUsers": "No users found",
+			"roleUser": "User",
+			"roleAdmin": "Admin"
+		},
+		"accessControl": {
+			"title": "Access Control",
+			"openSignups": "Open signups enabled",
+			"closedBeta": "Closed beta - whitelist required"
+		},
+		"invite": {
+			"title": "Invite User",
+			"placeholder": "Enter email address...",
+			"send": "Send Invite",
+			"sending": "Sending...",
+			"description": "Adds the email to the whitelist and sends an invite email."
+		},
+		"waitlist": {
+			"title": "Waitlist",
+			"pending": "pending",
+			"description": "Users waiting for access",
+			"email": "Email",
+			"name": "Name",
+			"date": "Date",
+			"actions": "Actions",
+			"approve": "Approve",
+			"remove": "Remove",
+			"empty": "No waitlist entries"
+		},
+		"whitelist": {
+			"title": "Whitelist",
+			"approved": "approved",
+			"description": "Emails allowed to sign up",
+			"email": "Email",
+			"added": "Added",
+			"invited": "Invited",
+			"actions": "Actions",
+			"remove": "Remove",
+			"sent": "Sent",
+			"by": "by",
+			"empty": "No whitelist entries"
+		},
+		"errors": {
+			"loadFailed": "Failed to load admin data",
+			"dailyStatsFailed": "Failed to load daily stats",
+			"searchFailed": "Failed to search users",
+			"filterFailed": "Failed to filter users",
+			"updateUserFailed": "Failed to update user",
+			"updateRoleFailed": "Failed to update user role",
+			"approveFailed": "Failed to approve waitlist entry",
+			"removeWaitlistFailed": "Failed to remove from waitlist",
+			"removeWhitelistFailed": "Failed to remove from whitelist",
+			"inviteFailed": "Failed to invite user"
+		}
 	}
 }

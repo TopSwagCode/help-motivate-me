@@ -16,7 +16,7 @@ public class SmtpEmailService : IEmailService
         _configuration = configuration;
     }
 
-    public async Task SendLoginLinkAsync(string email, string loginUrl, Language language = Language.English)
+    public async Task SendLoginLinkAsync(string email, string loginUrl, Language language)
     {
         var templates = EmailTemplateProvider.GetTemplates(language);
 
@@ -39,7 +39,7 @@ public class SmtpEmailService : IEmailService
         await SendMessageAsync(message);
     }
 
-    public async Task SendBuddyInviteAsync(string email, string inviterName, string loginUrl, Language language = Language.English)
+    public async Task SendBuddyInviteAsync(string email, string inviterName, string loginUrl, Language language)
     {
         var templates = EmailTemplateProvider.GetTemplates(language);
 
@@ -61,7 +61,7 @@ public class SmtpEmailService : IEmailService
         await SendMessageAsync(message);
     }
 
-    public async Task SendBuddyJournalNotificationAsync(string email, string buddyName, string entryTitle, string journalUrl, Language language = Language.English)
+    public async Task SendBuddyJournalNotificationAsync(string email, string buddyName, string entryTitle, string journalUrl, Language language)
     {
         var templates = EmailTemplateProvider.GetTemplates(language);
 
@@ -83,7 +83,7 @@ public class SmtpEmailService : IEmailService
         await SendMessageAsync(message);
     }
 
-    public async Task SendWaitlistConfirmationAsync(string email, string name, Language language = Language.English)
+    public async Task SendWaitlistConfirmationAsync(string email, string name, Language language)
     {
         var templates = EmailTemplateProvider.GetTemplates(language);
 
@@ -105,7 +105,7 @@ public class SmtpEmailService : IEmailService
         await SendMessageAsync(message);
     }
 
-    public async Task SendWhitelistInviteAsync(string email, string loginUrl, Language language = Language.English)
+    public async Task SendWhitelistInviteAsync(string email, string loginUrl, Language language)
     {
         var templates = EmailTemplateProvider.GetTemplates(language);
 
