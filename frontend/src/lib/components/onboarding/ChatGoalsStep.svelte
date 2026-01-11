@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from 'svelte-i18n';
 	import ChatOnboarding from './ChatOnboarding.svelte';
 	import { createGoal } from '$lib/api/goals';
 	import type { ExtractedData } from '$lib/api/ai';
@@ -18,21 +19,7 @@
 
 	let createdItems = $state<CreatedItem[]>([]);
 
-	const initialMessage = `Excellent! Finally, let's set some meaningful goals.
-
-Goals give direction to your efforts and help you track progress over time. Great goals are:
-• Specific - clear and well-defined
-• Meaningful - connected to your identity
-• Actionable - can be broken into smaller tasks
-
-For example:
-• "Run a marathon by December 2025"
-• "Write and publish my first book"
-• "Learn conversational Spanish"
-
-You can optionally set target dates and later break goals into smaller tasks.
-
-What goals would you like to work towards? What do you want to achieve?`;
+	const initialMessage = $derived($t('onboarding.goals.initialMessage'));
 
 	async function handleExtractedData(data: ExtractedData) {
 		if (data.action === 'create' && data.type === 'goal') {
@@ -77,12 +64,12 @@ What goals would you like to work towards? What do you want to achieve?`;
 				<span class="text-lg sm:text-xl">🎯</span>
 			</div>
 			<div class="flex-1 min-w-0">
-				<h2 class="font-semibold text-gray-900 text-sm sm:text-base">Set Your Goals</h2>
+				<h2 class="font-semibold text-gray-900 text-sm sm:text-base">{$t('onboarding.goals.title')}</h2>
 				<p class="text-xs sm:text-sm text-gray-500 truncate">
 					{#if createdItems.length > 0}
-						{createdItems.length} {createdItems.length === 1 ? 'goal' : 'goals'} created
+						{$t('onboarding.goals.statusCreated', { values: { count: createdItems.length } })}
 					{:else}
-						What do you want to achieve?
+						{$t('onboarding.goals.status')}
 					{/if}
 				</p>
 			</div>

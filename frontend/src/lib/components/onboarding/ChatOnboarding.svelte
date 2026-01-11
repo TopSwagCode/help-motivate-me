@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { tick } from 'svelte';
+	import { t } from 'svelte-i18n';
+	import { get } from 'svelte/store';
 	import VoiceInput from '$lib/components/shared/VoiceInput.svelte';
 	import { streamOnboardingChat, type ChatMessage, type ExtractedData, type OnboardingStep } from '$lib/api/ai';
 
@@ -80,8 +82,11 @@
 	}
 
 	// Get default suggested actions - simple and consistent
-	function getDefaultSuggestedActions(): string[] {
-		return ['Yes', 'Skip'];
+	function getDefaultSuggestedActions(): Array<{ key: string; label: string }> {
+		return [
+			{ key: 'yes', label: $t('onboarding.chat.yes') },
+			{ key: 'skip', label: $t('onboarding.chat.skip') }
+		];
 	}
 
 	// Strip JSON code blocks from content for display
@@ -231,26 +236,24 @@
 	});
 
 	// Handle quick action button click
-	async function handleQuickAction(action: string) {
+	async function handleQuickAction(actionKey: string) {
 		// Clear suggested actions immediately
 		suggestedActions = [];
 
-		const lowerAction = action.toLowerCase();
-
 		// Handle "Skip" action directly without API call
-		if (lowerAction === 'skip' || lowerAction === 'skip this step') {
+		if (actionKey === 'skip') {
 			onSkip();
 			return;
 		}
 
 		// Handle "Done" type actions - send to API but navigate silently
-		if (lowerAction === 'done' || lowerAction.includes('done') || lowerAction.includes('next step') || lowerAction.includes('finish')) {
-			await sendMessage(action, false, true);
+		if (actionKey === 'done' || actionKey === 'next_step' || actionKey === 'finish') {
+			await sendMessage('Yes', false, true);
 			return;
 		}
 
-		// For "Yes" or any other action, send as regular message
-		await sendMessage(action);
+		// For "Yes" or any other action, send as regular message (send English "Yes" to API)
+		await sendMessage('Yes');
 	}
 
 	async function sendMessage(content: string, isInitial = false, silentNavigation = false) {
@@ -344,7 +347,7 @@
 			messages = messages.filter((_, i) => i !== messages.length - 1);
 			messages = [...messages, {
 				role: 'assistant',
-				content: 'Sorry, something went wrong. Please try again.',
+				content: get(t)('onboarding.chat.errorGeneric'),
 				isStreaming: false
 			}];
 		} finally {
@@ -418,7 +421,7 @@
 				successNotification = null;
 				messages = [...messages, {
 					role: 'assistant',
-					content: 'Sorry, there was an error saving. Please try again.'
+					content: get(t)('onboarding.chat.errorSaving')
 				}];
 			} finally {
 				isProcessing = false;
@@ -459,7 +462,7 @@
 			</div>
 			<div>
 				<p class="font-semibold text-gray-900">{successNotification.name}</p>
-				<p class="text-sm font-medium" style="color: {successNotification.color}">✓ Created successfully!</p>
+				<p class="text-sm font-medium" style="color: {successNotification.color}">✓ {$t('onboarding.chat.createdSuccess')}</p>
 			</div>
 		</div>
 	{/if}
@@ -501,13 +504,13 @@
 			{#each getDefaultSuggestedActions() as action}
 				{@const isDisabled = isLoading || isTypingMessage || isProcessing}
 				<button
-					onclick={() => handleQuickAction(action)}
+					onclick={() => handleQuickAction(action.key)}
 					disabled={isDisabled}
-					class="px-4 py-1.5 text-sm rounded-full border transition-all {isDisabled 
-						? 'border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed' 
+					class="px-4 py-1.5 text-sm rounded-full border transition-all {isDisabled
+						? 'border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed'
 						: 'border-primary-300 text-primary-700 hover:bg-primary-50 hover:border-primary-400'}"
 				>
-					{action}
+					{action.label}
 				</button>
 			{/each}
 		</div>
@@ -517,7 +520,7 @@
 				<textarea
 					bind:value={inputValue}
 					onkeydown={handleKeydown}
-					placeholder="Type your message..."
+					placeholder={$t('onboarding.chat.placeholder')}
 					disabled={isLoading || isProcessing || isTypingMessage}
 					rows="1"
 					class="input resize-none pr-2 text-base"
@@ -533,7 +536,7 @@
 				onclick={() => sendMessage(inputValue)}
 				disabled={isLoading || isProcessing || isTypingMessage || !inputValue.trim()}
 				class="btn-primary p-2.5 sm:p-3 flex-shrink-0"
-				aria-label="Send message"
+				aria-label={$t('onboarding.chat.send')}
 			>
 				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path
@@ -551,12 +554,12 @@
 			<div>
 				{#if showBack && onBack}
 					<button onclick={onBack} class="text-sm text-gray-600 hover:text-gray-900">
-						← Back
+						← {$t('onboarding.chat.back')}
 					</button>
 				{/if}
 			</div>
 			<button onclick={onSkip} class="text-sm text-gray-500 hover:text-gray-700">
-				Skip this step
+				{$t('onboarding.chat.skipStep')}
 			</button>
 		</div>
 	</div>

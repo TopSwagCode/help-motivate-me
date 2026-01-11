@@ -138,9 +138,9 @@ public class AccountabilityBuddyController : ControllerBase
         var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
         var inviteUrl = $"{frontendUrl}/auth/buddy-invite?token={token}";
 
-        // Send invite email
+        // Send invite email with inviter's language preference
         var inviterName = inviter.DisplayName ?? inviter.Username;
-        await _emailService.SendBuddyInviteAsync(email, inviterName, inviteUrl);
+        await _emailService.SendBuddyInviteAsync(email, inviterName, inviteUrl, inviter.PreferredLanguage);
 
         return Ok(new BuddyResponse(
             accountabilityBuddy.Id,
@@ -324,7 +324,8 @@ public class AccountabilityBuddyController : ControllerBase
             targetUser.Email,
             authorName,
             entry.Title,
-            journalUrl
+            journalUrl,
+            targetUser.PreferredLanguage
         );
 
         return Ok(new BuddyJournalEntryResponse(

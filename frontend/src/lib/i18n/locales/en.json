@@ -66,7 +66,10 @@
 		"identity": {
 			"title": "Define Your Identity",
 			"subtitle": "Who do you want to become? Start with the identity you want to embody.",
+			"status": "Who do you want to become?",
+			"statusCreated": "{count} {count, plural, one {identity} other {identities}} created",
 			"concept": "Instead of focusing on what to achieve, focus on who to become. For example, 'I am a healthy person' instead of 'I want to lose weight'.",
+			"initialMessage": "Hi! I'm here to help you define your identity - who you want to become.\n\nIdentity-based habits are powerful because instead of focusing on what you want to achieve, you focus on who you want to be. For example:\n• \"I am a healthy person\" instead of \"I want to lose weight\"\n• \"I am a writer\" instead of \"I want to write a book\"\n• \"I am an early riser\" instead of \"I want to wake up early\"\n\nEvery action you take is a vote for the type of person you want to become.\n\nSo tell me, who do you want to become? What kind of person do you aspire to be?",
 			"form": {
 				"name": "Identity Name",
 				"namePlaceholder": "e.g., A Healthy Person",
@@ -80,9 +83,12 @@
 			"skipStep": "Skip this step"
 		},
 		"habitStack": {
-			"title": "Build Your Habit Stacks",
+			"title": "Build Habit Stacks",
 			"subtitle": "Link new habits to existing routines. This is called habit stacking.",
+			"status": "Chain habits together for powerful routines",
+			"statusCreated": "{count} habit {count, plural, one {stack} other {stacks}} created",
 			"concept": "Formula: 'After I [CURRENT HABIT], I will [NEW HABIT]'. Chain multiple habits together to create powerful routines.",
+			"initialMessage": "Great! Now let's build some habit stacks.\n\nHabit stacking is one of the most effective ways to build new habits. The idea is simple: link a new habit to an existing one using this formula:\n\n\"After I [CURRENT HABIT], I will [NEW HABIT]\"\n\nFor example, a morning routine might look like:\n• After I wake up, I will make my bed\n• After I make my bed, I will do 5 minutes of stretching\n• After I stretch, I will drink a glass of water\n\nYou can chain multiple habits together to create powerful routines!\n\nWhat daily routines do you have? What new habits would you like to build into them?",
 			"form": {
 				"name": "Stack Name",
 				"namePlaceholder": "e.g., Morning Routine",
@@ -102,7 +108,10 @@
 		"goals": {
 			"title": "Set Your Goals",
 			"subtitle": "What do you want to achieve? Set meaningful goals to guide your journey.",
+			"status": "What do you want to achieve?",
+			"statusCreated": "{count} {count, plural, one {goal} other {goals}} created",
 			"concept": "Great goals are specific, meaningful, and actionable. They can have target dates and be broken into smaller tasks.",
+			"initialMessage": "Excellent! Finally, let's set some meaningful goals.\n\nGoals give direction to your efforts and help you track progress over time. Great goals are:\n• Specific - clear and well-defined\n• Meaningful - connected to your identity\n• Actionable - can be broken into smaller tasks\n\nFor example:\n• \"Run a marathon by December 2025\"\n• \"Write and publish my first book\"\n• \"Learn conversational Spanish\"\n\nYou can optionally set target dates and later break goals into smaller tasks.\n\nWhat goals would you like to work towards? What do you want to achieve?",
 			"form": {
 				"title": "Goal Title",
 				"titlePlaceholder": "What do you want to achieve?",
@@ -117,11 +126,18 @@
 			"finishSetup": "Finish Setup"
 		},
 		"chat": {
-			"placeholder": "Type a message...",
+			"placeholder": "Type your message...",
 			"send": "Send",
 			"thinking": "Thinking...",
 			"voiceInput": "Voice input",
-			"stopRecording": "Stop recording"
+			"stopRecording": "Stop recording",
+			"yes": "Yes",
+			"skip": "Skip",
+			"back": "Back",
+			"skipStep": "Skip this step",
+			"createdSuccess": "Created successfully!",
+			"errorSaving": "Sorry, there was an error saving. Please try again.",
+			"errorGeneric": "Sorry, something went wrong. Please try again."
 		},
 		"complete": {
 			"title": "You're All Set!",
@@ -186,10 +202,12 @@
 		"profile": {
 			"title": "Profile",
 			"displayName": "Display Name",
-			"displayNamePlaceholder": "Enter your display name",
+			"displayNamePlaceholder": "Enter a display name",
 			"email": "Email",
 			"username": "Username",
-			"save": "Save Changes"
+			"save": "Save Changes",
+			"saving": "Saving...",
+			"updated": "Profile updated successfully"
 		},
 		"password": {
 			"title": "Password",
@@ -215,12 +233,16 @@
 			"title": "Linked Accounts",
 			"link": "Link",
 			"unlink": "Unlink",
-			"github": "GitHub"
+			"github": "GitHub",
+			"noAccounts": "No external accounts linked"
 		},
-		"danger": {
-			"title": "Danger Zone",
-			"resetOnboarding": "Reset Onboarding",
-			"resetOnboardingDescription": "Go through the onboarding process again"
+		"onboarding": {
+			"title": "Onboarding",
+			"description": "Restart the setup wizard to update your identities, goals, and habit stacks.",
+			"restart": "Restart Onboarding",
+			"restarting": "Resetting...",
+			"confirmReset": "Are you sure you want to restart the onboarding process? This will take you through the setup wizard again.",
+			"failedReset": "Failed to reset onboarding"
 		}
 	},
 	"goals": {

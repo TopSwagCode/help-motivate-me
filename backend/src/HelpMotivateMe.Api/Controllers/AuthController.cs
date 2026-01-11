@@ -318,8 +318,8 @@ public class AuthController : ControllerBase
         var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
         var loginUrl = $"{frontendUrl}/auth/login?token={token}";
 
-        // Send email
-        await _emailService.SendLoginLinkAsync(email, loginUrl);
+        // Send email with user's language preference
+        await _emailService.SendLoginLinkAsync(email, loginUrl, user.PreferredLanguage);
 
         return Ok(new { message = "If an account exists, a login link has been sent." });
     }

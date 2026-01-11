@@ -66,7 +66,10 @@
 		"identity": {
 			"title": "Definer din identitet",
 			"subtitle": "Hvem vil du blive? Start med den identitet, du vil legemliggøre.",
+			"status": "Hvem vil du blive?",
+			"statusCreated": "{count} {count, plural, one {identitet} other {identiteter}} oprettet",
 			"concept": "I stedet for at fokusere på hvad du vil opnå, fokuser på hvem du vil blive. For eksempel 'Jeg er en sund person' i stedet for 'Jeg vil tabe mig'.",
+			"initialMessage": "Hej! Jeg er her for at hjælpe dig med at definere din identitet - hvem du vil blive.\n\nIdentitetsbaserede vaner er kraftfulde, fordi du i stedet for at fokusere på hvad du vil opnå, fokuserer på hvem du vil være. For eksempel:\n• \"Jeg er en sund person\" i stedet for \"Jeg vil tabe mig\"\n• \"Jeg er en forfatter\" i stedet for \"Jeg vil skrive en bog\"\n• \"Jeg er en morgenfugl\" i stedet for \"Jeg vil stå tidligt op\"\n\nHver handling du foretager, er en stemme for den type person, du vil blive.\n\nSå fortæl mig, hvem vil du blive? Hvilken slags person stræber du efter at være?",
 			"form": {
 				"name": "Identitetsnavn",
 				"namePlaceholder": "f.eks., En sund person",
@@ -80,9 +83,12 @@
 			"skipStep": "Spring dette trin over"
 		},
 		"habitStack": {
-			"title": "Byg dine vanestakke",
+			"title": "Byg vanestakke",
 			"subtitle": "Knyt nye vaner til eksisterende rutiner. Dette kaldes vanestabling.",
+			"status": "Kæd vaner sammen til kraftfulde rutiner",
+			"statusCreated": "{count} {count, plural, one {vanestak} other {vanestakke}} oprettet",
 			"concept": "Formel: 'Efter jeg [NUVÆRENDE VANE], vil jeg [NY VANE]'. Kæd flere vaner sammen for at skabe kraftfulde rutiner.",
+			"initialMessage": "Fantastisk! Lad os nu bygge nogle vanestakke.\n\nVanestabling er en af de mest effektive måder at opbygge nye vaner på. Ideen er simpel: knyt en ny vane til en eksisterende ved hjælp af denne formel:\n\n\"Efter jeg [NUVÆRENDE VANE], vil jeg [NY VANE]\"\n\nFor eksempel kan en morgenrutine se sådan ud:\n• Efter jeg vågner, vil jeg rede min seng\n• Efter jeg reder min seng, vil jeg strække ud i 5 minutter\n• Efter jeg strækker ud, vil jeg drikke et glas vand\n\nDu kan kæde flere vaner sammen for at skabe kraftfulde rutiner!\n\nHvilke daglige rutiner har du? Hvilke nye vaner vil du gerne bygge ind i dem?",
 			"form": {
 				"name": "Staknavn",
 				"namePlaceholder": "f.eks., Morgenrutine",
@@ -102,7 +108,10 @@
 		"goals": {
 			"title": "Sæt dine mål",
 			"subtitle": "Hvad vil du opnå? Sæt meningsfulde mål for at guide din rejse.",
+			"status": "Hvad vil du opnå?",
+			"statusCreated": "{count} {count, plural, one {mål} other {mål}} oprettet",
 			"concept": "Gode mål er specifikke, meningsfulde og handlingsorienterede. De kan have måldatoer og opdeles i mindre opgaver.",
+			"initialMessage": "Fremragende! Lad os til sidst sætte nogle meningsfulde mål.\n\nMål giver retning til din indsats og hjælper dig med at spore fremskridt over tid. Gode mål er:\n• Specifikke - klare og veldefinerede\n• Meningsfulde - forbundet med din identitet\n• Handlingsorienterede - kan opdeles i mindre opgaver\n\nFor eksempel:\n• \"Løb et maraton inden december 2025\"\n• \"Skriv og udgiv min første bog\"\n• \"Lær konversationelt spansk\"\n\nDu kan valgfrit sætte måldatoer og senere opdele mål i mindre opgaver.\n\nHvilke mål vil du gerne arbejde hen imod? Hvad vil du opnå?",
 			"form": {
 				"title": "Måltitel",
 				"titlePlaceholder": "Hvad vil du opnå?",
@@ -117,11 +126,18 @@
 			"finishSetup": "Afslut opsætning"
 		},
 		"chat": {
-			"placeholder": "Skriv en besked...",
+			"placeholder": "Skriv din besked...",
 			"send": "Send",
 			"thinking": "Tænker...",
 			"voiceInput": "Stemmeinput",
-			"stopRecording": "Stop optagelse"
+			"stopRecording": "Stop optagelse",
+			"yes": "Ja",
+			"skip": "Spring over",
+			"back": "Tilbage",
+			"skipStep": "Spring dette trin over",
+			"createdSuccess": "Oprettet!",
+			"errorSaving": "Beklager, der opstod en fejl ved gemning. Prøv venligst igen.",
+			"errorGeneric": "Beklager, noget gik galt. Prøv venligst igen."
 		},
 		"complete": {
 			"title": "Du er klar!",
@@ -186,10 +202,12 @@
 		"profile": {
 			"title": "Profil",
 			"displayName": "Visningsnavn",
-			"displayNamePlaceholder": "Indtast dit visningsnavn",
+			"displayNamePlaceholder": "Indtast et visningsnavn",
 			"email": "E-mail",
 			"username": "Brugernavn",
-			"save": "Gem ændringer"
+			"save": "Gem ændringer",
+			"saving": "Gemmer...",
+			"updated": "Profil opdateret"
 		},
 		"password": {
 			"title": "Adgangskode",
@@ -215,12 +233,16 @@
 			"title": "Tilknyttede konti",
 			"link": "Tilknyt",
 			"unlink": "Fjern tilknytning",
-			"github": "GitHub"
+			"github": "GitHub",
+			"noAccounts": "Ingen eksterne konti tilknyttet"
 		},
-		"danger": {
-			"title": "Farezone",
-			"resetOnboarding": "Nulstil onboarding",
-			"resetOnboardingDescription": "Gennemgå onboarding-processen igen"
+		"onboarding": {
+			"title": "Onboarding",
+			"description": "Genstart opsætningsguiden for at opdatere dine identiteter, mål og vanestakke.",
+			"restart": "Genstart onboarding",
+			"restarting": "Nulstiller...",
+			"confirmReset": "Er du sikker på, at du vil genstarte onboarding-processen? Dette vil tage dig gennem opsætningsguiden igen.",
+			"failedReset": "Kunne ikke nulstille onboarding"
 		}
 	},
 	"goals": {

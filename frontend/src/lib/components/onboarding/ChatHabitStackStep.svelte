@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from 'svelte-i18n';
 	import ChatOnboarding from './ChatOnboarding.svelte';
 	import { createHabitStack } from '$lib/api/habitStacks';
 	import type { ExtractedData } from '$lib/api/ai';
@@ -18,20 +19,7 @@
 
 	let createdItems = $state<CreatedItem[]>([]);
 
-	const initialMessage = `Great! Now let's build some habit stacks.
-
-Habit stacking is one of the most effective ways to build new habits. The idea is simple: link a new habit to an existing one using this formula:
-
-"After I [CURRENT HABIT], I will [NEW HABIT]"
-
-For example, a morning routine might look like:
-• After I wake up, I will make my bed
-• After I make my bed, I will do 5 minutes of stretching
-• After I stretch, I will drink a glass of water
-
-You can chain multiple habits together to create powerful routines!
-
-What daily routines do you have? What new habits would you like to build into them?`;
+	const initialMessage = $derived($t('onboarding.habitStack.initialMessage'));
 
 	interface HabitItem {
 		cueDescription: string;
@@ -100,12 +88,12 @@ What daily routines do you have? What new habits would you like to build into th
 				<span class="text-lg sm:text-xl">🔗</span>
 			</div>
 			<div class="flex-1 min-w-0">
-				<h2 class="font-semibold text-gray-900 text-sm sm:text-base">Build Habit Stacks</h2>
+				<h2 class="font-semibold text-gray-900 text-sm sm:text-base">{$t('onboarding.habitStack.title')}</h2>
 				<p class="text-xs sm:text-sm text-gray-500 truncate">
 					{#if createdItems.length > 0}
-						{createdItems.length} habit {createdItems.length === 1 ? 'stack' : 'stacks'} created
+						{$t('onboarding.habitStack.statusCreated', { values: { count: createdItems.length } })}
 					{:else}
-						Chain habits together for powerful routines
+						{$t('onboarding.habitStack.status')}
 					{/if}
 				</p>
 			</div>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from 'svelte-i18n';
 	import ChatOnboarding from './ChatOnboarding.svelte';
 	import { createIdentity } from '$lib/api/identities';
 	import type { ExtractedData } from '$lib/api/ai';
@@ -18,16 +19,7 @@
 
 	let createdItems = $state<CreatedItem[]>([]);
 
-	const initialMessage = `Hi! I'm here to help you define your identity - who you want to become.
-
-Identity-based habits are powerful because instead of focusing on what you want to achieve, you focus on who you want to be. For example:
-• "I am a healthy person" instead of "I want to lose weight"
-• "I am a writer" instead of "I want to write a book"
-• "I am an early riser" instead of "I want to wake up early"
-
-Every action you take is a vote for the type of person you want to become.
-
-So tell me, who do you want to become? What kind of person do you aspire to be?`;
+	const initialMessage = $derived($t('onboarding.identity.initialMessage'));
 
 	async function handleExtractedData(data: ExtractedData) {
 		if (data.action === 'create' && data.type === 'identity') {
@@ -76,12 +68,12 @@ So tell me, who do you want to become? What kind of person do you aspire to be?`
 				<span class="text-lg sm:text-xl">🎯</span>
 			</div>
 			<div class="flex-1 min-w-0">
-				<h2 class="font-semibold text-gray-900 text-sm sm:text-base">Define Your Identity</h2>
+				<h2 class="font-semibold text-gray-900 text-sm sm:text-base">{$t('onboarding.identity.title')}</h2>
 				<p class="text-xs sm:text-sm text-gray-500 truncate">
 					{#if createdItems.length > 0}
-						{createdItems.length} {createdItems.length === 1 ? 'identity' : 'identities'} created
+						{$t('onboarding.identity.statusCreated', { values: { count: createdItems.length } })}
 					{:else}
-						Who do you want to become?
+						{$t('onboarding.identity.status')}
 					{/if}
 				</p>
 			</div>

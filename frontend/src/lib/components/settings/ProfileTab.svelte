@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { t } from 'svelte-i18n';
+	import { get } from 'svelte/store';
 	import { auth } from '$lib/stores/auth';
 	import { updateProfile } from '$lib/api/settings';
 	import { resetOnboarding } from '$lib/api/onboarding';
@@ -21,16 +23,16 @@
 				displayName: displayName.trim() || undefined
 			});
 			auth.updateUser(updatedUser);
-			success = 'Profile updated successfully';
+			success = get(t)('settings.profile.updated');
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to update profile';
+			error = e instanceof Error ? e.message : get(t)('errors.generic');
 		} finally {
 			loading = false;
 		}
 	}
 
 	async function handleResetOnboarding() {
-		if (!confirm('Are you sure you want to restart the onboarding process? This will take you through the setup wizard again.')) {
+		if (!confirm(get(t)('settings.onboarding.confirmReset'))) {
 			return;
 		}
 
@@ -42,14 +44,14 @@
 			auth.updateUser(updatedUser);
 			goto('/onboarding');
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to reset onboarding';
+			error = e instanceof Error ? e.message : get(t)('settings.onboarding.failedReset');
 			resetLoading = false;
 		}
 	}
 </script>
 
 <div>
-	<h2 class="text-lg font-semibold text-gray-900 mb-4">Profile Settings</h2>
+	<h2 class="text-lg font-semibold text-gray-900 mb-4">{$t('settings.profile.title')}</h2>
 
 	<form onsubmit={handleSubmit} class="space-y-4 max-w-md">
 		{#if error}
@@ -66,7 +68,7 @@
 
 		<!-- Read-only fields -->
 		<div>
-			<label class="label">Username</label>
+			<label class="label">{$t('settings.profile.username')}</label>
 			<input
 				type="text"
 				value={$auth.user?.username}
@@ -76,7 +78,7 @@
 		</div>
 
 		<div>
-			<label class="label">Email</label>
+			<label class="label">{$t('settings.profile.email')}</label>
 			<input
 				type="email"
 				value={$auth.user?.email}
@@ -87,25 +89,25 @@
 
 		<!-- Editable field -->
 		<div>
-			<label for="displayName" class="label">Display Name</label>
+			<label for="displayName" class="label">{$t('settings.profile.displayName')}</label>
 			<input
 				id="displayName"
 				type="text"
 				bind:value={displayName}
 				maxlength="100"
-				placeholder="Enter a display name"
+				placeholder={$t('settings.profile.displayNamePlaceholder')}
 				class="input"
 			/>
 		</div>
 
 		<button type="submit" disabled={loading} class="btn-primary">
-			{loading ? 'Saving...' : 'Save Changes'}
+			{loading ? $t('settings.profile.saving') : $t('settings.profile.save')}
 		</button>
 	</form>
 
 	<!-- Linked Accounts Section -->
 	<div class="mt-8 pt-6 border-t border-gray-200">
-		<h3 class="text-md font-medium text-gray-900 mb-3">Linked Accounts</h3>
+		<h3 class="text-md font-medium text-gray-900 mb-3">{$t('settings.linkedAccounts.title')}</h3>
 		{#if $auth.user?.linkedProviders.length}
 			<ul class="space-y-2">
 				{#each $auth.user.linkedProviders as provider}
@@ -122,22 +124,22 @@
 				{/each}
 			</ul>
 		{:else}
-			<p class="text-sm text-gray-500">No external accounts linked</p>
+			<p class="text-sm text-gray-500">{$t('settings.linkedAccounts.noAccounts')}</p>
 		{/if}
 	</div>
 
 	<!-- Onboarding Section -->
 	<div class="mt-8 pt-6 border-t border-gray-200">
-		<h3 class="text-md font-medium text-gray-900 mb-2">Onboarding</h3>
+		<h3 class="text-md font-medium text-gray-900 mb-2">{$t('settings.onboarding.title')}</h3>
 		<p class="text-sm text-gray-500 mb-3">
-			Restart the setup wizard to update your identities, goals, and habit stacks.
+			{$t('settings.onboarding.description')}
 		</p>
 		<button
 			onclick={handleResetOnboarding}
 			disabled={resetLoading}
 			class="btn-secondary text-sm"
 		>
-			{resetLoading ? 'Resetting...' : 'Restart Onboarding'}
+			{resetLoading ? $t('settings.onboarding.restarting') : $t('settings.onboarding.restart')}
 		</button>
 	</div>
 </div>
