@@ -1,0 +1,335 @@
+{
+	"common": {
+		"appName": "HelpMotivateMe",
+		"loading": "Loading...",
+		"saving": "Saving...",
+		"save": "Save",
+		"cancel": "Cancel",
+		"delete": "Delete",
+		"edit": "Edit",
+		"create": "Create",
+		"update": "Update",
+		"close": "Close",
+		"back": "Back",
+		"next": "Next",
+		"skip": "Skip",
+		"continue": "Continue",
+		"done": "Done",
+		"finish": "Finish",
+		"yes": "Yes",
+		"no": "No",
+		"or": "or",
+		"and": "and",
+		"optional": "Optional",
+		"required": "Required",
+		"error": "Error",
+		"success": "Success",
+		"confirm": "Confirm",
+		"search": "Search",
+		"noResults": "No results found",
+		"tryAgain": "Try again"
+	},
+	"language": {
+		"select": "Select Language",
+		"english": "English",
+		"danish": "Danish",
+		"selectDescription": "Choose your preferred language for the app"
+	},
+	"onboarding": {
+		"language": {
+			"title": "Choose Your Language",
+			"subtitle": "Select your preferred language. You can change this later in settings.",
+			"continue": "Continue"
+		},
+		"modeSelect": {
+			"title": "Welcome to HelpMotivateMe",
+			"subtitle": "Let's set up your identities, habits, and goals. Choose how you'd like to get started.",
+			"manual": {
+				"title": "Manual Setup",
+				"description": "Step-by-step forms to create your identities, habit stacks, and goals. Best if you already know what you want to set up.",
+				"cta": "Get started"
+			},
+			"ai": {
+				"title": "AI Assistant",
+				"description": "Chat with our AI to discover your identities and build personalized habits. Great for exploring possibilities and getting guidance.",
+				"cta": "Start chatting",
+				"recommended": "Recommended",
+				"voiceInput": "Voice input",
+				"instantSuggestions": "Instant suggestions"
+			}
+		},
+		"steps": {
+			"identity": "Identity",
+			"habitStacks": "Habit Stacks",
+			"goals": "Goals"
+		},
+		"identity": {
+			"title": "Define Your Identity",
+			"subtitle": "Who do you want to become? Start with the identity you want to embody.",
+			"concept": "Instead of focusing on what to achieve, focus on who to become. For example, 'I am a healthy person' instead of 'I want to lose weight'.",
+			"form": {
+				"name": "Identity Name",
+				"namePlaceholder": "e.g., A Healthy Person",
+				"description": "Description",
+				"descriptionPlaceholder": "Describe who you want to become...",
+				"emoji": "Choose an emoji",
+				"color": "Choose a color"
+			},
+			"created": "Identity created!",
+			"addAnother": "Add Another Identity",
+			"skipStep": "Skip this step"
+		},
+		"habitStack": {
+			"title": "Build Your Habit Stacks",
+			"subtitle": "Link new habits to existing routines. This is called habit stacking.",
+			"concept": "Formula: 'After I [CURRENT HABIT], I will [NEW HABIT]'. Chain multiple habits together to create powerful routines.",
+			"form": {
+				"name": "Stack Name",
+				"namePlaceholder": "e.g., Morning Routine",
+				"description": "Description",
+				"descriptionPlaceholder": "Describe this habit stack...",
+				"trigger": "Trigger Cue",
+				"triggerPlaceholder": "After I...",
+				"habits": "Habits in this stack",
+				"addHabit": "Add Habit",
+				"habitCue": "After I...",
+				"habitAction": "I will..."
+			},
+			"created": "Habit stack created!",
+			"addAnother": "Add Another Habit Stack",
+			"skipStep": "Skip this step"
+		},
+		"goals": {
+			"title": "Set Your Goals",
+			"subtitle": "What do you want to achieve? Set meaningful goals to guide your journey.",
+			"concept": "Great goals are specific, meaningful, and actionable. They can have target dates and be broken into smaller tasks.",
+			"form": {
+				"title": "Goal Title",
+				"titlePlaceholder": "What do you want to achieve?",
+				"description": "Description",
+				"descriptionPlaceholder": "Describe your goal...",
+				"targetDate": "Target Date",
+				"targetDatePlaceholder": "When do you want to achieve this?"
+			},
+			"created": "Goal created!",
+			"addAnother": "Add Another Goal",
+			"skipStep": "Skip this step",
+			"finishSetup": "Finish Setup"
+		},
+		"chat": {
+			"placeholder": "Type a message...",
+			"send": "Send",
+			"thinking": "Thinking...",
+			"voiceInput": "Voice input",
+			"stopRecording": "Stop recording"
+		},
+		"complete": {
+			"title": "You're All Set!",
+			"subtitle": "Great job completing your setup. You're ready to start your journey!",
+			"goToDashboard": "Go to Dashboard"
+		},
+		"progress": {
+			"step": "Step {current} of {total}"
+		}
+	},
+	"auth": {
+		"login": {
+			"title": "Welcome Back",
+			"subtitle": "Sign in to continue your journey",
+			"email": "Email",
+			"emailPlaceholder": "Enter your email",
+			"password": "Password",
+			"passwordPlaceholder": "Enter your password",
+			"submit": "Sign In",
+			"forgotPassword": "Forgot password?",
+			"noAccount": "Don't have an account?",
+			"signUp": "Sign up",
+			"orContinueWith": "Or continue with",
+			"magicLink": "Send me a login link",
+			"magicLinkSent": "Check your email for a login link",
+			"invalidCredentials": "Invalid email or password"
+		},
+		"register": {
+			"title": "Create Account",
+			"subtitle": "Start your journey to better habits",
+			"username": "Username",
+			"usernamePlaceholder": "Choose a username",
+			"email": "Email",
+			"emailPlaceholder": "Enter your email",
+			"password": "Password",
+			"passwordPlaceholder": "Create a password",
+			"confirmPassword": "Confirm Password",
+			"confirmPasswordPlaceholder": "Confirm your password",
+			"displayName": "Display Name",
+			"displayNamePlaceholder": "How should we call you?",
+			"submit": "Create Account",
+			"hasAccount": "Already have an account?",
+			"signIn": "Sign in",
+			"passwordRequirements": "Password must be at least 8 characters"
+		},
+		"logout": "Log out",
+		"github": "GitHub"
+	},
+	"nav": {
+		"today": "Today",
+		"dashboard": "Dashboard",
+		"goals": "Goals",
+		"habitStacks": "Habit Stacks",
+		"identities": "Identities",
+		"journal": "Journal",
+		"analytics": "Analytics",
+		"buddies": "Buddies",
+		"settings": "Settings"
+	},
+	"settings": {
+		"title": "Settings",
+		"profile": {
+			"title": "Profile",
+			"displayName": "Display Name",
+			"displayNamePlaceholder": "Enter your display name",
+			"email": "Email",
+			"username": "Username",
+			"save": "Save Changes"
+		},
+		"password": {
+			"title": "Password",
+			"current": "Current Password",
+			"new": "New Password",
+			"confirm": "Confirm New Password",
+			"change": "Change Password",
+			"requirements": "Password must be at least 8 characters"
+		},
+		"language": {
+			"title": "Language",
+			"description": "Choose your preferred language for the app",
+			"current": "Current language"
+		},
+		"membership": {
+			"title": "Membership",
+			"currentTier": "Current tier",
+			"free": "Free",
+			"plus": "Plus",
+			"pro": "Pro"
+		},
+		"linkedAccounts": {
+			"title": "Linked Accounts",
+			"link": "Link",
+			"unlink": "Unlink",
+			"github": "GitHub"
+		},
+		"danger": {
+			"title": "Danger Zone",
+			"resetOnboarding": "Reset Onboarding",
+			"resetOnboardingDescription": "Go through the onboarding process again"
+		}
+	},
+	"goals": {
+		"title": "Goals",
+		"empty": "No goals yet. Create your first goal to get started!",
+		"create": "Create Goal",
+		"edit": "Edit Goal",
+		"delete": "Delete Goal",
+		"complete": "Mark as Complete",
+		"uncomplete": "Mark as Incomplete",
+		"form": {
+			"title": "Goal Title",
+			"titlePlaceholder": "What do you want to achieve?",
+			"description": "Description",
+			"descriptionPlaceholder": "Describe your goal...",
+			"targetDate": "Target Date",
+			"submit": "Save Goal"
+		}
+	},
+	"identities": {
+		"title": "Identities",
+		"empty": "No identities yet. Define who you want to become!",
+		"create": "Create Identity",
+		"edit": "Edit Identity",
+		"delete": "Delete Identity",
+		"form": {
+			"name": "Identity Name",
+			"namePlaceholder": "e.g., A Healthy Person",
+			"description": "Description",
+			"descriptionPlaceholder": "Describe who you want to become...",
+			"emoji": "Emoji",
+			"color": "Color",
+			"submit": "Save Identity"
+		}
+	},
+	"habitStacks": {
+		"title": "Habit Stacks",
+		"empty": "No habit stacks yet. Create your first routine!",
+		"create": "Create Habit Stack",
+		"edit": "Edit Habit Stack",
+		"delete": "Delete Habit Stack",
+		"form": {
+			"name": "Stack Name",
+			"namePlaceholder": "e.g., Morning Routine",
+			"description": "Description",
+			"descriptionPlaceholder": "Describe this routine...",
+			"trigger": "Trigger Cue",
+			"triggerPlaceholder": "After I...",
+			"habits": "Habits",
+			"addHabit": "Add Habit",
+			"submit": "Save Habit Stack"
+		},
+		"chain": {
+			"after": "After I",
+			"iWill": "I will"
+		}
+	},
+	"journal": {
+		"title": "Journal",
+		"empty": "No journal entries yet. Start reflecting on your journey!",
+		"create": "New Entry",
+		"edit": "Edit Entry",
+		"delete": "Delete Entry",
+		"form": {
+			"title": "Entry Title",
+			"titlePlaceholder": "Give your entry a title...",
+			"content": "Content",
+			"contentPlaceholder": "Write your thoughts...",
+			"date": "Date",
+			"submit": "Save Entry"
+		}
+	},
+	"today": {
+		"title": "Today",
+		"greeting": {
+			"morning": "Good morning",
+			"afternoon": "Good afternoon",
+			"evening": "Good evening"
+		},
+		"noTasks": "No tasks for today. Enjoy your day!",
+		"habitStacks": "Habit Stacks",
+		"tasks": "Tasks",
+		"journal": "Journal"
+	},
+	"analytics": {
+		"title": "Analytics",
+		"streak": {
+			"current": "Current Streak",
+			"longest": "Longest Streak",
+			"days": "days"
+		},
+		"completionRate": "Completion Rate",
+		"tasksCompleted": "Tasks Completed"
+	},
+	"buddies": {
+		"title": "Accountability Buddies",
+		"empty": "No buddies yet. Invite someone to help keep you accountable!",
+		"invite": "Invite Buddy",
+		"inviteDescription": "Send an invitation to someone who can help keep you accountable",
+		"email": "Email address",
+		"sendInvite": "Send Invite",
+		"pending": "Pending Invitations",
+		"viewProgress": "View Progress"
+	},
+	"errors": {
+		"generic": "Something went wrong. Please try again.",
+		"network": "Network error. Please check your connection.",
+		"unauthorized": "Please sign in to continue.",
+		"notFound": "The requested resource was not found.",
+		"validation": "Please check your input and try again."
+	}
+}

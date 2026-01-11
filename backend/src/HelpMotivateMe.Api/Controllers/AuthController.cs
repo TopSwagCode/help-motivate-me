@@ -480,6 +480,31 @@ public class AuthController : ControllerBase
         return Ok(MapToResponse(user));
     }
 
+    [HttpPatch("language")]
+    [Authorize]
+    public async Task<ActionResult<UserResponse>> UpdateLanguage([FromBody] UpdateLanguageRequest request)
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
+
+        var user = await _db.Users
+            .Include(u => u.ExternalLogins)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user == null) return NotFound();
+
+        if (!Enum.TryParse<Language>(request.Language, true, out var language))
+        {
+            return BadRequest(new { message = "Invalid language. Must be English or Danish." });
+        }
+
+        user.PreferredLanguage = language;
+        user.UpdatedAt = DateTime.UtcNow;
+
+        await _db.SaveChangesAsync();
+        return Ok(MapToResponse(user));
+    }
+
     [HttpPost("login-with-buddy-token")]
     public async Task<ActionResult<BuddyLoginResponse>> LoginWithBuddyToken([FromBody] LoginWithTokenRequest request)
     {
@@ -568,7 +593,8 @@ public class AuthController : ControllerBase
             user.PasswordHash != null,
             user.MembershipTier.ToString(),
             user.HasCompletedOnboarding,
-            user.Role.ToString()
+            user.Role.ToString(),
+            user.PreferredLanguage.ToString()
         );
     }
 

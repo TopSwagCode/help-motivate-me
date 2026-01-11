@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { t } from 'svelte-i18n';
+
 	interface Props {
 		onselect: (mode: 'manual' | 'ai') => void;
 	}
@@ -9,9 +11,9 @@
 <div class="min-h-screen bg-gradient-to-b from-primary-50 to-white">
 	<div class="max-w-2xl mx-auto px-4 py-12">
 		<div class="text-center mb-10">
-			<h1 class="text-3xl font-bold text-gray-900 mb-3">Welcome to HelpMotivateMe</h1>
+			<h1 class="text-3xl font-bold text-gray-900 mb-3">{$t('onboarding.modeSelect.title')}</h1>
 			<p class="text-gray-600">
-				Let's set up your identities, habits, and goals. Choose how you'd like to get started.
+				{$t('onboarding.modeSelect.subtitle')}
 			</p>
 		</div>
 
@@ -38,15 +40,16 @@
 						/>
 					</svg>
 				</div>
-				<h2 class="text-xl font-semibold text-gray-900 mb-2">Manual Setup</h2>
+				<h2 class="text-xl font-semibold text-gray-900 mb-2">
+					{$t('onboarding.modeSelect.manual.title')}
+				</h2>
 				<p class="text-gray-600 text-sm mb-4">
-					Step-by-step forms to create your identities, habit stacks, and goals. Best if you
-					already know what you want to set up.
+					{$t('onboarding.modeSelect.manual.description')}
 				</p>
 				<span
 					class="inline-flex items-center text-sm font-medium text-primary-600 group-hover:text-primary-700"
 				>
-					Get started
+					{$t('onboarding.modeSelect.manual.cta')}
 					<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
 					</svg>
@@ -61,7 +64,7 @@
 				<div
 					class="absolute top-3 right-3 px-2 py-1 bg-primary-100 text-primary-700 text-xs font-medium rounded-full"
 				>
-					Recommended
+					{$t('onboarding.modeSelect.ai.recommended')}
 				</div>
 				<div
 					class="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-primary-200 transition-colors"
@@ -80,10 +83,11 @@
 						/>
 					</svg>
 				</div>
-				<h2 class="text-xl font-semibold text-gray-900 mb-2">AI Assistant</h2>
+				<h2 class="text-xl font-semibold text-gray-900 mb-2">
+					{$t('onboarding.modeSelect.ai.title')}
+				</h2>
 				<p class="text-gray-600 text-sm mb-4">
-					Chat with our AI to discover your identities and build personalized habits. Great for
-					exploring possibilities and getting guidance.
+					{$t('onboarding.modeSelect.ai.description')}
 				</p>
 				<div class="flex items-center gap-3 text-xs text-gray-500 mb-4">
 					<span class="flex items-center gap-1">
@@ -95,7 +99,7 @@
 								d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
 							/>
 						</svg>
-						Voice input
+						{$t('onboarding.modeSelect.ai.voiceInput')}
 					</span>
 					<span class="flex items-center gap-1">
 						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -106,13 +110,13 @@
 								d="M13 10V3L4 14h7v7l9-11h-7z"
 							/>
 						</svg>
-						Instant suggestions
+						{$t('onboarding.modeSelect.ai.instantSuggestions')}
 					</span>
 				</div>
 				<span
 					class="inline-flex items-center text-sm font-medium text-primary-600 group-hover:text-primary-700"
 				>
-					Start chatting
+					{$t('onboarding.modeSelect.ai.cta')}
 					<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
 					</svg>

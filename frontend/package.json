@@ -26,6 +26,7 @@
   },
   "type": "module",
   "dependencies": {
-    "canvas-confetti": "^1.9.4"
+    "canvas-confetti": "^1.9.4",
+    "svelte-i18n": "^4.0.1"
   }
 }

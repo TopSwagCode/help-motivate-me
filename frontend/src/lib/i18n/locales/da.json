@@ -1,0 +1,335 @@
+{
+	"common": {
+		"appName": "HelpMotivateMe",
+		"loading": "Indlæser...",
+		"saving": "Gemmer...",
+		"save": "Gem",
+		"cancel": "Annuller",
+		"delete": "Slet",
+		"edit": "Rediger",
+		"create": "Opret",
+		"update": "Opdater",
+		"close": "Luk",
+		"back": "Tilbage",
+		"next": "Næste",
+		"skip": "Spring over",
+		"continue": "Fortsæt",
+		"done": "Færdig",
+		"finish": "Afslut",
+		"yes": "Ja",
+		"no": "Nej",
+		"or": "eller",
+		"and": "og",
+		"optional": "Valgfrit",
+		"required": "Påkrævet",
+		"error": "Fejl",
+		"success": "Succes",
+		"confirm": "Bekræft",
+		"search": "Søg",
+		"noResults": "Ingen resultater fundet",
+		"tryAgain": "Prøv igen"
+	},
+	"language": {
+		"select": "Vælg sprog",
+		"english": "Engelsk",
+		"danish": "Dansk",
+		"selectDescription": "Vælg dit foretrukne sprog til appen"
+	},
+	"onboarding": {
+		"language": {
+			"title": "Vælg dit sprog",
+			"subtitle": "Vælg dit foretrukne sprog. Du kan ændre det senere i indstillinger.",
+			"continue": "Fortsæt"
+		},
+		"modeSelect": {
+			"title": "Velkommen til HelpMotivateMe",
+			"subtitle": "Lad os opsætte dine identiteter, vaner og mål. Vælg hvordan du vil komme i gang.",
+			"manual": {
+				"title": "Manuel opsætning",
+				"description": "Trin-for-trin formularer til at oprette dine identiteter, vanestakke og mål. Bedst hvis du allerede ved, hvad du vil opsætte.",
+				"cta": "Kom i gang"
+			},
+			"ai": {
+				"title": "AI-assistent",
+				"description": "Chat med vores AI for at opdage dine identiteter og opbygge personlige vaner. Fantastisk til at udforske muligheder og få vejledning.",
+				"cta": "Start chat",
+				"recommended": "Anbefalet",
+				"voiceInput": "Stemmeinput",
+				"instantSuggestions": "Øjeblikkelige forslag"
+			}
+		},
+		"steps": {
+			"identity": "Identitet",
+			"habitStacks": "Vanestakke",
+			"goals": "Mål"
+		},
+		"identity": {
+			"title": "Definer din identitet",
+			"subtitle": "Hvem vil du blive? Start med den identitet, du vil legemliggøre.",
+			"concept": "I stedet for at fokusere på hvad du vil opnå, fokuser på hvem du vil blive. For eksempel 'Jeg er en sund person' i stedet for 'Jeg vil tabe mig'.",
+			"form": {
+				"name": "Identitetsnavn",
+				"namePlaceholder": "f.eks., En sund person",
+				"description": "Beskrivelse",
+				"descriptionPlaceholder": "Beskriv hvem du vil blive...",
+				"emoji": "Vælg en emoji",
+				"color": "Vælg en farve"
+			},
+			"created": "Identitet oprettet!",
+			"addAnother": "Tilføj endnu en identitet",
+			"skipStep": "Spring dette trin over"
+		},
+		"habitStack": {
+			"title": "Byg dine vanestakke",
+			"subtitle": "Knyt nye vaner til eksisterende rutiner. Dette kaldes vanestabling.",
+			"concept": "Formel: 'Efter jeg [NUVÆRENDE VANE], vil jeg [NY VANE]'. Kæd flere vaner sammen for at skabe kraftfulde rutiner.",
+			"form": {
+				"name": "Staknavn",
+				"namePlaceholder": "f.eks., Morgenrutine",
+				"description": "Beskrivelse",
+				"descriptionPlaceholder": "Beskriv denne vanestak...",
+				"trigger": "Triggersignal",
+				"triggerPlaceholder": "Efter jeg...",
+				"habits": "Vaner i denne stak",
+				"addHabit": "Tilføj vane",
+				"habitCue": "Efter jeg...",
+				"habitAction": "Vil jeg..."
+			},
+			"created": "Vanestak oprettet!",
+			"addAnother": "Tilføj endnu en vanestak",
+			"skipStep": "Spring dette trin over"
+		},
+		"goals": {
+			"title": "Sæt dine mål",
+			"subtitle": "Hvad vil du opnå? Sæt meningsfulde mål for at guide din rejse.",
+			"concept": "Gode mål er specifikke, meningsfulde og handlingsorienterede. De kan have måldatoer og opdeles i mindre opgaver.",
+			"form": {
+				"title": "Måltitel",
+				"titlePlaceholder": "Hvad vil du opnå?",
+				"description": "Beskrivelse",
+				"descriptionPlaceholder": "Beskriv dit mål...",
+				"targetDate": "Måldato",
+				"targetDatePlaceholder": "Hvornår vil du opnå dette?"
+			},
+			"created": "Mål oprettet!",
+			"addAnother": "Tilføj endnu et mål",
+			"skipStep": "Spring dette trin over",
+			"finishSetup": "Afslut opsætning"
+		},
+		"chat": {
+			"placeholder": "Skriv en besked...",
+			"send": "Send",
+			"thinking": "Tænker...",
+			"voiceInput": "Stemmeinput",
+			"stopRecording": "Stop optagelse"
+		},
+		"complete": {
+			"title": "Du er klar!",
+			"subtitle": "Godt arbejde med at fuldføre din opsætning. Du er klar til at begynde din rejse!",
+			"goToDashboard": "Gå til dashboard"
+		},
+		"progress": {
+			"step": "Trin {current} af {total}"
+		}
+	},
+	"auth": {
+		"login": {
+			"title": "Velkommen tilbage",
+			"subtitle": "Log ind for at fortsætte din rejse",
+			"email": "E-mail",
+			"emailPlaceholder": "Indtast din e-mail",
+			"password": "Adgangskode",
+			"passwordPlaceholder": "Indtast din adgangskode",
+			"submit": "Log ind",
+			"forgotPassword": "Glemt adgangskode?",
+			"noAccount": "Har du ikke en konto?",
+			"signUp": "Opret konto",
+			"orContinueWith": "Eller fortsæt med",
+			"magicLink": "Send mig et login-link",
+			"magicLinkSent": "Tjek din e-mail for et login-link",
+			"invalidCredentials": "Ugyldig e-mail eller adgangskode"
+		},
+		"register": {
+			"title": "Opret konto",
+			"subtitle": "Start din rejse mod bedre vaner",
+			"username": "Brugernavn",
+			"usernamePlaceholder": "Vælg et brugernavn",
+			"email": "E-mail",
+			"emailPlaceholder": "Indtast din e-mail",
+			"password": "Adgangskode",
+			"passwordPlaceholder": "Opret en adgangskode",
+			"confirmPassword": "Bekræft adgangskode",
+			"confirmPasswordPlaceholder": "Bekræft din adgangskode",
+			"displayName": "Visningsnavn",
+			"displayNamePlaceholder": "Hvad skal vi kalde dig?",
+			"submit": "Opret konto",
+			"hasAccount": "Har du allerede en konto?",
+			"signIn": "Log ind",
+			"passwordRequirements": "Adgangskoden skal være mindst 8 tegn"
+		},
+		"logout": "Log ud",
+		"github": "GitHub"
+	},
+	"nav": {
+		"today": "I dag",
+		"dashboard": "Dashboard",
+		"goals": "Mål",
+		"habitStacks": "Vanestakke",
+		"identities": "Identiteter",
+		"journal": "Dagbog",
+		"analytics": "Analyse",
+		"buddies": "Venner",
+		"settings": "Indstillinger"
+	},
+	"settings": {
+		"title": "Indstillinger",
+		"profile": {
+			"title": "Profil",
+			"displayName": "Visningsnavn",
+			"displayNamePlaceholder": "Indtast dit visningsnavn",
+			"email": "E-mail",
+			"username": "Brugernavn",
+			"save": "Gem ændringer"
+		},
+		"password": {
+			"title": "Adgangskode",
+			"current": "Nuværende adgangskode",
+			"new": "Ny adgangskode",
+			"confirm": "Bekræft ny adgangskode",
+			"change": "Skift adgangskode",
+			"requirements": "Adgangskoden skal være mindst 8 tegn"
+		},
+		"language": {
+			"title": "Sprog",
+			"description": "Vælg dit foretrukne sprog til appen",
+			"current": "Nuværende sprog"
+		},
+		"membership": {
+			"title": "Medlemskab",
+			"currentTier": "Nuværende niveau",
+			"free": "Gratis",
+			"plus": "Plus",
+			"pro": "Pro"
+		},
+		"linkedAccounts": {
+			"title": "Tilknyttede konti",
+			"link": "Tilknyt",
+			"unlink": "Fjern tilknytning",
+			"github": "GitHub"
+		},
+		"danger": {
+			"title": "Farezone",
+			"resetOnboarding": "Nulstil onboarding",
+			"resetOnboardingDescription": "Gennemgå onboarding-processen igen"
+		}
+	},
+	"goals": {
+		"title": "Mål",
+		"empty": "Ingen mål endnu. Opret dit første mål for at komme i gang!",
+		"create": "Opret mål",
+		"edit": "Rediger mål",
+		"delete": "Slet mål",
+		"complete": "Marker som fuldført",
+		"uncomplete": "Marker som ufuldført",
+		"form": {
+			"title": "Måltitel",
+			"titlePlaceholder": "Hvad vil du opnå?",
+			"description": "Beskrivelse",
+			"descriptionPlaceholder": "Beskriv dit mål...",
+			"targetDate": "Måldato",
+			"submit": "Gem mål"
+		}
+	},
+	"identities": {
+		"title": "Identiteter",
+		"empty": "Ingen identiteter endnu. Definer hvem du vil blive!",
+		"create": "Opret identitet",
+		"edit": "Rediger identitet",
+		"delete": "Slet identitet",
+		"form": {
+			"name": "Identitetsnavn",
+			"namePlaceholder": "f.eks., En sund person",
+			"description": "Beskrivelse",
+			"descriptionPlaceholder": "Beskriv hvem du vil blive...",
+			"emoji": "Emoji",
+			"color": "Farve",
+			"submit": "Gem identitet"
+		}
+	},
+	"habitStacks": {
+		"title": "Vanestakke",
+		"empty": "Ingen vanestakke endnu. Opret din første rutine!",
+		"create": "Opret vanestak",
+		"edit": "Rediger vanestak",
+		"delete": "Slet vanestak",
+		"form": {
+			"name": "Staknavn",
+			"namePlaceholder": "f.eks., Morgenrutine",
+			"description": "Beskrivelse",
+			"descriptionPlaceholder": "Beskriv denne rutine...",
+			"trigger": "Triggersignal",
+			"triggerPlaceholder": "Efter jeg...",
+			"habits": "Vaner",
+			"addHabit": "Tilføj vane",
+			"submit": "Gem vanestak"
+		},
+		"chain": {
+			"after": "Efter jeg",
+			"iWill": "Vil jeg"
+		}
+	},
+	"journal": {
+		"title": "Dagbog",
+		"empty": "Ingen dagbogsindlæg endnu. Begynd at reflektere over din rejse!",
+		"create": "Nyt indlæg",
+		"edit": "Rediger indlæg",
+		"delete": "Slet indlæg",
+		"form": {
+			"title": "Indlægstitel",
+			"titlePlaceholder": "Giv dit indlæg en titel...",
+			"content": "Indhold",
+			"contentPlaceholder": "Skriv dine tanker...",
+			"date": "Dato",
+			"submit": "Gem indlæg"
+		}
+	},
+	"today": {
+		"title": "I dag",
+		"greeting": {
+			"morning": "Godmorgen",
+			"afternoon": "God eftermiddag",
+			"evening": "Godaften"
+		},
+		"noTasks": "Ingen opgaver i dag. Nyd din dag!",
+		"habitStacks": "Vanestakke",
+		"tasks": "Opgaver",
+		"journal": "Dagbog"
+	},
+	"analytics": {
+		"title": "Analyse",
+		"streak": {
+			"current": "Nuværende stribe",
+			"longest": "Længste stribe",
+			"days": "dage"
+		},
+		"completionRate": "Fuldførelsesrate",
+		"tasksCompleted": "Opgaver fuldført"
+	},
+	"buddies": {
+		"title": "Ansvarsvenner",
+		"empty": "Ingen venner endnu. Inviter nogen til at hjælpe dig med at holde dig ansvarlig!",
+		"invite": "Inviter ven",
+		"inviteDescription": "Send en invitation til nogen, der kan hjælpe dig med at holde dig ansvarlig",
+		"email": "E-mailadresse",
+		"sendInvite": "Send invitation",
+		"pending": "Afventende invitationer",
+		"viewProgress": "Se fremskridt"
+	},
+	"errors": {
+		"generic": "Noget gik galt. Prøv venligst igen.",
+		"network": "Netværksfejl. Tjek venligst din forbindelse.",
+		"unauthorized": "Log venligst ind for at fortsætte.",
+		"notFound": "Den anmodede ressource blev ikke fundet.",
+		"validation": "Tjek venligst dit input og prøv igen."
+	}
+}

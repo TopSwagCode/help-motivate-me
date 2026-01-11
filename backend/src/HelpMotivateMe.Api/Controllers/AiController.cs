@@ -1,10 +1,13 @@
 using System.Security.Claims;
 using System.Text.Json;
-using HelpMotivateMe.Core.Constants;
 using HelpMotivateMe.Core.DTOs.Ai;
+using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
+using HelpMotivateMe.Core.Localization;
+using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HelpMotivateMe.Api.Controllers;
 
@@ -15,11 +18,13 @@ public class AiController : ControllerBase
 {
     private readonly IOpenAiService _openAiService;
     private readonly ILogger<AiController> _logger;
+    private readonly AppDbContext _db;
 
-    public AiController(IOpenAiService openAiService, ILogger<AiController> logger)
+    public AiController(IOpenAiService openAiService, ILogger<AiController> logger, AppDbContext db)
     {
         _openAiService = openAiService;
         _logger = logger;
+        _db = db;
     }
 
     [HttpPost("onboarding/chat")]
@@ -33,7 +38,11 @@ public class AiController : ControllerBase
 
         try
         {
-            var systemPrompt = OnboardingPrompts.BuildSystemPrompt(request.Step, request.Context);
+            // Get user's preferred language
+            var user = await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+            var language = user?.PreferredLanguage ?? Language.English;
+
+            var systemPrompt = LocalizedPrompts.BuildSystemPrompt(request.Step, language, request.Context);
 
             await foreach (var chunk in _openAiService.StreamChatCompletionAsync(
                 request.Messages,

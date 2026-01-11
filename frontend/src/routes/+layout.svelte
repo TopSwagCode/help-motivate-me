@@ -3,8 +3,21 @@
 	import { page } from '$app/stores';
 	import { auth } from '$lib/stores/auth';
 	import TopNav from '$lib/components/layout/TopNav.svelte';
+	import { initI18n, setLocale, getLocaleFromLanguage } from '$lib/i18n';
+	import { isLoading as i18nLoading } from 'svelte-i18n';
+
+	// Initialize i18n
+	initI18n();
 
 	let { children } = $props();
+
+	// Sync locale with user's preferred language when auth state changes
+	$effect(() => {
+		if ($auth.user?.preferredLanguage) {
+			const userLocale = getLocaleFromLanguage($auth.user.preferredLanguage);
+			setLocale(userLocale);
+		}
+	});
 
 	// Routes that should NOT show the nav
 	const publicRoutes = ['/', '/auth/login', '/auth/register', '/auth/callback', '/faq', '/privacy', '/terms', '/pricing', '/about', '/contact'];

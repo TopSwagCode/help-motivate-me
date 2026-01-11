@@ -34,5 +34,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasDefaultValue(UserRole.User)
             .HasConversion<string>()
             .HasMaxLength(20);
+        builder.Property(u => u.PreferredLanguage)
+            .HasDefaultValue(Language.English)
+            .HasConversion<string>()
+            .HasMaxLength(20);
     }
 }

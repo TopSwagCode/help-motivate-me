@@ -10,5 +10,6 @@ public record UserResponse(
     bool HasPassword,
     string MembershipTier,
     bool HasCompletedOnboarding,
-    string Role
+    string Role,
+    string PreferredLanguage
 );

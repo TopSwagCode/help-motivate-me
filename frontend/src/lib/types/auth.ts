@@ -1,5 +1,6 @@
 export type MembershipTier = 'Free' | 'Plus' | 'Pro';
 export type UserRole = 'User' | 'Admin';
+export type Language = 'English' | 'Danish';
 
 export interface User {
 	id: string;
@@ -12,6 +13,7 @@ export interface User {
 	membershipTier: MembershipTier;
 	hasCompletedOnboarding: boolean;
 	role: UserRole;
+	preferredLanguage: Language;
 }
 
 export interface LoginRequest {
@@ -37,4 +39,8 @@ export interface ChangePasswordRequest {
 
 export interface UpdateMembershipRequest {
 	tier: MembershipTier;
+}
+
+export interface UpdateLanguageRequest {
+	language: Language;
 }

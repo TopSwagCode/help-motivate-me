@@ -15,6 +15,7 @@ public class User
     public MembershipTier MembershipTier { get; set; } = MembershipTier.Free;
     public bool HasCompletedOnboarding { get; set; } = false;
     public UserRole Role { get; set; } = UserRole.User;
+    public Language PreferredLanguage { get; set; } = Language.English;
 
     // Navigation properties
     public ICollection<UserExternalLogin> ExternalLogins { get; set; } = [];
