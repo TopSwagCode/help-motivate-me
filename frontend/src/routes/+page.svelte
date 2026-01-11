@@ -147,11 +147,17 @@
 	</section>
 
 	<!-- Footer -->
-	<footer class="py-6 px-4 text-center text-sm text-gray-500 border-t border-gray-200">
-		<div class="mb-3">
-			<a href="/faq" class="text-primary-600 hover:text-primary-700 font-medium">
-				Frequently Asked Questions
-			</a>
+	<footer class="py-8 px-4 text-center text-sm text-gray-500 border-t border-gray-200">
+		<div class="mb-4 flex flex-wrap justify-center gap-4">
+			<a href="/about" class="text-primary-600 hover:text-primary-700 font-medium">About</a>
+			<a href="/pricing" class="text-primary-600 hover:text-primary-700 font-medium">Pricing</a>
+			<a href="/faq" class="text-primary-600 hover:text-primary-700 font-medium">FAQ</a>
+			<a href="/contact" class="text-primary-600 hover:text-primary-700 font-medium">Contact</a>
+		</div>
+		<div class="mb-4 flex flex-wrap justify-center gap-4 text-gray-400">
+			<a href="/privacy" class="hover:text-gray-600">Privacy Policy</a>
+			<span class="hidden sm:inline">|</span>
+			<a href="/terms" class="hover:text-gray-600">Terms of Service</a>
 		</div>
 		<p>&copy; {new Date().getFullYear()} Help Motivate Me. All rights reserved.</p>
 	</footer>

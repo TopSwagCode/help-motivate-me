@@ -1,52 +1,11 @@
 <script lang="ts">
 	import { auth } from '$lib/stores/auth';
 	import { updateMembership } from '$lib/api/settings';
+	import { tiers } from '$lib/config/tiers';
 	import type { MembershipTier } from '$lib/types/auth';
 
 	let loading = $state<MembershipTier | null>(null);
 	let error = $state('');
-
-	const tiers = [
-		{
-			id: 'Free' as const,
-			name: 'Free',
-			price: '$0',
-			description: 'Get started with the basics',
-			features: [
-				'Up to 5 goals',
-				'Basic habit tracking',
-				'Daily journal entries',
-				'Community support'
-			]
-		},
-		{
-			id: 'Plus' as const,
-			name: 'Plus',
-			price: '$9/mo',
-			description: 'For serious habit builders',
-			features: [
-				'Unlimited goals',
-				'Advanced analytics',
-				'Priority support',
-				'Custom themes',
-				'Export data'
-			],
-			popular: true
-		},
-		{
-			id: 'Pro' as const,
-			name: 'Pro',
-			price: '$19/mo',
-			description: 'For power users and teams',
-			features: [
-				'Everything in Plus',
-				'API access',
-				'Team features',
-				'White-label options',
-				'Dedicated support'
-			]
-		}
-	];
 
 	async function handleUpgrade(tier: MembershipTier) {
 		if (tier === $auth.user?.membershipTier) return;

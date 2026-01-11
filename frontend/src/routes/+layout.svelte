@@ -7,7 +7,7 @@
 	let { children } = $props();
 
 	// Routes that should NOT show the nav
-	const publicRoutes = ['/', '/auth/login', '/auth/register', '/auth/callback', '/faq'];
+	const publicRoutes = ['/', '/auth/login', '/auth/register', '/auth/callback', '/faq', '/privacy', '/terms', '/pricing', '/about', '/contact'];
 
 	function shouldShowNav(): boolean {
 		const path = $page.url.pathname;
