@@ -540,11 +540,11 @@
 <div class="min-h-screen bg-gray-50">
 	<!-- Date Navigation Sub-header -->
 	<div class="bg-white border-b border-gray-100">
-		<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="flex items-center justify-center py-3 gap-4">
+		<div class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">
+			<div class="flex items-center justify-center py-3 gap-2 sm:gap-4">
 				<button
 					onclick={goToPreviousDay}
-					class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg flex-shrink-0"
+					class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg flex-shrink-0 touch-manipulation"
 					title="Previous day"
 				>
 					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -554,15 +554,14 @@
 
 				<button
 					onclick={() => (showDatePicker = !showDatePicker)}
-					class="text-lg font-semibold text-gray-900 hover:text-primary-600 px-3 py-1 rounded-lg hover:bg-gray-100 min-w-[320px] text-center"
-					style="width: 320px;"
+					class="text-base sm:text-lg font-semibold text-gray-900 hover:text-primary-600 px-2 sm:px-3 py-1 rounded-lg hover:bg-gray-100 min-w-0 sm:min-w-[320px] text-center flex-1 sm:flex-initial truncate"
 				>
 					{formatDisplayDate(currentDate)}
 				</button>
 
 				<button
 					onclick={goToNextDay}
-					class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg flex-shrink-0"
+					class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg flex-shrink-0 touch-manipulation"
 					title="Next day"
 				>
 					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -576,7 +575,7 @@
 				<div class="flex justify-center pb-3">
 					<button
 						onclick={goToToday}
-						class="px-4 py-1.5 text-sm text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg font-medium transition-colors"
+						class="px-4 py-1.5 text-sm text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg font-medium transition-colors touch-manipulation"
 					>
 						{$t('today.jumpToToday')}
 					</button>
@@ -597,7 +596,7 @@
 		</div>
 	</div>
 
-	<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+	<main class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
 		{#if loading}
 			<div class="flex justify-center py-12">
 				<div class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full"></div>

@@ -54,14 +54,14 @@
 </script>
 
 <div class="min-h-screen bg-gray-50">
-	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-		<div class="flex justify-between items-center mb-8">
-			<h1 class="text-2xl font-bold text-gray-900">{$t('goals.pageTitle')}</h1>
-			<button onclick={openModal} class="btn-primary">
-				<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+	<main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+		<div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6 sm:mb-8">
+			<h1 class="text-xl sm:text-2xl font-bold text-gray-900">{$t('goals.pageTitle')}</h1>
+			<button onclick={openModal} class="btn-primary w-full sm:w-auto justify-center">
+				<svg class="w-5 h-5 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
 				</svg>
-				{$t('goals.newGoal')}
+				<span class="ml-2 sm:ml-0">{$t('goals.newGoal')}</span>
 			</button>
 		</div>
 
@@ -147,16 +147,16 @@
 	<!-- Create Goal Modal -->
 	{#if showModal}
 		<div
-			class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+			class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4"
 			role="dialog"
 			aria-modal="true"
 		>
 			<div class="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-				<div class="p-6">
-					<div class="flex items-center justify-between mb-6">
-						<h2 class="text-xl font-semibold text-gray-900">{$t('goals.newGoal')}</h2>
-						<button onclick={closeModal} class="text-gray-400 hover:text-gray-600" aria-label="Close">
-							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<div class="p-4 sm:p-6">
+					<div class="flex items-center justify-between mb-4 sm:mb-6">
+						<h2 class="text-lg sm:text-xl font-semibold text-gray-900">{$t('goals.newGoal')}</h2>
+						<button onclick={closeModal} class="text-gray-400 hover:text-gray-600 p-1" aria-label="Close">
+							<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
 									stroke-linecap="round"
 									stroke-linejoin="round"

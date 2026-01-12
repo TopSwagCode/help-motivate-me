@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import { auth } from '$lib/stores/auth';
 	import TopNav from '$lib/components/layout/TopNav.svelte';
+	import BetaBanner from '$lib/components/layout/BetaBanner.svelte';
 	import CommandBar from '$lib/components/ai/CommandBar.svelte';
 	import { initI18n, setLocale, getLocaleFromLanguage } from '$lib/i18n';
 	import { isLoading as i18nLoading } from 'svelte-i18n';
@@ -113,6 +114,9 @@
 	<meta name="description" content="A modern task and goal management app to help you stay motivated" />
 </svelte:head>
 
+<!-- Beta Banner (shown on all pages) -->
+<BetaBanner />
+
 {#if shouldShowNav()}
 	<TopNav />
 {/if}
@@ -133,14 +137,15 @@
 	<button
 		type="button"
 		onclick={() => (commandBarOpen = true)}
-		class="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-primary-600 to-primary-700 
+		class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 
+		       bg-gradient-to-r from-primary-600 to-primary-700 
 		       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 
 		       transition-all duration-200 flex items-center justify-center z-40
-		       group"
+		       group touch-manipulation"
 		title="AI Assistant (⌘K / Ctrl+K)"
 		aria-label="Open AI Assistant"
 	>
-		<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+		<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 			<path
 				stroke-linecap="round"
 				stroke-linejoin="round"
@@ -148,8 +153,8 @@
 				d="M13 10V3L4 14h7v7l9-11h-7z"
 			/>
 		</svg>
-		<!-- Keyboard shortcut hint on hover -->
-		<span class="absolute -top-10 right-0 bg-gray-900 text-white text-xs px-2 py-1 
+		<!-- Keyboard shortcut hint on hover (hidden on mobile) -->
+		<span class="hidden sm:block absolute -top-10 right-0 bg-gray-900 text-white text-xs px-2 py-1 
 		             rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
 			Press ⌘K
 		</span>

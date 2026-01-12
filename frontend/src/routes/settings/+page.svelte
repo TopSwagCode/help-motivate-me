@@ -51,8 +51,8 @@
 </svelte:head>
 
 <div class="min-h-screen bg-gray-50">
-	<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-		<h1 class="text-2xl font-bold text-gray-900 mb-6">{$t('settings.title')}</h1>
+	<main class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+		<h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">{$t('settings.title')}</h1>
 
 		{#if loading}
 			<div class="flex justify-center py-12">
@@ -62,12 +62,12 @@
 			</div>
 		{:else}
 			<!-- Tab Navigation -->
-			<div class="border-b border-gray-200 mb-6">
-				<nav class="flex gap-4">
+			<div class="border-b border-gray-200 mb-4 sm:mb-6 -mx-3 sm:mx-0 px-3 sm:px-0">
+				<nav class="flex gap-2 sm:gap-4 overflow-x-auto scrollbar-hide">
 					{#each tabs.filter((tab) => tab.show) as tab}
 						<button
 							onclick={() => setTab(tab.id)}
-							class="px-1 py-3 text-sm font-medium border-b-2 transition-colors {activeTab ===
+							class="px-2 sm:px-1 py-2 sm:py-3 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 {activeTab ===
 							tab.id
 								? 'border-primary-600 text-primary-600'
 								: 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}"
@@ -79,7 +79,7 @@
 			</div>
 
 			<!-- Tab Content -->
-			<div class="card p-6">
+			<div class="card p-4 sm:p-6">
 				{#if activeTab === 'profile'}
 					<ProfileTab />
 				{:else if activeTab === 'password' && $auth.user?.hasPassword}

@@ -12,10 +12,10 @@
 </script>
 
 <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+	<div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
 		<div class="flex justify-between items-center h-14">
 			<!-- Logo -->
-			<a href="/today" class="text-lg font-bold text-primary-600 flex-shrink-0">
+			<a href="/today" class="text-base sm:text-lg font-bold text-primary-600 flex-shrink-0 truncate max-w-[140px] sm:max-w-none">
 				HelpMotivateMe
 			</a>
 
@@ -86,10 +86,10 @@
 		</div>
 
 		<!-- Mobile Navigation -->
-		<nav class="sm:hidden flex items-center gap-1 pb-2 overflow-x-auto">
+		<nav class="sm:hidden flex items-center gap-1 pb-2 overflow-x-auto scrollbar-hide">
 			<a
 				href="/today"
-				class="px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors {isActive('/today')
+				class="px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 {isActive('/today')
 					? 'bg-primary-100 text-primary-700'
 					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 			>
@@ -97,7 +97,7 @@
 			</a>
 			<a
 				href="/goals"
-				class="px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors {isActive('/goals')
+				class="px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 {isActive('/goals')
 					? 'bg-primary-100 text-primary-700'
 					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 			>
@@ -105,7 +105,7 @@
 			</a>
 			<a
 				href="/habit-stacks"
-				class="px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors {isActive('/habit-stacks')
+				class="px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 {isActive('/habit-stacks')
 					? 'bg-primary-100 text-primary-700'
 					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 			>
@@ -113,7 +113,7 @@
 			</a>
 			<a
 				href="/journal"
-				class="px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors {isActive('/journal')
+				class="px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 {isActive('/journal')
 					? 'bg-primary-100 text-primary-700'
 					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 			>
@@ -121,7 +121,7 @@
 			</a>
 			<a
 				href="/identities"
-				class="px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors {isActive('/identities')
+				class="px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 {isActive('/identities')
 					? 'bg-primary-100 text-primary-700'
 					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 			>
@@ -129,7 +129,7 @@
 			</a>
 			<a
 				href="/analytics"
-				class="px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors {isActive('/analytics')
+				class="px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 {isActive('/analytics')
 					? 'bg-primary-100 text-primary-700'
 					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 			>
@@ -137,7 +137,7 @@
 			</a>
 			<a
 				href="/buddies"
-				class="px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors {isActive('/buddies')
+				class="px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 {isActive('/buddies')
 					? 'bg-primary-100 text-primary-700'
 					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 			>

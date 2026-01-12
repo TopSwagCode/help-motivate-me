@@ -82,11 +82,11 @@
 </script>
 
 <div class="min-h-screen bg-gray-50">
-	<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+	<main class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
 		<!-- Page Header -->
-		<div class="flex items-center justify-between mb-6">
-			<h1 class="text-2xl font-bold text-gray-900">{$t('identities.pageTitle')}</h1>
-			<button onclick={openCreateModal} class="btn-primary text-sm">
+		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
+			<h1 class="text-xl sm:text-2xl font-bold text-gray-900">{$t('identities.pageTitle')}</h1>
+			<button onclick={openCreateModal} class="btn-primary text-sm w-full sm:w-auto justify-center">
 				{$t('identities.newIdentity')}
 			</button>
 		</div>

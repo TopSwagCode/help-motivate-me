@@ -354,15 +354,15 @@
 </script>
 
 <div class="min-h-screen bg-gray-50">
-	<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+	<main class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
 		<!-- Page Header -->
-		<div class="flex items-center justify-between mb-6">
-			<h1 class="text-2xl font-bold text-gray-900">{$t('habitStacks.pageTitle')}</h1>
+		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
+			<h1 class="text-xl sm:text-2xl font-bold text-gray-900">{$t('habitStacks.pageTitle')}</h1>
 			<div class="flex items-center gap-2">
 				{#if stacks.length > 1}
 					<button
 						onclick={openReorderPopup}
-						class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+						class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors touch-manipulation"
 						title={$t('habitStacks.reorderPopup.title')}
 					>
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -371,7 +371,7 @@
 						</svg>
 					</button>
 				{/if}
-				<button onclick={openCreatePopup} class="btn-primary text-sm">{$t('habitStacks.newStack')}</button>
+				<button onclick={openCreatePopup} class="btn-primary text-sm flex-1 sm:flex-none justify-center">{$t('habitStacks.newStack')}</button>
 			</div>
 		</div>
 
