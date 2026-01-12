@@ -492,6 +492,15 @@
 			"high": "Klar til at oprette",
 			"medium": "Præciser venligst",
 			"low": "Har brug for flere detaljer"
+		},
+		"successMessages": {
+			"taskCreated": "Opgave oprettet!",
+			"goalCreated": "Mål oprettet!",
+			"habitStackCreated": "Vanestak oprettet!"
+		},
+		"errors": {
+			"requestFailed": "Kunne ikke behandle anmodning. Prøv venligst igen.",
+			"creationFailed": "Kunne ikke oprette. Prøv venligst igen."
 		}
 	},
 	"today": {
@@ -672,7 +681,23 @@
 			"deactivate": "Deaktiver",
 			"noUsers": "Ingen brugere fundet",
 			"roleUser": "Bruger",
-			"roleAdmin": "Admin"
+			"roleAdmin": "Admin",
+			"activity": {
+				"title": "Brugeraktivitet",
+				"loading": "Indlæser aktivitet...",
+				"lastWeek": "Sidste 7 dage",
+				"total": "Alt tid",
+				"tasksCreated": "Opgaver oprettet",
+				"tasksCompleted": "Opgaver fuldført",
+				"goalsCreated": "Mål oprettet",
+				"identitiesCreated": "Identiteter oprettet",
+				"habitStacksCreated": "Vanestakke oprettet",
+				"habitCompletions": "Vanefuldførelse",
+				"journalEntries": "Dagbogsindlæg",
+				"aiCalls": "AI-kald",
+				"aiCost": "AI-omkostning",
+				"close": "Luk"
+			}
 		},
 		"accessControl": {
 			"title": "Adgangskontrol",

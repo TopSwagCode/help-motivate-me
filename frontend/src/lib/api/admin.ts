@@ -1,5 +1,5 @@
 import { apiGet, apiPatch, apiPost, apiDelete } from './client';
-import type { AdminStats, AdminUser, DailyStats, UpdateRoleRequest } from '$lib/types';
+import type { AdminStats, AdminUser, DailyStats, UpdateRoleRequest, UserActivity } from '$lib/types';
 import type { WaitlistEntry, WhitelistEntry, SignupSettingsResponse } from '$lib/types/waitlist';
 
 export async function getAdminStats(): Promise<AdminStats> {
@@ -38,6 +38,10 @@ export async function toggleUserActive(userId: string): Promise<AdminUser> {
 
 export async function updateUserRole(userId: string, data: UpdateRoleRequest): Promise<AdminUser> {
 	return apiPatch<AdminUser>(`/admin/users/${userId}/role`, data);
+}
+
+export async function getUserActivity(userId: string): Promise<UserActivity> {
+	return apiGet<UserActivity>(`/admin/users/${userId}/activity`);
 }
 
 // Settings

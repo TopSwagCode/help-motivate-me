@@ -43,3 +43,23 @@ export interface AdminUser {
 export interface UpdateRoleRequest {
 	role: UserRole;
 }
+
+export interface UserActivityPeriod {
+	tasksCreated: number;
+	tasksCompleted: number;
+	goalsCreated: number;
+	identitiesCreated: number;
+	habitStacksCreated: number;
+	habitCompletions: number;
+	journalEntries: number;
+	aiCalls: number;
+	aiCostUsd: number;
+}
+
+export interface UserActivity {
+	userId: string;
+	username: string;
+	email: string;
+	lastWeek: UserActivityPeriod;
+	total: UserActivityPeriod;
+}

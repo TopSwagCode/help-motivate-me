@@ -492,6 +492,15 @@
 			"high": "Ready to create",
 			"medium": "Please clarify",
 			"low": "Need more details"
+		},
+		"successMessages": {
+			"taskCreated": "Task created successfully!",
+			"goalCreated": "Goal created successfully!",
+			"habitStackCreated": "Habit stack created successfully!"
+		},
+		"errors": {
+			"requestFailed": "Failed to process request. Please try again.",
+			"creationFailed": "Failed to create. Please try again."
 		}
 	},
 	"today": {
@@ -672,7 +681,23 @@
 			"deactivate": "Deactivate",
 			"noUsers": "No users found",
 			"roleUser": "User",
-			"roleAdmin": "Admin"
+			"roleAdmin": "Admin",
+			"activity": {
+				"title": "User Activity",
+				"loading": "Loading activity...",
+				"lastWeek": "Last 7 Days",
+				"total": "All Time",
+				"tasksCreated": "Tasks Created",
+				"tasksCompleted": "Tasks Completed",
+				"goalsCreated": "Goals Created",
+				"identitiesCreated": "Identities Created",
+				"habitStacksCreated": "Habit Stacks Created",
+				"habitCompletions": "Habit Completions",
+				"journalEntries": "Journal Entries",
+				"aiCalls": "AI Calls",
+				"aiCost": "AI Cost",
+				"close": "Close"
+			}
 		},
 		"accessControl": {
 			"title": "Access Control",

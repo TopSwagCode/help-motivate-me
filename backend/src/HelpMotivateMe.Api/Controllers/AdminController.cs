@@ -247,6 +247,97 @@ public class AdminController : ControllerBase
         ));
     }
 
+    [HttpGet("users/{userId}/activity")]
+    public async Task<ActionResult<UserActivityResponse>> GetUserActivity(Guid userId)
+    {
+        var user = await _db.Users.FindAsync(userId);
+        if (user == null)
+        {
+            return NotFound(new { message = "User not found" });
+        }
+
+        var now = DateTime.UtcNow;
+        var lastWeekStart = now.AddDays(-7);
+        var lastWeekStartDate = DateOnly.FromDateTime(lastWeekStart);
+
+        // Last week stats
+        var userGoalIds = await _db.Goals.Where(g => g.UserId == userId).Select(g => g.Id).ToListAsync();
+        var userHabitStackIds = await _db.HabitStacks.Where(hs => hs.UserId == userId).Select(hs => hs.Id).ToListAsync();
+        var userHabitStackItemIds = await _db.HabitStackItems
+            .Where(hsi => userHabitStackIds.Contains(hsi.HabitStackId))
+            .Select(hsi => hsi.Id)
+            .ToListAsync();
+
+        var tasksCreatedLastWeek = await _db.TaskItems
+            .Where(t => userGoalIds.Contains(t.GoalId) && t.CreatedAt >= lastWeekStart)
+            .CountAsync();
+        var tasksCompletedLastWeek = await _db.TaskItems
+            .Where(t => userGoalIds.Contains(t.GoalId) && t.CompletedAt >= lastWeekStartDate)
+            .CountAsync();
+        var goalsCreatedLastWeek = await _db.Goals.CountAsync(g => g.UserId == userId && g.CreatedAt >= lastWeekStart);
+        var identitiesCreatedLastWeek = await _db.Identities.CountAsync(i => i.UserId == userId && i.CreatedAt >= lastWeekStart);
+        var habitStacksCreatedLastWeek = await _db.HabitStacks.CountAsync(hs => hs.UserId == userId && hs.CreatedAt >= lastWeekStart);
+        var habitCompletionsLastWeek = await _db.HabitStackItemCompletions
+            .Where(hc => userHabitStackItemIds.Contains(hc.HabitStackItemId) && hc.CompletedAt >= lastWeekStart)
+            .CountAsync();
+        var journalEntriesLastWeek = await _db.JournalEntries.CountAsync(j => j.UserId == userId && j.CreatedAt >= lastWeekStart);
+        
+        var aiStatsLastWeek = await _db.AiUsageLogs
+            .Where(a => a.UserId == userId && a.CreatedAt >= lastWeekStart)
+            .GroupBy(a => a.UserId)
+            .Select(g => new { CallsCount = g.Count(), TotalCost = g.Sum(a => a.EstimatedCostUsd) })
+            .FirstOrDefaultAsync();
+
+        // Total (all time) stats
+        var tasksCreatedTotal = await _db.TaskItems
+            .Where(t => userGoalIds.Contains(t.GoalId))
+            .CountAsync();
+        var tasksCompletedTotal = await _db.TaskItems
+            .Where(t => userGoalIds.Contains(t.GoalId) && t.CompletedAt != null)
+            .CountAsync();
+        var goalsCreatedTotal = await _db.Goals.CountAsync(g => g.UserId == userId);
+        var identitiesCreatedTotal = await _db.Identities.CountAsync(i => i.UserId == userId);
+        var habitStacksCreatedTotal = await _db.HabitStacks.CountAsync(hs => hs.UserId == userId);
+        var habitCompletionsTotal = await _db.HabitStackItemCompletions
+            .Where(hc => userHabitStackItemIds.Contains(hc.HabitStackItemId))
+            .CountAsync();
+        var journalEntriesTotal = await _db.JournalEntries.CountAsync(j => j.UserId == userId);
+        
+        var aiStatsTotal = await _db.AiUsageLogs
+            .Where(a => a.UserId == userId)
+            .GroupBy(a => a.UserId)
+            .Select(g => new { CallsCount = g.Count(), TotalCost = g.Sum(a => a.EstimatedCostUsd) })
+            .FirstOrDefaultAsync();
+
+        return Ok(new UserActivityResponse(
+            user.Id,
+            user.Username,
+            user.Email,
+            LastWeek: new UserActivityPeriod(
+                tasksCreatedLastWeek,
+                tasksCompletedLastWeek,
+                goalsCreatedLastWeek,
+                identitiesCreatedLastWeek,
+                habitStacksCreatedLastWeek,
+                habitCompletionsLastWeek,
+                journalEntriesLastWeek,
+                aiStatsLastWeek?.CallsCount ?? 0,
+                aiStatsLastWeek?.TotalCost ?? 0m
+            ),
+            Total: new UserActivityPeriod(
+                tasksCreatedTotal,
+                tasksCompletedTotal,
+                goalsCreatedTotal,
+                identitiesCreatedTotal,
+                habitStacksCreatedTotal,
+                habitCompletionsTotal,
+                journalEntriesTotal,
+                aiStatsTotal?.CallsCount ?? 0,
+                aiStatsTotal?.TotalCost ?? 0m
+            )
+        ));
+    }
+
     // ==================== Settings ====================
 
     [HttpGet("settings")]

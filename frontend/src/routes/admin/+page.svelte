@@ -16,9 +16,10 @@
 		approveWaitlistEntry,
 		getWhitelist,
 		addToWhitelist,
-		removeFromWhitelist
+		removeFromWhitelist,
+		getUserActivity
 	} from '$lib/api/admin';
-	import type { AdminStats, AdminUser, DailyStats, UserRole } from '$lib/types';
+	import type { AdminStats, AdminUser, DailyStats, UserRole, UserActivity } from '$lib/types';
 	import type { WaitlistEntry, WhitelistEntry } from '$lib/types/waitlist';
 
 	let stats = $state<AdminStats | null>(null);
@@ -41,6 +42,11 @@
 	let searchQuery = $state('');
 	let tierFilter = $state('');
 	let activeFilter = $state('');
+
+	// User activity modal
+	let activityModalOpen = $state(false);
+	let activityModalLoading = $state(false);
+	let selectedUserActivity = $state<UserActivity | null>(null);
 
 	// Debounce search
 	let searchTimeout: ReturnType<typeof setTimeout>;
@@ -150,6 +156,25 @@
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Failed to update user role';
 		}
+	}
+
+	async function showUserActivity(user: AdminUser) {
+		activityModalOpen = true;
+		activityModalLoading = true;
+		selectedUserActivity = null;
+		
+		try {
+			selectedUserActivity = await getUserActivity(user.id);
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to load user activity';
+		} finally {
+			activityModalLoading = false;
+		}
+	}
+
+	function closeActivityModal() {
+		activityModalOpen = false;
+		selectedUserActivity = null;
 	}
 
 	function navigateDate(direction: 'prev' | 'next') {
@@ -616,7 +641,7 @@
 						</thead>
 						<tbody class="bg-white divide-y divide-gray-200">
 							{#each users as user (user.id)}
-								<tr class="hover:bg-gray-50">
+								<tr class="hover:bg-gray-50 cursor-pointer" onclick={() => showUserActivity(user)}>
 									<td class="px-6 py-4 whitespace-nowrap">
 										<div class="flex items-center">
 											<div
@@ -892,3 +917,160 @@
 		{/if}
 	</main>
 </div>
+
+<!-- User Activity Modal -->
+{#if activityModalOpen}
+	<div
+		class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+		onclick={closeActivityModal}
+		role="presentation"
+	>
+		<div
+			class="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-auto"
+			onclick={(e) => e.stopPropagation()}
+			onkeydown={(e) => e.key === 'Escape' && closeActivityModal()}
+			role="dialog"
+			aria-modal="true"
+			tabindex="-1"
+		>
+			<!-- Header -->
+			<div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+				<div>
+					<h2 class="text-xl font-semibold text-gray-900">{$t('admin.users.activity.title')}</h2>
+					{#if selectedUserActivity}
+						<p class="text-sm text-gray-500 mt-1">
+							{selectedUserActivity.username} ({selectedUserActivity.email})
+						</p>
+					{/if}
+				</div>
+				<button
+					onclick={closeActivityModal}
+					class="text-gray-400 hover:text-gray-600 transition-colors"
+					aria-label={$t('admin.users.activity.close')}
+				>
+					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+					</svg>
+				</button>
+			</div>
+
+			<!-- Content -->
+			<div class="p-6">
+				{#if activityModalLoading}
+					<div class="flex items-center justify-center py-12">
+						<div class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full"></div>
+						<span class="ml-3 text-gray-600">{$t('admin.users.activity.loading')}</span>
+					</div>
+				{:else if selectedUserActivity}
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<!-- Last Week Column -->
+						<div class="space-y-4">
+							<h3 class="text-lg font-semibold text-gray-900 border-b pb-2">
+								{$t('admin.users.activity.lastWeek')}
+							</h3>
+							
+							<div class="space-y-3">
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">{$t('admin.users.activity.tasksCreated')}</span>
+									<span class="font-semibold text-gray-900">{selectedUserActivity.lastWeek.tasksCreated}</span>
+								</div>
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">{$t('admin.users.activity.tasksCompleted')}</span>
+									<span class="font-semibold text-green-600">{selectedUserActivity.lastWeek.tasksCompleted}</span>
+								</div>
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">{$t('admin.users.activity.goalsCreated')}</span>
+									<span class="font-semibold text-gray-900">{selectedUserActivity.lastWeek.goalsCreated}</span>
+								</div>
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">{$t('admin.users.activity.identitiesCreated')}</span>
+									<span class="font-semibold text-gray-900">{selectedUserActivity.lastWeek.identitiesCreated}</span>
+								</div>
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">{$t('admin.users.activity.habitStacksCreated')}</span>
+									<span class="font-semibold text-gray-900">{selectedUserActivity.lastWeek.habitStacksCreated}</span>
+								</div>
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">{$t('admin.users.activity.habitCompletions')}</span>
+									<span class="font-semibold text-green-600">{selectedUserActivity.lastWeek.habitCompletions}</span>
+								</div>
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">{$t('admin.users.activity.journalEntries')}</span>
+									<span class="font-semibold text-gray-900">{selectedUserActivity.lastWeek.journalEntries}</span>
+								</div>
+								<div class="border-t pt-3 mt-3">
+									<div class="flex justify-between items-center">
+										<span class="text-gray-600">{$t('admin.users.activity.aiCalls')}</span>
+										<span class="font-semibold text-primary-600">{selectedUserActivity.lastWeek.aiCalls}</span>
+									</div>
+									<div class="flex justify-between items-center mt-2">
+										<span class="text-gray-600">{$t('admin.users.activity.aiCost')}</span>
+										<span class="font-semibold text-amber-600">${selectedUserActivity.lastWeek.aiCostUsd.toFixed(4)}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Total Column -->
+						<div class="space-y-4">
+							<h3 class="text-lg font-semibold text-gray-900 border-b pb-2">
+								{$t('admin.users.activity.total')}
+							</h3>
+							
+							<div class="space-y-3">
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">{$t('admin.users.activity.tasksCreated')}</span>
+									<span class="font-semibold text-gray-900">{selectedUserActivity.total.tasksCreated}</span>
+								</div>
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">{$t('admin.users.activity.tasksCompleted')}</span>
+									<span class="font-semibold text-green-600">{selectedUserActivity.total.tasksCompleted}</span>
+								</div>
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">{$t('admin.users.activity.goalsCreated')}</span>
+									<span class="font-semibold text-gray-900">{selectedUserActivity.total.goalsCreated}</span>
+								</div>
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">{$t('admin.users.activity.identitiesCreated')}</span>
+									<span class="font-semibold text-gray-900">{selectedUserActivity.total.identitiesCreated}</span>
+								</div>
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">{$t('admin.users.activity.habitStacksCreated')}</span>
+									<span class="font-semibold text-gray-900">{selectedUserActivity.total.habitStacksCreated}</span>
+								</div>
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">{$t('admin.users.activity.habitCompletions')}</span>
+									<span class="font-semibold text-green-600">{selectedUserActivity.total.habitCompletions}</span>
+								</div>
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">{$t('admin.users.activity.journalEntries')}</span>
+									<span class="font-semibold text-gray-900">{selectedUserActivity.total.journalEntries}</span>
+								</div>
+								<div class="border-t pt-3 mt-3">
+									<div class="flex justify-between items-center">
+										<span class="text-gray-600">{$t('admin.users.activity.aiCalls')}</span>
+										<span class="font-semibold text-primary-600">{selectedUserActivity.total.aiCalls}</span>
+									</div>
+									<div class="flex justify-between items-center mt-2">
+										<span class="text-gray-600">{$t('admin.users.activity.aiCost')}</span>
+										<span class="font-semibold text-amber-600">${selectedUserActivity.total.aiCostUsd.toFixed(4)}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Close button -->
+					<div class="mt-6 flex justify-end">
+						<button
+							onclick={closeActivityModal}
+							class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+						>
+							{$t('admin.users.activity.close')}
+						</button>
+					</div>
+				{/if}
+			</div>
+		</div>
+	</div>
+{/if}
