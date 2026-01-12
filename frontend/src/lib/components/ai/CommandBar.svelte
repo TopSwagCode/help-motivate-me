@@ -88,7 +88,7 @@
 			}
 		} catch (error) {
 			console.error('AI chat error:', error);
-			displayContent = 'Sorry, something went wrong. Please try again.';
+			displayContent = $t('ai.errors.requestFailed');
 		} finally {
 			isLoading = false;
 		}
