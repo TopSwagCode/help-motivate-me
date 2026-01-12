@@ -689,5 +689,143 @@
 			"removeWhitelistFailed": "Kunne ikke fjerne fra whitelist",
 			"inviteFailed": "Kunne ikke invitere bruger"
 		}
+	},
+	"faq": {
+		"title": "Ofte stillede spørgsmål",
+		"subtitle": "Alt du behøver at vide om Help Motivate Me",
+		"getStarted": "Kom i gang",
+		"cta": {
+			"title": "Klar til at starte din rejse?",
+			"description": "Bliv en del af tusindvis af brugere, der bygger bedre vaner og bliver den person, de ønsker at være. Tilmeld dig gratis og begynd at gøre fremskridt i dag.",
+			"createAccount": "Opret gratis konto",
+			"signIn": "Log ind"
+		},
+		"footer": {
+			"stillHaveQuestions": "Har du stadig spørgsmål?",
+			"contactSupport": "Kontakt support"
+		},
+		"questions": {
+			"whatIs": {
+				"title": "Hvad er Help Motivate Me?",
+				"content": "Help Motivate Me er en omfattende produktivitets- og motivationsplatform designet til at hjælpe dig med at opbygge bedre vaner, nå dine mål og blive den person, du ønsker at være. Appen kombinerer dokumenterede adfærdsvidenskabelige principper med praktiske værktøjer for at gøre varig forandring lettere."
+			},
+			"identities": {
+				"title": "Hvad er identiteter, og hvordan fungerer de?",
+				"content": "Identiteter er kernen i varig adfærdsændring. I stedet for bare at sætte mål, definerer du hvem du ønsker at blive - \"Jeg er en forfatter,\" \"Jeg er en sund person,\" eller \"Jeg er en organiseret professionel.\"\n\nHver gang du fuldfører en opgave eller vane tilpasset en identitet, afgiver du en \"stemme\" for den identitet. Disse stemmer akkumuleres som bevis på din nye identitet. Du vil se bekræftelsesmeddelelser som \"Det er, hvad en forfatter gør!\" eller \"Du bliver en sund person!\"\n\nDenne tilgang virker, fordi adfærdsændring er lettere, når den stemmer overens med, hvordan du ser dig selv. I stedet for at tvinge dig selv til at skrive, fordi du \"bør,\" skriver du, fordi det er, hvad forfattere gør - og du er en forfatter."
+			},
+			"identityVotes": {
+				"title": "Hvad er identitetsstemmer?",
+				"content": "Identitetsstemmer er et sporingssystem, der viser, at du bliver den person, du ønsker at være. Hver fuldført opgave eller vane knyttet til en identitet tæller som én stemme for den identitet.\n\nFor eksempel, hvis du har defineret \"Jeg er en sund person\" som en identitet, så:\n- At gå en morgentur = 1 stemme for \"sund person\"\n- At tilberede et nærende måltid = 1 stemme for \"sund person\"\n- At få 8 timers søvn = 1 stemme for \"sund person\"\n\nAppen sporer dine samlede stemmer, seneste aktivitet og gennemførelsesrater. Disse synlige målinger fungerer som bevis på dit identitetsskift, hvilket gør det psykologisk lettere at fortsætte adfærden. Du er ikke bare en, der prøver at være sund - du er en, der har bevist det 50 gange denne måned."
+			},
+			"habitStacks": {
+				"title": "Hvad er vanestak?",
+				"content": "Vanestak er en kraftfuld teknik til at opbygge nye vaner ved at knytte dem til eksisterende rutiner. Formlen er simpel: \"Efter [NUVÆRENDE VANE], vil jeg [NY VANE].\"\n\nFor eksempel:\n- Efter jeg hælder min morgenkaffe, vil jeg meditere i 2 minutter\n- Efter jeg lukker min bærbare computer til frokost, vil jeg lave 10 armstrækninger\n- Efter jeg børster tænder om aftenen, vil jeg lægge morgendagens træningstøj frem\n\nAppen hjælper dig med at oprette og spore disse stak. Du kan definere en række vaner, der flyder naturligt fra den ene til den anden, ved at udnytte momentum fra eksisterende rutiner til at få nye vaner til at sidde fast.\n\nDu kan også knytte vanestak til identiteter. En \"Forfatter\" identitet kan have en morgenstak: Efter jeg laver kaffe → Vil jeg skrive 250 ord → Derefter vil jeg gemme mit arbejde. Hver fuldført stak styrker din identitet."
+			},
+			"goals": {
+				"title": "Hvordan fungerer mål?",
+				"content": "Mål hjælper dig med at definere, hvad du ønsker at opnå, og spore dine fremskridt. I modsætning til traditionelle målsætningsapps, der udelukkende fokuserer på resultater, lægger denne app vægt på processen og identiteten bag dine mål.\n\nDu kan oprette mål med:\n- Klare beskrivelser af, hvad du ønsker at opnå\n- Måldatoer og milepæle\n- Links til identiteter (f.eks. \"Gennemfør et maraton\" knyttet til \"Jeg er en atlet\")\n- Tilknyttede opgaver, der opdeler målet i handlingsvenlige trin\n\nAppen sporer dine fremskridt og hjælper dig med at se, hvordan daglige handlinger (opgaver) forbinder til større mål (mål) og i sidste ende til hvem du bliver (identiteter). Denne trelagsmetode - identitet, mål, opgaver - sikrer, at din daglige indsats stemmer overens med din langsigtede vision."
+			},
+			"tasks": {
+				"title": "Hvad er opgaver, og hvordan adskiller de sig fra vaner?",
+				"content": "Opgaver er specifikke, handlingsvenlige elementer, du skal gennemføre. De kan være engangshændelser eller tilbagevendende aktiviteter, der bidrager til dine mål og identiteter.\n\nNøglefunktioner:\n- Indstil frister og prioriteter\n- Knyt opgaver til mål og identiteter\n- Markér som fuldført for at optjene identitetsstemmer\n- Udskyd opgaver efter behov\n- Spor gennemførelseshistorik\n\nMens vanestak er rutiner, du gentager regelmæssigt i sekvens, er opgaver individuelle elementer, der kræver din opmærksomhed. En opgave kan være \"Gennemgå kvartalsbudget\" (engangshændelse) eller \"Ring til mor\" (ugentlig tilbagevendende). Begge typer aktiviteter kan bidrage til dine identiteter og mål."
+			},
+			"today": {
+				"title": "Hvad er I dag-visningen?",
+				"content": "I dag-visningen er dit daglige dashboard - dit missionskontrolcenter for dagen. Den viser alt, der kræver din opmærksomhed lige nu:\n\n- Opgaver, der forfalder i dag eller er forfaldne\n- Vanestak planlagt til i dag\n- Fremskridt på aktive mål\n- Hurtig adgang til at logge journalindlæg\n- Fremgang på identitetsstemmer\n\nDenne fokuserede visning hjælper dig med at starte hver dag med klarhed, og vide præcis hvilke handlinger, der vil bevæge dig fremad. I stedet for at blive overvældet af alt på din tallerken, ser du kun det, der betyder noget i dag."
+			},
+			"journal": {
+				"title": "Hvordan fungerer journalen?",
+				"content": "Journalfunktionen giver et rum til refleksion, sporing af dine tanker, sejre, udfordringer og indsigter om dine fremskridt.\n\nDu kan:\n- Skrive daglige indlæg om dine oplevelser\n- Vedhæfte billeder eller filer for at fange øjeblikke\n- Reflektere over, hvad der virker, og hvad der ikke gør\n- Spore mønstre i din motivation og energi\n- Dokumentere din rejse med identitetsændring\n\nRegelmæssig journalføring hjælper dig med at opretholde bevidsthed om dine fremskridt, behandle udfordringer og fejre sejre. Det er et kraftfuldt værktøj til selvrefleksion og kurskorrektion. At se tilbage på journalindlæg fra uger eller måneder siden kan vise dig, hvor langt du er kommet."
+			},
+			"analytics": {
+				"title": "Hvilke analyser er tilgængelige?",
+				"content": "Analyseafsnittet giver dig datadrevne indsigter i dine fremskridt:\n\n- Opgavegennemførelsesrater over tid\n- Tendenser og striber for identitetsstemmer\n- Visualisering af målfremskridt\n- Overholdelsesrater for vanestak\n- Bedst præsterende tider og mønstre\n\nDisse målinger hjælper dig med at forstå, hvad der virker, identificere forhindringer og foretage informerede justeringer af din tilgang. Data fjerner gætværk - du kan se præcis hvilke vaner, der sidder fast, og hvilke identiteter, der får momentum."
+			},
+			"loginSocial": {
+				"title": "Hvordan logger jeg ind med Google eller GitHub?",
+				"content": "Vi understøtter socialt login for at gøre adgang hurtig og sikker:\n\n**Google Login:**\nKlik på \"Fortsæt med Google\" på login-siden. Du vil blive omdirigeret til Google for at godkende adgang. Når det er godkendt, bliver du automatisk logget ind. Ingen adgangskode nødvendig!\n\n**GitHub Login:**\nKlik på \"Fortsæt med GitHub\" på login-siden. Godkend appen gennem GitHub, og du er inde.\n\n**Fordele:**\n- Ingen adgangskode at huske\n- Sikker godkendelse gennem betroede udbydere\n- Hurtig login-proces\n- Du kan knytte flere udbydere til samme konto\n\nHvis du tilmelder dig med én udbyder og senere ønsker at tilføje en anden, kan du knytte yderligere login-metoder i dine kontoindstillinger."
+			},
+			"loginEmail": {
+				"title": "Hvordan fungerer e-mail/token-login?",
+				"content": "Vi tilbyder adgangskodeløs e-mail-godkendelse for en sikker, problemfri oplevelse:\n\n**Sådan fungerer det:**\n1. Indtast din e-mailadresse på login-siden\n2. Klik på \"Send login-link\"\n3. Tjek din e-mail for et sikkert login-link\n4. Klik på linket for øjeblikkeligt at logge ind\n\n**Fordele:**\n- Ingen adgangskode at oprette, huske eller nulstille\n- Mere sikkert end traditionelle adgangskoder\n- Virker fra enhver enhed med e-mailadgang\n- Automatisk kontooprettelse for nye brugere\n\nLogin-linket er til engangsbrug og udløber efter kort tid af sikkerhedsmæssige årsager. Hvis du ikke modtager e-mailen, skal du tjekke din spam-mappe eller anmode om et nyt link.\n\n**Bemærk:** Du kan også indstille en traditionel adgangskode i dine kontoindstillinger, hvis du foretrækker den login-metode."
+			},
+			"multipleLogins": {
+				"title": "Kan jeg bruge flere login-metoder?",
+				"content": "Ja! Du kan knytte flere godkendelsesmetoder til din konto for fleksibilitet:\n\n- Start med Google, tilføj GitHub senere\n- Brug e-mail-login fra din telefon, Google fra din bærbare\n- Knyt en traditionel adgangskode som backup\n\n**For at tilføje en login-metode:**\n1. Log ind med din primære metode\n2. Gå til indstillinger\n3. Se efter \"Forbundne konti\" eller \"Login-metoder\"\n4. Klik på \"Knyt\" ved siden af den udbyder, du vil tilføje\n\n**For at fjerne en metode:**\nDu kan afkoble login-metoder i indstillinger, men appen vil forhindre dig i at fjerne din sidste login-metode for at undgå at blive låst ude.\n\nDenne fleksibilitet sikrer, at du altid kan få adgang til din konto, selv hvis en udbyder har problemer, eller du skifter enheder."
+			},
+			"gettingStarted": {
+				"title": "Hvordan kommer jeg i gang?",
+				"content": "Her er den anbefalede vej til at få mest muligt ud af appen:\n\n**Trin 1: Definer dine identiteter (5 minutter)**\nTænk på, hvem du ønsker at blive. Vælg 2-3 identiteter til at starte, som \"Jeg er en sund person\" eller \"Jeg er en fokuseret professionel.\"\n\n**Trin 2: Opret en simpel vanestak (5 minutter)**\nKnyt en ny vane til noget, du allerede gør. Start småt - \"Efter jeg vågner, vil jeg drikke et glas vand.\"\n\n**Trin 3: Tilføj et par opgaver (5 minutter)**\nHvad skal gøres i dag? Tilføj 3-5 opgaver og knyt dem til dine identiteter, når det er relevant.\n\n**Trin 4: Tag handling**\nGennenfør opgaver, arbejd gennem din vanestak, og se dine identitetsstemmer akkumulere.\n\n**Trin 5: Reflekter i journalen (2 minutter)**\nAfslut din dag med et hurtigt journalindlæg om, hvad der gik godt.\n\nNøglen er at starte simpelt. Du behøver ikke alt perfekt på dag ét. Tilføj mål og mere komplekse vanestak, efterhånden som du bliver fortrolig med det grundlæggende."
+			},
+			"privacy": {
+				"title": "Er mine data private og sikre?",
+				"content": "Ja. Din databeskyttelse og sikkerhed er topprioritet:\n\n- Alle data er krypteret under transport (HTTPS)\n- Adgangskoder er hashed og gemmes aldrig i klartekst\n- Sociale logins bruger OAuth 2.0 industristandarder\n- Dine data sælges eller deles aldrig med tredjeparter\n- Regelmæssige automatiserede sikkerhedskopier beskytter mod datatab\n\nDu ejer dine data. Du kan eksportere dem eller slette din konto når som helst fra indstillingssiden."
+			},
+			"support": {
+				"title": "Hvordan får jeg hjælp eller rapporterer problemer?",
+				"content": "Vi er her for at hjælpe:\n\n- Tjek disse FAQ for almindelige spørgsmål\n- Gennemgå in-app hjælpeværktøjstip og guider\n- Kontakt support gennem indstillingssiden\n- Rapporter fejl eller anmod om funktioner via GitHub (hvis tilgængelig)\n\nVi forbedrer løbende appen baseret på brugerfeedback, så tøv ikke med at dele dine tanker eller forslag!"
+			}
+		}
+	},
+	"pricing": {
+		"title": "Priser",
+		"subtitle": "Enkel, gennemsigtig prissætning. Ingen sporing. Ingen skjulte gebyrer.",
+		"backToHome": "Tilbage til hjem",
+		"privacyCallout": "Ingen sporingscookies. Intet datasalg. Bare værktøjer til at hjælpe dig med at vokse.",
+		"billing": {
+			"monthly": "Månedlig",
+			"annual": "Årlig",
+			"save": "Spar 20%",
+			"billedAnnually": "faktureret årligt",
+			"billedMonthly": "per måned"
+		},
+		"popularBadge": "Mest populær",
+		"getStarted": "Kom i gang gratis",
+		"getPlan": "Få {plan}",
+		"faq": {
+			"title": "Ofte stillede spørgsmål",
+			"changePlans": {
+				"question": "Kan jeg skifte plan senere?",
+				"answer": "Ja, du kan opgradere eller nedgradere din plan når som helst fra dine kontoindstillinger."
+			},
+			"paymentMethods": {
+				"question": "Hvilke betalingsmetoder accepterer I?",
+				"answer": "Vi accepterer alle større kreditkort. Betalingsbehandling håndteres sikkert."
+			},
+			"freeTrial": {
+				"question": "Er der en gratis prøveperiode for betalte planer?",
+				"answer": "Den gratis plan lader dig opleve kernefunktionerne. Du kan opgradere, når du er klar til mere."
+			},
+			"cancel": {
+				"question": "Hvad sker der, hvis jeg annullerer?",
+				"answer": "Du beholder adgang indtil slutningen af din faktureringsperiode. Dine data forbliver sikre, og du kan altid genabonnere."
+			},
+			"refunds": {
+				"question": "Tilbyder I refusioner?",
+				"answer": "Ja, vi tilbyder refusioner på individuel basis. Kontakt os inden for 14 dage efter en opkrævning for at anmode om en."
+			}
+		},
+		"cta": {
+			"title": "Har du stadig spørgsmål?",
+			"description": "Vi hjælper gerne dig med at finde den rette plan til dine behov.",
+			"contact": "Kontakt os"
+		},
+		"betaNote": "Bemærk: Betalingsintegration vil blive tilføjet i en fremtidig opdatering. I øjeblikket er alle funktioner tilgængelige under beta."
+	},
+	"contact": {
+		"title": "Kontakt os",
+		"subtitle": "Kom i kontakt med vores team",
+		"form": {
+			"name": "Navn",
+			"namePlaceholder": "Dit navn",
+			"email": "E-mail",
+			"emailPlaceholder": "din@email.com",
+			"message": "Besked",
+			"messagePlaceholder": "Hvordan kan vi hjælpe dig?",
+			"submit": "Send besked",
+			"sending": "Sender..."
+		},
+		"success": "Tak! Vi vender tilbage til dig snart.",
+		"error": "Kunne ikke sende besked. Prøv venligst igen."
 	}
 }
