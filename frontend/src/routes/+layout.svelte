@@ -6,7 +6,7 @@
 	import BetaBanner from '$lib/components/layout/BetaBanner.svelte';
 	import CommandBar from '$lib/components/ai/CommandBar.svelte';
 	import { initI18n, setLocale, getLocaleFromLanguage } from '$lib/i18n';
-	import { isLoading as i18nLoading } from 'svelte-i18n';
+	import { onMount } from 'svelte';
 	import { createGoal, getGoals } from '$lib/api/goals';
 	import { createTask } from '$lib/api/tasks';
 	import { createHabitStack } from '$lib/api/habitStacks';
@@ -16,8 +16,13 @@
 		HabitStackPreviewData
 	} from '$lib/api/aiGeneral';
 
-	// Initialize i18n
-	initI18n();
+	let i18nReady = $state(false);
+
+	// Initialize i18n and wait for it to be ready
+	onMount(async () => {
+		await initI18n();
+		i18nReady = true;
+	});
 
 	let { children } = $props();
 
@@ -26,7 +31,7 @@
 
 	// Sync locale with user's preferred language when auth state changes
 	$effect(() => {
-		if ($auth.user?.preferredLanguage) {
+		if ($auth.user?.preferredLanguage && i18nReady) {
 			const userLocale = getLocaleFromLanguage($auth.user.preferredLanguage);
 			setLocale(userLocale);
 		}
@@ -114,49 +119,56 @@
 	<meta name="description" content="A modern task and goal management app to help you stay motivated" />
 </svelte:head>
 
-<!-- Beta Banner (shown on all pages) -->
-<BetaBanner />
+{#if i18nReady}
+	<!-- Beta Banner (shown on all pages) -->
+	<BetaBanner />
 
-{#if shouldShowNav()}
-	<TopNav />
-{/if}
+	{#if shouldShowNav()}
+		<TopNav />
+	{/if}
 
-{@render children()}
+	{@render children()}
 
-<!-- Command Bar (Cmd+K / Ctrl+K) -->
-{#if shouldShowNav()}
-	<CommandBar
-		isOpen={commandBarOpen}
-		onClose={() => (commandBarOpen = false)}
-		onCreateTask={handleCreateTask}
-		onCreateGoal={handleCreateGoal}
-		onCreateHabitStack={handleCreateHabitStack}
-	/>
-	
-	<!-- Floating AI Assistant Button -->
-	<button
-		type="button"
-		onclick={() => (commandBarOpen = true)}
-		class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 
-		       bg-gradient-to-r from-primary-600 to-primary-700 
-		       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 
-		       transition-all duration-200 flex items-center justify-center z-40
-		       group touch-manipulation"
-		title="AI Assistant (⌘K / Ctrl+K)"
-		aria-label="Open AI Assistant"
-	>
-		<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-			<path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				d="M13 10V3L4 14h7v7l9-11h-7z"
-			/>
-		</svg>
-		<!-- Keyboard shortcut hint on hover (hidden on mobile) -->
-		<span class="hidden sm:block absolute -top-10 right-0 bg-gray-900 text-white text-xs px-2 py-1 
-		             rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-			Press ⌘K
-		</span>
-	</button>
+	<!-- Command Bar (Cmd+K / Ctrl+K) -->
+	{#if shouldShowNav()}
+		<CommandBar
+			isOpen={commandBarOpen}
+			onClose={() => (commandBarOpen = false)}
+			onCreateTask={handleCreateTask}
+			onCreateGoal={handleCreateGoal}
+			onCreateHabitStack={handleCreateHabitStack}
+		/>
+		
+		<!-- Floating AI Assistant Button -->
+		<button
+			type="button"
+			onclick={() => (commandBarOpen = true)}
+			class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 
+			       bg-gradient-to-r from-primary-600 to-primary-700 
+			       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 
+			       transition-all duration-200 flex items-center justify-center z-40
+			       group touch-manipulation"
+			title="AI Assistant (⌘K / Ctrl+K)"
+			aria-label="Open AI Assistant"
+		>
+			<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M13 10V3L4 14h7v7l9-11h-7z"
+				/>
+			</svg>
+			<!-- Keyboard shortcut hint on hover (hidden on mobile) -->
+			<span class="hidden sm:block absolute -top-10 right-0 bg-gray-900 text-white text-xs px-2 py-1 
+			             rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+				Press ⌘K
+			</span>
+		</button>
+	{/if}
+{:else}
+	<!-- Loading state while i18n initializes -->
+	<div class="min-h-screen bg-gray-50 flex items-center justify-center">
+		<div class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full"></div>
+	</div>
 {/if}

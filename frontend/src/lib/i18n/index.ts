@@ -1,16 +1,26 @@
 import { browser } from '$app/environment';
-import { init, register, locale, getLocaleFromNavigator } from 'svelte-i18n';
+import { init, register, locale, getLocaleFromNavigator, waitLocale } from 'svelte-i18n';
 
 const defaultLocale = 'en';
 
 register('en', () => import('./locales/en.json'));
 register('da', () => import('./locales/da.json'));
 
-export function initI18n() {
+let initialized = false;
+
+export async function initI18n() {
+	if (initialized) return;
+	
+	const initialLocale = browser ? getInitialLocale() : defaultLocale;
+	
 	init({
 		fallbackLocale: defaultLocale,
-		initialLocale: browser ? getInitialLocale() : defaultLocale
+		initialLocale
 	});
+	
+	// Wait for the initial locale to be loaded
+	await waitLocale(initialLocale);
+	initialized = true;
 }
 
 function getInitialLocale(): string {
@@ -60,4 +70,4 @@ export function getLanguageFromLocale(localeCode: string): string {
 	}
 }
 
-export { locale } from 'svelte-i18n';
+export { locale, waitLocale } from 'svelte-i18n';
