@@ -306,7 +306,7 @@
 										<div
 											class="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"
 										></div>
-										Creating...
+										{$t('ai.actions.creating')}
 									</span>
 								{:else}
 									{getActionLabel(action)}
