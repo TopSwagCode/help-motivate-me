@@ -460,6 +460,40 @@
 			"deleteFailed": "Kunne ikke slette indlæg"
 		}
 	},
+	"ai": {
+		"commandBar": {
+			"placeholder": "Hvad vil du gerne gøre? (f.eks., 'Køb ind i morgen')",
+			"thinking": "Tænker...",
+			"hint": "Prøv: 'Mind mig om at ringe til mor i morgen' eller 'Hver morgen efter jeg vågner, vil jeg strække ud'",
+			"examples": "Skriv eller tal naturligt - jeg forstår opgaver, mål og vaner"
+		},
+		"addWithAi": "Tilføj med AI",
+		"describeTask": "Beskriv en opgave",
+		"describeGoal": "Beskriv et mål",
+		"describeHabit": "Beskriv en rutine",
+		"tellMeWhatToWorkOn": "Fortæl mig hvad du vil arbejde på",
+		"preview": {
+			"task": "Opgave",
+			"goal": "Mål",
+			"habitStack": "Vanestak",
+			"targetDate": "Målsdato",
+			"trigger": "Trigger"
+		},
+		"actions": {
+			"confirm": "Opret",
+			"edit": "Rediger",
+			"cancel": "Annuller",
+			"task": "Gør det til en opgave",
+			"goal": "Gør det til et mål",
+			"habitStack": "Gør det til en vane",
+			"makeTask": "Gør det til en opgave"
+		},
+		"confidence": {
+			"high": "Klar til at oprette",
+			"medium": "Præciser venligst",
+			"low": "Har brug for flere detaljer"
+		}
+	},
 	"today": {
 		"title": "I dag",
 		"greeting": {
