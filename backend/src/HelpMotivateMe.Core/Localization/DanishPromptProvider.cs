@@ -245,7 +245,7 @@ public class DanishPromptProvider : IPromptProvider
         [Vis menneskelig læsbar forhåndsvisning]
         "Skal dette være en engangsopgave eller en tilbagevendende vane?"
         ```json
-        {"intent":"create_habit_stack","confidence":0.68,"preview":{"type":"habitStack","data":{"name":"Træningsrutine","description":null,"triggerCue":"Efter jeg vågner","identityId":"guid-hvis-matchet","identityName":"Sund Person","habits":[{"cueDescription":"Efter jeg vågner","habitDescription":"Gå en løbetur"}]}},"clarifyingQuestion":"Skal dette være en engangsopgave eller en tilbagevendende vane?","actions":["confirm","edit","make_task","cancel"]}
+        {"intent":"create_habit_stack","confidence":0.68,"preview":{"type":"habitStack","data":{"name":"Træningsrutine","description":null,"triggerCue":"Efter jeg vågner","identityId":"guid-hvis-matchet","identityName":"Sund Person","habits":[{"cueDescription":"vågner","habitDescription":"går en løbetur"}]}},"clarifyingQuestion":"Skal dette være en engangsopgave eller en tilbagevendende vane?","actions":["confirm","edit","make_task","cancel"]}
         ```
 
         FOR LAV TILLID (< 0.50) - Bed om præcisering:
@@ -269,7 +269,13 @@ public class DanishPromptProvider : IPromptProvider
         {"type":"goal","data":{"title":"streng (påkrævet)","description":"streng eller null","targetDate":"ÅÅÅÅ-MM-DD eller null"}}
 
         Vanestak:
-        {"type":"habitStack","data":{"name":"streng (påkrævet)","description":"streng eller null","triggerCue":"Efter jeg... (påkrævet)","identityId":"guid eller null","identityName":"streng eller null","habits":[{"cueDescription":"Efter jeg...","habitDescription":"Vil jeg..."}]}}
+        {"type":"habitStack","data":{"name":"streng (påkrævet)","description":"streng eller null","triggerCue":"Efter jeg... (påkrævet)","identityId":"guid eller null","identityName":"streng eller null","habits":[{"cueDescription":"vågner","habitDescription":"drikker et glas vand"}]}}
+
+        KRITISK FOR VANESTAKKE:
+        - triggerCue SKAL starte med "Efter jeg" (f.eks. "Efter jeg vågner")
+        - cueDescription skal IKKE inkludere "Efter" eller "Efter jeg" - kun handlingen (f.eks. "vågner", "børster tænder")
+        - habitDescription skal IKKE inkludere "Efter" - kun handlingen (f.eks. "drikker vand", "strækker ud i 5 minutter")
+        - UI'en vil automatisk vise "Efter jeg [cueDescription]" format, så undgå dublering
 
         IDENTITETS LINKING:
         - Tjek om brugerens input relaterer til en eksisterende identitet
@@ -282,8 +288,9 @@ public class DanishPromptProvider : IPromptProvider
         2. Vis en menneskelig læsbar beskrivelse før JSON'en
         3. For opgaver, udled rimelige forfaldsdatoer fra konteksten ("i morgen", "næste uge", osv.)
         4. For vanestakke, brug altid "Efter jeg [trigger]" format for triggerCue
-        5. Når brugeren siger "annuller" eller "glem det", anerkend og afslut høfligt
-        6. Hvis brugeren vil redigere, spørg hvad de gerne vil ændre
+        5. For vanestak cueDescription og habitDescription, inkluder IKKE "Efter" eller "Efter jeg" - kun handlingen
+        6. Når brugeren siger "annuller" eller "glem det", anerkend og afslut høfligt
+        7. Hvis brugeren vil redigere, spørg hvad de gerne vil ændre
 
         Husk: Vær hjælpsom, kortfattet, og vis altid forhåndsvisninger før du opretter noget. Svar på dansk.
         """;

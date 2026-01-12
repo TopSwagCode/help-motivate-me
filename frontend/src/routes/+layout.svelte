@@ -39,16 +39,11 @@
 		return $auth.user !== null && !publicRoutes.includes(path);
 	}
 
-	function shouldShowCommandBar(): boolean {
-		const path = $page.url.pathname;
-		return $auth.user !== null && !publicRoutes.includes(path);
-	}
-
 	// Global keyboard shortcut for command bar
 	function handleGlobalKeydown(e: KeyboardEvent) {
 		if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
 			e.preventDefault();
-			if (shouldShowCommandBar()) {
+			if (shouldShowNav()) {
 				commandBarOpen = !commandBarOpen;
 			}
 		}
@@ -125,7 +120,7 @@
 {@render children()}
 
 <!-- Command Bar (Cmd+K / Ctrl+K) -->
-{#if shouldShowCommandBar()}
+{#if shouldShowNav()}
 	<CommandBar
 		isOpen={commandBarOpen}
 		onClose={() => (commandBarOpen = false)}
@@ -133,4 +128,30 @@
 		onCreateGoal={handleCreateGoal}
 		onCreateHabitStack={handleCreateHabitStack}
 	/>
+	
+	<!-- Floating AI Assistant Button -->
+	<button
+		type="button"
+		onclick={() => (commandBarOpen = true)}
+		class="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-primary-600 to-primary-700 
+		       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 
+		       transition-all duration-200 flex items-center justify-center z-40
+		       group"
+		title="AI Assistant (⌘K / Ctrl+K)"
+		aria-label="Open AI Assistant"
+	>
+		<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M13 10V3L4 14h7v7l9-11h-7z"
+			/>
+		</svg>
+		<!-- Keyboard shortcut hint on hover -->
+		<span class="absolute -top-10 right-0 bg-gray-900 text-white text-xs px-2 py-1 
+		             rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+			Press ⌘K
+		</span>
+	</button>
 {/if}

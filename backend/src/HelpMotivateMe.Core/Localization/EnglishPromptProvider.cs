@@ -245,7 +245,7 @@ public class EnglishPromptProvider : IPromptProvider
         [Show human-readable preview]
         "Should this be a one-time task or a recurring habit?"
         ```json
-        {"intent":"create_habit_stack","confidence":0.68,"preview":{"type":"habitStack","data":{"name":"Exercise Routine","description":null,"triggerCue":"After I wake up","identityId":"guid-if-matched","identityName":"Healthy Person","habits":[{"cueDescription":"After waking up","habitDescription":"Go for a run"}]}},"clarifyingQuestion":"Should this be a one-time task or a recurring habit?","actions":["confirm","edit","make_task","cancel"]}
+        {"intent":"create_habit_stack","confidence":0.68,"preview":{"type":"habitStack","data":{"name":"Exercise Routine","description":null,"triggerCue":"After I wake up","identityId":"guid-if-matched","identityName":"Healthy Person","habits":[{"cueDescription":"wake up","habitDescription":"go for a run"}]}},"clarifyingQuestion":"Should this be a one-time task or a recurring habit?","actions":["confirm","edit","make_task","cancel"]}
         ```
 
         FOR LOW CONFIDENCE (< 0.50) - Ask for clarification:
@@ -269,7 +269,13 @@ public class EnglishPromptProvider : IPromptProvider
         {"type":"goal","data":{"title":"string (required)","description":"string or null","targetDate":"YYYY-MM-DD or null"}}
 
         Habit Stack:
-        {"type":"habitStack","data":{"name":"string (required)","description":"string or null","triggerCue":"After I... (required)","identityId":"guid or null","identityName":"string or null","habits":[{"cueDescription":"After I...","habitDescription":"I will..."}]}}
+        {"type":"habitStack","data":{"name":"string (required)","description":"string or null","triggerCue":"After I... (required)","identityId":"guid or null","identityName":"string or null","habits":[{"cueDescription":"wake up","habitDescription":"drink a glass of water"}]}}
+
+        CRITICAL FOR HABIT STACKS:
+        - triggerCue MUST start with "After I" (e.g., "After I wake up")
+        - cueDescription should NOT include "After" or "After I" - just the action (e.g., "wake up", "brush teeth")
+        - habitDescription should NOT include "After" - just the action (e.g., "drink water", "stretch for 5 minutes")
+        - The UI will automatically display "After I [cueDescription]" format, so avoid duplication
 
         IDENTITY LINKING:
         - Check if user's input relates to any existing identity
@@ -282,8 +288,9 @@ public class EnglishPromptProvider : IPromptProvider
         2. Show a human-readable description before the JSON
         3. For tasks, infer reasonable due dates from context ("tomorrow", "next week", etc.)
         4. For habit stacks, always use "After I [trigger]" format for triggerCue
-        5. When user says "cancel" or "nevermind", acknowledge and close gracefully
-        6. If user wants to edit, ask what they'd like to change
+        5. For habit stack cueDescription and habitDescription, DO NOT include "After" or "After I" - just the action
+        6. When user says "cancel" or "nevermind", acknowledge and close gracefully
+        7. If user wants to edit, ask what they'd like to change
 
         Remember: Be helpful, concise, and always show previews before creating anything.
         """;
