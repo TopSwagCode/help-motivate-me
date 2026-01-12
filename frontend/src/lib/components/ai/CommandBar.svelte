@@ -140,7 +140,7 @@
 			}, 1500);
 		} catch (error) {
 			console.error('Failed to create:', error);
-			displayContent = 'Failed to create. Please try again.';
+			displayContent = $t('ai.errors.creationFailed');
 		} finally {
 			isCreating = false;
 		}
