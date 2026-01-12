@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
+	import { t, locale } from 'svelte-i18n';
+	import { get } from 'svelte/store';
 	import {
 		getJournalEntries,
 		createJournalEntry,
@@ -77,7 +79,7 @@
 			habitStacks = stacksData;
 			tasks = tasksData;
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to load journal';
+			error = e instanceof Error ? e.message : get(t)('journal.errors.loadFailed');
 		} finally {
 			loading = false;
 		}
@@ -197,7 +199,7 @@
 
 	async function handleSubmit() {
 		if (!modalTitle.trim()) {
-			modalError = 'Title is required';
+			modalError = get(t)('journal.errors.titleRequired');
 			return;
 		}
 
@@ -248,7 +250,7 @@
 	}
 
 	async function handleDeleteImage(entry: JournalEntry, image: JournalImage) {
-		if (!confirm('Delete this image?')) return;
+		if (!confirm(get(t)('journal.deleteImageConfirm'))) return;
 
 		try {
 			await deleteJournalImage(entry.id, image.id);
@@ -261,12 +263,12 @@
 				editingEntry = updatedEntry;
 			}
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to delete image';
+			error = e instanceof Error ? e.message : get(t)('journal.errors.deleteImageFailed');
 		}
 	}
 
 	async function handleDelete(id: string) {
-		if (!confirm('Are you sure you want to delete this journal entry?')) return;
+		if (!confirm(get(t)('journal.deleteConfirm'))) return;
 
 		try {
 			await deleteJournalEntry(id);
@@ -275,12 +277,12 @@
 				closeModal();
 			}
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to delete entry';
+			error = e instanceof Error ? e.message : get(t)('journal.errors.deleteFailed');
 		}
 	}
 
 	function formatDate(dateStr: string): string {
-		return new Date(dateStr + 'T12:00:00').toLocaleDateString('en-US', {
+		return new Date(dateStr + 'T12:00:00').toLocaleDateString(get(locale) === 'da' ? 'da-DK' : 'en-US', {
 			weekday: 'long',
 			year: 'numeric',
 			month: 'long',
@@ -327,8 +329,8 @@
 <div class="min-h-screen bg-gray-50">
 	<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 		<div class="flex items-center justify-between mb-6">
-			<h1 class="text-2xl font-bold text-gray-900">Journal</h1>
-			<button onclick={openCreateModal} class="btn-primary text-sm">New Entry</button>
+			<h1 class="text-2xl font-bold text-gray-900">{$t('journal.pageTitle')}</h1>
+			<button onclick={openCreateModal} class="btn-primary text-sm">{$t('journal.newEntry')}</button>
 		</div>
 
 		{#if loading}
@@ -356,9 +358,9 @@
 						/>
 					</svg>
 				</div>
-				<h3 class="text-lg font-medium text-gray-900 mb-2">No journal entries yet</h3>
-				<p class="text-gray-500 mb-6">Start documenting your journey by creating your first entry.</p>
-				<button onclick={openCreateModal} class="btn-primary">Create Entry</button>
+				<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('journal.emptyTitle')}</h3>
+				<p class="text-gray-500 mb-6">{$t('journal.emptyDescription')}</p>
+				<button onclick={openCreateModal} class="btn-primary">{$t('journal.createFirst')}</button>
 			</div>
 		{:else}
 			<div class="space-y-4">
@@ -427,7 +429,7 @@
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-6">
 						<h2 class="text-xl font-semibold text-gray-900">
-							{isEditing ? 'Edit Entry' : 'New Entry'}
+							{isEditing ? $t('journal.modal.editTitle') : $t('journal.modal.createTitle')}
 						</h2>
 						<button onclick={closeModal} class="text-gray-400 hover:text-gray-600">
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -457,37 +459,37 @@
 
 					<div class="space-y-4">
 						<div>
-							<label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+							<label for="title" class="block text-sm font-medium text-gray-700 mb-1">{$t('journal.form.title')} *</label>
 							<input
 								type="text"
 								id="title"
 								bind:value={modalTitle}
-								placeholder="What happened today?"
+								placeholder={$t('journal.form.titlePlaceholder')}
 								maxlength="255"
 								class="input"
 							/>
 						</div>
 
 						<div>
-							<label for="entryDate" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+							<label for="entryDate" class="block text-sm font-medium text-gray-700 mb-1">{$t('journal.form.date')}</label>
 							<input type="date" id="entryDate" bind:value={modalEntryDate} class="input" />
 						</div>
 
 						<div>
 							<label for="description" class="block text-sm font-medium text-gray-700 mb-1"
-								>Description</label
+								>{$t('journal.form.description')}</label
 							>
 							<textarea
 								id="description"
 								bind:value={modalDescription}
 								rows="4"
-								placeholder="Write about your experience..."
+								placeholder={$t('journal.form.descriptionPlaceholder')}
 								class="input"
 							></textarea>
 						</div>
 
 						<div>
-							<label class="block text-sm font-medium text-gray-700 mb-2">Link to</label>
+							<label class="block text-sm font-medium text-gray-700 mb-2">{$t('journal.form.linkTo')}</label>
 							<div class="flex gap-2 mb-2">
 								<button
 									type="button"
@@ -501,7 +503,7 @@
 										? 'border-primary-500 bg-primary-50 text-primary-700'
 										: 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'}"
 								>
-									None
+									{$t('journal.form.linkNone')}
 								</button>
 								<button
 									type="button"
@@ -514,7 +516,7 @@
 										? 'border-primary-500 bg-primary-50 text-primary-700'
 										: 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'}"
 								>
-									Habit Stack
+									{$t('journal.form.linkHabitStack')}
 								</button>
 								<button
 									type="button"
@@ -527,20 +529,20 @@
 										? 'border-primary-500 bg-primary-50 text-primary-700'
 										: 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'}"
 								>
-									Task
+									{$t('journal.form.linkTask')}
 								</button>
 							</div>
 
 							{#if modalLinkType === 'habitStack'}
 								<select bind:value={modalHabitStackId} class="input">
-									<option value="">Select a habit stack...</option>
+									<option value="">{$t('journal.form.selectHabitStack')}</option>
 									{#each habitStacks as stack (stack.id)}
 										<option value={stack.id}>{stack.name}</option>
 									{/each}
 								</select>
 							{:else if modalLinkType === 'task'}
 								<select bind:value={modalTaskId} class="input">
-									<option value="">Select a task...</option>
+									<option value="">{$t('journal.form.selectTask')}</option>
 									{#each tasks as task (task.id)}
 										<option value={task.id}>{task.goalTitle} - {task.title}</option>
 									{/each}
@@ -550,7 +552,7 @@
 
 						<!-- Images Section -->
 						<div>
-							<label class="block text-sm font-medium text-gray-700 mb-2">Images</label>
+							<label class="block text-sm font-medium text-gray-700 mb-2">{$t('journal.images.title')}</label>
 
 							<!-- Existing images (edit mode) -->
 							{#if isEditing && editingEntry && editingEntry.images.length > 0}
@@ -622,7 +624,7 @@
 									<div class="text-center">
 										{#if processingImages}
 											<div class="animate-spin w-6 h-6 mx-auto border-2 border-primary-600 border-t-transparent rounded-full"></div>
-											<span class="text-xs text-gray-500 mt-1">Processing...</span>
+											<span class="text-xs text-gray-500 mt-1">{$t('journal.images.processing')}</span>
 										{:else}
 											<svg
 												class="w-6 h-6 mx-auto text-gray-400"
@@ -637,7 +639,7 @@
 													d="M12 4v16m8-8H4"
 												/>
 											</svg>
-											<span class="text-xs text-gray-500">Add images</span>
+											<span class="text-xs text-gray-500">{$t('journal.images.add')}</span>
 										{/if}
 									</div>
 									<input
@@ -651,7 +653,7 @@
 								</label>
 							{/if}
 							<p class="text-xs text-gray-500 mt-1">
-								Images are automatically compressed to WebP. Max 5 images, 5MB each. GIFs kept as-is.
+								{$t('journal.images.hint')}
 							</p>
 						</div>
 					</div>
@@ -664,7 +666,7 @@
 									onclick={() => handleDelete(editingEntry!.id)}
 									class="text-red-600 hover:text-red-700 text-sm"
 								>
-									Delete
+									{$t('common.delete')}
 								</button>
 							{/if}
 						</div>
@@ -675,7 +677,7 @@
 								class="btn-secondary"
 								disabled={modalLoading || uploadingImages}
 							>
-								Cancel
+								{$t('common.cancel')}
 							</button>
 							<button
 								type="button"
@@ -684,11 +686,11 @@
 								disabled={modalLoading || uploadingImages}
 							>
 								{#if modalLoading}
-									Saving...
+									{$t('common.saving')}
 								{:else if uploadingImages}
-									Uploading...
+									{$t('journal.images.uploading')}
 								{:else}
-									{isEditing ? 'Save Changes' : 'Create Entry'}
+									{isEditing ? $t('common.saveChanges') : $t('journal.createFirst')}
 								{/if}
 							</button>
 						</div>

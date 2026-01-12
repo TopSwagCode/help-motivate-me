@@ -4,6 +4,7 @@
 		"loading": "Indlæser...",
 		"saving": "Gemmer...",
 		"save": "Gem",
+		"saveChanges": "Gem ændringer",
 		"cancel": "Annuller",
 		"delete": "Slet",
 		"edit": "Rediger",
@@ -386,7 +387,7 @@
 		"deleteConfirm": "Er du sikker på, at du vil slette dette dagbogsindlæg?",
 		"deleteImageConfirm": "Slet dette billede?",
 		"form": {
-			"title": "Indlægstitel",
+			"title": "Titel",
 			"titlePlaceholder": "Hvad skete der i dag?",
 			"content": "Indhold",
 			"contentPlaceholder": "Skriv dine tanker...",
@@ -395,28 +396,35 @@
 			"descriptionPlaceholder": "Skriv om din oplevelse...",
 			"submit": "Gem indlæg",
 			"linkTo": "Link til",
-			"none": "Ingen",
-			"habitStack": "Vanestak",
-			"task": "Opgave",
+			"linkNone": "Ingen",
+			"linkHabitStack": "Vanestak",
+			"linkTask": "Opgave",
 			"selectHabitStack": "Vælg en vanestak...",
 			"selectTask": "Vælg en opgave..."
 		},
 		"images": {
 			"title": "Billeder",
-			"addImages": "Tilføj billeder",
+			"add": "Tilføj billeder",
 			"processing": "Behandler...",
+			"uploading": "Uploader...",
 			"new": "Ny",
-			"imageNote": "Billeder komprimeres automatisk til WebP. Maks 5 billeder, 5MB hver. GIF'er bevares.",
+			"hint": "Billeder komprimeres automatisk til WebP. Maks 5 billeder, 5MB hver. GIF'er bevares.",
 			"canOnlyAdd": "Kan kun tilføje {count} flere billede(r)"
 		},
 		"modal": {
-			"newEntry": "Nyt indlæg",
-			"editEntry": "Rediger indlæg",
+			"createTitle": "Nyt indlæg",
+			"editTitle": "Rediger indlæg",
 			"titleRequired": "Titel er påkrævet",
 			"saving": "Gemmer...",
 			"uploading": "Uploader...",
 			"saveChanges": "Gem ændringer",
 			"createEntry": "Opret indlæg"
+		},
+		"errors": {
+			"loadFailed": "Kunne ikke indlæse dagbog",
+			"titleRequired": "Titel er påkrævet",
+			"deleteImageFailed": "Kunne ikke slette billede",
+			"deleteFailed": "Kunne ikke slette indlæg"
 		}
 	},
 	"today": {
@@ -499,6 +507,9 @@
 			"title": "Ingen stribedata endnu",
 			"description": "Fuldfør gentagne opgaver for at begynde at opbygge striber.",
 			"goToDashboard": "Gå til dashboard"
+		},
+		"errors": {
+			"loadFailed": "Kunne ikke indlæse analyse"
 		}
 	},
 	"buddies": {
@@ -535,7 +546,13 @@
 		"email": "E-mailadresse",
 		"sendInvite": "Send invitation",
 		"pending": "Afventende invitationer",
-		"viewProgress": "Se fremskridt"
+		"viewProgress": "Se fremskridt",
+		"errors": {
+			"loadFailed": "Kunne ikke indlæse venskabsrelationer",
+			"inviteFailed": "Kunne ikke sende invitation",
+			"removeFailed": "Kunne ikke fjerne ven",
+			"leaveFailed": "Kunne ikke forlade venskabsrelation"
+		}
 	},
 	"errors": {
 		"generic": "Noget gik galt. Prøv venligst igen.",

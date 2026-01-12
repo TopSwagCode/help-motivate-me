@@ -4,6 +4,7 @@
 		"loading": "Loading...",
 		"saving": "Saving...",
 		"save": "Save",
+		"saveChanges": "Save Changes",
 		"cancel": "Cancel",
 		"delete": "Delete",
 		"edit": "Edit",
@@ -386,7 +387,7 @@
 		"deleteConfirm": "Are you sure you want to delete this journal entry?",
 		"deleteImageConfirm": "Delete this image?",
 		"form": {
-			"title": "Entry Title",
+			"title": "Title",
 			"titlePlaceholder": "What happened today?",
 			"content": "Content",
 			"contentPlaceholder": "Write your thoughts...",
@@ -395,28 +396,35 @@
 			"descriptionPlaceholder": "Write about your experience...",
 			"submit": "Save Entry",
 			"linkTo": "Link to",
-			"none": "None",
-			"habitStack": "Habit Stack",
-			"task": "Task",
+			"linkNone": "None",
+			"linkHabitStack": "Habit Stack",
+			"linkTask": "Task",
 			"selectHabitStack": "Select a habit stack...",
 			"selectTask": "Select a task..."
 		},
 		"images": {
 			"title": "Images",
-			"addImages": "Add images",
+			"add": "Add images",
 			"processing": "Processing...",
+			"uploading": "Uploading...",
 			"new": "New",
-			"imageNote": "Images are automatically compressed to WebP. Max 5 images, 5MB each. GIFs kept as-is.",
+			"hint": "Images are automatically compressed to WebP. Max 5 images, 5MB each. GIFs kept as-is.",
 			"canOnlyAdd": "Can only add {count} more image(s)"
 		},
 		"modal": {
-			"newEntry": "New Entry",
-			"editEntry": "Edit Entry",
+			"createTitle": "New Entry",
+			"editTitle": "Edit Entry",
 			"titleRequired": "Title is required",
 			"saving": "Saving...",
 			"uploading": "Uploading...",
 			"saveChanges": "Save Changes",
 			"createEntry": "Create Entry"
+		},
+		"errors": {
+			"loadFailed": "Failed to load journal",
+			"titleRequired": "Title is required",
+			"deleteImageFailed": "Failed to delete image",
+			"deleteFailed": "Failed to delete entry"
 		}
 	},
 	"today": {
@@ -499,6 +507,9 @@
 			"title": "No streak data yet",
 			"description": "Complete repeating tasks to start building streaks.",
 			"goToDashboard": "Go to Dashboard"
+		},
+		"errors": {
+			"loadFailed": "Failed to load analytics"
 		}
 	},
 	"buddies": {
@@ -535,7 +546,13 @@
 		"email": "Email address",
 		"sendInvite": "Send Invite",
 		"pending": "Pending Invitations",
-		"viewProgress": "View Progress"
+		"viewProgress": "View Progress",
+		"errors": {
+			"loadFailed": "Failed to load buddy relationships",
+			"inviteFailed": "Failed to send invitation",
+			"removeFailed": "Failed to remove buddy",
+			"leaveFailed": "Failed to leave buddy relationship"
+		}
 	},
 	"errors": {
 		"generic": "Something went wrong. Please try again.",
