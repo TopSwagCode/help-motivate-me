@@ -161,7 +161,7 @@ public class AiController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error in general chat stream for user {UserId}", userId);
-            await Response.WriteAsync($"data: {{\"error\": \"{ex.Message}\"}}\n\n", cancellationToken);
+            await Response.WriteAsync("data: {\"error\": \"An unexpected error occurred while processing the chat request.\"}\n\n", cancellationToken);
             await Response.Body.FlushAsync(cancellationToken);
         }
     }
