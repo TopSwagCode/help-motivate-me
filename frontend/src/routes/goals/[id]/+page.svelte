@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { t } from 'svelte-i18n';
 	import { auth } from '$lib/stores/auth';
 	import { getGoal, completeGoal, deleteGoal, updateGoal } from '$lib/api/goals';
 	import { getTasks, createTask, completeTask, deleteTask, postponeTask, updateTask } from '$lib/api/tasks';
@@ -135,7 +136,7 @@
 	}
 
 	async function handleDeleteTask(taskId: string) {
-		if (!confirm('Are you sure you want to delete this task?')) return;
+		if (!confirm($t('goals.deleteTaskConfirm'))) return;
 
 		const id = goalId;
 		try {
@@ -158,7 +159,7 @@
 	}
 
 	async function handleDeleteGoal() {
-		if (!confirm('Are you sure you want to delete this goal? All tasks will also be deleted.')) return;
+		if (!confirm($t('goals.deleteGoalConfirm'))) return;
 
 		const id = goalId;
 		try {
@@ -290,7 +291,7 @@
 	}
 
 	function formatDueDate(dateStr: string | null): string {
-		if (!dateStr) return 'No date';
+		if (!dateStr) return $t('goals.noDate');
 		return new Date(dateStr + 'T12:00:00').toLocaleDateString();
 	}
 
@@ -342,13 +343,13 @@
 					<div class="flex items-center gap-2">
 						{#if goal.isCompleted}
 							<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-								Completed
+								{$t('goals.completed')}
 							</span>
 						{/if}
 						<button onclick={handleCompleteGoal} class="btn-secondary text-sm">
-							{goal.isCompleted ? 'Reopen' : 'Complete'}
+							{goal.isCompleted ? $t('goals.reopen') : $t('goals.complete')}
 						</button>
-						<button onclick={handleDeleteGoal} class="btn-danger text-sm">Delete</button>
+						<button onclick={handleDeleteGoal} class="btn-danger text-sm">{$t('goals.delete')}</button>
 					</div>
 				</div>
 
@@ -371,13 +372,13 @@
 								onclick={saveTargetDate}
 								class="text-primary-600 hover:text-primary-700 font-medium"
 							>
-								Save
+								{$t('common.save')}
 							</button>
 							<button
 								onclick={cancelEditTargetDate}
 								class="text-gray-500 hover:text-gray-700"
 							>
-								Cancel
+								{$t('common.cancel')}
 							</button>
 						</div>
 					{:else if !goal.isCompleted}
@@ -390,9 +391,9 @@
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
 							</svg>
 							{#if goal.targetDate}
-								Target: {new Date(goal.targetDate + 'T12:00:00').toLocaleDateString()}
+								{$t('goals.target')}: {new Date(goal.targetDate + 'T12:00:00').toLocaleDateString()}
 							{:else}
-								Set target date
+								{$t('goals.setTargetDate')}
 							{/if}
 							<svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -403,10 +404,10 @@
 							<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
 							</svg>
-							Target: {new Date(goal.targetDate + 'T12:00:00').toLocaleDateString()}
+							{$t('goals.target')}: {new Date(goal.targetDate + 'T12:00:00').toLocaleDateString()}
 						</span>
 					{/if}
-					<span>{goal.completedTaskCount}/{goal.taskCount} tasks completed</span>
+					<span>{goal.completedTaskCount}/{goal.taskCount} {$t('goals.tasksCompleted')}</span>
 				</div>
 
 				{#if goal.taskCount > 0}
@@ -426,7 +427,7 @@
 						<input
 							type="text"
 							bind:value={newTaskTitle}
-							placeholder="Add a new task..."
+							placeholder={$t('goals.addTaskPlaceholder')}
 							class="input flex-1"
 							disabled={addingTask}
 						/>
@@ -435,16 +436,16 @@
 							bind:value={newTaskDueDate}
 							class="input sm:w-40"
 							disabled={addingTask}
-							title="Due date (optional)"
+							title={$t('goals.dueDate')}
 						/>
 						<button type="submit" disabled={addingTask || !newTaskTitle.trim()} class="btn-primary">
-							{addingTask ? 'Adding...' : 'Add Task'}
+							{addingTask ? $t('goals.adding') : $t('goals.addTask')}
 						</button>
 					</div>
 					<div class="flex flex-col sm:flex-row gap-3 mt-3">
 						<textarea
 							bind:value={newTaskDescription}
-							placeholder="Description (optional)..."
+							placeholder={$t('goals.form.taskDescriptionPlaceholder')}
 							class="input flex-1 resize-none"
 							rows="2"
 							disabled={addingTask}
@@ -454,9 +455,9 @@
 								bind:value={newTaskIdentityId}
 								class="input sm:w-48"
 								disabled={addingTask}
-								title="Link to identity (optional)"
+								title={$t('goals.form.linkToIdentity')}
 							>
-								<option value="">No identity</option>
+								<option value="">{$t('goals.noIdentity')}</option>
 								{#each identities as identity (identity.id)}
 									<option value={identity.id}>{identity.name}</option>
 								{/each}
@@ -472,13 +473,13 @@
 					<svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
 					</svg>
-					<span>This goal is completed. Reopen it to make changes to tasks.</span>
+					<span>{$t('goals.readonlyNotice')}</span>
 				</div>
 			{/if}
 
 			<!-- Tasks List - Always show both sections -->
 			<section class="mb-6">
-				<h2 class="text-lg font-semibold text-gray-900 mb-3">Tasks ({pendingTasks.length})</h2>
+				<h2 class="text-lg font-semibold text-gray-900 mb-3">{$t('goals.pendingTasksSection')} ({pendingTasks.length})</h2>
 				<div class="card divide-y divide-gray-200 {goal.isCompleted ? 'opacity-60' : ''}">
 					{#if pendingTasks.length > 0}
 						{#each pendingTasks as task (task.id)}
@@ -504,7 +505,7 @@
 										onclick={() => handleCompleteTask(task.id)}
 										class="flex-shrink-0 w-5 h-5 rounded-full border-2 border-gray-300 hover:border-primary-500 transition-all duration-200
 											{transitioningTaskIds.includes(task.id) ? 'bg-green-500 border-green-500' : ''}"
-										title="Mark as completed"
+										title={$t('goals.markCompleted')}
 									>
 										{#if transitioningTaskIds.includes(task.id)}
 											<svg class="w-3 h-3 text-white m-auto" fill="currentColor" viewBox="0 0 24 24">
@@ -539,7 +540,7 @@
 									<button
 										onclick={() => handleSnooze(task)}
 										class="text-gray-400 hover:text-amber-500 transition-colors p-1"
-										title="Snooze 1 week"
+										title={$t('goals.snooze')}
 										disabled={snoozingTaskIds.includes(task.id)}
 									>
 										<span class="text-lg">💤</span>
@@ -547,7 +548,7 @@
 									<button
 										onclick={() => openEditPopup(task)}
 										class="text-gray-400 hover:text-primary-600 transition-colors p-1"
-										title="Edit task"
+										title={$t('goals.editTask')}
 									>
 										<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -556,7 +557,7 @@
 									<button
 										onclick={() => handleDeleteTask(task.id)}
 										class="text-gray-400 hover:text-red-500 transition-colors p-1"
-										title="Delete task"
+										title={$t('goals.deleteTask')}
 									>
 										<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -568,9 +569,9 @@
 					{:else}
 						<div class="p-6 text-center text-gray-400">
 							{#if goal.isCompleted}
-								All tasks completed!
+								{$t('goals.allTasksCompleted')}
 							{:else}
-								No pending tasks. Add one above!
+								{$t('goals.noPendingTasks')}
 							{/if}
 						</div>
 					{/if}
@@ -578,7 +579,7 @@
 			</section>
 
 			<section>
-				<h2 class="text-lg font-semibold text-gray-900 mb-3">Completed ({completedTasks.length})</h2>
+				<h2 class="text-lg font-semibold text-gray-900 mb-3">{$t('goals.completedTasksSection')} ({completedTasks.length})</h2>
 				<div class="card divide-y divide-gray-200 {goal.isCompleted ? 'opacity-60' : ''}">
 					{#if completedTasks.length > 0}
 						{#each completedTasks as task (task.id)}
@@ -597,7 +598,7 @@
 									<button
 										onclick={() => handleCompleteTask(task.id)}
 										class="flex-shrink-0 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center hover:bg-green-600 transition-colors"
-										title="Mark as incomplete"
+										title={$t('goals.markIncomplete')}
 									>
 										<svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
 											<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
@@ -617,7 +618,7 @@
 									<button
 										onclick={() => handleDeleteTask(task.id)}
 										class="text-gray-400 hover:text-red-500 transition-colors p-1"
-										title="Delete task"
+										title={$t('goals.deleteTask')}
 									>
 										<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -628,7 +629,7 @@
 						{/each}
 					{:else}
 						<div class="p-6 text-center text-gray-400">
-							No completed tasks yet
+							{$t('goals.noCompletedTasks')}
 						</div>
 					{/if}
 				</div>
@@ -640,36 +641,36 @@
 	{#if showEditPopup && editingTask}
 		<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
 			<div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-				<h3 class="text-lg font-semibold text-gray-900 mb-4">Edit Task</h3>
+				<h3 class="text-lg font-semibold text-gray-900 mb-4">{$t('goals.editTask')}</h3>
 
 				<div class="space-y-4">
 					<div>
-						<label for="editTitle" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+						<label for="editTitle" class="block text-sm font-medium text-gray-700 mb-1">{$t('goals.form.taskTitle')}</label>
 						<input
 							type="text"
 							id="editTitle"
 							bind:value={editTitle}
 							class="input w-full"
-							placeholder="Task title"
+							placeholder={$t('goals.form.taskTitlePlaceholder')}
 						/>
 					</div>
 
 					<div>
 						<label for="editDescription" class="block text-sm font-medium text-gray-700 mb-1">
-							Description <span class="text-gray-400 font-normal">(optional)</span>
+							{$t('goals.form.taskDescription')} <span class="text-gray-400 font-normal">({$t('goals.form.optional')})</span>
 						</label>
 						<textarea
 							id="editDescription"
 							bind:value={editDescription}
 							class="input w-full resize-none"
 							rows="3"
-							placeholder="Add more details about this task..."
+							placeholder={$t('goals.form.taskDescriptionPlaceholder')}
 						></textarea>
 					</div>
 
 					<div>
 						<label for="editDueDate" class="block text-sm font-medium text-gray-700 mb-1">
-							Due date <span class="text-gray-400 font-normal">(optional)</span>
+							{$t('goals.dueDate')} <span class="text-gray-400 font-normal">({$t('goals.form.optional')})</span>
 						</label>
 						<input
 							type="date"
@@ -682,14 +683,14 @@
 					{#if identities.length > 0}
 						<div>
 							<label for="editIdentity" class="block text-sm font-medium text-gray-700 mb-1">
-								Identity <span class="text-gray-400 font-normal">(optional)</span>
+								{$t('goals.form.identity')} <span class="text-gray-400 font-normal">({$t('goals.form.optional')})</span>
 							</label>
 							<select
 								id="editIdentity"
 								bind:value={editIdentityId}
 								class="input w-full"
 							>
-								<option value="">No identity</option>
+								<option value="">{$t('goals.noIdentity')}</option>
 								{#each identities as identity (identity.id)}
 									<option value={identity.id}>{identity.icon ? `${identity.icon} ` : ''}{identity.name}</option>
 								{/each}
@@ -703,14 +704,14 @@
 						onclick={closeEditPopup}
 						class="px-4 py-2 text-gray-600 hover:text-gray-800"
 					>
-						Cancel
+						{$t('common.cancel')}
 					</button>
 					<button
 						onclick={handleSaveEdit}
 						disabled={!editTitle.trim()}
 						class="btn-primary"
 					>
-						Save
+						{$t('common.save')}
 					</button>
 				</div>
 			</div>
@@ -721,11 +722,11 @@
 	{#if showPostponePopup && postponingTask}
 		<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
 			<div class="bg-white rounded-xl shadow-xl max-w-sm w-full p-6">
-				<h3 class="text-lg font-semibold text-gray-900 mb-4">Change Due Date</h3>
+				<h3 class="text-lg font-semibold text-gray-900 mb-4">{$t('goals.changeDueDate')}</h3>
 				<p class="text-gray-600 mb-4 truncate">{postponingTask.title}</p>
 
 				<div class="mb-6">
-					<label for="newDueDate" class="block text-sm font-medium text-gray-700 mb-2">Due date</label>
+					<label for="newDueDate" class="block text-sm font-medium text-gray-700 mb-2">{$t('goals.dueDate')}</label>
 					<input
 						type="date"
 						id="newDueDate"
@@ -739,13 +740,13 @@
 						onclick={closePostponePopup}
 						class="px-4 py-2 text-gray-600 hover:text-gray-800"
 					>
-						Cancel
+						{$t('common.cancel')}
 					</button>
 					<button
 						onclick={handlePostpone}
 						class="btn-primary"
 					>
-						Save
+						{$t('common.save')}
 					</button>
 				</div>
 			</div>
