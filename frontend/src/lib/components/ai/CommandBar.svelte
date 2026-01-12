@@ -125,13 +125,13 @@
 		try {
 			if (preview.type === 'task' && onCreateTask) {
 				await onCreateTask(preview.data as TaskPreviewData);
-				successMessage = 'Task created!';
+				successMessage = $t('ai.successMessages.taskCreated');
 			} else if (preview.type === 'goal' && onCreateGoal) {
 				await onCreateGoal(preview.data as GoalPreviewData);
-				successMessage = 'Goal created!';
+				successMessage = $t('ai.successMessages.goalCreated');
 			} else if (preview.type === 'habitStack' && onCreateHabitStack) {
 				await onCreateHabitStack(preview.data as HabitStackPreviewData);
-				successMessage = 'Habit stack created!';
+				successMessage = $t('ai.successMessages.habitStackCreated');
 			}
 
 			// Show success briefly then close
