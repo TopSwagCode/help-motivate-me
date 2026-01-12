@@ -3,6 +3,9 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		extend: {
+			screens: {
+				'xs': '475px', // Extra small devices
+			},
 			colors: {
 				primary: {
 					50: '#f0f9ff',

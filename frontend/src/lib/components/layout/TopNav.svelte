@@ -9,18 +9,42 @@
 		const currentPath = $page.url.pathname;
 		return currentPath.startsWith(path);
 	}
+
+	// Mobile menu state
+	let showMobileMenu = $state(false);
+	let headerRef = $state<HTMLElement | null>(null);
+
+	function closeMobileMenu() {
+		showMobileMenu = false;
+	}
+
+	// Close menu when clicking outside
+	function handleClickOutside(event: MouseEvent) {
+		if (showMobileMenu && headerRef && !headerRef.contains(event.target as Node)) {
+			closeMobileMenu();
+		}
+	}
+
+	// Close menu when route changes
+	$effect(() => {
+		$page.url.pathname;
+		closeMobileMenu();
+	});
 </script>
 
-<header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+<svelte:window onclick={handleClickOutside} />
+
+<header bind:this={headerRef} class="bg-white border-b border-gray-200 sticky top-0 z-50">
 	<div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-		<div class="flex justify-between items-center h-14">
+		<div class="flex justify-between items-center h-12 sm:h-14">
 			<!-- Logo -->
-			<a href="/today" class="text-base sm:text-lg font-bold text-primary-600 flex-shrink-0 truncate max-w-[140px] sm:max-w-none">
-				HelpMotivateMe
+			<a href="/today" class="text-base sm:text-lg font-bold text-primary-600 flex-shrink-0">
+				<span class="hidden xs:inline">HelpMotivateMe</span>
+				<span class="xs:hidden">HMM</span>
 			</a>
 
-			<!-- Navigation Links -->
-			<nav class="hidden sm:flex items-center gap-1">
+			<!-- Desktop Navigation Links -->
+			<nav class="hidden md:flex items-center gap-1">
 				<a
 					href="/today"
 					class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {isActive('/today')
@@ -61,14 +85,6 @@
 				>
 					{$t('nav.identities')}
 				</a>
-				<!--<a
-					href="/analytics"
-					class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {isActive('/analytics')
-						? 'bg-primary-100 text-primary-700'
-						: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
-				>
-					{$t('nav.analytics')}
-				</a>-->
 				<a
 					href="/buddies"
 					class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {isActive('/buddies')
@@ -79,70 +95,99 @@
 				</a>
 			</nav>
 
-			<!-- User Menu -->
-			<div class="flex items-center gap-3">
+			<!-- Right Side: Mobile Menu Button + User Menu -->
+			<div class="flex items-center gap-2">
+				<!-- Mobile Menu Button -->
+				<button
+					onclick={() => (showMobileMenu = !showMobileMenu)}
+					class="md:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg touch-manipulation"
+					aria-label="Toggle menu"
+				>
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						{#if showMobileMenu}
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+						{:else}
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+						{/if}
+					</svg>
+				</button>
+				
 				<UserDropdown />
 			</div>
 		</div>
-
-		<!-- Mobile Navigation -->
-		<nav class="sm:hidden flex items-center gap-1 pb-2 overflow-x-auto scrollbar-hide">
-			<a
-				href="/today"
-				class="px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 {isActive('/today')
-					? 'bg-primary-100 text-primary-700'
-					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
-			>
-				{$t('nav.today')}
-			</a>
-			<a
-				href="/goals"
-				class="px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 {isActive('/goals')
-					? 'bg-primary-100 text-primary-700'
-					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
-			>
-				{$t('nav.goals')}
-			</a>
-			<a
-				href="/habit-stacks"
-				class="px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 {isActive('/habit-stacks')
-					? 'bg-primary-100 text-primary-700'
-					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
-			>
-				{$t('nav.habitStacks')}
-			</a>
-			<a
-				href="/journal"
-				class="px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 {isActive('/journal')
-					? 'bg-primary-100 text-primary-700'
-					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
-			>
-				{$t('nav.journal')}
-			</a>
-			<a
-				href="/identities"
-				class="px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 {isActive('/identities')
-					? 'bg-primary-100 text-primary-700'
-					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
-			>
-				{$t('nav.identities')}
-			</a>
-			<a
-				href="/analytics"
-				class="px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 {isActive('/analytics')
-					? 'bg-primary-100 text-primary-700'
-					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
-			>
-				{$t('nav.analytics')}
-			</a>
-			<a
-				href="/buddies"
-				class="px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 {isActive('/buddies')
-					? 'bg-primary-100 text-primary-700'
-					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
-			>
-				{$t('nav.buddies')}
-			</a>
-		</nav>
 	</div>
+
+	<!-- Mobile Dropdown Menu -->
+	{#if showMobileMenu}
+		<div class="md:hidden border-t border-gray-200 bg-white animate-slide-down">
+			<nav class="max-w-7xl mx-auto px-3 py-2 flex flex-col gap-1">
+				<a
+					href="/today"
+					class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors touch-manipulation {isActive('/today')
+						? 'bg-primary-100 text-primary-700'
+						: 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}"
+				>
+					<svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+					</svg>
+					<span>{$t('nav.today')}</span>
+				</a>
+				<a
+					href="/goals"
+					class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors touch-manipulation {isActive('/goals')
+						? 'bg-primary-100 text-primary-700'
+						: 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}"
+				>
+					<svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+					</svg>
+					<span>{$t('nav.goals')}</span>
+				</a>
+				<a
+					href="/habit-stacks"
+					class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors touch-manipulation {isActive('/habit-stacks')
+						? 'bg-primary-100 text-primary-700'
+						: 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}"
+				>
+					<svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+					</svg>
+					<span>{$t('nav.habitStacks')}</span>
+				</a>
+				<a
+					href="/journal"
+					class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors touch-manipulation {isActive('/journal')
+						? 'bg-primary-100 text-primary-700'
+						: 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}"
+				>
+					<svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+					</svg>
+					<span>{$t('nav.journal')}</span>
+				</a>
+				<a
+					href="/identities"
+					class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors touch-manipulation {isActive('/identities')
+						? 'bg-primary-100 text-primary-700'
+						: 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}"
+				>
+					<svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+					</svg>
+					<span>{$t('nav.identities')}</span>
+				</a>
+				<a
+					href="/buddies"
+					class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors touch-manipulation {isActive('/buddies')
+						? 'bg-primary-100 text-primary-700'
+						: 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}"
+				>
+					<svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+					</svg>
+					<span>{$t('nav.buddies')}</span>
+				</a>
+			</nav>
+		</div>
+	{/if}
 </header>
