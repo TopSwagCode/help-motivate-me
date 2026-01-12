@@ -5,4 +5,5 @@ public interface IPromptProvider
     string IdentitySystemPrompt { get; }
     string HabitStackSystemPrompt { get; }
     string GoalsSystemPrompt { get; }
+    string GeneralTaskCreationPrompt { get; }
 }

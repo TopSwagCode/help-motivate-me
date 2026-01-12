@@ -460,6 +460,40 @@
 			"deleteFailed": "Failed to delete entry"
 		}
 	},
+	"ai": {
+		"commandBar": {
+			"placeholder": "What would you like to do? (e.g., 'Buy groceries tomorrow')",
+			"thinking": "Thinking...",
+			"hint": "Try: 'Remind me to call mom tomorrow' or 'Every morning after I wake up, I want to stretch'",
+			"examples": "Type or speak naturally - I'll understand tasks, goals, and habits"
+		},
+		"addWithAi": "Add with AI",
+		"describeTask": "Describe a task",
+		"describeGoal": "Describe a goal",
+		"describeHabit": "Describe a routine",
+		"tellMeWhatToWorkOn": "Tell me what you want to work on",
+		"preview": {
+			"task": "Task",
+			"goal": "Goal",
+			"habitStack": "Habit Stack",
+			"targetDate": "Target",
+			"trigger": "Trigger"
+		},
+		"actions": {
+			"confirm": "Create",
+			"edit": "Edit",
+			"cancel": "Cancel",
+			"task": "Make it a task",
+			"goal": "Make it a goal",
+			"habitStack": "Make it a habit",
+			"makeTask": "Make it a task"
+		},
+		"confidence": {
+			"high": "Ready to create",
+			"medium": "Please clarify",
+			"low": "Need more details"
+		}
+	},
 	"today": {
 		"title": "Today",
 		"greeting": {

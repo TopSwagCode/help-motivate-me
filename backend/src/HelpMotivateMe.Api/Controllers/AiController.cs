@@ -107,6 +107,86 @@ public class AiController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Stream AI chat for general task/goal/habit creation.
+    /// Uses intent classification with confidence scores.
+    /// </summary>
+    [HttpPost("general/chat")]
+    public async Task StreamGeneralChat([FromBody] GeneralChatRequest request, CancellationToken cancellationToken)
+    {
+        var userId = GetUserId();
+
+        Response.ContentType = "text/event-stream";
+        Response.Headers.CacheControl = "no-cache";
+        Response.Headers.Connection = "keep-alive";
+
+        try
+        {
+            // Get user's preferred language
+            var user = await _db.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+            var language = user?.PreferredLanguage ?? Language.English;
+
+            // Get user's identities for context
+            var identities = await _db.Identities
+                .Where(i => i.UserId == userId)
+                .Select(i => new { i.Id, i.Name, i.Icon, i.Description })
+                .ToListAsync(cancellationToken);
+
+            // Build context with identities
+            var context = request.Context ?? new Dictionary<string, object>();
+            context["identities"] = identities;
+
+            var systemPrompt = LocalizedPrompts.BuildGeneralCreationPrompt(language, context);
+
+            await foreach (var chunk in _openAiService.StreamChatCompletionAsync(
+                request.Messages,
+                systemPrompt,
+                userId,
+                cancellationToken))
+            {
+                var json = JsonSerializer.Serialize(chunk);
+                await Response.WriteAsync($"data: {json}\n\n", cancellationToken);
+                await Response.Body.FlushAsync(cancellationToken);
+            }
+
+            await Response.WriteAsync("data: [DONE]\n\n", cancellationToken);
+            await Response.Body.FlushAsync(cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("General chat stream cancelled for user {UserId}", userId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in general chat stream for user {UserId}", userId);
+            await Response.WriteAsync("data: {\"error\": \"An unexpected error occurred while processing the chat request.\"}\n\n", cancellationToken);
+            await Response.Body.FlushAsync(cancellationToken);
+        }
+    }
+
+    /// <summary>
+    /// Get AI context data (user's identities and active goals) for enriching AI interactions.
+    /// </summary>
+    [HttpGet("context")]
+    public async Task<ActionResult<AiContextResponse>> GetAiContext(CancellationToken cancellationToken)
+    {
+        var userId = GetUserId();
+
+        var identities = await _db.Identities
+            .Where(i => i.UserId == userId)
+            .Select(i => new IdentitySummary(i.Id, i.Name, i.Icon, i.Color))
+            .ToListAsync(cancellationToken);
+
+        var goals = await _db.Goals
+            .Where(g => g.UserId == userId && !g.IsCompleted)
+            .Select(g => new GoalSummary(g.Id, g.Title))
+            .ToListAsync(cancellationToken);
+
+        return Ok(new AiContextResponse(identities, goals));
+    }
+
     private Guid GetUserId()
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
