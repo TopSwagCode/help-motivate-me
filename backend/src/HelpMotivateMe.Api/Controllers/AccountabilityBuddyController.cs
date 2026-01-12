@@ -88,11 +88,12 @@ public class AccountabilityBuddyController : ControllerBase
         var buddyUser = await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
         if (buddyUser == null)
         {
-            // Create placeholder user
+            // Create placeholder user with inviter's preferred language
             buddyUser = new User
             {
                 Username = await GenerateUniqueUsername(email.Split('@')[0]),
-                Email = email
+                Email = email,
+                PreferredLanguage = inviter.PreferredLanguage
             };
             _db.Users.Add(buddyUser);
             await _db.SaveChangesAsync();

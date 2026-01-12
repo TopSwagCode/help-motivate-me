@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { auth } from '$lib/stores/auth';
+	import { t } from 'svelte-i18n';
 	import UserDropdown from './UserDropdown.svelte';
 
 	// Helper to check if route is active
@@ -26,7 +27,7 @@
 						? 'bg-primary-100 text-primary-700'
 						: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 				>
-					Today
+					{$t('nav.today')}
 				</a>
 				<a
 					href="/goals"
@@ -34,7 +35,7 @@
 						? 'bg-primary-100 text-primary-700'
 						: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 				>
-					Goals
+					{$t('nav.goals')}
 				</a>
 				<a
 					href="/habit-stacks"
@@ -42,7 +43,7 @@
 						? 'bg-primary-100 text-primary-700'
 						: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 				>
-					Stacks
+					{$t('nav.habitStacks')}
 				</a>
 				<a
 					href="/journal"
@@ -50,7 +51,7 @@
 						? 'bg-primary-100 text-primary-700'
 						: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 				>
-					Journal
+					{$t('nav.journal')}
 				</a>
 				<a
 					href="/identities"
@@ -58,7 +59,7 @@
 						? 'bg-primary-100 text-primary-700'
 						: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 				>
-					Identities
+					{$t('nav.identities')}
 				</a>
 				<!--<a
 					href="/analytics"
@@ -66,7 +67,7 @@
 						? 'bg-primary-100 text-primary-700'
 						: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 				>
-					Analytics
+					{$t('nav.analytics')}
 				</a>-->
 				<a
 					href="/buddies"
@@ -74,7 +75,7 @@
 						? 'bg-primary-100 text-primary-700'
 						: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 				>
-					Buddies
+					{$t('nav.buddies')}
 				</a>
 			</nav>
 
@@ -92,7 +93,7 @@
 					? 'bg-primary-100 text-primary-700'
 					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 			>
-				Today
+				{$t('nav.today')}
 			</a>
 			<a
 				href="/goals"
@@ -100,7 +101,7 @@
 					? 'bg-primary-100 text-primary-700'
 					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 			>
-				Goals
+				{$t('nav.goals')}
 			</a>
 			<a
 				href="/habit-stacks"
@@ -108,7 +109,7 @@
 					? 'bg-primary-100 text-primary-700'
 					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 			>
-				Stacks
+				{$t('nav.habitStacks')}
 			</a>
 			<a
 				href="/journal"
@@ -116,7 +117,7 @@
 					? 'bg-primary-100 text-primary-700'
 					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 			>
-				Journal
+				{$t('nav.journal')}
 			</a>
 			<a
 				href="/identities"
@@ -124,7 +125,7 @@
 					? 'bg-primary-100 text-primary-700'
 					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 			>
-				Identities
+				{$t('nav.identities')}
 			</a>
 			<a
 				href="/analytics"
@@ -132,7 +133,7 @@
 					? 'bg-primary-100 text-primary-700'
 					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 			>
-				Analytics
+				{$t('nav.analytics')}
 			</a>
 			<a
 				href="/buddies"
@@ -140,7 +141,7 @@
 					? 'bg-primary-100 text-primary-700'
 					: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
 			>
-				Buddies
+				{$t('nav.buddies')}
 			</a>
 		</nav>
 	</div>
