@@ -8,3 +8,4 @@ export * from './analytics';
 export * from './journal';
 export * from './admin';
 export * from './buddy';
+export * from './notifications';

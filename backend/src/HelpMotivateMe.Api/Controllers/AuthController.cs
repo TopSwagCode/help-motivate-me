@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using HelpMotivateMe.Core.DTOs.Auth;
+using HelpMotivateMe.Core.DTOs.Notifications;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
@@ -505,6 +506,85 @@ public class AuthController : ControllerBase
         return Ok(MapToResponse(user));
     }
 
+    [HttpGet("notification-preferences")]
+    [Authorize]
+    public async Task<ActionResult<NotificationPreferencesResponse>> GetNotificationPreferences()
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
+
+        var prefs = await _db.NotificationPreferences
+            .FirstOrDefaultAsync(np => np.UserId == userId);
+
+        if (prefs == null)
+        {
+            // Create default preferences for this user
+            prefs = new NotificationPreferences { UserId = userId.Value };
+            _db.NotificationPreferences.Add(prefs);
+            await _db.SaveChangesAsync();
+        }
+
+        return Ok(MapToNotificationPreferencesResponse(prefs));
+    }
+
+    [HttpPatch("notification-preferences")]
+    [Authorize]
+    public async Task<ActionResult<NotificationPreferencesResponse>> UpdateNotificationPreferences(
+        [FromBody] UpdateNotificationPreferencesRequest request)
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
+
+        var prefs = await _db.NotificationPreferences
+            .FirstOrDefaultAsync(np => np.UserId == userId);
+
+        if (prefs == null)
+        {
+            // Create default preferences if none exist
+            prefs = new NotificationPreferences { UserId = userId.Value };
+            _db.NotificationPreferences.Add(prefs);
+        }
+
+        // Update only the fields that were provided (partial update for auto-save)
+        if (request.NotificationsEnabled.HasValue)
+            prefs.NotificationsEnabled = request.NotificationsEnabled.Value;
+        if (request.EmailEnabled.HasValue)
+            prefs.EmailEnabled = request.EmailEnabled.Value;
+        if (request.SmsEnabled.HasValue)
+            prefs.SmsEnabled = request.SmsEnabled.Value;
+        if (request.HabitRemindersEnabled.HasValue)
+            prefs.HabitRemindersEnabled = request.HabitRemindersEnabled.Value;
+        if (request.GoalRemindersEnabled.HasValue)
+            prefs.GoalRemindersEnabled = request.GoalRemindersEnabled.Value;
+        if (request.DailyDigestEnabled.HasValue)
+            prefs.DailyDigestEnabled = request.DailyDigestEnabled.Value;
+        if (request.StreakAlertsEnabled.HasValue)
+            prefs.StreakAlertsEnabled = request.StreakAlertsEnabled.Value;
+        if (request.MotivationalQuotesEnabled.HasValue)
+            prefs.MotivationalQuotesEnabled = request.MotivationalQuotesEnabled.Value;
+        if (request.WeeklyReviewEnabled.HasValue)
+            prefs.WeeklyReviewEnabled = request.WeeklyReviewEnabled.Value;
+        if (request.BuddyUpdatesEnabled.HasValue)
+            prefs.BuddyUpdatesEnabled = request.BuddyUpdatesEnabled.Value;
+        if (request.SelectedDays.HasValue)
+            prefs.SelectedDays = (NotificationDays)request.SelectedDays.Value;
+        if (request.PreferredTimeSlot != null && Enum.TryParse<TimeSlot>(request.PreferredTimeSlot, true, out var timeSlot))
+            prefs.PreferredTimeSlot = timeSlot;
+        if (request.CustomTimeStart != null)
+            prefs.CustomTimeStart = TimeOnly.TryParse(request.CustomTimeStart, out var startTime) ? startTime : null;
+        if (request.CustomTimeEnd != null)
+            prefs.CustomTimeEnd = TimeOnly.TryParse(request.CustomTimeEnd, out var endTime) ? endTime : null;
+        if (request.TimezoneId != null)
+            prefs.TimezoneId = request.TimezoneId;
+        if (request.UtcOffsetMinutes.HasValue)
+            prefs.UtcOffsetMinutes = request.UtcOffsetMinutes.Value;
+
+        prefs.UpdatedAt = DateTime.UtcNow;
+
+        await _db.SaveChangesAsync();
+        return Ok(MapToNotificationPreferencesResponse(prefs));
+    }
+
     [HttpPost("login-with-buddy-token")]
     public async Task<ActionResult<BuddyLoginResponse>> LoginWithBuddyToken([FromBody] LoginWithTokenRequest request)
     {
@@ -648,5 +728,28 @@ public class AuthController : ControllerBase
     private async Task<bool> IsEmailWhitelisted(string email)
     {
         return await _db.WhitelistEntries.AnyAsync(w => w.Email.ToLower() == email.ToLower());
+    }
+
+    private static NotificationPreferencesResponse MapToNotificationPreferencesResponse(NotificationPreferences prefs)
+    {
+        return new NotificationPreferencesResponse(
+            prefs.NotificationsEnabled,
+            prefs.EmailEnabled,
+            prefs.SmsEnabled,
+            prefs.PhoneEnabled,
+            prefs.HabitRemindersEnabled,
+            prefs.GoalRemindersEnabled,
+            prefs.DailyDigestEnabled,
+            prefs.StreakAlertsEnabled,
+            prefs.MotivationalQuotesEnabled,
+            prefs.WeeklyReviewEnabled,
+            prefs.BuddyUpdatesEnabled,
+            (int)prefs.SelectedDays,
+            prefs.PreferredTimeSlot.ToString(),
+            prefs.CustomTimeStart?.ToString("HH:mm"),
+            prefs.CustomTimeEnd?.ToString("HH:mm"),
+            prefs.TimezoneId,
+            prefs.UtcOffsetMinutes
+        );
     }
 }

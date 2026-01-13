@@ -251,6 +251,82 @@
 			"restarting": "Resetting...",
 			"confirmReset": "Are you sure you want to restart the onboarding process? This will take you through the setup wizard again.",
 			"failedReset": "Failed to reset onboarding"
+		},
+		"notifications": {
+			"title": "Notifications",
+			"description": "Configure when and how you receive notifications",
+			"master": {
+				"label": "Enable Notifications",
+				"description": "Turn all notifications on or off"
+			},
+			"channels": {
+				"title": "Delivery Channels",
+				"description": "Choose how you want to receive notifications",
+				"email": "Email",
+				"emailDescription": "Receive notifications via email",
+				"sms": "SMS",
+				"smsDescription": "Receive notifications via text message",
+				"phone": "Phone Call",
+				"phoneDescription": "Receive notifications via phone call",
+				"comingSoon": "Coming Soon"
+			},
+			"types": {
+				"title": "Notification Types",
+				"description": "Choose which notifications you want to receive",
+				"habitReminders": "Habit Reminders",
+				"habitRemindersDescription": "Daily reminders for your habit stacks",
+				"goalReminders": "Goal Reminders",
+				"goalRemindersDescription": "Updates about your goals and deadlines",
+				"dailyDigest": "Daily Digest",
+				"dailyDigestDescription": "Summary of your daily tasks and progress",
+				"streakAlerts": "Streak Alerts",
+				"streakAlertsDescription": "Alerts when your streak is at risk",
+				"motivationalQuotes": "Motivational Quotes",
+				"motivationalQuotesDescription": "Inspiring quotes to keep you motivated",
+				"weeklyReview": "Weekly Review",
+				"weeklyReviewDescription": "Weekly summary of your achievements",
+				"buddyUpdates": "Buddy Updates",
+				"buddyUpdatesDescription": "Alerts when your accountability buddy makes progress"
+			},
+			"schedule": {
+				"title": "Notification Schedule",
+				"description": "Choose when you'd like to receive notifications",
+				"estimatedNote": "Note: Notification timing is estimated and may vary slightly",
+				"days": {
+					"title": "Days",
+					"monday": "Mon",
+					"tuesday": "Tue",
+					"wednesday": "Wed",
+					"thursday": "Thu",
+					"friday": "Fri",
+					"saturday": "Sat",
+					"sunday": "Sun",
+					"selectAll": "All",
+					"weekdays": "Weekdays",
+					"weekend": "Weekend"
+				},
+				"timeSlot": {
+					"title": "Preferred Time",
+					"morning": "Morning",
+					"morningTime": "6:00 AM - 12:00 PM",
+					"afternoon": "Afternoon",
+					"afternoonTime": "12:00 PM - 6:00 PM",
+					"evening": "Evening",
+					"eveningTime": "6:00 PM - 10:00 PM",
+					"custom": "Custom",
+					"customStart": "Start time",
+					"customEnd": "End time"
+				},
+				"timezone": {
+					"title": "Timezone",
+					"detected": "Detected",
+					"change": "Change"
+				}
+			},
+			"errors": {
+				"loadFailed": "Failed to load notification preferences",
+				"saveFailed": "Failed to save notification preferences"
+			}
 		}
 	},
 	"goals": {

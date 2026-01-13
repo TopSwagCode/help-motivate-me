@@ -251,6 +251,82 @@
 			"restarting": "Nulstiller...",
 			"confirmReset": "Er du sikker på, at du vil genstarte onboarding-processen? Dette vil tage dig gennem opsætningsguiden igen.",
 			"failedReset": "Kunne ikke nulstille onboarding"
+		},
+		"notifications": {
+			"title": "Notifikationer",
+			"description": "Konfigurer hvornår og hvordan du modtager notifikationer",
+			"master": {
+				"label": "Aktiver notifikationer",
+				"description": "Slå alle notifikationer til eller fra"
+			},
+			"channels": {
+				"title": "Leveringskanaler",
+				"description": "Vælg hvordan du vil modtage notifikationer",
+				"email": "E-mail",
+				"emailDescription": "Modtag notifikationer via e-mail",
+				"sms": "SMS",
+				"smsDescription": "Modtag notifikationer via SMS",
+				"phone": "Telefonopkald",
+				"phoneDescription": "Modtag notifikationer via telefonopkald",
+				"comingSoon": "Kommer snart"
+			},
+			"types": {
+				"title": "Notifikationstyper",
+				"description": "Vælg hvilke notifikationer du vil modtage",
+				"habitReminders": "Vanepåmindelser",
+				"habitRemindersDescription": "Daglige påmindelser om dine vanestakke",
+				"goalReminders": "Målpåmindelser",
+				"goalRemindersDescription": "Opdateringer om dine mål og deadlines",
+				"dailyDigest": "Daglig oversigt",
+				"dailyDigestDescription": "Oversigt over dine daglige opgaver og fremskridt",
+				"streakAlerts": "Stribe-advarsler",
+				"streakAlertsDescription": "Advarsler når din stribe er i fare",
+				"motivationalQuotes": "Motiverende citater",
+				"motivationalQuotesDescription": "Inspirerende citater for at holde dig motiveret",
+				"weeklyReview": "Ugentlig gennemgang",
+				"weeklyReviewDescription": "Ugentlig oversigt over dine præstationer",
+				"buddyUpdates": "Venneopdateringer",
+				"buddyUpdatesDescription": "Advarsler når din accountability-ven gør fremskridt"
+			},
+			"schedule": {
+				"title": "Notifikationsplan",
+				"description": "Vælg hvornår du gerne vil modtage notifikationer",
+				"estimatedNote": "Bemærk: Notifikationstidspunktet er estimeret og kan variere lidt",
+				"days": {
+					"title": "Dage",
+					"monday": "Man",
+					"tuesday": "Tir",
+					"wednesday": "Ons",
+					"thursday": "Tor",
+					"friday": "Fre",
+					"saturday": "Lør",
+					"sunday": "Søn",
+					"selectAll": "Alle",
+					"weekdays": "Hverdage",
+					"weekend": "Weekend"
+				},
+				"timeSlot": {
+					"title": "Foretrukket tid",
+					"morning": "Morgen",
+					"morningTime": "6:00 - 12:00",
+					"afternoon": "Eftermiddag",
+					"afternoonTime": "12:00 - 18:00",
+					"evening": "Aften",
+					"eveningTime": "18:00 - 22:00",
+					"custom": "Brugerdefineret",
+					"customStart": "Starttid",
+					"customEnd": "Sluttid"
+				},
+				"timezone": {
+					"title": "Tidszone",
+					"detected": "Registreret",
+					"change": "Ændr"
+				}
+			},
+			"errors": {
+				"loadFailed": "Kunne ikke indlæse notifikationsindstillinger",
+				"saveFailed": "Kunne ikke gemme notifikationsindstillinger"
+			}
 		}
 	},
 	"goals": {
