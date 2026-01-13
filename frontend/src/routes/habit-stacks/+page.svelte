@@ -13,6 +13,7 @@
 		deleteStackItem,
 		reorderHabitStacks
 	} from '$lib/api/habitStacks';
+	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
 	import type {
 		HabitStack,
 		HabitStackItemRequest
@@ -357,7 +358,10 @@
 	<main class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
 		<!-- Page Header -->
 		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
-			<h1 class="text-xl sm:text-2xl font-bold text-gray-900">{$t('habitStacks.pageTitle')}</h1>
+			<InfoOverlay 
+				title={$t('habitStacks.pageTitle')} 
+				description={$t('habitStacks.info.description')} 
+			/>
 			<div class="flex items-center gap-2">
 				{#if stacks.length > 1}
 					<button

@@ -15,6 +15,7 @@
 		getLinkableTasks
 	} from '$lib/api/journal';
 	import { processMultipleImages, formatFileSize } from '$lib/utils/imageProcessing';
+	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
 	import type {
 		JournalEntry,
 		JournalImage,
@@ -329,7 +330,10 @@
 <div class="min-h-screen bg-gray-50">
 	<main class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
 		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
-			<h1 class="text-xl sm:text-2xl font-bold text-gray-900">{$t('journal.pageTitle')}</h1>
+			<InfoOverlay 
+				title={$t('journal.pageTitle')} 
+				description={$t('journal.info.description')} 
+			/>
 			<button onclick={openCreateModal} class="btn-primary text-sm w-full sm:w-auto justify-center">{$t('journal.newEntry')}</button>
 		</div>
 

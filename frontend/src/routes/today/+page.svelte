@@ -10,6 +10,7 @@
 	import { completeTask, postponeTask, updateTask, completeMultipleTasks } from '$lib/api/tasks';
 	import { getIdentities } from '$lib/api/identities';
 	import WelcomePopup from '$lib/components/onboarding/WelcomePopup.svelte';
+	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
 	import type { TodayView, TodayTask, Identity } from '$lib/types';
 
 	let todayData = $state<TodayView | null>(null);
@@ -541,6 +542,14 @@
 	<!-- Date Navigation Sub-header -->
 	<div class="bg-white border-b border-gray-100">
 		<div class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">
+			<!-- Page Title with Info -->
+			<div class="flex items-center justify-between pt-4 pb-2">
+				<InfoOverlay 
+					title={$t('today.title')} 
+					description={$t('today.info.description')} 
+				/>
+			</div>
+			
 			<div class="flex items-center justify-center py-3 gap-2 sm:gap-4">
 				<button
 					onclick={goToPreviousDay}

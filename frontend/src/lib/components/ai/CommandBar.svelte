@@ -204,8 +204,8 @@
 				</div>
 			{:else}
 				<!-- Input area -->
-				<div class="flex items-center gap-3 p-4 border-b border-gray-200">
-					<svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<div class="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border-b border-gray-200">
+					<svg class="w-5 h-5 text-gray-400 flex-shrink-0 hidden xs:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
 							stroke-linecap="round"
 							stroke-linejoin="round"
@@ -218,11 +218,13 @@
 						bind:value={inputValue}
 						onkeydown={(e) => e.key === 'Enter' && handleSubmit()}
 						placeholder={$t('ai.commandBar.placeholder')}
-						class="flex-1 text-base outline-none bg-transparent placeholder-gray-400"
+						class="flex-1 text-sm sm:text-base outline-none bg-transparent placeholder-gray-400 min-w-0"
 						disabled={isLoading || isCreating}
 					/>
-					<VoiceInput onTranscription={handleVoiceTranscription} disabled={isLoading || isCreating} />
-					<kbd class="hidden sm:inline-block px-2 py-1 text-xs text-gray-500 bg-gray-100 rounded border border-gray-200">
+					<div class="flex-shrink-0">
+						<VoiceInput onTranscription={handleVoiceTranscription} disabled={isLoading || isCreating} />
+					</div>
+					<kbd class="hidden sm:inline-block px-2 py-1 text-xs text-gray-500 bg-gray-100 rounded border border-gray-200 flex-shrink-0">
 						Esc
 					</kbd>
 				</div>

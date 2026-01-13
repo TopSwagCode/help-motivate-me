@@ -28,7 +28,12 @@
 		"confirm": "Confirm",
 		"search": "Search",
 		"noResults": "No results found",
-		"tryAgain": "Try again"
+		"tryAgain": "Try again",
+		"gotIt": "Got it",
+		"info": {
+			"moreQuestions": "Have more questions?",
+			"visitFaq": "Visit our FAQ page"
+		}
 	},
 	"language": {
 		"select": "Select Language",
@@ -288,6 +293,9 @@
 		"markIncomplete": "Mark as incomplete",
 		"changeDueDate": "Change Due Date",
 		"dueDate": "Due date",
+		"info": {
+			"description": "<p><strong>Goals</strong> give direction to your efforts and help you track progress over time.</p><p>Great goals are:</p><ul><li><strong>Specific</strong> - Clear and well-defined</li><li><strong>Meaningful</strong> - Connected to your identity</li><li><strong>Actionable</strong> - Can be broken into smaller tasks</li></ul><p>Examples: 'Run a marathon by December 2025', 'Write and publish my first book', 'Learn conversational Spanish'</p><p>You can set target dates and break goals into smaller, manageable tasks to track your progress.</p>"
+		},
 		"form": {
 			"title": "Goal Title",
 			"titlePlaceholder": "What do you want to achieve?",
@@ -307,6 +315,9 @@
 	"identities": {
 		"title": "Identities",
 		"pageTitle": "My Identities",
+		"info": {
+			"description": "<p><strong>Identities</strong> help you focus on who you want to become rather than just what you want to achieve.</p><p>Instead of saying <em>\"I want to run more,\"</em> you become <em>\"I am a runner.\"</em> This shift from goals to identity makes habits feel natural and sustainable.</p><ul><li><strong>Define your identity:</strong> Choose who you want to be (e.g., \"A healthy person\", \"A lifelong learner\")</li><li><strong>Link habits:</strong> Every small action becomes a vote for that identity</li><li><strong>Build consistency:</strong> When your habits align with your identity, progress feels authentic</li></ul><p>Remember: You don't have to be perfect to claim an identity. Every time you act in alignment with it, you reinforce who you're becoming.</p>"
+		},
 		"newIdentity": "New Identity",
 		"empty": "No identities yet. Define who you want to become!",
 		"emptyTitle": "No identities yet",
@@ -335,6 +346,9 @@
 	"habitStacks": {
 		"title": "Habit Stacks",
 		"pageTitle": "Habit Stacks",
+		"info": {
+			"description": "<p><strong>Habit Stacking</strong> is a powerful technique where you link a new habit to something you already do consistently.</p><p>The formula is simple: <em>\"After I [existing habit], I will [new habit].\"</em></p><ul><li><strong>Use existing cues:</strong> Anchor new behaviors to things you already do (e.g., \"After I pour my coffee, I will review my goals\")</li><li><strong>Build routines:</strong> Chain multiple small habits together to create powerful daily rituals</li><li><strong>Reduce friction:</strong> By connecting habits, you remove the need to remember or decide when to do them</li></ul><p>Start small—even a 1-minute habit stacked onto an existing routine can lead to lasting change.</p>"
+		},
 		"newStack": "New Stack",
 		"empty": "No habit stacks yet. Create your first routine!",
 		"emptyTitle": "No habit stacks yet",
@@ -409,6 +423,9 @@
 	"journal": {
 		"title": "Journal",
 		"pageTitle": "Journal",
+		"info": {
+			"description": "<p><strong>Journaling</strong> helps you reflect on your progress, capture insights, and stay aware of patterns in your behavior.</p><p>Use your journal to document your journey, celebrate wins, and learn from challenges.</p><ul><li><strong>Reflect daily:</strong> Write about what worked, what didn't, and how you felt</li><li><strong>Link entries:</strong> Connect journal entries to specific habit stacks or tasks for context</li><li><strong>Add images:</strong> Include photos to capture moments and make entries more memorable</li><li><strong>Track patterns:</strong> Over time, your journal reveals trends and helps you understand yourself better</li></ul><p>Your journal is a safe space to be honest, explore your thoughts, and celebrate your growth.</p>"
+		},
 		"newEntry": "New Entry",
 		"empty": "No journal entries yet. Start reflecting on your journey!",
 		"emptyTitle": "No journal entries yet",
@@ -505,6 +522,9 @@
 	},
 	"today": {
 		"title": "Today",
+		"info": {
+			"description": "<p><strong>Today</strong> is your daily command center—a focused view of what matters most right now.</p><p>See all your habit stacks, tasks, and journal entries in one place, organized by day.</p><ul><li><strong>7-day timeline:</strong> View a week at a glance to see what's coming and what you've completed</li><li><strong>Habit stacks:</strong> Check off each habit in your daily routines and build streaks</li><li><strong>Tasks & votes:</strong> Complete tasks and see how they contribute to your identity growth</li><li><strong>Quick actions:</strong> Postpone tasks, add journal entries, or create new habits on the fly</li></ul><p>Focus on today, but always keep an eye on tomorrow. Small daily actions compound into remarkable long-term results.</p>"
+		},
 		"greeting": {
 			"morning": "Good morning",
 			"afternoon": "Good afternoon",
@@ -591,6 +611,9 @@
 	"buddies": {
 		"title": "Accountability Buddies",
 		"pageTitle": "Accountability Buddies",
+		"info": {
+			"description": "<p><strong>Accountability Buddies</strong> are people who help you stay on track and provide encouragement along your journey.</p><p>Sharing your progress with others makes you more likely to follow through on your commitments.</p><ul><li><strong>Invite buddies:</strong> Send email invitations to friends, family, or mentors</li><li><strong>Share progress:</strong> Your buddies can view your daily habit completion and tasks</li><li><strong>Mutual support:</strong> You can also be someone else's accountability buddy</li><li><strong>Encouragement:</strong> Buddies can leave notes in your journal to cheer you on</li></ul><p>Remember: Accountability isn't about judgment—it's about having someone in your corner who believes in your ability to grow.</p>"
+		},
 		"empty": "No buddies yet. Invite someone to help keep you accountable!",
 		"invite": {
 			"title": "Invite a New Accountability Buddy",

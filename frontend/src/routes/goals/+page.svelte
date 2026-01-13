@@ -7,6 +7,7 @@
 	import { getGoals, createGoal } from '$lib/api/goals';
 	import type { Goal, CreateGoalRequest } from '$lib/types';
 	import GoalForm from '$lib/components/goals/GoalForm.svelte';
+	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
 
 	let goals = $state<Goal[]>([]);
 	let loading = $state(true);
@@ -56,7 +57,10 @@
 <div class="min-h-screen bg-gray-50">
 	<main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
 		<div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6 sm:mb-8">
-			<h1 class="text-xl sm:text-2xl font-bold text-gray-900">{$t('goals.pageTitle')}</h1>
+			<InfoOverlay 
+				title={$t('goals.pageTitle')} 
+				description={$t('goals.info.description')} 
+			/>
 			<button onclick={openModal} class="btn-primary w-full sm:w-auto justify-center">
 				<svg class="w-5 h-5 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
