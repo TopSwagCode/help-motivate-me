@@ -393,21 +393,6 @@
 				>
 			</div>
 		{:else}
-			<!-- Info Card -->
-			<div class="card p-6 mb-6 bg-gradient-to-r from-purple-50 to-pink-50">
-				<h2 class="font-semibold text-gray-900 mb-2">{$t('habitStacks.infoCard.title')}</h2>
-				<p class="text-sm text-gray-600 mb-4">
-					{$t('habitStacks.infoCard.description')}
-				</p>
-
-				<div class="mt-4 border-t border-pink-100 pt-4">
-					<h3 class="text-sm font-medium text-gray-800 mb-1">{$t('habitStacks.infoCard.createTitle')}</h3>
-					<p class="text-sm text-gray-600">
-						{$t('habitStacks.infoCard.createDescription')}
-					</p>
-				</div>
-			</div>
-
 			{#if stacks.length > 0}
 				<div class="space-y-4">
 					{#each stacks as stack (stack.id)}
