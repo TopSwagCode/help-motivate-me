@@ -28,7 +28,13 @@
 		"confirm": "Bekræft",
 		"search": "Søg",
 		"noResults": "Ingen resultater fundet",
-		"tryAgain": "Prøv igen"
+		"tryAgain": "Prøv igen",
+		"gotIt": "Forstået",
+		"info": {
+			"whatIsThis": "Hvad er dette?",
+			"moreQuestions": "Har du flere spørgsmål?",
+			"visitFaq": "Besøg vores FAQ-side"
+		}
 	},
 	"language": {
 		"select": "Vælg sprog",
@@ -249,6 +255,9 @@
 	"goals": {
 		"title": "Mål",
 		"pageTitle": "Mine mål",
+		"info": {
+			"description": "<p><strong>Mål</strong> giver retning til dine bestræbelser og hjælper dig med at fokusere på det, der betyder mest.</p><p>Brug SMART-metoden til at skabe mål, der er <em>Specifikke, Målbare, Opnåelige, Relevante og Tidsbegrænsede.</em></p><ul><li><strong>Link til identiteter:</strong> Forbind hvert mål med en identitet for at gøre det mere meningsfuldt</li><li><strong>Opdel i opgaver:</strong> Opdel store mål i mindre, håndterbare opgaver</li><li><strong>Spor fremskridt:</strong> Se hvor mange opgaver du har fuldført mod dit mål</li><li><strong>Fejr sejre:</strong> Marker mål som fuldført og reflekter over din rejse</li></ul><p>Husk: Mål giver dig en destination, men vaner er den transportform, der bringer dig derhen.</p>"
+		},
 		"newGoal": "Nyt mål",
 		"empty": "Ingen mål endnu. Opret dit første mål for at komme i gang!",
 		"emptyTitle": "Ingen mål endnu",
@@ -307,6 +316,9 @@
 	"identities": {
 		"title": "Identiteter",
 		"pageTitle": "Mine identiteter",
+		"info": {
+			"description": "<p><strong>Identiteter</strong> hjælper dig med at fokusere på hvem du vil blive snarere end kun hvad du vil opnå.</p><p>I stedet for at sige <em>\"Jeg vil løbe mere,\"</em> bliver du <em>\"Jeg er en løber.\"</em> Dette skift fra mål til identitet får vaner til at føles naturlige og bæredygtige.</p><ul><li><strong>Definer din identitet:</strong> Vælg hvem du vil være (f.eks. \"En sund person\", \"En livslang lærende\")</li><li><strong>Forbind vaner:</strong> Hver lille handling bliver en stemme for den identitet</li><li><strong>Byg konsistens:</strong> Når dine vaner stemmer overens med din identitet, føles fremskridt autentisk</li></ul><p>Husk: Du behøver ikke være perfekt for at påberåbe dig en identitet. Hver gang du handler i overensstemmelse med den, forstærker du hvem du er ved at blive.</p>"
+		},
 		"newIdentity": "Ny identitet",
 		"empty": "Ingen identiteter endnu. Definer hvem du vil blive!",
 		"emptyTitle": "Ingen identiteter endnu",
@@ -335,6 +347,9 @@
 	"habitStacks": {
 		"title": "Vanestakke",
 		"pageTitle": "Vanestakke",
+		"info": {
+			"description": "<p><strong>Vanestabling</strong> er en kraftfuld teknik, hvor du forbinder en ny vane med noget, du allerede gør konsistent.</p><p>Formlen er simpel: <em>\"Efter jeg [eksisterende vane], vil jeg [ny vane].\"</em></p><ul><li><strong>Brug eksisterende signaler:</strong> Forankre ny adfærd til ting, du allerede gør (f.eks. \"Efter jeg hælder min kaffe, vil jeg gennemgå mine mål\")</li><li><strong>Byg rutiner:</strong> Kæd flere små vaner sammen for at skabe kraftfulde daglige ritualer</li><li><strong>Reducer friktion:</strong> Ved at forbinde vaner fjerner du behovet for at huske eller beslutte, hvornår du skal gøre dem</li></ul><p>Start småt—selv en 1-minuts vane stablet oven på en eksisterende rutine kan føre til varig forandring.</p>"
+		},
 		"newStack": "Ny stak",
 		"empty": "Ingen vanestakke endnu. Opret din første rutine!",
 		"emptyTitle": "Ingen vanestakke endnu",
@@ -409,6 +424,9 @@
 	"journal": {
 		"title": "Dagbog",
 		"pageTitle": "Dagbog",
+		"info": {
+			"description": "<p><strong>Dagbog</strong> hjælper dig med at reflektere over dine fremskridt, fange indsigter og forblive opmærksom på mønstre i din adfærd.</p><p>Brug din dagbog til at dokumentere din rejse, fejre sejre og lære af udfordringer.</p><ul><li><strong>Reflekter dagligt:</strong> Skriv om hvad der virkede, hvad der ikke gjorde, og hvordan du følte dig</li><li><strong>Forbind indlæg:</strong> Forbind dagbogsindlæg med specifikke vanestakke eller opgaver for kontekst</li><li><strong>Tilføj billeder:</strong> Inkluder fotos for at fange øjeblikke og gøre indlæg mere mindeværdige</li><li><strong>Spor mønstre:</strong> Over tid afslører din dagbog tendenser og hjælper dig med at forstå dig selv bedre</li></ul><p>Din dagbog er et sikkert rum til at være ærlig, udforske dine tanker og fejre din vækst.</p>"
+		},
 		"newEntry": "Nyt indlæg",
 		"empty": "Ingen dagbogsindlæg endnu. Begynd at reflektere over din rejse!",
 		"emptyTitle": "Ingen dagbogsindlæg endnu",
@@ -505,6 +523,9 @@
 	},
 	"today": {
 		"title": "I dag",
+		"info": {
+			"description": "<p><strong>I dag</strong> er dit daglige kommandocenter—en fokuseret visning af hvad der betyder mest lige nu.</p><p>Se alle dine vanestakke, opgaver og dagbogsindlæg ét sted, organiseret efter dag.</p><ul><li><strong>7-dages tidslinje:</strong> Se en uge på ét blik for at se hvad der kommer og hvad du har fuldført</li><li><strong>Vanestakke:</strong> Afkryds hver vane i dine daglige rutiner og opbyg striber</li><li><strong>Opgaver & stemmer:</strong> Fuldfør opgaver og se hvordan de bidrager til din identitetsvækst</li><li><strong>Hurtige handlinger:</strong> Udskyd opgaver, tilføj dagbogsindlæg eller opret nye vaner på farten</li></ul><p>Fokuser på i dag, men hold altid et øje med i morgen. Små daglige handlinger sammensætter til bemærkelsesværdige langsigtede resultater.</p>"
+		},
 		"greeting": {
 			"morning": "Godmorgen",
 			"afternoon": "God eftermiddag",
@@ -591,6 +612,9 @@
 	"buddies": {
 		"title": "Ansvarsvenner",
 		"pageTitle": "Ansvarsvenner",
+		"info": {
+			"description": "<p><strong>Ansvarsvenner</strong> er mennesker, der hjælper dig med at holde dig på sporet og give opmuntring langs din rejse.</p><p>At dele dine fremskridt med andre gør dig mere tilbøjelig til at følge igennem med dine forpligtelser.</p><ul><li><strong>Inviter venner:</strong> Send e-mailinvitationer til venner, familie eller mentorer</li><li><strong>Del fremskridt:</strong> Dine venner kan se din daglige vanenemmelse og opgaver</li><li><strong>Gensidig støtte:</strong> Du kan også være en andens ansvarsven</li><li><strong>Opmuntring:</strong> Venner kan efterlade noter i din dagbog for at heppe på dig</li></ul><p>Husk: Ansvarlighed handler ikke om dom—det handler om at have nogen i dit hjørne, som tror på din evne til at vokse.</p>"
+		},
 		"empty": "Ingen venner endnu. Inviter nogen til at hjælpe dig med at holde dig ansvarlig!",
 		"invite": {
 			"title": "Inviter en ny ansvarsven",
