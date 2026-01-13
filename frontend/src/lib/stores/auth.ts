@@ -72,6 +72,10 @@ function createAuthStore() {
 			window.location.href = getOAuthUrl('GitHub');
 		},
 
+		loginWithGoogle() {
+			window.location.href = getOAuthUrl('Google');
+		},
+
 		setUser(user: User) {
 			set({ user, loading: false, initialized: true });
 		},

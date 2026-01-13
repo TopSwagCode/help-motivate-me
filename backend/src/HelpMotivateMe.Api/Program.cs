@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using AspNet.Security.OAuth.GitHub;
+using AspNet.Security.OAuth.Google;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
 using HelpMotivateMe.Api.Services;
@@ -107,6 +108,29 @@ builder.Services.AddAuthentication(options =>
                 identity.AddClaim(new Claim("urn:github:login", context.User.GetProperty("login").GetString() ?? ""));
                 identity.AddClaim(new Claim("urn:github:avatar",
                     context.User.GetProperty("avatar_url").GetString() ?? ""));
+            }
+
+            return Task.CompletedTask;
+        };
+    })
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["OAuth:Google:ClientId"] ?? "";
+        options.ClientSecret = builder.Configuration["OAuth:Google:ClientSecret"] ?? "";
+        options.SaveTokens = true;
+        options.CallbackPath = "/api/signin-google";
+
+        options.Events.OnCreatingTicket = context =>
+        {
+            if (context.Principal?.Identity is ClaimsIdentity identity)
+            {
+                // Google already provides email and name claims by default
+                // Add any additional claims from the user info if needed
+                var picture = context.User.GetProperty("picture").GetString();
+                if (!string.IsNullOrEmpty(picture))
+                {
+                    identity.AddClaim(new Claim("urn:google:picture", picture));
+                }
             }
 
             return Task.CompletedTask;
