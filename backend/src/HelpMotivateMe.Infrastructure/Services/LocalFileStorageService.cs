@@ -114,10 +114,17 @@ public class LocalFileStorageService : IStorageService
     public string GetPresignedUrl(string key)
     {
         // For local storage, return a direct URL to the file serving endpoint
-        // The URL format will be: {baseUrl}/api/files/{key}
         // Strip any existing api/files/ prefix to handle legacy data
         var cleanKey = key.StartsWith("api/files/") ? key.Substring("api/files/".Length) : key;
-        return $"{_baseUrl.TrimEnd('/')}/api/files/{cleanKey}";
+        
+        // If baseUrl already ends with /api/files, don't add it again
+        // Otherwise, append /api/files to the base URL
+        var baseUrl = _baseUrl.TrimEnd('/');
+        if (baseUrl.EndsWith("/api/files"))
+        {
+            return $"{baseUrl}/{cleanKey}";
+        }
+        return $"{baseUrl}/api/files/{cleanKey}";
     }
 
     private string GetFullPath(string key)
