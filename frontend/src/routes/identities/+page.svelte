@@ -103,21 +103,6 @@
 				{error}
 			</div>
 		{:else}
-			<!-- Info Card -->
-			<div class="card p-6 mb-6 bg-gradient-to-r from-primary-50 to-indigo-50">
-				<h2 class="font-semibold text-gray-900 mb-2">{$t('identities.infoCard.title')}</h2>
-				<p class="text-sm text-gray-600 mb-4">
-					{$t('identities.infoCard.description')}
-				</p>
-
-				<div class="mt-4 border-t border-indigo-100 pt-4">
-					<h3 class="text-sm font-medium text-gray-800 mb-1">{$t('identities.infoCard.createTitle')}</h3>
-					<p class="text-sm text-gray-600">
-						{$t('identities.infoCard.createDescription')}
-					</p>
-				</div>
-			</div>
-
 			{#if identities.length > 0}
 				<div class="grid gap-4 sm:grid-cols-2">
 					{#each identities as identity (identity.id)}

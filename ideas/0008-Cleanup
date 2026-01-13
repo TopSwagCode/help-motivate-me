@@ -1,1 +1,4 @@
 Lets clean up code ALOT!. Eg. Stop using massive include statements and start using IQueryInterface instead that we looked at before! :) Make code cleaner and easier to use again.
+
+Skal fixe så onbparding er mere minimal og nemt som resten ai. 
+Skal fixe så edit / ai svar virker bedre
