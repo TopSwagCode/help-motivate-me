@@ -4,6 +4,7 @@ export interface TodayView {
 	upcomingTasks: TodayTask[];
 	completedTasks: TodayTask[];
 	identityFeedback: IdentityFeedback[];
+	identityProgress: IdentityProgress[];
 }
 
 export interface TodayTask {
@@ -46,3 +47,18 @@ export interface IdentityFeedback {
 	completionsToday: number;
 	reinforcementMessage: string;
 }
+
+export interface IdentityProgress {
+	id: string;
+	name: string;
+	color: string | null;
+	icon: string | null;
+	score: number;
+	status: IdentityStatus;
+	trend: TrendDirection;
+	accountAgeDays: number;
+	showNumericScore: boolean;
+}
+
+export type IdentityStatus = 'Dormant' | 'Forming' | 'Emerging' | 'Stabilizing' | 'Strong' | 'Automatic';
+export type TrendDirection = 'Up' | 'Down' | 'Neutral';

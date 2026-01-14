@@ -1,5 +1,8 @@
 <script lang="ts">
-	import type { Goal, CreateGoalRequest } from '$lib/types';
+	import { onMount } from 'svelte';
+	import { t } from 'svelte-i18n';
+	import { getIdentities } from '$lib/api/identities';
+	import type { Goal, CreateGoalRequest, Identity } from '$lib/types';
 
 	interface Props {
 		goal?: Goal;
@@ -12,8 +15,18 @@
 	let title = $state(goal?.title ?? '');
 	let description = $state(goal?.description ?? '');
 	let targetDate = $state(goal?.targetDate ?? '');
+	let identityId = $state(goal?.identityId ?? '');
+	let identities = $state<Identity[]>([]);
 	let loading = $state(false);
 	let error = $state('');
+
+	onMount(async () => {
+		try {
+			identities = await getIdentities();
+		} catch (e) {
+			console.error('Failed to load identities', e);
+		}
+	});
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
@@ -26,7 +39,8 @@
 			await onsubmit({
 				title: title.trim(),
 				description: description.trim() || undefined,
-				targetDate: targetDate || undefined
+				targetDate: targetDate || undefined,
+				identityId: identityId || undefined
 			});
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Failed to save goal';
@@ -44,33 +58,33 @@
 	{/if}
 
 	<div>
-		<label for="title" class="label">Goal Title *</label>
+		<label for="title" class="label">{$t('goals.form.title')} *</label>
 		<input
 			id="title"
 			type="text"
 			bind:value={title}
 			required
 			maxlength="255"
-			placeholder="What do you want to achieve?"
+			placeholder={$t('goals.form.titlePlaceholder')}
 			class="input"
 			disabled={loading}
 		/>
 	</div>
 
 	<div>
-		<label for="description" class="label">Description</label>
+		<label for="description" class="label">{$t('goals.form.description')}</label>
 		<textarea
 			id="description"
 			bind:value={description}
 			rows="3"
-			placeholder="Add more details about your goal..."
+			placeholder={$t('goals.form.descriptionPlaceholder')}
 			class="input"
 			disabled={loading}
 		></textarea>
 	</div>
 
 	<div>
-		<label for="targetDate" class="label">Target Date</label>
+		<label for="targetDate" class="label">{$t('goals.form.targetDate')}</label>
 		<input
 			id="targetDate"
 			type="date"
@@ -80,12 +94,32 @@
 		/>
 	</div>
 
+	{#if identities.length > 0}
+		<div>
+			<label for="identityId" class="label">{$t('goals.form.identity')} <span class="text-gray-500 text-sm">({$t('common.optional')})</span></label>
+			<select
+				id="identityId"
+				bind:value={identityId}
+				class="input"
+				disabled={loading}
+			>
+				<option value="">{$t('goals.noIdentity')}</option>
+				{#each identities as identity (identity.id)}
+					<option value={identity.id}>
+						{identity.icon ? `${identity.icon} ` : ''}{identity.name}
+					</option>
+				{/each}
+			</select>
+			<p class="text-xs text-gray-500 mt-1">{$t('goals.form.identityHint')}</p>
+		</div>
+	{/if}
+
 	<div class="flex gap-3 pt-4">
 		<button type="submit" disabled={loading || !title.trim()} class="btn-primary flex-1">
-			{loading ? 'Saving...' : goal ? 'Update Goal' : 'Create Goal'}
+			{loading ? $t('common.saving') : goal ? $t('common.update') : $t('goals.create')}
 		</button>
 		<button type="button" onclick={oncancel} class="btn-secondary" disabled={loading}>
-			Cancel
+			{$t('common.cancel')}
 		</button>
 	</div>
 </form>

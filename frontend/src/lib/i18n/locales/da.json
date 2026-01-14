@@ -358,6 +358,7 @@
 		"addTask": "Tilføj opgave",
 		"addTaskPlaceholder": "Tilføj en ny opgave...",
 		"adding": "Tilføjer...",
+		"identity": "Identitet",
 		"noIdentity": "Ingen identitet",
 		"noPendingTasks": "Ingen ventende opgaver. Tilføj en ovenfor!",
 		"noCompletedTasks": "Ingen fuldførte opgaver endnu",
@@ -387,7 +388,8 @@
 			"taskDescriptionPlaceholder": "Tilføj flere detaljer om denne opgave...",
 			"optional": "valgfri",
 			"identity": "Identitet",
-			"linkToIdentity": "Tilknyt til identitet (valgfri)"
+			"linkToIdentity": "Tilknyt til identitet (valgfri)",
+			"identityHint": "Opgaver oprettet under dette mål vil arve denne identitet som standard"
 		}
 	},
 	"identities": {
@@ -614,6 +616,7 @@
 		"journal": "Dagbog",
 		"jumpToToday": "Gå til i dag",
 		"identityVotes": "Identitetsstemmer",
+		"identityProgress": "Identitetsfremskridt",
 		"completeAll": "Fuldfør alle",
 		"completed": "Fuldført",
 		"noPendingTasks": "Ingen ventende opgaver for denne dag",
@@ -634,6 +637,18 @@
 		"snooze1Week": "Udskyd 1 uge",
 		"movedOutsideView": "Flyttet udenfor 7-dages visning",
 		"dayStreak": "dages stribe",
+		"trendUp": "Stigende trend",
+		"trendDown": "Faldende trend",
+		"trendStable": "Stabil",
+		"scoreHiddenMessage": "Din score vil være synlig om {days} dage",
+		"status": {
+			"dormant": "Sovende",
+			"forming": "Formende",
+			"emerging": "Fremvoksende",
+			"stabilizing": "Stabiliserende",
+			"strong": "Stærk",
+			"automatic": "Automatisk"
+		},
 		"dates": {
 			"today": "I dag",
 			"tomorrow": "I morgen",

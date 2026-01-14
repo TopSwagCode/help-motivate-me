@@ -11,7 +11,7 @@
 	import { getIdentities } from '$lib/api/identities';
 	import WelcomePopup from '$lib/components/onboarding/WelcomePopup.svelte';
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
-	import type { TodayView, TodayTask, Identity } from '$lib/types';
+	import type { TodayView, TodayTask, Identity, IdentityStatus } from '$lib/types';
 
 	let todayData = $state<TodayView | null>(null);
 	let identities = $state<Identity[]>([]);
@@ -534,6 +534,43 @@
 		return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
 	}
 
+	// Identity progress helper functions
+	function getStatusBadgeClasses(status: IdentityStatus): string {
+		switch (status) {
+			case 'Automatic':
+				return 'bg-purple-100 text-purple-800';
+			case 'Strong':
+				return 'bg-green-100 text-green-800';
+			case 'Stabilizing':
+				return 'bg-blue-100 text-blue-800';
+			case 'Emerging':
+				return 'bg-yellow-100 text-yellow-800';
+			case 'Forming':
+				return 'bg-orange-100 text-orange-800';
+			case 'Dormant':
+			default:
+				return 'bg-gray-100 text-gray-600';
+		}
+	}
+
+	function getProgressBarColor(status: IdentityStatus): string {
+		switch (status) {
+			case 'Automatic':
+				return 'bg-purple-500';
+			case 'Strong':
+				return 'bg-green-500';
+			case 'Stabilizing':
+				return 'bg-blue-500';
+			case 'Emerging':
+				return 'bg-yellow-500';
+			case 'Forming':
+				return 'bg-orange-500';
+			case 'Dormant':
+			default:
+				return 'bg-gray-400';
+		}
+	}
+
 	// Sorted tasks
 	const sortedUpcomingTasks = $derived(todayData?.upcomingTasks.slice().sort(sortByDueDate) ?? []);
 </script>
@@ -630,6 +667,60 @@
 							>
 								<p class="font-medium text-gray-900">{feedback.name}</p>
 								<p class="text-sm text-gray-600 mt-1">{feedback.reinforcementMessage}</p>
+							</div>
+						{/each}
+					</div>
+				</section>
+			{/if}
+
+			<!-- Identity Progress -->
+			{#if todayData.identityProgress && todayData.identityProgress.length > 0}
+				<section class="mb-8">
+					<h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+						<span>📊</span> {$t('today.identityProgress')}
+					</h2>
+					<div class="space-y-4">
+						{#each todayData.identityProgress as progress (progress.id)}
+							<div class="card p-4">
+								<div class="flex items-center justify-between mb-2">
+									<div class="flex items-center gap-2">
+										{#if progress.icon}
+											<span class="text-lg">{progress.icon}</span>
+										{/if}
+										<span class="font-medium text-gray-900">{progress.name}</span>
+									</div>
+									<div class="flex items-center gap-2">
+										<!-- Trend indicator -->
+										{#if progress.trend === 'Up'}
+											<span class="text-green-500" title={$t('today.trendUp')}>↑</span>
+										{:else if progress.trend === 'Down'}
+											<span class="text-red-500" title={$t('today.trendDown')}>↓</span>
+										{:else}
+											<span class="text-gray-400" title={$t('today.trendStable')}>→</span>
+										{/if}
+										<!-- Status label -->
+										<span class="text-sm font-medium px-2 py-0.5 rounded-full {getStatusBadgeClasses(progress.status)}">
+											{$t(`today.status.${progress.status.toLowerCase()}`)}
+										</span>
+										<!-- Score (only show after 7 days) -->
+										{#if progress.showNumericScore}
+											<span class="text-sm font-bold text-gray-700">{progress.score}%</span>
+										{/if}
+									</div>
+								</div>
+								<!-- Progress bar -->
+								<div class="bg-gray-200 rounded-full h-2.5">
+									<div
+										class="h-2.5 rounded-full transition-all duration-500 {getProgressBarColor(progress.status)}"
+										style="width: {progress.score}%; background-color: {progress.color || undefined}"
+									></div>
+								</div>
+								<!-- New user message -->
+								{#if !progress.showNumericScore}
+									<p class="text-xs text-gray-500 mt-2 italic">
+										{$t('today.scoreHiddenMessage', { values: { days: 7 - progress.accountAgeDays } })}
+									</p>
+								{/if}
 							</div>
 						{/each}
 					</div>

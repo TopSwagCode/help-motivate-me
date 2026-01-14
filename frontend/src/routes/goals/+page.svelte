@@ -96,7 +96,18 @@
 					<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						{#each activeGoals as goal (goal.id)}
 							<a href="/goals/{goal.id}" class="card-hover p-6 block">
-								<h3 class="font-medium text-gray-900 line-clamp-2 mb-3">{goal.title}</h3>
+								<div class="flex items-start justify-between gap-2 mb-3">
+									<h3 class="font-medium text-gray-900 line-clamp-2">{goal.title}</h3>
+									{#if goal.identityIcon || goal.identityColor}
+										<span 
+											class="flex-shrink-0 text-lg"
+											style="color: {goal.identityColor || 'inherit'}"
+											title={goal.identityName || ''}
+										>
+											{goal.identityIcon || '●'}
+										</span>
+									{/if}
+								</div>
 
 								{#if goal.description}
 									<p class="text-sm text-gray-500 line-clamp-2 mb-4">{goal.description}</p>

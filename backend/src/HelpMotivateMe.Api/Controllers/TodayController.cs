@@ -2,6 +2,7 @@ using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.HabitStacks;
 using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Infrastructure.Data;
+using HelpMotivateMe.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,8 +15,13 @@ namespace HelpMotivateMe.Api.Controllers;
 public class TodayController : ControllerBase
 {
     private readonly AppDbContext _db;
+    private readonly IdentityScoreService _identityScoreService;
 
-    public TodayController(AppDbContext db) => _db = db;
+    public TodayController(AppDbContext db, IdentityScoreService identityScoreService)
+    {
+        _db = db;
+        _identityScoreService = identityScoreService;
+    }
 
     /// <summary>
     /// Get the today view for a specific date (defaults to today).
@@ -38,12 +44,27 @@ public class TodayController : ControllerBase
         // Get identity feedback (based on habit stack item completions + task completions)
         var identityFeedback = await GetIdentityFeedback(userId, targetDate);
 
+        // Get identity scores (progress bars)
+        var identityScores = await _identityScoreService.CalculateScoresAsync(userId, targetDate);
+        var identityProgress = identityScores.Select(s => new IdentityProgressResponse(
+            s.Id,
+            s.Name,
+            s.Color,
+            s.Icon,
+            s.Score,
+            s.Status.ToString(),
+            s.Trend.ToString(),
+            s.AccountAgeDays,
+            s.ShowNumericScore
+        )).ToList();
+
         return Ok(new TodayViewResponse(
             targetDate,
             habitStacks,
             upcomingTasks,
             completedTasks,
-            identityFeedback
+            identityFeedback,
+            identityProgress
         ));
     }
 
@@ -202,7 +223,8 @@ public record TodayViewResponse(
     List<TodayHabitStackResponse> HabitStacks,
     List<TodayTaskResponse> UpcomingTasks,
     List<TodayTaskResponse> CompletedTasks,
-    List<TodayIdentityFeedbackResponse> IdentityFeedback
+    List<TodayIdentityFeedbackResponse> IdentityFeedback,
+    List<IdentityProgressResponse> IdentityProgress
 );
 
 public record TodayTaskResponse(
@@ -225,4 +247,16 @@ public record TodayIdentityFeedbackResponse(
     string? Icon,
     int CompletionsToday,
     string ReinforcementMessage
+);
+
+public record IdentityProgressResponse(
+    Guid Id,
+    string Name,
+    string? Color,
+    string? Icon,
+    int Score,
+    string Status,
+    string Trend,
+    int AccountAgeDays,
+    bool ShowNumericScore
 );

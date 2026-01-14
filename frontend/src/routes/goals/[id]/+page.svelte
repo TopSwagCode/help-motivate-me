@@ -65,6 +65,10 @@
 		const id = goalId;
 		try {
 			[goal, tasks, identities] = await Promise.all([getGoal(id), getTasks(id), getIdentities()]);
+			// Set default identity for new tasks to the goal's identity
+			if (goal?.identityId) {
+				newTaskIdentityId = goal.identityId;
+			}
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Failed to load goal';
 		} finally {
@@ -91,7 +95,8 @@
 			newTaskTitle = '';
 			newTaskDescription = '';
 			newTaskDueDate = '';
-			newTaskIdentityId = '';
+			// Reset to goal's identity (not empty)
+			newTaskIdentityId = goal?.identityId ?? '';
 			// Remove from newly arrived after animation completes
 			setTimeout(() => {
 				newlyArrivedTaskIds = newlyArrivedTaskIds.filter((id) => id !== task.id);
@@ -355,6 +360,18 @@
 
 				{#if goal.description}
 					<p class="text-gray-600 mb-4">{goal.description}</p>
+				{/if}
+
+				{#if goal.identityIcon || goal.identityName}
+					<div class="flex items-center gap-2 mb-4 text-sm">
+						<span class="text-gray-500">{$t('goals.identity')}:</span>
+						{#if goal.identityIcon}
+							<span class="text-lg">{goal.identityIcon}</span>
+						{/if}
+						{#if goal.identityName}
+							<span class="font-medium text-gray-700">{goal.identityName}</span>
+						{/if}
+					</div>
 				{/if}
 
 				<div class="flex items-center gap-4 text-sm text-gray-500">

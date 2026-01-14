@@ -28,6 +28,7 @@ public class GoalsController : ControllerBase
 
         var goals = await _db.Goals
             .Include(g => g.Tasks)
+            .Include(g => g.Identity)
             .Where(g => g.UserId == userId)
             .OrderBy(g => g.SortOrder)
             .ThenByDescending(g => g.CreatedAt)
@@ -43,6 +44,7 @@ public class GoalsController : ControllerBase
 
         var goal = await _db.Goals
             .Include(g => g.Tasks)
+            .Include(g => g.Identity)
             .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
 
         if (goal == null)
@@ -63,7 +65,8 @@ public class GoalsController : ControllerBase
             UserId = userId,
             Title = request.Title,
             Description = request.Description,
-            TargetDate = request.TargetDate
+            TargetDate = request.TargetDate,
+            IdentityId = request.IdentityId
         };
 
         // Set sort order to be at the top
@@ -75,6 +78,12 @@ public class GoalsController : ControllerBase
         _db.Goals.Add(goal);
         await _db.SaveChangesAsync();
 
+        // Load identity for response
+        if (goal.IdentityId.HasValue)
+        {
+            await _db.Entry(goal).Reference(g => g.Identity).LoadAsync();
+        }
+
         return CreatedAtAction(nameof(GetGoal), new { id = goal.Id }, MapToResponse(goal));
     }
 
@@ -85,6 +94,7 @@ public class GoalsController : ControllerBase
 
         var goal = await _db.Goals
             .Include(g => g.Tasks)
+            .Include(g => g.Identity)
             .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
 
         if (goal == null)
@@ -95,9 +105,16 @@ public class GoalsController : ControllerBase
         goal.Title = request.Title;
         goal.Description = request.Description;
         goal.TargetDate = request.TargetDate;
+        goal.IdentityId = request.IdentityId;
         goal.UpdatedAt = DateTime.UtcNow;
 
         await _db.SaveChangesAsync();
+
+        // Reload identity if changed
+        if (goal.IdentityId.HasValue)
+        {
+            await _db.Entry(goal).Reference(g => g.Identity).LoadAsync();
+        }
 
         return Ok(MapToResponse(goal));
     }
@@ -132,6 +149,7 @@ public class GoalsController : ControllerBase
 
         var goal = await _db.Goals
             .Include(g => g.Tasks)
+            .Include(g => g.Identity)
             .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
 
         if (goal == null)
@@ -189,6 +207,10 @@ public class GoalsController : ControllerBase
             goal.SortOrder,
             goal.Tasks.Count,
             goal.Tasks.Count(t => t.Status == TaskItemStatus.Completed),
+            goal.IdentityId,
+            goal.Identity?.Name,
+            goal.Identity?.Color,
+            goal.Identity?.Icon,
             goal.CreatedAt,
             goal.UpdatedAt
         );

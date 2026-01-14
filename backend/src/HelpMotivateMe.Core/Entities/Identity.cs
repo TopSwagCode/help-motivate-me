@@ -14,4 +14,5 @@ public class Identity
     public User User { get; set; } = null!;
     public ICollection<TaskItem> Tasks { get; set; } = [];
     public ICollection<HabitStack> HabitStacks { get; set; } = [];
+    public ICollection<Goal> Goals { get; set; } = [];
 }

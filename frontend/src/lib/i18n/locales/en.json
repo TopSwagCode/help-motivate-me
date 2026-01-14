@@ -355,6 +355,7 @@
 		"addTask": "Add Task",
 		"addTaskPlaceholder": "Add a new task...",
 		"adding": "Adding...",
+		"identity": "Identity",
 		"noIdentity": "No identity",
 		"noPendingTasks": "No pending tasks. Add one above!",
 		"noCompletedTasks": "No completed tasks yet",
@@ -387,7 +388,8 @@
 			"taskDescriptionPlaceholder": "Add more details about this task...",
 			"optional": "optional",
 			"identity": "Identity",
-			"linkToIdentity": "Link to identity (optional)"
+			"linkToIdentity": "Link to identity (optional)",
+			"identityHint": "Tasks created under this goal will inherit this identity by default"
 		}
 	},
 	"identities": {
@@ -614,6 +616,7 @@
 		"journal": "Journal",
 		"jumpToToday": "Jump to Today",
 		"identityVotes": "Identity Votes",
+		"identityProgress": "Identity Progress",
 		"completeAll": "Complete All",
 		"completed": "Completed",
 		"noPendingTasks": "No pending tasks for this day",
@@ -634,6 +637,18 @@
 		"snooze1Week": "Snooze 1 week",
 		"movedOutsideView": "Moved outside 7-day view",
 		"dayStreak": "day streak",
+		"trendUp": "Trending up",
+		"trendDown": "Trending down",
+		"trendStable": "Stable",
+		"scoreHiddenMessage": "Your score will be visible in {days} more days",
+		"status": {
+			"dormant": "Dormant",
+			"forming": "Forming",
+			"emerging": "Emerging",
+			"stabilizing": "Stabilizing",
+			"strong": "Strong",
+			"automatic": "Automatic"
+		},
 		"dates": {
 			"today": "Today",
 			"tomorrow": "Tomorrow",

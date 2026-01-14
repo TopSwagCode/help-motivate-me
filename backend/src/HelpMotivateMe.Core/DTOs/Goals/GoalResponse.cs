@@ -10,6 +10,10 @@ public record GoalResponse(
     int SortOrder,
     int TaskCount,
     int CompletedTaskCount,
+    Guid? IdentityId,
+    string? IdentityName,
+    string? IdentityColor,
+    string? IdentityIcon,
     DateTime CreatedAt,
     DateTime UpdatedAt
 );

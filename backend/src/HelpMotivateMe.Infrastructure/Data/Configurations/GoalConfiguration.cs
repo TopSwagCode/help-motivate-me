@@ -27,5 +27,10 @@ public class GoalConfiguration : IEntityTypeConfiguration<Goal>
             .HasForeignKey(g => g.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        // Optional identity relationship
+        builder.HasOne(g => g.Identity)
+            .WithMany(i => i.Goals)
+            .HasForeignKey(g => g.IdentityId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

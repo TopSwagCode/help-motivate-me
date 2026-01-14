@@ -43,6 +43,9 @@ builder.Services.AddSingleton<IStorageService, LocalFileStorageService>();
 // OpenAI Service
 builder.Services.AddHttpClient<IOpenAiService, OpenAiService>();
 
+// Identity Score Service
+builder.Services.AddScoped<IdentityScoreService>();
+
 // Database Seeder
 builder.Services.AddHostedService<AdminUserSeeder>();
 
