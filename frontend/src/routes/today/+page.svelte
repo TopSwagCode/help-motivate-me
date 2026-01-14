@@ -11,7 +11,7 @@
 	import { getIdentities } from '$lib/api/identities';
 	import WelcomePopup from '$lib/components/onboarding/WelcomePopup.svelte';
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
-	import type { TodayView, TodayTask, Identity, IdentityStatus } from '$lib/types';
+	import type { TodayView, TodayTask, Identity } from '$lib/types';
 
 	let todayData = $state<TodayView | null>(null);
 	let identities = $state<Identity[]>([]);
@@ -534,43 +534,6 @@
 		return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
 	}
 
-	// Identity progress helper functions
-	function getStatusBadgeClasses(status: IdentityStatus): string {
-		switch (status) {
-			case 'Automatic':
-				return 'bg-purple-100 text-purple-800';
-			case 'Strong':
-				return 'bg-green-100 text-green-800';
-			case 'Stabilizing':
-				return 'bg-blue-100 text-blue-800';
-			case 'Emerging':
-				return 'bg-yellow-100 text-yellow-800';
-			case 'Forming':
-				return 'bg-orange-100 text-orange-800';
-			case 'Dormant':
-			default:
-				return 'bg-gray-100 text-gray-600';
-		}
-	}
-
-	function getProgressBarColor(status: IdentityStatus): string {
-		switch (status) {
-			case 'Automatic':
-				return 'bg-purple-500';
-			case 'Strong':
-				return 'bg-green-500';
-			case 'Stabilizing':
-				return 'bg-blue-500';
-			case 'Emerging':
-				return 'bg-yellow-500';
-			case 'Forming':
-				return 'bg-orange-500';
-			case 'Dormant':
-			default:
-				return 'bg-gray-400';
-		}
-	}
-
 	// Sorted tasks
 	const sortedUpcomingTasks = $derived(todayData?.upcomingTasks.slice().sort(sortByDueDate) ?? []);
 </script>
@@ -679,48 +642,58 @@
 					<h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
 						<span>📊</span> {$t('today.identityProgress')}
 					</h2>
-					<div class="space-y-4">
-						{#each todayData.identityProgress as progress (progress.id)}
-							<div class="card p-4">
-								<div class="flex items-center justify-between mb-2">
-									<div class="flex items-center gap-2">
-										{#if progress.icon}
-											<span class="text-lg">{progress.icon}</span>
-										{/if}
-										<span class="font-medium text-gray-900">{progress.name}</span>
-									</div>
-									<div class="flex items-center gap-2">
-										<!-- Trend indicator -->
-										{#if progress.trend === 'Up'}
-											<span class="text-green-500" title={$t('today.trendUp')}>↑</span>
-										{:else if progress.trend === 'Down'}
-											<span class="text-red-500" title={$t('today.trendDown')}>↓</span>
-										{:else}
-											<span class="text-gray-400" title={$t('today.trendStable')}>→</span>
-										{/if}
-										<!-- Status label -->
-										<span class="text-sm font-medium px-2 py-0.5 rounded-full {getStatusBadgeClasses(progress.status)}">
-											{$t(`today.status.${progress.status.toLowerCase()}`)}
-										</span>
-										<!-- Score (only show after 7 days) -->
-										{#if progress.showNumericScore}
-											<span class="text-sm font-bold text-gray-700">{progress.score}%</span>
-										{/if}
+					<div class="card overflow-hidden">
+						{#each todayData.identityProgress as progress, index (progress.id)}
+							<div 
+								class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors {index > 0 ? 'border-t border-gray-100' : ''}"
+							>
+								<!-- Color indicator bar -->
+								<div 
+									class="w-1 h-10 rounded-full flex-shrink-0"
+									style="background-color: {progress.color || '#9CA3AF'}"
+								></div>
+								
+								<!-- Icon and name -->
+								<div class="flex items-center gap-2 min-w-0 flex-1">
+									{#if progress.icon}
+										<span class="text-lg flex-shrink-0">{progress.icon}</span>
+									{/if}
+									<span class="font-medium text-gray-900 truncate">{progress.name}</span>
+								</div>
+								
+								<!-- Progress bar (inline, smaller) -->
+								<div class="w-24 sm:w-32 flex-shrink-0">
+									<div class="bg-gray-200 rounded-full h-2">
+										<div
+											class="h-2 rounded-full transition-all duration-500"
+											style="width: {progress.score}%; background-color: {progress.color || '#9CA3AF'}"
+										></div>
 									</div>
 								</div>
-								<!-- Progress bar -->
-								<div class="bg-gray-200 rounded-full h-2.5">
-									<div
-										class="h-2.5 rounded-full transition-all duration-500 {getProgressBarColor(progress.status)}"
-										style="width: {progress.score}%; background-color: {progress.color || undefined}"
-									></div>
+								
+								<!-- Score and trend -->
+								<div class="flex items-center gap-1.5 flex-shrink-0 w-16 justify-end">
+									{#if progress.showNumericScore}
+										<span class="text-sm font-bold" style="color: {progress.color || '#374151'}">{progress.score}%</span>
+									{:else}
+										<span class="text-xs text-gray-400">--</span>
+									{/if}
+									{#if progress.trend === 'Up'}
+										<span class="text-green-500 text-sm">↑</span>
+									{:else if progress.trend === 'Down'}
+										<span class="text-red-500 text-sm">↓</span>
+									{:else}
+										<span class="text-gray-300 text-sm">→</span>
+									{/if}
 								</div>
-								<!-- New user message -->
-								{#if !progress.showNumericScore}
-									<p class="text-xs text-gray-500 mt-2 italic">
-										{$t('today.scoreHiddenMessage', { values: { days: 7 - progress.accountAgeDays } })}
-									</p>
-								{/if}
+								
+								<!-- Status badge (compact) -->
+								<span 
+									class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 hidden sm:inline-block"
+									style="background-color: {progress.color}20; color: {progress.color || '#6B7280'}"
+								>
+									{$t(`today.status.${progress.status.toLowerCase()}`)}
+								</span>
 							</div>
 						{/each}
 					</div>
