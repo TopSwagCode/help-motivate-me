@@ -639,61 +639,38 @@
 			<!-- Identity Progress -->
 			{#if todayData.identityProgress && todayData.identityProgress.length > 0}
 				<section class="mb-8">
-					<h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+					<h2 class="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
 						<span>📊</span> {$t('today.identityProgress')}
 					</h2>
-					<div class="card overflow-hidden">
-						{#each todayData.identityProgress as progress, index (progress.id)}
+					<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+						{#each todayData.identityProgress as progress (progress.id)}
 							<div 
-								class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors {index > 0 ? 'border-t border-gray-100' : ''}"
+								class="rounded-lg p-3 transition-all hover:scale-[1.02] cursor-default"
+								style="background-color: {progress.color}15; border: 1px solid {progress.color}30"
 							>
-								<!-- Color indicator bar -->
-								<div 
-									class="w-1 h-10 rounded-full flex-shrink-0"
-									style="background-color: {progress.color || '#9CA3AF'}"
-								></div>
-								
-								<!-- Icon and name -->
-								<div class="flex items-center gap-2 min-w-0 flex-1">
-									{#if progress.icon}
-										<span class="text-lg flex-shrink-0">{progress.icon}</span>
-									{/if}
-									<span class="font-medium text-gray-900 truncate">{progress.name}</span>
-								</div>
-								
-								<!-- Progress bar (inline, smaller) -->
-								<div class="w-24 sm:w-32 flex-shrink-0">
-									<div class="bg-gray-200 rounded-full h-2">
-										<div
-											class="h-2 rounded-full transition-all duration-500"
-											style="width: {progress.score}%; background-color: {progress.color || '#9CA3AF'}"
-										></div>
+								<!-- Header: Icon + Score + Trend -->
+								<div class="flex items-center justify-between mb-1.5">
+									<span class="text-xl">{progress.icon || '🎯'}</span>
+									<div class="flex items-center gap-0.5">
+										<span class="text-sm font-bold" style="color: {progress.color || '#374151'}">{progress.score}</span>
+										{#if progress.trend === 'Up'}
+											<span class="text-green-500 text-xs">↑</span>
+										{:else if progress.trend === 'Down'}
+											<span class="text-red-500 text-xs">↓</span>
+										{:else}
+											<span class="text-gray-400 text-xs">→</span>
+										{/if}
 									</div>
 								</div>
-								
-								<!-- Score and trend -->
-								<div class="flex items-center gap-1.5 flex-shrink-0 w-16 justify-end">
-									{#if progress.showNumericScore}
-										<span class="text-sm font-bold" style="color: {progress.color || '#374151'}">{progress.score}%</span>
-									{:else}
-										<span class="text-xs text-gray-400">--</span>
-									{/if}
-									{#if progress.trend === 'Up'}
-										<span class="text-green-500 text-sm">↑</span>
-									{:else if progress.trend === 'Down'}
-										<span class="text-red-500 text-sm">↓</span>
-									{:else}
-										<span class="text-gray-300 text-sm">→</span>
-									{/if}
+								<!-- Name (truncated) -->
+								<p class="text-xs font-medium text-gray-700 truncate mb-1.5" title={progress.name}>{progress.name}</p>
+								<!-- Mini progress bar -->
+								<div class="bg-white/50 rounded-full h-1.5">
+									<div
+										class="h-1.5 rounded-full transition-all duration-500"
+										style="width: {progress.score}%; background-color: {progress.color || '#9CA3AF'}"
+									></div>
 								</div>
-								
-								<!-- Status badge (compact) -->
-								<span 
-									class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 hidden sm:inline-block"
-									style="background-color: {progress.color}20; color: {progress.color || '#6B7280'}"
-								>
-									{$t(`today.status.${progress.status.toLowerCase()}`)}
-								</span>
 							</div>
 						{/each}
 					</div>
