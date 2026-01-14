@@ -326,7 +326,7 @@
 				title={$t('journal.pageTitle')} 
 				description={$t('journal.info.description')} 
 			/>
-			<button onclick={openCreateModal} class="btn-primary text-sm w-full sm:w-auto justify-center">{$t('journal.newEntry')}</button>
+			
 		</div>
 
 		{#if loading}
