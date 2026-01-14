@@ -459,7 +459,10 @@
 			"triggerPlaceholder": "Efter jeg...",
 			"habits": "Vaner",
 			"addHabit": "Tilføj vane",
-			"submit": "Gem vanestak"
+			"submit": "Gem vanestak",
+			"identity": "Knyt til identitet (Valgfrit)",
+			"noIdentity": "Ingen identitet",
+			"identityHint": "At knytte til en identitet hjælper med at forstærke hvem du er ved at blive"
 		},
 		"chain": {
 			"after": "Efter jeg",

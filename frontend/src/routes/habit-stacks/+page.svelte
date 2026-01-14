@@ -13,19 +13,23 @@
 		deleteStackItem,
 		reorderHabitStacks
 	} from '$lib/api/habitStacks';
+	import { getIdentities } from '$lib/api/identities';
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
 	import type {
 		HabitStack,
-		HabitStackItemRequest
+		HabitStackItemRequest,
+		Identity
 	} from '$lib/types';
 
 	let stacks = $state<HabitStack[]>([]);
+	let identities = $state<Identity[]>([]);
 	let loading = $state(true);
 	let error = $state('');
 
 	// Create popup state
 	let showCreatePopup = $state(false);
 	let createName = $state('');
+	let createIdentityId = $state<string | undefined>(undefined);
 	let createItems = $state<HabitStackItemRequest[]>([{ cueDescription: '', habitDescription: '' }]);
 	let createLoading = $state(false);
 	let createError = $state('');
@@ -35,6 +39,7 @@
 	let showEditPopup = $state(false);
 	let editingStack = $state<HabitStack | null>(null);
 	let editName = $state('');
+	let editIdentityId = $state<string | undefined>(undefined);
 	let editIsActive = $state(true);
 	let editLoading = $state(false);
 	let editError = $state('');
@@ -61,14 +66,19 @@
 			return;
 		}
 
-		await loadStacks();
+		await loadData();
 	});
 
-	async function loadStacks() {
+	async function loadData() {
 		try {
-			stacks = await getHabitStacks();
+			const [stacksData, identitiesData] = await Promise.all([
+				getHabitStacks(),
+				getIdentities()
+			]);
+			stacks = stacksData;
+			identities = identitiesData;
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to load habit stacks';
+			error = e instanceof Error ? e.message : 'Failed to load data';
 		} finally {
 			loading = false;
 		}
@@ -77,6 +87,7 @@
 	// Create popup functions
 	function openCreatePopup() {
 		createName = '';
+		createIdentityId = undefined;
 		createItems = [{ cueDescription: '', habitDescription: '' }];
 		createError = '';
 		showCreatePopup = true;
@@ -85,6 +96,7 @@
 	function closeCreatePopup() {
 		showCreatePopup = false;
 		createName = '';
+		createIdentityId = undefined;
 		createItems = [{ cueDescription: '', habitDescription: '' }];
 		createError = '';
 	}
@@ -165,7 +177,11 @@
 		createError = '';
 
 		try {
-			const stack = await createHabitStack({ name: createName.trim(), items: validItems });
+			const stack = await createHabitStack({ 
+				name: createName.trim(), 
+				identityId: createIdentityId,
+				items: validItems 
+			});
 			stacks = [stack, ...stacks];
 			closeCreatePopup();
 		} catch (e) {
@@ -179,6 +195,7 @@
 	function openEditPopup(stack: HabitStack) {
 		editingStack = stack;
 		editName = stack.name;
+		editIdentityId = stack.identityId || undefined;
 		editIsActive = stack.isActive;
 		editError = '';
 		newItemCue = '';
@@ -190,6 +207,7 @@
 		showEditPopup = false;
 		editingStack = null;
 		editName = '';
+		editIdentityId = undefined;
 		editIsActive = true;
 		editError = '';
 		newItemCue = '';
@@ -208,6 +226,7 @@
 		try {
 			const updated = await updateHabitStack(editingStack.id, {
 				name: editName.trim(),
+				identityId: editIdentityId,
 				isActive: editIsActive
 			});
 			stacks = stacks.map((s) => (s.id === updated.id ? updated : s));
@@ -399,22 +418,44 @@
 						<button
 							type="button"
 							onclick={() => openEditPopup(stack)}
-							class="card-hover p-5 text-left w-full"
+							class="rounded-lg overflow-hidden text-left w-full transition-all hover:shadow-md"
+							style="background-color: {stack.identityColor || '#6366f1'}08; border: 1px solid {stack.identityColor || '#6366f1'}20"
 						>
-								<div class="flex items-center justify-between mb-3">
+							<!-- Header with identity color -->
+							<div 
+								class="flex items-center justify-between px-5 py-3"
+								style="background-color: {stack.identityColor || '#6366f1'}15"
+							>
+								<div class="flex items-center gap-2">
+									{#if stack.identityName}
+										<span class="text-lg" title={stack.identityName}>
+											{identities.find(i => i.id === stack.identityId)?.icon || '🎯'}
+										</span>
+									{/if}
 									<h3 class="font-semibold text-gray-900 text-lg">{stack.name}</h3>
-									<div class="flex items-center gap-2">
-										{#if !stack.isActive}
-											<span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600"
-												>{$t('habitStacks.inactive')}</span
-											>
-										{/if}
-										<span class="text-sm text-gray-500"
-											>{stack.items.length} {stack.items.length !== 1 ? $t('habitStacks.habits') : $t('habitStacks.habit')}</span
-										>
-									</div>
 								</div>
+								<div class="flex items-center gap-2">
+									{#if stack.identityName}
+										<span 
+											class="text-xs px-2 py-0.5 rounded-full"
+											style="background-color: {stack.identityColor || '#6366f1'}20; color: {stack.identityColor || '#6366f1'}"
+										>
+											{stack.identityName}
+										</span>
+									{/if}
+									{#if !stack.isActive}
+										<span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600"
+											>{$t('habitStacks.inactive')}</span
+										>
+									{/if}
+									<span class="text-sm text-gray-500"
+										>{stack.items.length} {stack.items.length !== 1 ? $t('habitStacks.habits') : $t('habitStacks.habit')}</span
+									>
+								</div>
+							</div>
 
+							<!-- Content -->
+							<div class="p-5 pt-3">
 							{#if stack.items.length > 0}
 								<div class="relative ml-2">
 									{#each stack.items as item, i (item.id)}
@@ -452,6 +493,7 @@
 							{:else}
 								<p class="text-sm text-gray-500 italic">{$t('habitStacks.noHabitsYet')}</p>
 							{/if}
+							</div>
 						</button>
 					{/each}
 				</div>
@@ -512,6 +554,26 @@
 								placeholder={$t('habitStacks.form.namePlaceholder')}
 								class="input"
 							/>
+						</div>
+
+						<!-- Identity selector -->
+						<div>
+							<label for="createIdentity" class="block text-sm font-medium text-gray-700 mb-1"
+								>{$t('habitStacks.form.identity')}</label
+							>
+							<select
+								id="createIdentity"
+								bind:value={createIdentityId}
+								class="input"
+							>
+								<option value={undefined}>{$t('habitStacks.form.noIdentity')}</option>
+								{#each identities as identity (identity.id)}
+									<option value={identity.id}>
+										{identity.icon || '🎯'} {identity.name}
+									</option>
+								{/each}
+							</select>
+							<p class="text-xs text-gray-500 mt-1">{$t('habitStacks.form.identityHint')}</p>
 						</div>
 
 						<div>
@@ -657,6 +719,25 @@
 									>{$t('habitStacks.form.name')}</label
 								>
 								<input type="text" id="editName" bind:value={editName} class="input" />
+							</div>
+
+							<!-- Identity selector -->
+							<div>
+								<label for="editIdentity" class="block text-sm font-medium text-gray-700 mb-1"
+									>{$t('habitStacks.form.identity')}</label
+								>
+								<select
+									id="editIdentity"
+									bind:value={editIdentityId}
+									class="input"
+								>
+									<option value={undefined}>{$t('habitStacks.form.noIdentity')}</option>
+									{#each identities as identity (identity.id)}
+										<option value={identity.id}>
+											{identity.icon || '🎯'} {identity.name}
+										</option>
+									{/each}
+								</select>
 							</div>
 
 							<div class="flex items-center justify-between">

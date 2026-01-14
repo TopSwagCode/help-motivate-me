@@ -459,7 +459,10 @@
 			"triggerPlaceholder": "After I...",
 			"habits": "Habits",
 			"addHabit": "Add Habit",
-			"submit": "Save Habit Stack"
+			"submit": "Save Habit Stack",
+			"identity": "Link to Identity (Optional)",
+			"noIdentity": "No identity",
+			"identityHint": "Linking to an identity helps reinforce who you're becoming"
 		},
 		"chain": {
 			"after": "After I",
