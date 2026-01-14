@@ -855,99 +855,108 @@
 					{/if}
 				</div>
 				{#if sectionsExpanded.tasks}
-				<div class="card divide-y divide-gray-100">
 					{#if sortedUpcomingTasks.length > 0}
-						{#each sortedUpcomingTasks as task (task.id)}
-							<div
-								class="relative flex items-start gap-4 p-4 transition-all duration-300
-									{transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95 bg-green-50' : ''}
-									{newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight' : ''}
-									{snoozingTaskIds.includes(task.id) ? 'bg-amber-50' : ''}
-									{removingAfterSnoozeIds.includes(task.id) ? 'animate-snooze-remove' : ''}"
-							>
-								<!-- Snooze animation overlay -->
-								{#if snoozingTaskIds.includes(task.id)}
-									<div class="absolute inset-0 flex items-center justify-center bg-amber-100/80 rounded-lg animate-snooze-pulse z-10">
-										<span class="text-amber-700 font-bold text-lg flex items-center gap-2">
-											💤 +7 days
-										</span>
-									</div>
-								{/if}
-								<!-- Removal message overlay -->
-								{#if removingAfterSnoozeIds.includes(task.id)}
-									<div class="absolute inset-0 flex items-center justify-center bg-gray-100/90 rounded-lg z-10">
-										<span class="text-gray-600 font-medium text-sm flex items-center gap-2">
-											📅 {$t('today.movedOutsideView')}
-										</span>
-									</div>
-								{/if}
-								<button
-									onclick={() => toggleTask(task.id)}
-									class="flex-shrink-0 mt-1"
-									title="Mark as completed"
+						<div class="columns-1 sm:columns-2 gap-2 space-y-2">
+							{#each sortedUpcomingTasks as task (task.id)}
+								<div
+									class="relative break-inside-avoid rounded-lg border bg-white p-3 transition-all duration-300 hover:shadow-md
+										{transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95 bg-green-50 border-green-200' : 'border-gray-200'}
+										{newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight' : ''}
+										{snoozingTaskIds.includes(task.id) ? 'bg-amber-50 border-amber-200' : ''}
+										{removingAfterSnoozeIds.includes(task.id) ? 'animate-snooze-remove' : ''}"
 								>
-									<div
-										class="w-6 h-6 rounded-full border-2 border-gray-300 hover:border-primary-500 transition-all duration-200 flex items-center justify-center
-											{transitioningTaskIds.includes(task.id) ? 'bg-green-500 border-green-500' : ''}"
-									>
-										{#if transitioningTaskIds.includes(task.id)}
-											<svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-												<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-											</svg>
+									<!-- Snooze animation overlay -->
+									{#if snoozingTaskIds.includes(task.id)}
+										<div class="absolute inset-0 flex items-center justify-center bg-amber-100/90 rounded-lg z-10">
+											<span class="text-amber-700 font-bold flex items-center gap-1">
+												💤 +7 days
+											</span>
+										</div>
+									{/if}
+									<!-- Removal message overlay -->
+									{#if removingAfterSnoozeIds.includes(task.id)}
+										<div class="absolute inset-0 flex items-center justify-center bg-gray-100/90 rounded-lg z-10">
+											<span class="text-gray-600 font-medium text-sm">
+												📅 {$t('today.movedOutsideView')}
+											</span>
+										</div>
+									{/if}
+									
+									<!-- Task Header: Checkbox + Title -->
+									<div class="flex items-start gap-2">
+										<button
+											onclick={() => toggleTask(task.id)}
+											class="flex-shrink-0 mt-0.5 group"
+											title="Mark as completed"
+										>
+											<div
+												class="w-5 h-5 rounded-full border-2 transition-all duration-200 flex items-center justify-center
+													{transitioningTaskIds.includes(task.id) 
+														? 'bg-green-500 border-green-500' 
+														: 'border-gray-300 group-hover:border-green-400 group-hover:bg-green-50'}"
+											>
+												{#if transitioningTaskIds.includes(task.id)}
+													<svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+														<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+													</svg>
+												{/if}
+											</div>
+										</button>
+										<div class="flex-1 min-w-0">
+											<p class="text-sm font-medium text-gray-900 leading-tight {transitioningTaskIds.includes(task.id) ? 'line-through text-gray-400' : ''}">
+												{task.title}
+											</p>
+										</div>
+										{#if task.identityIcon}
+											<span class="text-base flex-shrink-0" title={task.identityName}>{task.identityIcon}</span>
 										{/if}
 									</div>
-								</button>
-								{#if task.identityIcon}
-									<span class="flex-shrink-0 text-lg mt-1" title={task.identityName || 'Identity'}>{task.identityIcon}</span>
-								{/if}
-								<div class="flex-1 min-w-0">
-									<p class="text-gray-900 font-medium {transitioningTaskIds.includes(task.id) ? 'line-through text-gray-500' : ''}">
-										{task.title}
-									</p>
-									{#if task.description}
-										<p class="text-sm text-gray-500 mt-1 line-clamp-2">{task.description}</p>
-									{/if}
-									<p class="text-xs text-gray-400 mt-1">{task.goalTitle}</p>
+									
+									<!-- Task Meta Row -->
+									<div class="flex items-center gap-2 mt-2 pl-7">
+										<span class="text-xs text-gray-400 truncate flex-1">{task.goalTitle}</span>
+										<span class="text-xs font-medium {getDueDateColor(task.dueDate)} flex-shrink-0">
+											{formatRelativeDate(task.dueDate)}
+										</span>
+									</div>
+									
+									<!-- Action Buttons -->
+									<div class="flex items-center justify-end gap-1 mt-2 pt-2 border-t border-gray-100">
+										<button
+											onclick={() => handleSnooze(task)}
+											class="p-1.5 text-gray-400 hover:text-amber-500 hover:bg-amber-50 rounded transition-colors"
+											title="Snooze 1 week"
+											disabled={snoozingTaskIds.includes(task.id)}
+										>
+											<span class="text-sm">💤</span>
+										</button>
+										<button
+											onclick={() => openPostponePopup(task)}
+											class="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded transition-colors"
+											title="Postpone task"
+										>
+											<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+											</svg>
+										</button>
+										<button
+											onclick={() => openEditPopup(task)}
+											class="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded transition-colors"
+											title="Edit task"
+										>
+											<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+											</svg>
+										</button>
+									</div>
 								</div>
-								<div class="flex items-center gap-2 flex-shrink-0">
-									<span class="{getDueDateColor(task.dueDate)} text-sm">
-										{formatRelativeDate(task.dueDate)}
-									</span>
-									<button
-										onclick={() => handleSnooze(task)}
-										class="text-gray-400 hover:text-amber-500 p-1 relative"
-										title="Snooze 1 week"
-										disabled={snoozingTaskIds.includes(task.id)}
-									>
-										<span class="text-lg">💤</span>
-									</button>
-									<button
-										onclick={() => openEditPopup(task)}
-										class="text-gray-400 hover:text-primary-600 p-1"
-										title="Edit task"
-									>
-										<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-										</svg>
-									</button>
-									<button
-										onclick={() => openPostponePopup(task)}
-										class="text-gray-400 hover:text-primary-600 p-1"
-										title="Postpone task"
-									>
-										<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-										</svg>
-									</button>
-								</div>
-							</div>
-						{/each}
+							{/each}
+						</div>
 					{:else}
-						<div class="p-6 text-center text-gray-400">
+						<div class="text-center text-gray-400 py-8">
 							{$t('today.noPendingTasks')}
 						</div>
 					{/if}
-				</div>
 				{/if}
 			</section>
 
@@ -969,54 +978,41 @@
 					</svg>
 				</button>
 				{#if sectionsExpanded.completedTasks}
-				<div class="card divide-y divide-gray-100">
 					{#if todayData.completedTasks.length > 0}
-						{#each todayData.completedTasks as task (task.id)}
-							<div
-								class="flex items-start gap-4 p-4 bg-green-50 transition-all duration-300
-									{transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95 bg-gray-50' : ''}
-									{newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight-green' : ''}"
-							>
-								<button
-									onclick={() => toggleTask(task.id)}
-									class="flex-shrink-0 mt-1"
-									title="Mark as incomplete"
+						<div class="columns-1 sm:columns-2 lg:columns-3 gap-2 space-y-2">
+							{#each todayData.completedTasks as task (task.id)}
+								<div
+									class="relative break-inside-avoid rounded-lg border border-green-200 bg-green-50/50 p-2.5 transition-all duration-300
+										{transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95' : ''}
+										{newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight-green' : ''}"
 								>
-									<div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center hover:bg-green-600 transition-colors">
-										<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-										</svg>
+									<div class="flex items-center gap-2">
+										<button
+											onclick={() => toggleTask(task.id)}
+											class="flex-shrink-0 group"
+											title="Mark as incomplete"
+										>
+											<div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center group-hover:bg-green-600 transition-colors">
+												<svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+												</svg>
+											</div>
+										</button>
+										<p class="flex-1 text-sm text-gray-500 line-through truncate">
+											{task.title}
+										</p>
+										{#if task.identityIcon}
+											<span class="text-sm opacity-50 flex-shrink-0">{task.identityIcon}</span>
+										{/if}
 									</div>
-								</button>
-								{#if task.identityIcon}
-									<span class="flex-shrink-0 text-lg mt-1 opacity-50" title={task.identityName || 'Identity'}>{task.identityIcon}</span>
-								{/if}
-								<div class="flex-1 min-w-0">
-									<p class="text-gray-500 line-through font-medium">
-										{task.title}
-									</p>
-									{#if task.description}
-										<p class="text-sm text-gray-400 mt-1 line-clamp-2 line-through">{task.description}</p>
-									{/if}
-									<p class="text-xs text-gray-400 mt-1">{task.goalTitle}</p>
 								</div>
-								<button
-									onclick={() => openEditPopup(task)}
-									class="text-gray-400 hover:text-primary-600 p-1 flex-shrink-0"
-									title="Edit task"
-								>
-									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-									</svg>
-								</button>
-							</div>
-						{/each}
+							{/each}
+						</div>
 					{:else}
-						<div class="p-6 text-center text-gray-400">
+						<div class="text-center text-gray-400 py-6">
 							{$t('today.noCompletedTasks')}
 						</div>
 					{/if}
-				</div>
 				{/if}
 			</section>
 
