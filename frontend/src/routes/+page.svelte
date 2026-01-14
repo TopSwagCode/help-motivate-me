@@ -37,7 +37,7 @@
 
 <div class="min-h-screen flex flex-col">
 	<!-- Hero Section -->
-	<main class="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+	<main class="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 		<div class="max-w-3xl mx-auto text-center">
 			<h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight">
 				Stay Focused.
