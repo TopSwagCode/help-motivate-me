@@ -57,6 +57,7 @@ export interface BuddyTodayTask {
 	identityId: string | null;
 	identityName: string | null;
 	identityIcon: string | null;
+	identityColor: string | null;
 	dueDate: string | null;
 	status: string;
 }

@@ -487,6 +487,7 @@ public class AccountabilityBuddyController : ControllerBase
             t.IdentityId,
             t.Identity?.Name,
             t.Identity?.Icon,
+            t.Identity?.Color,
             t.DueDate,
             t.Status.ToString()
         )).ToList();
@@ -516,6 +517,7 @@ public class AccountabilityBuddyController : ControllerBase
             t.IdentityId,
             t.Identity?.Name,
             t.Identity?.Icon,
+            t.Identity?.Color,
             t.DueDate,
             t.Status.ToString()
         )).ToList();

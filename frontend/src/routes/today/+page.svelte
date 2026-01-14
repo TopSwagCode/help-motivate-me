@@ -859,11 +859,12 @@
 						<div class="columns-1 sm:columns-2 gap-2 space-y-2">
 							{#each sortedUpcomingTasks as task (task.id)}
 								<div
-									class="relative break-inside-avoid rounded-lg border bg-white p-3 transition-all duration-300 hover:shadow-md
-										{transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95 bg-green-50 border-green-200' : 'border-gray-200'}
+									class="relative break-inside-avoid rounded-lg p-3 transition-all duration-300 hover:shadow-md
+										{transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95' : ''}
 										{newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight' : ''}
-										{snoozingTaskIds.includes(task.id) ? 'bg-amber-50 border-amber-200' : ''}
+										{snoozingTaskIds.includes(task.id) ? 'bg-amber-50' : ''}
 										{removingAfterSnoozeIds.includes(task.id) ? 'animate-snooze-remove' : ''}"
+									style="background-color: {task.identityColor ? task.identityColor + '08' : 'white'}; border: 1px solid {task.identityColor ? task.identityColor + '30' : '#e5e7eb'}"
 								>
 									<!-- Snooze animation overlay -->
 									{#if snoozingTaskIds.includes(task.id)}
@@ -908,7 +909,13 @@
 											</p>
 										</div>
 										{#if task.identityIcon}
-											<span class="text-base flex-shrink-0" title={task.identityName}>{task.identityIcon}</span>
+											<span 
+												class="text-sm flex-shrink-0 px-1.5 py-0.5 rounded-full"
+												style="background-color: {task.identityColor || '#6366f1'}20; color: {task.identityColor || '#6366f1'}"
+												title={task.identityName}
+											>
+												{task.identityIcon}
+											</span>
 										{/if}
 									</div>
 									
@@ -982,9 +989,10 @@
 						<div class="columns-1 sm:columns-2 lg:columns-3 gap-2 space-y-2">
 							{#each todayData.completedTasks as task (task.id)}
 								<div
-									class="relative break-inside-avoid rounded-lg border border-green-200 bg-green-50/50 p-2.5 transition-all duration-300
+									class="relative break-inside-avoid rounded-lg p-2.5 transition-all duration-300
 										{transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95' : ''}
 										{newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight-green' : ''}"
+									style="background-color: {task.identityColor ? task.identityColor + '10' : '#f0fdf4'}; border: 1px solid {task.identityColor ? task.identityColor + '30' : '#bbf7d0'}"
 								>
 									<div class="flex items-center gap-2">
 										<button
@@ -1002,7 +1010,13 @@
 											{task.title}
 										</p>
 										{#if task.identityIcon}
-											<span class="text-sm opacity-50 flex-shrink-0">{task.identityIcon}</span>
+											<span 
+												class="text-xs flex-shrink-0 px-1.5 py-0.5 rounded-full opacity-70"
+												style="background-color: {task.identityColor || '#6366f1'}20; color: {task.identityColor || '#6366f1'}"
+												title={task.identityName}
+											>
+												{task.identityIcon}
+											</span>
 										{/if}
 									</div>
 								</div>

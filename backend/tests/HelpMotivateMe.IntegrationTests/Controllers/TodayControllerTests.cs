@@ -404,6 +404,7 @@ public record TodayTaskResponse(
     Guid? IdentityId,
     string? IdentityName,
     string? IdentityIcon,
+    string? IdentityColor,
     DateOnly? DueDate,
     string Status
 );

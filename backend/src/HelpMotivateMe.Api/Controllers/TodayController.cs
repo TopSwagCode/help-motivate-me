@@ -124,6 +124,7 @@ public class TodayController : ControllerBase
             t.IdentityId,
             t.Identity?.Name,
             t.Identity?.Icon,
+            t.Identity?.Color,
             t.DueDate,
             t.Status.ToString()
         )).ToList();
@@ -155,6 +156,7 @@ public class TodayController : ControllerBase
             t.IdentityId,
             t.Identity?.Name,
             t.Identity?.Icon,
+            t.Identity?.Color,
             t.DueDate,
             t.Status.ToString()
         )).ToList();
@@ -236,6 +238,7 @@ public record TodayTaskResponse(
     Guid? IdentityId,
     string? IdentityName,
     string? IdentityIcon,
+    string? IdentityColor,
     DateOnly? DueDate,
     string Status
 );
