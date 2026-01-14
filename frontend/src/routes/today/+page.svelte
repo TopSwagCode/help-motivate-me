@@ -55,6 +55,19 @@
 	// Track tasks being removed after snooze (outside 7-day window)
 	let removingAfterSnoozeIds = $state<string[]>([]);
 
+	// Collapsible section states (default expanded)
+	let sectionsExpanded = $state({
+		identityVotes: true,
+		identityProgress: true,
+		habitStacks: true,
+		tasks: true,
+		completedTasks: false
+	});
+
+	function toggleSection(section: keyof typeof sectionsExpanded) {
+		sectionsExpanded[section] = !sectionsExpanded[section];
+	}
+
 	onMount(async () => {
 		if (!$auth.initialized) {
 			await auth.init();
@@ -616,74 +629,118 @@
 				<button onclick={() => (error = '')} class="float-right text-red-500 hover:text-red-700">&times;</button>
 			</div>
 		{:else if todayData}
-			<!-- Identity Feedback -->
+			<!-- Identity Feedback (Votes) -->
 			{#if todayData.identityFeedback.length > 0}
-				<section class="mb-8">
-					<h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-						<span>🎯</span> {$t('today.identityVotes')}
-					</h2>
-					<div class="grid gap-3 sm:grid-cols-2">
-						{#each todayData.identityFeedback as feedback (feedback.id)}
-							<div
-								class="card p-4 border-l-4"
-								style="border-left-color: {feedback.color || '#6366f1'}"
-							>
-								<p class="font-medium text-gray-900">{feedback.name}</p>
-								<p class="text-sm text-gray-600 mt-1">{feedback.reinforcementMessage}</p>
-							</div>
-						{/each}
-					</div>
+				<section class="mb-6">
+					<button 
+						onclick={() => toggleSection('identityVotes')}
+						class="w-full flex items-center justify-between text-left mb-2 group"
+					>
+						<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+							<span>🎯</span> {$t('today.identityVotes')}
+							<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.identityFeedback.length}</span>
+						</h2>
+						<svg 
+							class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.identityVotes ? 'rotate-180' : ''}"
+							fill="none" stroke="currentColor" viewBox="0 0 24 24"
+						>
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+						</svg>
+					</button>
+					{#if sectionsExpanded.identityVotes}
+						<div class="flex flex-wrap gap-1.5">
+							{#each todayData.identityFeedback as feedback (feedback.id)}
+								<div
+									class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-sm transition-all hover:scale-105 cursor-default"
+									style="background-color: {feedback.color || '#6366f1'}15; border: 1px solid {feedback.color || '#6366f1'}30"
+									title={feedback.reinforcementMessage}
+								>
+									{#if feedback.icon}
+										<span class="text-sm">{feedback.icon}</span>
+									{/if}
+									<span class="font-medium text-gray-700">{feedback.name}</span>
+									<span class="text-green-500 text-xs">✓</span>
+								</div>
+							{/each}
+						</div>
+					{/if}
 				</section>
 			{/if}
 
 			<!-- Identity Progress -->
 			{#if todayData.identityProgress && todayData.identityProgress.length > 0}
-				<section class="mb-8">
-					<h2 class="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
-						<span>📊</span> {$t('today.identityProgress')}
-					</h2>
-					<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-						{#each todayData.identityProgress as progress (progress.id)}
-							<div 
-								class="rounded-lg p-3 transition-all hover:scale-[1.02] cursor-default"
-								style="background-color: {progress.color}15; border: 1px solid {progress.color}30"
-							>
-								<!-- Header: Icon + Score + Trend -->
-								<div class="flex items-center justify-between mb-1.5">
-									<span class="text-xl">{progress.icon || '🎯'}</span>
-									<div class="flex items-center gap-0.5">
-										<span class="text-sm font-bold" style="color: {progress.color || '#374151'}">{progress.score}</span>
-										{#if progress.trend === 'Up'}
-											<span class="text-green-500 text-xs">↑</span>
-										{:else if progress.trend === 'Down'}
-											<span class="text-red-500 text-xs">↓</span>
-										{:else}
-											<span class="text-gray-400 text-xs">→</span>
-										{/if}
+				<section class="mb-6">
+					<button 
+						onclick={() => toggleSection('identityProgress')}
+						class="w-full flex items-center justify-between text-left mb-2 group"
+					>
+						<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+							<span>📊</span> {$t('today.identityProgress')}
+						</h2>
+						<svg 
+							class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.identityProgress ? 'rotate-180' : ''}"
+							fill="none" stroke="currentColor" viewBox="0 0 24 24"
+						>
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+						</svg>
+					</button>
+					{#if sectionsExpanded.identityProgress}
+						<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+							{#each todayData.identityProgress as progress (progress.id)}
+								<div 
+									class="rounded-lg p-3 transition-all hover:scale-[1.02] cursor-default"
+									style="background-color: {progress.color}15; border: 1px solid {progress.color}30"
+								>
+									<!-- Header: Icon + Score + Trend -->
+									<div class="flex items-center justify-between mb-1.5">
+										<span class="text-xl">{progress.icon || '🎯'}</span>
+										<div class="flex items-center gap-0.5">
+											<span class="text-sm font-bold" style="color: {progress.color || '#374151'}">{progress.score}</span>
+											{#if progress.trend === 'Up'}
+												<span class="text-green-500 text-xs">↑</span>
+											{:else if progress.trend === 'Down'}
+												<span class="text-red-500 text-xs">↓</span>
+											{:else}
+												<span class="text-gray-400 text-xs">→</span>
+											{/if}
+										</div>
+									</div>
+									<!-- Name (truncated) -->
+									<p class="text-xs font-medium text-gray-700 truncate mb-1.5" title={progress.name}>{progress.name}</p>
+									<!-- Mini progress bar -->
+									<div class="bg-white/50 rounded-full h-1.5">
+										<div
+											class="h-1.5 rounded-full transition-all duration-500"
+											style="width: {progress.score}%; background-color: {progress.color || '#9CA3AF'}"
+										></div>
 									</div>
 								</div>
-								<!-- Name (truncated) -->
-								<p class="text-xs font-medium text-gray-700 truncate mb-1.5" title={progress.name}>{progress.name}</p>
-								<!-- Mini progress bar -->
-								<div class="bg-white/50 rounded-full h-1.5">
-									<div
-										class="h-1.5 rounded-full transition-all duration-500"
-										style="width: {progress.score}%; background-color: {progress.color || '#9CA3AF'}"
-									></div>
-								</div>
-							</div>
-						{/each}
-					</div>
+							{/each}
+						</div>
+					{/if}
 				</section>
 			{/if}
 
 			<!-- Habit Stacks -->
 			{#if todayData.habitStacks.length > 0}
-				<section class="mb-8">
-					<h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-						<span>🔗</span> {$t('today.habitStacks')}
-					</h2>
-					<div class="space-y-4">
+				<section class="mb-6">
+					<button 
+						onclick={() => toggleSection('habitStacks')}
+						class="w-full flex items-center justify-between text-left mb-3 group"
+					>
+						<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+							<span>🔗</span> {$t('today.habitStacks')}
+							<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.habitStacks.length}</span>
+						</h2>
+						<svg 
+							class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.habitStacks ? 'rotate-180' : ''}"
+							fill="none" stroke="currentColor" viewBox="0 0 24 24"
+						>
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+						</svg>
+					</button>
+					{#if sectionsExpanded.habitStacks}
+						<div class="space-y-4">
 						{#each todayData.habitStacks as stack (stack.id)}
 							<div class="card p-4">
 								<div class="flex items-center justify-between mb-3">
@@ -757,24 +814,38 @@
 							</div>
 						{/each}
 					</div>
+					{/if}
 				</section>
 			{/if}
 
-			<!-- Upcoming Tasks - Always visible -->
-			<section class="mb-8">
-				<div class="flex items-center justify-between mb-4">
-					<h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-						<span>📋</span> {$t('today.tasks')} ({todayData.upcomingTasks.length})
-					</h2>
-					{#if todayData.upcomingTasks.length > 0}
+			<!-- Upcoming Tasks -->
+			<section class="mb-6">
+				<div class="flex items-center justify-between mb-3">
+					<button 
+						onclick={() => toggleSection('tasks')}
+						class="flex items-center gap-2 text-left group"
+					>
+						<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+							<span>📋</span> {$t('today.tasks')}
+							<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.upcomingTasks.length}</span>
+						</h2>
+						<svg 
+							class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.tasks ? 'rotate-180' : ''}"
+							fill="none" stroke="currentColor" viewBox="0 0 24 24"
+						>
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+						</svg>
+					</button>
+					{#if todayData.upcomingTasks.length > 0 && sectionsExpanded.tasks}
 						<button
 							onclick={completeAllTasks}
-							class="px-3 py-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-md transition-colors"
+							class="px-2 py-1 text-xs font-medium text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-md transition-colors"
 						>
 							{$t('today.completeAll')}
 						</button>
 					{/if}
 				</div>
+				{#if sectionsExpanded.tasks}
 				<div class="card divide-y divide-gray-100">
 					{#if sortedUpcomingTasks.length > 0}
 						{#each sortedUpcomingTasks as task (task.id)}
@@ -868,13 +939,27 @@
 						</div>
 					{/if}
 				</div>
+				{/if}
 			</section>
 
-			<!-- Completed Tasks - Always visible -->
-			<section class="mb-8">
-				<h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-					<span>✅</span> {$t('today.completed')} ({todayData.completedTasks.length})
-				</h2>
+			<!-- Completed Tasks -->
+			<section class="mb-6">
+				<button 
+					onclick={() => toggleSection('completedTasks')}
+					class="w-full flex items-center justify-between text-left mb-3 group"
+				>
+					<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+						<span>✅</span> {$t('today.completed')}
+						<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.completedTasks.length}</span>
+					</h2>
+					<svg 
+						class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.completedTasks ? 'rotate-180' : ''}"
+						fill="none" stroke="currentColor" viewBox="0 0 24 24"
+					>
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+					</svg>
+				</button>
+				{#if sectionsExpanded.completedTasks}
 				<div class="card divide-y divide-gray-100">
 					{#if todayData.completedTasks.length > 0}
 						{#each todayData.completedTasks as task (task.id)}
@@ -923,6 +1008,7 @@
 						</div>
 					{/if}
 				</div>
+				{/if}
 			</section>
 
 			<!-- Empty State - Only show if no habit stacks -->
