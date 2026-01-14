@@ -11,6 +11,7 @@
 	} from '$lib/api/buddies';
 	import { processMultipleImages, formatFileSize } from '$lib/utils/imageProcessing';
 	import TodayViewContent from '$lib/components/today/TodayViewContent.svelte';
+	import JournalViewContent from '$lib/components/journal/JournalViewContent.svelte';
 	import type { BuddyTodayViewResponse, BuddyJournalEntry, BuddyJournalImage } from '$lib/types/buddy';
 
 	// Tab state
@@ -139,15 +140,6 @@
 		const date = new Date(dateStr + 'T12:00:00');
 		return date.toLocaleDateString('en-US', {
 			weekday: 'long',
-			month: 'long',
-			day: 'numeric'
-		});
-	}
-
-	function formatJournalDate(dateStr: string): string {
-		return new Date(dateStr + 'T12:00:00').toLocaleDateString('en-US', {
-			weekday: 'long',
-			year: 'numeric',
 			month: 'long',
 			day: 'numeric'
 		});
@@ -446,87 +438,14 @@
 						<p class="text-red-600 mb-4">{journalError}</p>
 					</div>
 				{:else}
-					<!-- Info Banner -->
-					<div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-						<p class="text-sm text-blue-800">
-							As an accountability buddy, you can leave encouraging notes and messages here. Your entries
-							will be visible to {userDisplayName} and will help keep them motivated!
-						</p>
-					</div>
-
-					<!-- Write Button -->
-					<div class="flex justify-end mb-4">
-						<button onclick={openCreateModal} class="btn-primary text-sm">
-							Write Encouragement
-						</button>
-					</div>
-
-					<!-- Entries List -->
-					{#if journalEntries.length === 0}
-						<div class="card p-12 text-center">
-							<div
-								class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center"
-							>
-								<svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-									/>
-								</svg>
-							</div>
-							<h3 class="text-lg font-medium text-gray-900 mb-2">No journal entries yet</h3>
-							<p class="text-gray-500 mb-6">
-								Be the first to leave an encouraging note for {userDisplayName}!
-							</p>
-							<button onclick={openCreateModal} class="btn-primary">Write Encouragement</button>
-						</div>
-					{:else}
-						<div class="space-y-4">
-							{#each journalEntries as entry (entry.id)}
-								<div class="card p-5">
-									<div class="flex items-start justify-between mb-2">
-										<div>
-											<h3 class="font-semibold text-gray-900 text-lg">{entry.title}</h3>
-											<p class="text-sm text-gray-500">{formatJournalDate(entry.entryDate)}</p>
-										</div>
-									</div>
-
-									{#if entry.description}
-										<p class="text-gray-600 text-sm mb-3 whitespace-pre-wrap">{entry.description}</p>
-									{/if}
-
-									{#if entry.images.length > 0}
-										<div class="flex gap-2 mt-3 overflow-x-auto pb-2">
-											{#each entry.images as image, idx (image.id)}
-												<button
-													type="button"
-													onclick={(e) => openLightbox(entry.images, idx, e)}
-													class="flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg"
-												>
-													<img
-														src={image.url}
-														alt={image.fileName}
-														class="w-20 h-20 object-cover rounded-lg hover:opacity-80 transition-opacity"
-													/>
-												</button>
-											{/each}
-										</div>
-									{/if}
-
-									<!-- Author Attribution -->
-									{#if entry.authorDisplayName}
-										<div class="flex justify-end mt-3 pt-3 border-t border-gray-100">
-											<span class="text-xs text-gray-500 italic">
-												— {entry.authorDisplayName}
-											</span>
-										</div>
-									{/if}
-								</div>
-							{/each}
-						</div>
-					{/if}
+					<JournalViewContent
+						entries={journalEntries}
+						mode="buddy"
+						buddyDisplayName={userDisplayName}
+						currentUserId={$auth.user?.id}
+						onCreateEntry={openCreateModal}
+						onOpenLightbox={openLightbox}
+					/>
 				{/if}
 			{/if}
 		{/if}

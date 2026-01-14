@@ -742,6 +742,12 @@
 		"sendInvite": "Send invitation",
 		"pending": "Afventende invitationer",
 		"viewProgress": "Se fremskridt",
+		"journal": {
+			"infoBanner": "Skriv en opmuntrende note til {name}!",
+			"writeEncouragement": "Skriv opmuntring",
+			"emptyTitle": "Ingen dagbogsindlæg endnu",
+			"emptyDescription": "Vær den første til at skrive en opmuntrende note til {name}!"
+		},
 		"errors": {
 			"loadFailed": "Kunne ikke indlæse venskabsrelationer",
 			"inviteFailed": "Kunne ikke sende invitation",

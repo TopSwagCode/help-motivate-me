@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
-	import { t, locale } from 'svelte-i18n';
+	import { t } from 'svelte-i18n';
 	import { get } from 'svelte/store';
 	import {
 		getJournalEntries,
@@ -16,6 +16,7 @@
 	} from '$lib/api/journal';
 	import { processMultipleImages, formatFileSize } from '$lib/utils/imageProcessing';
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
+	import JournalViewContent from '$lib/components/journal/JournalViewContent.svelte';
 	import type {
 		JournalEntry,
 		JournalImage,
@@ -282,15 +283,6 @@
 		}
 	}
 
-	function formatDate(dateStr: string): string {
-		return new Date(dateStr + 'T12:00:00').toLocaleDateString(get(locale) === 'da' ? 'da-DK' : 'en-US', {
-			weekday: 'long',
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric'
-		});
-	}
-
 	function openLightbox(images: JournalImage[], index: number, event: Event) {
 		event.stopPropagation();
 		lightboxImages = images;
@@ -350,75 +342,15 @@
 					>&times;</button
 				>
 			</div>
-		{:else if entries.length === 0}
-			<div class="card p-12 text-center">
-				<div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-					<svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-						/>
-					</svg>
-				</div>
-				<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('journal.emptyTitle')}</h3>
-				<p class="text-gray-500 mb-6">{$t('journal.emptyDescription')}</p>
-				<button onclick={openCreateModal} class="btn-primary">{$t('journal.createFirst')}</button>
-			</div>
 		{:else}
-			<div class="space-y-4">
-				{#each entries as entry (entry.id)}
-					<button
-						type="button"
-						onclick={() => openEditModal(entry)}
-						class="card p-5 text-left w-full hover:shadow-md transition-shadow"
-					>
-						<div class="flex items-start justify-between mb-2">
-							<div>
-								<h3 class="font-semibold text-gray-900 text-lg">{entry.title}</h3>
-								<p class="text-sm text-gray-500">{formatDate(entry.entryDate)}</p>
-							</div>
-							{#if entry.habitStackName || entry.taskItemTitle}
-								<span class="text-xs px-2 py-1 rounded-full bg-primary-50 text-primary-700">
-									{entry.habitStackName || entry.taskItemTitle}
-								</span>
-							{/if}
-						</div>
-
-						{#if entry.description}
-							<p class="text-gray-600 text-sm line-clamp-3 mb-3">{entry.description}</p>
-						{/if}
-
-						{#if entry.images.length > 0}
-							<div class="flex gap-2 mt-3 overflow-x-auto pb-2">
-								{#each entry.images as image, idx (image.id)}
-									<button
-										type="button"
-										onclick={(e) => openLightbox(entry.images, idx, e)}
-										class="flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg"
-									>
-										<img
-											src={image.url}
-											alt={image.fileName}
-											class="w-20 h-20 object-cover rounded-lg hover:opacity-80 transition-opacity"
-										/>
-									</button>
-								{/each}
-							</div>
-						{/if}
-
-						<!-- Author Attribution (for buddy entries) -->
-						{#if entry.authorDisplayName && entry.authorUserId && entry.authorUserId !== $auth.user?.id}
-							<div class="flex justify-end mt-3 pt-3 border-t border-gray-100">
-								<span class="text-xs text-gray-500 italic">
-									— {entry.authorDisplayName}
-								</span>
-							</div>
-						{/if}
-					</button>
-				{/each}
-			</div>
+			<JournalViewContent
+				{entries}
+				mode="own"
+				currentUserId={$auth.user?.id}
+				onCreateEntry={openCreateModal}
+				onEditEntry={(entry) => openEditModal(entry as JournalEntry)}
+				onOpenLightbox={openLightbox}
+			/>
 		{/if}
 	</main>
 

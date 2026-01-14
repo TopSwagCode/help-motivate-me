@@ -742,6 +742,12 @@
 		"sendInvite": "Send Invite",
 		"pending": "Pending Invitations",
 		"viewProgress": "View Progress",
+		"journal": {
+			"infoBanner": "Write an encouraging note for {name}!",
+			"writeEncouragement": "Write Encouragement",
+			"emptyTitle": "No journal entries yet",
+			"emptyDescription": "Be the first to write an encouraging note for {name}!"
+		},
 		"errors": {
 			"loadFailed": "Failed to load buddy relationships",
 			"inviteFailed": "Failed to send invitation",
