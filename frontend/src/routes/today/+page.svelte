@@ -737,13 +737,13 @@
 							fill="none" stroke="currentColor" viewBox="0 0 24 24"
 						>
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-						</svg>
+					</svg>
 					</button>
 					{#if sectionsExpanded.habitStacks}
-						<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+						<div class="columns-1 sm:columns-2 lg:columns-3 gap-2 space-y-2">
 						{#each todayData.habitStacks as stack (stack.id)}
 							<div 
-								class="rounded-lg overflow-hidden transition-all"
+								class="rounded-lg overflow-hidden transition-all break-inside-avoid"
 								style="background-color: {stack.identityColor || '#6366f1'}08; border: 1px solid {stack.identityColor || '#6366f1'}20"
 							>
 								<!-- Stack Header -->
