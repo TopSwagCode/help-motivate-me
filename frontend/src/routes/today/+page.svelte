@@ -740,72 +740,91 @@
 						</svg>
 					</button>
 					{#if sectionsExpanded.habitStacks}
-						<div class="space-y-4">
+						<div class="space-y-2">
 						{#each todayData.habitStacks as stack (stack.id)}
-							<div class="card p-4">
-								<div class="flex items-center justify-between mb-3">
-									<div>
-										<h3 class="font-medium text-gray-900">{stack.name}</h3>
-										{#if stack.triggerCue}
-											<p class="text-sm text-gray-500 mt-0.5">{stack.triggerCue}</p>
-										{/if}
+							<div 
+								class="rounded-lg overflow-hidden border transition-all"
+								style="border-color: {stack.identityColor || '#e5e7eb'}30; background: linear-gradient(135deg, {stack.identityColor || '#6366f1'}08, transparent)"
+							>
+								<!-- Compact Stack Header -->
+								<div class="flex items-center gap-3 px-3 py-2">
+									<!-- Identity color dot -->
+									{#if stack.identityColor}
+										<div 
+											class="w-2 h-8 rounded-full flex-shrink-0"
+											style="background-color: {stack.identityColor}"
+										></div>
+									{/if}
+									
+									<!-- Stack info -->
+									<div class="flex-1 min-w-0">
+										<div class="flex items-center gap-2">
+											<span class="font-medium text-gray-900 text-sm truncate">{stack.name}</span>
+											{#if stack.triggerCue}
+												<span class="text-xs text-gray-400 hidden sm:inline">• {stack.triggerCue}</span>
+											{/if}
+										</div>
 									</div>
-									<div class="flex items-center gap-2">
-										{#if stack.identityColor}
-											<span
-												class="w-3 h-3 rounded-full"
-												style="background-color: {stack.identityColor}"
-												title={stack.identityName}
-											></span>
-										{/if}
-										<span class="text-sm font-medium text-gray-600">
-											{stack.completedCount}/{stack.totalCount}
-										</span>
+									
+									<!-- Progress indicator -->
+									<div class="flex items-center gap-2 flex-shrink-0">
+										<!-- Mini circular progress -->
+										<div class="relative w-8 h-8">
+											<svg class="w-8 h-8 -rotate-90">
+												<circle cx="16" cy="16" r="12" fill="none" stroke="#e5e7eb" stroke-width="3"/>
+												<circle 
+													cx="16" cy="16" r="12" fill="none" 
+													stroke={stack.identityColor || '#6366f1'}
+													stroke-width="3"
+													stroke-linecap="round"
+													stroke-dasharray={2 * Math.PI * 12}
+													stroke-dashoffset={2 * Math.PI * 12 * (1 - (stack.totalCount > 0 ? stack.completedCount / stack.totalCount : 0))}
+													class="transition-all duration-500"
+												/>
+											</svg>
+											<span class="absolute inset-0 flex items-center justify-center text-xs font-bold text-gray-700">
+												{stack.completedCount}
+											</span>
+										</div>
+										
 										{#if stack.completedCount < stack.totalCount}
 											<button
 												onclick={() => completeAllHabits(stack.id)}
-												class="px-2 py-1 text-xs font-medium text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-md transition-colors"
+												class="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-md transition-colors"
+												title={$t('today.completeAll')}
 											>
-												{$t('today.completeAll')}
+												<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+												</svg>
 											</button>
+										{:else}
+											<span class="text-green-500 text-lg" title="All done!">✓</span>
 										{/if}
 									</div>
 								</div>
 
-								<!-- Progress bar -->
-								<div class="bg-gray-200 rounded-full h-1.5 mb-4">
-									<div
-										class="bg-primary-600 h-1.5 rounded-full transition-all duration-300"
-										style="width: {stack.totalCount > 0 ? (stack.completedCount / stack.totalCount) * 100 : 0}%"
-									></div>
-								</div>
-
-								<!-- Stack items -->
-								<div class="space-y-2">
+								<!-- Habit Items - Inline chips -->
+								<div class="flex flex-wrap gap-1.5 px-3 pb-3">
 									{#each stack.items as item (item.id)}
 										<button
 											onclick={() => toggleHabitItem(item.id)}
-											class="w-full flex items-start gap-3 p-2 rounded-lg transition-colors {item.isCompletedToday ? 'bg-green-50' : 'hover:bg-gray-50'} cursor-pointer"
+											class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-sm transition-all
+												{item.isCompletedToday 
+													? 'bg-green-100 text-green-700 hover:bg-green-200' 
+													: 'bg-white border border-gray-200 text-gray-700 hover:border-primary-300 hover:bg-primary-50'}"
+											title={item.habitDescription}
 										>
-											<div class="flex-shrink-0 mt-0.5">
-												{#if item.isCompletedToday}
-													<div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
-														<svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-															<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-														</svg>
-													</div>
-												{:else}
-													<div class="w-5 h-5 rounded-full border-2 border-gray-300"></div>
-												{/if}
-											</div>
-											<div class="flex-1 text-left">
-												<p class="{item.isCompletedToday ? 'text-gray-500 line-through' : 'text-gray-900'}">
-													{item.habitDescription}
-												</p>
-											</div>
+											{#if item.isCompletedToday}
+												<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+												</svg>
+											{:else}
+												<div class="w-3.5 h-3.5 rounded-full border-2 border-gray-300"></div>
+											{/if}
+											<span class="truncate max-w-[150px] {item.isCompletedToday ? 'line-through' : ''}">{item.habitDescription}</span>
 											{#if item.currentStreak > 0}
-												<span class="text-sm text-orange-500" title="{item.currentStreak} day streak">
-													{getStreakEmoji(item.currentStreak)} {item.currentStreak}
+												<span class="text-orange-500 text-xs flex-shrink-0" title="{item.currentStreak} day streak">
+													🔥{item.currentStreak}
 												</span>
 											{/if}
 										</button>
