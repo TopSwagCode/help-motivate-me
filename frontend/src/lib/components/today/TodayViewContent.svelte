@@ -1,0 +1,645 @@
+<script lang="ts">
+	import { t, locale } from 'svelte-i18n';
+	import { get } from 'svelte/store';
+	import type { TodayView, TodayTask, TodayHabitStack, IdentityFeedback, IdentityProgress } from '$lib/types';
+	import type { BuddyTodayViewResponse, BuddyTodayTask, BuddyTodayHabitStack } from '$lib/types/buddy';
+
+	// Unified type to accept both TodayView and BuddyTodayViewResponse
+	type TodayViewData = TodayView | BuddyTodayViewResponse;
+	type TaskData = TodayTask | BuddyTodayTask;
+	type HabitStackData = TodayHabitStack | BuddyTodayHabitStack;
+
+	interface Props {
+		todayData: TodayViewData;
+		readonly?: boolean;
+		// Event handlers for interactive mode
+		onToggleHabitItem?: (itemId: string) => Promise<void>;
+		onCompleteAllHabits?: (stackId: string) => Promise<void>;
+		onToggleTask?: (taskId: string) => Promise<void>;
+		onCompleteAllTasks?: () => Promise<void>;
+		onSnoozeTask?: (task: TaskData) => Promise<void>;
+		onPostponeTask?: (task: TaskData) => void;
+		onEditTask?: (task: TaskData) => void;
+		// Animation state (only needed for interactive mode)
+		transitioningTaskIds?: string[];
+		newlyArrivedTaskIds?: string[];
+		snoozingTaskIds?: string[];
+		removingAfterSnoozeIds?: string[];
+	}
+
+	let { 
+		todayData,
+		readonly = false,
+		onToggleHabitItem,
+		onCompleteAllHabits,
+		onToggleTask,
+		onCompleteAllTasks,
+		onSnoozeTask,
+		onPostponeTask,
+		onEditTask,
+		transitioningTaskIds = [],
+		newlyArrivedTaskIds = [],
+		snoozingTaskIds = [],
+		removingAfterSnoozeIds = []
+	}: Props = $props();
+
+	// Type guard to check if data has identityProgress (TodayView)
+	function hasIdentityProgress(data: TodayViewData): data is TodayView {
+		return 'identityProgress' in data;
+	}
+
+	// Collapsible section states
+	let sectionsExpanded = $state({
+		identityVotes: true,
+		identityProgress: true,
+		habitStacks: true,
+		tasks: true,
+		completedTasks: false
+	});
+
+	function toggleSection(section: keyof typeof sectionsExpanded) {
+		sectionsExpanded[section] = !sectionsExpanded[section];
+	}
+
+	// Sort by due date: tasks with due dates come first (nearest first), then tasks without due dates
+	function sortByDueDate(a: TaskData, b: TaskData): number {
+		if (!a.dueDate && !b.dueDate) return 0;
+		if (!a.dueDate) return 1;
+		if (!b.dueDate) return -1;
+		return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+	}
+
+	const sortedUpcomingTasks = $derived(todayData.upcomingTasks.slice().sort(sortByDueDate));
+
+	function formatRelativeDate(dateStr: string | null): string {
+		if (!dateStr) return get(t)('today.dates.noDate');
+
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+		const dueDate = new Date(dateStr);
+		dueDate.setHours(0, 0, 0, 0);
+
+		const diffDays = Math.round((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+		if (diffDays === 0) return get(t)('today.dates.today');
+		if (diffDays === 1) return get(t)('today.dates.tomorrow');
+		if (diffDays === -1) return get(t)('today.dates.yesterday');
+		if (diffDays < 0) return get(t)('today.dates.daysAgo', { values: { count: Math.abs(diffDays) } });
+
+		const currentLocale = get(locale) === 'da' ? 'da-DK' : 'en-US';
+		if (diffDays < 7) {
+			return dueDate.toLocaleDateString(currentLocale, { weekday: 'short', day: 'numeric' });
+		}
+		return dueDate.toLocaleDateString(currentLocale, { month: 'short', day: 'numeric' });
+	}
+
+	function getDueDateColor(dateStr: string | null): string {
+		if (!dateStr) return 'text-gray-400';
+
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+		const dueDate = new Date(dateStr);
+		dueDate.setHours(0, 0, 0, 0);
+
+		const diffDays = Math.round((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+		if (diffDays < 0) return 'text-red-600 font-medium';
+		if (diffDays === 0) return 'text-red-600 font-medium';
+		if (diffDays === 1) return 'text-orange-600';
+		return 'text-gray-500';
+	}
+
+	function getStreakEmoji(streak: number): string {
+		if (streak >= 30) return '🏆';
+		if (streak >= 14) return '💪';
+		if (streak >= 7) return '🔥';
+		if (streak >= 3) return '⚡';
+		return '';
+	}
+
+	async function handleToggleHabitItem(itemId: string) {
+		if (readonly || !onToggleHabitItem) return;
+		await onToggleHabitItem(itemId);
+	}
+
+	async function handleCompleteAllHabits(stackId: string) {
+		if (readonly || !onCompleteAllHabits) return;
+		await onCompleteAllHabits(stackId);
+	}
+
+	async function handleToggleTask(taskId: string) {
+		if (readonly || !onToggleTask) return;
+		await onToggleTask(taskId);
+	}
+
+	async function handleCompleteAllTasks() {
+		if (readonly || !onCompleteAllTasks) return;
+		await onCompleteAllTasks();
+	}
+
+	async function handleSnoozeTask(task: TaskData) {
+		if (readonly || !onSnoozeTask) return;
+		await onSnoozeTask(task);
+	}
+
+	function handlePostponeTask(task: TaskData) {
+		if (readonly || !onPostponeTask) return;
+		onPostponeTask(task);
+	}
+
+	function handleEditTask(task: TaskData) {
+		if (readonly || !onEditTask) return;
+		onEditTask(task);
+	}
+</script>
+
+<div class="space-y-6">
+	<!-- Identity Feedback (Votes) -->
+	{#if todayData.identityFeedback.length > 0}
+		<section>
+			<button 
+				onclick={() => toggleSection('identityVotes')}
+				class="w-full flex items-center justify-between text-left mb-2 group"
+			>
+				<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+					<span>🎯</span> {$t('today.identityVotes')}
+					<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.identityFeedback.length}</span>
+				</h2>
+				<svg 
+					class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.identityVotes ? 'rotate-180' : ''}"
+					fill="none" stroke="currentColor" viewBox="0 0 24 24"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+				</svg>
+			</button>
+			{#if sectionsExpanded.identityVotes}
+				<div class="flex flex-wrap gap-1.5">
+					{#each todayData.identityFeedback as feedback (feedback.id)}
+						<div
+							class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-sm transition-all hover:scale-105 cursor-default"
+							style="background-color: {feedback.color || '#6366f1'}15; border: 1px solid {feedback.color || '#6366f1'}30"
+							title={feedback.reinforcementMessage}
+						>
+							{#if feedback.icon}
+								<span class="text-sm">{feedback.icon}</span>
+							{/if}
+							<span class="font-medium text-gray-700">{feedback.name}</span>
+							<span class="text-green-500 text-xs">✓</span>
+						</div>
+					{/each}
+				</div>
+			{/if}
+		</section>
+	{/if}
+
+	<!-- Identity Progress -->
+	{#if hasIdentityProgress(todayData) && todayData.identityProgress && todayData.identityProgress.length > 0}
+		<section>
+			<button 
+				onclick={() => toggleSection('identityProgress')}
+				class="w-full flex items-center justify-between text-left mb-2 group"
+			>
+				<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+					<span>📊</span> {$t('today.identityProgress')}
+				</h2>
+				<svg 
+					class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.identityProgress ? 'rotate-180' : ''}"
+					fill="none" stroke="currentColor" viewBox="0 0 24 24"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+				</svg>
+			</button>
+			{#if sectionsExpanded.identityProgress}
+				<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+					{#each todayData.identityProgress as progress (progress.id)}
+						<div 
+							class="rounded-lg p-3 transition-all hover:scale-[1.02] cursor-default"
+							style="background-color: {progress.color}15; border: 1px solid {progress.color}30"
+						>
+							<!-- Header: Icon + Score + Trend -->
+							<div class="flex items-center justify-between mb-1.5">
+								<span class="text-xl">{progress.icon || '🎯'}</span>
+								<div class="flex items-center gap-0.5">
+									<span class="text-sm font-bold" style="color: {progress.color || '#374151'}">{progress.score}</span>
+									{#if progress.trend === 'Up'}
+										<span class="text-green-500 text-xs">↑</span>
+									{:else if progress.trend === 'Down'}
+										<span class="text-red-500 text-xs">↓</span>
+									{:else}
+										<span class="text-gray-400 text-xs">→</span>
+									{/if}
+								</div>
+							</div>
+							<!-- Name (truncated) -->
+							<p class="text-xs font-medium text-gray-700 truncate mb-1.5" title={progress.name}>{progress.name}</p>
+							<!-- Mini progress bar -->
+							<div class="bg-white/50 rounded-full h-1.5">
+								<div
+									class="h-1.5 rounded-full transition-all duration-500"
+									style="width: {progress.score}%; background-color: {progress.color || '#9CA3AF'}"
+								></div>
+							</div>
+						</div>
+					{/each}
+				</div>
+			{/if}
+		</section>
+	{/if}
+
+	<!-- Habit Stacks -->
+	{#if todayData.habitStacks.length > 0}
+		<section>
+			<button 
+				onclick={() => toggleSection('habitStacks')}
+				class="w-full flex items-center justify-between text-left mb-3 group"
+			>
+				<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+					<span>🔗</span> {$t('today.habitStacks')}
+					<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.habitStacks.length}</span>
+				</h2>
+				<svg 
+					class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.habitStacks ? 'rotate-180' : ''}"
+					fill="none" stroke="currentColor" viewBox="0 0 24 24"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+				</svg>
+			</button>
+			{#if sectionsExpanded.habitStacks}
+				<div class="columns-1 sm:columns-2 lg:columns-3 gap-2 space-y-2">
+					{#each todayData.habitStacks as stack (stack.id)}
+						<div 
+							class="rounded-lg overflow-hidden transition-all break-inside-avoid"
+							style="background-color: {stack.identityColor || '#6366f1'}08; border: 1px solid {stack.identityColor || '#6366f1'}20"
+						>
+							<!-- Stack Header -->
+							<div 
+								class="flex items-center gap-2 px-3 py-2"
+								style="background-color: {stack.identityColor || '#6366f1'}15"
+							>
+								{#if stack.identityIcon}
+									<span 
+										class="text-sm flex-shrink-0 px-1.5 py-0.5 rounded-full"
+										style="background-color: {stack.identityColor || '#6366f1'}25"
+										title={stack.identityName}
+									>
+										{stack.identityIcon}
+									</span>
+								{/if}
+								<span class="font-medium text-gray-800 text-sm truncate flex-1">{stack.name}</span>
+								<span class="text-xs text-gray-500">{stack.completedCount}/{stack.totalCount}</span>
+								{#if !readonly && stack.completedCount < stack.totalCount}
+									<button
+										onclick={() => handleCompleteAllHabits(stack.id)}
+										class="p-0.5 text-gray-400 hover:text-primary-600 rounded transition-colors"
+										title={$t('today.completeAll')}
+									>
+										<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+										</svg>
+									</button>
+								{:else if stack.completedCount === stack.totalCount}
+									<span class="text-green-500 text-sm">✓</span>
+								{/if}
+							</div>
+
+							<!-- Vertical Habits List -->
+							<div class="p-1">
+								{#each stack.items as item, index (item.id)}
+									{#if readonly}
+										<div
+											class="w-full flex items-center gap-2 px-2 py-1.5 rounded text-left
+												{item.isCompletedToday ? 'bg-green-500/10' : ''}"
+										>
+											<!-- Connector line + checkbox -->
+											<div class="flex flex-col items-center w-4 flex-shrink-0">
+												{#if index > 0}
+													<div 
+														class="w-0.5 h-1 -mt-1 mb-0.5 rounded-full"
+														style="background-color: {stack.items[index - 1]?.isCompletedToday ? '#22c55e' : (stack.identityColor || '#d1d5db')}40"
+													></div>
+												{/if}
+												{#if item.isCompletedToday}
+													<div class="w-4 h-4 rounded-full bg-green-500 flex items-center justify-center">
+														<svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+															<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+														</svg>
+													</div>
+												{:else}
+													<div 
+														class="w-4 h-4 rounded-full border-2 flex items-center justify-center text-[8px] font-bold"
+														style="border-color: {stack.identityColor || '#d1d5db'}60; color: {stack.identityColor || '#9ca3af'}"
+													>
+														{index + 1}
+													</div>
+												{/if}
+												{#if index < stack.items.length - 1}
+													<div 
+														class="w-0.5 h-1 mt-0.5 -mb-1 rounded-full"
+														style="background-color: {item.isCompletedToday ? '#22c55e' : (stack.identityColor || '#d1d5db')}40"
+													></div>
+												{/if}
+											</div>
+											
+											<!-- Habit text -->
+											<span class="flex-1 text-xs truncate {item.isCompletedToday ? 'text-green-700 line-through' : 'text-gray-700'}">
+												{item.habitDescription}
+											</span>
+											
+											<!-- Streak -->
+											{#if item.currentStreak > 0}
+												<span class="text-[10px] text-orange-500 flex-shrink-0">🔥{item.currentStreak}</span>
+											{/if}
+										</div>
+									{:else}
+										<button
+											onclick={() => handleToggleHabitItem(item.id)}
+											class="w-full flex items-center gap-2 px-2 py-1.5 rounded transition-all text-left
+												{item.isCompletedToday 
+													? 'bg-green-500/10' 
+													: 'hover:bg-white/50'}"
+										>
+											<!-- Connector line + checkbox -->
+											<div class="flex flex-col items-center w-4 flex-shrink-0">
+												{#if index > 0}
+													<div 
+														class="w-0.5 h-1 -mt-1 mb-0.5 rounded-full"
+														style="background-color: {stack.items[index - 1]?.isCompletedToday ? '#22c55e' : (stack.identityColor || '#d1d5db')}40"
+													></div>
+												{/if}
+												{#if item.isCompletedToday}
+													<div class="w-4 h-4 rounded-full bg-green-500 flex items-center justify-center">
+														<svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+															<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+														</svg>
+													</div>
+												{:else}
+													<div 
+														class="w-4 h-4 rounded-full border-2 flex items-center justify-center text-[8px] font-bold"
+														style="border-color: {stack.identityColor || '#d1d5db'}60; color: {stack.identityColor || '#9ca3af'}"
+													>
+														{index + 1}
+													</div>
+												{/if}
+												{#if index < stack.items.length - 1}
+													<div 
+														class="w-0.5 h-1 mt-0.5 -mb-1 rounded-full"
+														style="background-color: {item.isCompletedToday ? '#22c55e' : (stack.identityColor || '#d1d5db')}40"
+													></div>
+												{/if}
+											</div>
+											
+											<!-- Habit text -->
+											<span class="flex-1 text-xs truncate {item.isCompletedToday ? 'text-green-700 line-through' : 'text-gray-700'}">
+												{item.habitDescription}
+											</span>
+											
+											<!-- Streak -->
+											{#if item.currentStreak > 0}
+												<span class="text-[10px] text-orange-500 flex-shrink-0">🔥{item.currentStreak}</span>
+											{/if}
+										</button>
+									{/if}
+								{/each}
+							</div>
+						</div>
+					{/each}
+				</div>
+			{/if}
+		</section>
+	{/if}
+
+	<!-- Upcoming Tasks -->
+	<section>
+		<div class="flex items-center justify-between mb-3">
+			<button 
+				onclick={() => toggleSection('tasks')}
+				class="flex items-center gap-2 text-left group"
+			>
+				<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+					<span>📋</span> {$t('today.tasks')}
+					<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.upcomingTasks.length}</span>
+				</h2>
+				<svg 
+					class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.tasks ? 'rotate-180' : ''}"
+					fill="none" stroke="currentColor" viewBox="0 0 24 24"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+				</svg>
+			</button>
+			{#if !readonly && todayData.upcomingTasks.length > 0 && sectionsExpanded.tasks}
+				<button
+					onclick={handleCompleteAllTasks}
+					class="px-2 py-1 text-xs font-medium text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-md transition-colors"
+				>
+					{$t('today.completeAll')}
+				</button>
+			{/if}
+		</div>
+		{#if sectionsExpanded.tasks}
+			{#if sortedUpcomingTasks.length > 0}
+				<div class="columns-1 sm:columns-2 gap-2 space-y-2">
+					{#each sortedUpcomingTasks as task (task.id)}
+						<div
+							class="relative break-inside-avoid rounded-lg p-3 transition-all duration-300
+								{!readonly && transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95' : ''}
+								{!readonly && newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight' : ''}
+								{!readonly && snoozingTaskIds.includes(task.id) ? 'bg-amber-50' : ''}
+								{!readonly && removingAfterSnoozeIds.includes(task.id) ? 'animate-snooze-remove' : ''}"
+							style="background-color: {task.identityColor ? task.identityColor + '08' : 'white'}; border: 1px solid {task.identityColor ? task.identityColor + '30' : '#e5e7eb'}"
+						>
+							<!-- Snooze animation overlay -->
+							{#if !readonly && snoozingTaskIds.includes(task.id)}
+								<div class="absolute inset-0 flex items-center justify-center bg-amber-100/90 rounded-lg z-10">
+									<span class="text-amber-700 font-bold flex items-center gap-1">
+										💤 +7 days
+									</span>
+								</div>
+							{/if}
+							<!-- Removal message overlay -->
+							{#if !readonly && removingAfterSnoozeIds.includes(task.id)}
+								<div class="absolute inset-0 flex items-center justify-center bg-gray-100/90 rounded-lg z-10">
+									<span class="text-gray-600 font-medium text-sm">
+										📅 {$t('today.movedOutsideView')}
+									</span>
+								</div>
+							{/if}
+							
+							<!-- Task Header: Checkbox + Title -->
+							<div class="flex items-start gap-2">
+								{#if readonly}
+									<div class="flex-shrink-0 mt-0.5">
+										<div class="w-5 h-5 rounded-full border-2 border-gray-300"></div>
+									</div>
+								{:else}
+									<button
+										onclick={() => handleToggleTask(task.id)}
+										class="flex-shrink-0 mt-0.5 group"
+										title="Mark as completed"
+									>
+										<div
+											class="w-5 h-5 rounded-full border-2 transition-all duration-200 flex items-center justify-center
+												{transitioningTaskIds.includes(task.id) 
+													? 'bg-green-500 border-green-500' 
+													: 'border-gray-300 group-hover:border-green-400 group-hover:bg-green-50'}"
+										>
+											{#if transitioningTaskIds.includes(task.id)}
+												<svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+													<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+												</svg>
+											{/if}
+										</div>
+									</button>
+								{/if}
+								<div class="flex-1 min-w-0">
+									<p class="text-sm font-medium text-gray-900 leading-tight {!readonly && transitioningTaskIds.includes(task.id) ? 'line-through text-gray-400' : ''}">
+										{task.title}
+									</p>
+								</div>
+								{#if task.identityIcon}
+									<span 
+										class="text-sm flex-shrink-0 px-1.5 py-0.5 rounded-full"
+										style="background-color: {task.identityColor || '#6366f1'}20; color: {task.identityColor || '#6366f1'}"
+										title={task.identityName}
+									>
+										{task.identityIcon}
+									</span>
+								{/if}
+							</div>
+							
+							<!-- Task Meta Row -->
+							<div class="flex items-center gap-2 mt-2 pl-7">
+								<span class="text-xs text-gray-400 truncate flex-1">{task.goalTitle}</span>
+								<span class="text-xs font-medium {getDueDateColor(task.dueDate)} flex-shrink-0">
+									{formatRelativeDate(task.dueDate)}
+								</span>
+							</div>
+							
+							<!-- Action Buttons (only in interactive mode) -->
+							{#if !readonly}
+								<div class="flex items-center justify-end gap-1 mt-2 pt-2 border-t border-gray-100">
+									<button
+										onclick={() => handleSnoozeTask(task)}
+										class="p-1.5 text-gray-400 hover:text-amber-500 hover:bg-amber-50 rounded transition-colors"
+										title="Snooze 1 week"
+										disabled={snoozingTaskIds.includes(task.id)}
+									>
+										<span class="text-sm">💤</span>
+									</button>
+									<button
+										onclick={() => handlePostponeTask(task)}
+										class="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded transition-colors"
+										title="Postpone task"
+									>
+										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+										</svg>
+									</button>
+									<button
+										onclick={() => handleEditTask(task)}
+										class="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded transition-colors"
+										title="Edit task"
+									>
+										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+										</svg>
+									</button>
+								</div>
+							{/if}
+						</div>
+					{/each}
+				</div>
+			{:else}
+				<div class="text-center text-gray-400 py-8">
+					{$t('today.noPendingTasks')}
+				</div>
+			{/if}
+		{/if}
+	</section>
+
+	<!-- Completed Tasks -->
+	<section>
+		<button 
+			onclick={() => toggleSection('completedTasks')}
+			class="w-full flex items-center justify-between text-left mb-3 group"
+		>
+			<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+				<span>✅</span> {$t('today.completed')}
+				<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.completedTasks.length}</span>
+			</h2>
+			<svg 
+				class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.completedTasks ? 'rotate-180' : ''}"
+				fill="none" stroke="currentColor" viewBox="0 0 24 24"
+			>
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+			</svg>
+		</button>
+		{#if sectionsExpanded.completedTasks}
+			{#if todayData.completedTasks.length > 0}
+				<div class="columns-1 sm:columns-2 lg:columns-3 gap-2 space-y-2">
+					{#each todayData.completedTasks as task (task.id)}
+						<div
+							class="relative break-inside-avoid rounded-lg p-2.5 transition-all duration-300
+								{!readonly && transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95' : ''}
+								{!readonly && newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight-green' : ''}"
+							style="background-color: {task.identityColor ? task.identityColor + '10' : '#f0fdf4'}; border: 1px solid {task.identityColor ? task.identityColor + '30' : '#bbf7d0'}"
+						>
+							<div class="flex items-center gap-2">
+								{#if readonly}
+									<div class="flex-shrink-0">
+										<div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
+											<svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+											</svg>
+										</div>
+									</div>
+								{:else}
+									<button
+										onclick={() => handleToggleTask(task.id)}
+										class="flex-shrink-0 group"
+										title="Mark as incomplete"
+									>
+										<div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center group-hover:bg-green-600 transition-colors">
+											<svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+											</svg>
+										</div>
+									</button>
+								{/if}
+								<p class="flex-1 text-sm text-gray-500 line-through truncate">
+									{task.title}
+								</p>
+								{#if task.identityIcon}
+									<span 
+										class="text-xs flex-shrink-0 px-1.5 py-0.5 rounded-full opacity-70"
+										style="background-color: {task.identityColor || '#6366f1'}20; color: {task.identityColor || '#6366f1'}"
+										title={task.identityName}
+									>
+										{task.identityIcon}
+									</span>
+								{/if}
+							</div>
+						</div>
+					{/each}
+				</div>
+			{:else}
+				<div class="text-center text-gray-400 py-6">
+					{$t('today.noCompletedTasks')}
+				</div>
+			{/if}
+		{/if}
+	</section>
+
+	<!-- Empty State -->
+	{#if todayData.habitStacks.length === 0 && todayData.upcomingTasks.length === 0 && todayData.completedTasks.length === 0}
+		<div class="card p-12 text-center">
+			<div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+				<span class="text-3xl">🌟</span>
+			</div>
+			<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('today.allClear')}</h3>
+			<p class="text-gray-500 mb-6">{$t('today.allClearDescription')}</p>
+			{#if !readonly}
+				<a href="/habit-stacks" class="btn-primary">{$t('today.createHabitStack')}</a>
+			{/if}
+		</div>
+	{/if}
+</div>

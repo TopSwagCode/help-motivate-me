@@ -10,6 +10,7 @@
 		uploadBuddyJournalImage
 	} from '$lib/api/buddies';
 	import { processMultipleImages, formatFileSize } from '$lib/utils/imageProcessing';
+	import TodayViewContent from '$lib/components/today/TodayViewContent.svelte';
 	import type { BuddyTodayViewResponse, BuddyJournalEntry, BuddyJournalImage } from '$lib/types/buddy';
 
 	// Tab state
@@ -150,14 +151,6 @@
 			month: 'long',
 			day: 'numeric'
 		});
-	}
-
-	function getStreakEmoji(streak: number): string {
-		if (streak >= 30) return '🏆';
-		if (streak >= 14) return '🔥';
-		if (streak >= 7) return '💪';
-		if (streak >= 3) return '⚡';
-		return '';
 	}
 
 	function isToday(dateStr: string): boolean {
@@ -433,138 +426,10 @@
 						{/if}
 					</div>
 
-					<!-- Identity Feedback -->
-					{#if todayData.identityFeedback.length > 0}
-						<div class="card p-4 mb-6 bg-gradient-to-r from-primary-50 to-purple-50">
-							<div class="flex items-center gap-2 mb-2">
-								<span class="text-lg">🎯</span>
-								<h2 class="font-semibold text-gray-900">Identity Votes Today</h2>
-							</div>
-							<div class="space-y-2">
-								{#each todayData.identityFeedback as feedback (feedback.id)}
-									<p class="text-sm text-gray-700">{feedback.reinforcementMessage}</p>
-								{/each}
-							</div>
-						</div>
-					{/if}
-
-					<!-- Habit Stacks -->
-					<div class="card p-5 mb-6">
-						<div class="flex items-center justify-between mb-4">
-							<div class="flex items-center gap-2">
-								<span class="text-lg">🔗</span>
-								<h2 class="font-semibold text-gray-900">Habit Stacks</h2>
-							</div>
-						</div>
-
-						{#if todayData.habitStacks.length === 0}
-							<p class="text-gray-500 text-sm text-center py-4">No habit stacks</p>
-						{:else}
-							<div class="space-y-4">
-								{#each todayData.habitStacks as stack (stack.id)}
-									<div class="border border-gray-200 rounded-lg p-4">
-										<div class="flex items-center justify-between mb-3">
-											<div>
-												<h3 class="font-medium text-gray-900">{stack.name}</h3>
-												{#if stack.triggerCue}
-													<p class="text-xs text-gray-500">{stack.triggerCue}</p>
-												{/if}
-											</div>
-											<div class="text-sm text-gray-600">
-												{stack.completedCount}/{stack.totalCount}
-											</div>
-										</div>
-
-										<!-- Progress bar -->
-										<div class="h-2 bg-gray-100 rounded-full mb-3 overflow-hidden">
-											<div
-												class="h-full bg-primary-500 rounded-full transition-all"
-												style="width: {stack.totalCount > 0 ? (stack.completedCount / stack.totalCount) * 100 : 0}%"
-											></div>
-										</div>
-
-										<!-- Habit items -->
-										<div class="space-y-2">
-											{#each stack.items as item (item.id)}
-												<div class="flex items-center gap-3 py-1">
-													<div
-														class="w-5 h-5 rounded-full border-2 flex items-center justify-center {item.isCompletedToday
-															? 'bg-primary-500 border-primary-500'
-															: 'border-gray-300'}"
-													>
-														{#if item.isCompletedToday}
-															<svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-																<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-															</svg>
-														{/if}
-													</div>
-													<span class="text-sm {item.isCompletedToday ? 'text-gray-900' : 'text-gray-500'}">
-														{item.habitDescription}
-													</span>
-													{#if item.currentStreak > 0}
-														<span class="text-xs">{getStreakEmoji(item.currentStreak)} {item.currentStreak}</span>
-													{/if}
-												</div>
-											{/each}
-										</div>
-									</div>
-								{/each}
-							</div>
-						{/if}
-					</div>
-
-					<!-- Upcoming Tasks -->
-					<div class="card p-5 mb-6">
-						<div class="flex items-center gap-2 mb-4">
-							<span class="text-lg">📋</span>
-							<h2 class="font-semibold text-gray-900">Upcoming Tasks</h2>
-						</div>
-
-						{#if todayData.upcomingTasks.length === 0}
-							<p class="text-gray-500 text-sm text-center py-4">No upcoming tasks</p>
-						{:else}
-							<div class="space-y-2">
-								{#each todayData.upcomingTasks as task (task.id)}
-									<div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-										<div class="w-5 h-5 rounded-full border-2 border-gray-300 mt-0.5"></div>
-										<div class="flex-1 min-w-0">
-											<p class="font-medium text-gray-900">{task.title}</p>
-											<p class="text-xs text-gray-500">{task.goalTitle}</p>
-											{#if task.dueDate}
-												<p class="text-xs text-gray-400 mt-1">Due: {task.dueDate}</p>
-											{/if}
-										</div>
-									</div>
-								{/each}
-							</div>
-						{/if}
-					</div>
-
-					<!-- Completed Tasks -->
-					{#if todayData.completedTasks.length > 0}
-						<div class="card p-5">
-							<div class="flex items-center gap-2 mb-4">
-								<span class="text-lg">✅</span>
-								<h2 class="font-semibold text-gray-900">Completed Today</h2>
-							</div>
-
-							<div class="space-y-2">
-								{#each todayData.completedTasks as task (task.id)}
-									<div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
-										<div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mt-0.5">
-											<svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-											</svg>
-										</div>
-										<div class="flex-1 min-w-0">
-											<p class="font-medium text-gray-900 line-through">{task.title}</p>
-											<p class="text-xs text-gray-500">{task.goalTitle}</p>
-										</div>
-									</div>
-								{/each}
-							</div>
-						</div>
-					{/if}
+					<TodayViewContent
+						todayData={todayData}
+						readonly={true}
+					/>
 				{/if}
 			{/if}
 
