@@ -154,8 +154,8 @@ public class IdentityScoreService
         // Determine status based on score
         var status = GetStatus(normalizedScore);
 
-        // Hide numeric score for first 7 days
-        var showNumericScore = accountAgeDays >= 7;
+        // Show numeric score from day 1 (previously hidden for 7 days)
+        var showNumericScore = true;
 
         return new IdentityScoreResult(
             identity.Id,
