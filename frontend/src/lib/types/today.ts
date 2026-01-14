@@ -28,6 +28,7 @@ export interface TodayHabitStack {
 	identityId: string | null;
 	identityName: string | null;
 	identityColor: string | null;
+	identityIcon: string | null;
 	items: TodayHabitStackItem[];
 	completedCount: number;
 	totalCount: number;

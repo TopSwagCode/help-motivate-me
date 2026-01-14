@@ -451,6 +451,7 @@ public class AccountabilityBuddyController : ControllerBase
             s.IdentityId,
             s.Identity?.Name,
             s.Identity?.Color,
+            s.Identity?.Icon,
             s.Items.Select(i => new TodayHabitStackItemResponse(
                 i.Id,
                 i.HabitDescription,

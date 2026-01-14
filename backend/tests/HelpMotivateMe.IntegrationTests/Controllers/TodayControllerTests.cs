@@ -383,6 +383,7 @@ public record TodayHabitStackResponse(
     Guid? IdentityId,
     string? IdentityName,
     string? IdentityColor,
+    string? IdentityIcon,
     List<TodayHabitStackItemResponse> Items,
     int CompletedCount,
     int TotalCount

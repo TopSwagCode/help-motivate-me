@@ -751,6 +751,15 @@
 									class="flex items-center gap-2 px-3 py-2"
 									style="background-color: {stack.identityColor || '#6366f1'}15"
 								>
+									{#if stack.identityIcon}
+										<span 
+											class="text-sm flex-shrink-0 px-1.5 py-0.5 rounded-full"
+											style="background-color: {stack.identityColor || '#6366f1'}25"
+											title={stack.identityName}
+										>
+											{stack.identityIcon}
+										</span>
+									{/if}
 									<span class="font-medium text-gray-800 text-sm truncate flex-1">{stack.name}</span>
 									<span class="text-xs text-gray-500">{stack.completedCount}/{stack.totalCount}</span>
 									{#if stack.completedCount < stack.totalCount}

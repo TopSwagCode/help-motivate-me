@@ -64,6 +64,7 @@ public record TodayHabitStackResponse(
     Guid? IdentityId,
     string? IdentityName,
     string? IdentityColor,
+    string? IdentityIcon,
     IEnumerable<TodayHabitStackItemResponse> Items,
     int CompletedCount,
     int TotalCount
