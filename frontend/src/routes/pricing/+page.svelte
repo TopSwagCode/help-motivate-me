@@ -1,33 +1,32 @@
 <script lang="ts">
-	import { tiers } from '$lib/config/tiers';
+	import { tiers, featureComparison } from '$lib/config/tiers';
 
-	let billingPeriod = $state<'monthly' | 'annual'>('monthly');
+	let billingPeriod = $state<'monthly' | 'yearly'>('yearly');
 
-	function getPrice(price: string): string {
-		if (price === '$0') return '$0';
-
-		// Extract number from price string
-		const match = price.match(/\$(\d+)/);
-		if (!match) return price;
-
-		const monthlyPrice = parseInt(match[1]);
-
-		if (billingPeriod === 'annual') {
-			const annualPrice = Math.floor(monthlyPrice * 12 * 0.8); // 20% discount
-			return `$${Math.floor(annualPrice / 12)}/mo`;
+	function formatPrice(tier: typeof tiers[0]): string {
+		if (tier.monthlyPrice === 0) return '$0';
+		
+		if (billingPeriod === 'yearly') {
+			return `$${tier.yearlyPrice}`;
 		}
-		return price;
+		return `$${tier.monthlyPrice.toFixed(2)}`;
 	}
 
-	function getAnnualTotal(price: string): string | null {
-		if (price === '$0' || billingPeriod !== 'annual') return null;
+	function getPriceSubtext(tier: typeof tiers[0]): string {
+		if (tier.monthlyPrice === 0) return 'Forever free';
+		
+		if (billingPeriod === 'yearly') {
+			const monthlyEquivalent = (tier.yearlyPrice / 12).toFixed(2);
+			return `$${monthlyEquivalent}/mo billed yearly`;
+		}
+		return 'per month';
+	}
 
-		const match = price.match(/\$(\d+)/);
-		if (!match) return null;
-
-		const monthlyPrice = parseInt(match[1]);
-		const annualPrice = Math.floor(monthlyPrice * 12 * 0.8);
-		return `$${annualPrice}/year`;
+	function getEarlyBirdSavings(tier: typeof tiers[0]): string | null {
+		if (billingPeriod === 'yearly' && tier.earlyBirdYearlyPrice) {
+			return `Early bird: $${tier.earlyBirdYearlyPrice}`;
+		}
+		return null;
 	}
 </script>
 
@@ -46,7 +45,7 @@
 			<a href="/" class="text-primary-600 hover:text-primary-700 text-sm font-medium mb-2 inline-block">
 				&larr; Back to Home
 			</a>
-			<h1 class="text-3xl font-bold text-gray-900">Pricing</h1>
+			<h1 class="text-3xl font-bold text-gray-900">Choose the plan that fits your journey</h1>
 			<p class="mt-2 text-gray-600">
 				Simple, transparent pricing. No tracking. No hidden fees.
 			</p>
@@ -57,7 +56,7 @@
 	<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 		<div class="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
 			<p class="text-green-800 font-medium">
-				No tracking cookies. No data selling. Just tools to help you grow.
+				🌱 No tracking cookies. No data selling. Just tools to help you grow.
 			</p>
 		</div>
 	</div>
@@ -69,26 +68,30 @@
 				Monthly
 			</span>
 			<button
-				onclick={() => billingPeriod = billingPeriod === 'monthly' ? 'annual' : 'monthly'}
-				class="relative w-14 h-7 bg-gray-200 rounded-full transition-colors {billingPeriod === 'annual' ? 'bg-primary-600' : ''}"
+				onclick={() => billingPeriod = billingPeriod === 'monthly' ? 'yearly' : 'monthly'}
+				aria-label="Toggle between monthly and yearly billing"
+				class="relative w-14 h-7 bg-gray-200 rounded-full transition-colors {billingPeriod === 'yearly' ? 'bg-primary-600' : ''}"
 			>
 				<span
-					class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform {billingPeriod === 'annual' ? 'translate-x-7' : ''}"
+					class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform {billingPeriod === 'yearly' ? 'translate-x-7' : ''}"
 				></span>
 			</button>
-			<span class="text-sm font-medium {billingPeriod === 'annual' ? 'text-gray-900' : 'text-gray-500'}">
-				Annual
-				<span class="text-green-600 font-semibold ml-1">Save 20%</span>
+			<span class="text-sm font-medium {billingPeriod === 'yearly' ? 'text-gray-900' : 'text-gray-500'}">
+				Yearly
+				<span class="text-green-600 font-semibold ml-1">Save more</span>
 			</span>
 		</div>
+		<p class="text-center text-sm text-gray-500 mt-2">
+			Most people choose yearly to stay consistent and save money.
+		</p>
 	</div>
 
 	<!-- Pricing Cards -->
 	<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-		<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 			{#each tiers as tier}
 				<div
-					class="relative bg-white rounded-2xl shadow-sm border-2 p-6 flex flex-col {tier.popular ? 'border-primary-500 shadow-lg' : 'border-gray-200'}"
+					class="relative bg-white rounded-2xl shadow-sm border-2 p-6 flex flex-col {tier.popular ? 'border-primary-500 shadow-xl scale-105 z-10' : 'border-gray-200'}"
 				>
 					{#if tier.popular}
 						<span
@@ -100,60 +103,193 @@
 
 					<div class="text-center">
 						<h3 class="text-xl font-bold text-gray-900">{tier.name}</h3>
+						<p class="text-sm text-gray-500 mt-1">{tier.bestFor}</p>
+						
 						<div class="mt-4">
-							<span class="text-4xl font-bold text-gray-900">{getPrice(tier.price)}</span>
-							{#if tier.price !== '$0'}
-								<span class="text-gray-500 ml-1">
-									{billingPeriod === 'annual' ? 'billed annually' : ''}
-								</span>
+							<span class="text-4xl font-bold text-gray-900">{formatPrice(tier)}</span>
+							{#if billingPeriod === 'yearly' && tier.monthlyPrice > 0}
+								<span class="text-gray-500">/year</span>
 							{/if}
 						</div>
-						{#if getAnnualTotal(tier.price)}
-							<p class="text-sm text-gray-500 mt-1">{getAnnualTotal(tier.price)}</p>
+						<p class="text-sm text-gray-500 mt-1">{getPriceSubtext(tier)}</p>
+						
+						{#if getEarlyBirdSavings(tier)}
+							<p class="text-sm text-green-600 font-semibold mt-2 bg-green-50 rounded-lg py-1 px-2 inline-block">
+								✨ {getEarlyBirdSavings(tier)}
+							</p>
 						{/if}
-						<p class="text-gray-600 mt-2">{tier.description}</p>
+						
+						<p class="text-gray-600 mt-4 italic">"{tier.description}"</p>
 					</div>
 
-					<ul class="mt-6 space-y-3 flex-grow">
-						{#each tier.features as feature}
-							<li class="flex items-start gap-3">
-								<svg
-									class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M5 13l4 4L19 7"
-									/>
-								</svg>
-								<span class="text-gray-600">{feature}</span>
-							</li>
-						{/each}
-					</ul>
-
-					<div class="mt-8">
-						{#if tier.id === 'Free'}
-							<a
-								href="/auth/register"
-								class="btn-secondary w-full text-center block py-3"
-							>
-								Get Started Free
-							</a>
-						{:else}
-							<a
-								href="/auth/register"
-								class="{tier.popular ? 'btn-primary' : 'btn-secondary'} w-full text-center block py-3"
-							>
-								Get {tier.name}
-							</a>
-						{/if}
+					<div class="mt-6 flex-grow">
+						<a
+							href="/auth/register"
+							class="{tier.popular ? 'btn-primary' : 'btn-secondary'} w-full text-center block py-3"
+						>
+							{tier.id === 'Free' ? 'Get Started Free' : `Get ${tier.name}`}
+						</a>
 					</div>
 				</div>
 			{/each}
+		</div>
+	</div>
+
+	<!-- Feature Comparison Table -->
+	<div class="bg-white border-y border-gray-200">
+		<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+			<h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Compare Plans</h2>
+			
+			<!-- Desktop Table -->
+			<div class="hidden md:block overflow-x-auto">
+				<table class="w-full">
+					<thead>
+						<tr class="border-b-2 border-gray-200">
+							<th class="py-4 px-4 text-left text-sm font-semibold text-gray-900">Feature</th>
+							{#each tiers as tier}
+								<th class="py-4 px-4 text-center text-sm font-semibold {tier.popular ? 'text-primary-600 bg-primary-50 rounded-t-lg' : 'text-gray-900'}">
+									{tier.name}
+								</th>
+							{/each}
+						</tr>
+					</thead>
+					<tbody class="divide-y divide-gray-100">
+						{#each featureComparison as feature}
+							<tr class="hover:bg-gray-50">
+								<td class="py-4 px-4 text-sm text-gray-700 font-medium">{feature.name}</td>
+								<td class="py-4 px-4 text-center">
+									{#if typeof feature.free === 'boolean'}
+										{#if feature.free}
+											<svg class="w-5 h-5 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+											</svg>
+										{:else}
+											<span class="text-gray-300">—</span>
+										{/if}
+									{:else}
+										<span class="text-sm text-gray-600">{feature.free}</span>
+									{/if}
+								</td>
+								<td class="py-4 px-4 text-center {tiers[1].popular ? 'bg-primary-50' : ''}">
+									{#if typeof feature.plus === 'boolean'}
+										{#if feature.plus}
+											<svg class="w-5 h-5 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+											</svg>
+										{:else}
+											<span class="text-gray-300">—</span>
+										{/if}
+									{:else}
+										<span class="text-sm text-gray-600 font-medium">{feature.plus}</span>
+									{/if}
+								</td>
+								<td class="py-4 px-4 text-center">
+									{#if typeof feature.pro === 'boolean'}
+										{#if feature.pro}
+											<svg class="w-5 h-5 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+											</svg>
+										{:else}
+											<span class="text-gray-300">—</span>
+										{/if}
+									{:else}
+										<span class="text-sm text-gray-600 font-medium">{feature.pro}</span>
+									{/if}
+								</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Mobile Cards -->
+			<div class="md:hidden space-y-6">
+				{#each featureComparison as feature}
+					<div class="bg-gray-50 rounded-lg p-4">
+						<h4 class="font-medium text-gray-900 mb-3">{feature.name}</h4>
+						<div class="grid grid-cols-3 gap-2 text-center text-sm">
+							<div>
+								<span class="text-xs text-gray-500 block mb-1">Free</span>
+								{#if typeof feature.free === 'boolean'}
+									{#if feature.free}
+										<svg class="w-5 h-5 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+										</svg>
+									{:else}
+										<span class="text-gray-300">—</span>
+									{/if}
+								{:else}
+									<span class="text-gray-700">{feature.free}</span>
+								{/if}
+							</div>
+							<div class="bg-primary-100 rounded-lg py-1">
+								<span class="text-xs text-primary-700 block mb-1">Plus</span>
+								{#if typeof feature.plus === 'boolean'}
+									{#if feature.plus}
+										<svg class="w-5 h-5 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+										</svg>
+									{:else}
+										<span class="text-gray-300">—</span>
+									{/if}
+								{:else}
+									<span class="text-gray-700 font-medium">{feature.plus}</span>
+								{/if}
+							</div>
+							<div>
+								<span class="text-xs text-gray-500 block mb-1">Pro</span>
+								{#if typeof feature.pro === 'boolean'}
+									{#if feature.pro}
+										<svg class="w-5 h-5 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+										</svg>
+									{:else}
+										<span class="text-gray-300">—</span>
+									{/if}
+								{:else}
+									<span class="text-gray-700 font-medium">{feature.pro}</span>
+								{/if}
+							</div>
+						</div>
+					</div>
+				{/each}
+			</div>
+		</div>
+	</div>
+
+	<!-- Pricing Summary Table -->
+	<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+		<h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Pricing Summary</h2>
+		<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+			<table class="w-full">
+				<thead class="bg-gray-50">
+					<tr>
+						<th class="py-4 px-6 text-left text-sm font-semibold text-gray-900"></th>
+						<th class="py-4 px-6 text-center text-sm font-semibold text-gray-900">Monthly</th>
+						<th class="py-4 px-6 text-center text-sm font-semibold text-gray-900">Yearly</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-gray-100">
+					{#each tiers as tier}
+						<tr class="{tier.popular ? 'bg-primary-50' : ''}">
+							<td class="py-4 px-6 font-semibold text-gray-900">{tier.name}</td>
+							<td class="py-4 px-6 text-center text-gray-600">
+								{tier.monthlyPrice === 0 ? '$0' : `$${tier.monthlyPrice.toFixed(2)}`}
+							</td>
+							<td class="py-4 px-6 text-center">
+								<span class="font-semibold text-gray-900">
+									{tier.yearlyPrice === 0 ? '$0' : `$${tier.yearlyPrice}/year`}
+								</span>
+								{#if tier.earlyBirdYearlyPrice}
+									<span class="block text-sm text-green-600 font-medium">
+										Early bird: ${tier.earlyBirdYearlyPrice}
+									</span>
+								{/if}
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
 		</div>
 	</div>
 

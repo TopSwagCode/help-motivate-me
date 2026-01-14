@@ -83,16 +83,7 @@
 	</div>
 {/if}
 
-<!-- Header with Create Button -->
-<div class="flex justify-end mb-4">
-	<button onclick={onCreateEntry} class="btn-primary text-sm">
-		{#if mode === 'buddy'}
-			{$t('buddies.journal.writeEncouragement')}
-		{:else}
-			{$t('journal.newEntry')}
-		{/if}
-	</button>
-</div>
+
 
 <!-- Entries List -->
 {#if entries.length === 0}
