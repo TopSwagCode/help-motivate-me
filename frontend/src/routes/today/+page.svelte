@@ -803,32 +803,57 @@
 									</div>
 								</div>
 
-								<!-- Habit Items - Inline chips -->
-								<div class="flex flex-wrap gap-1.5 px-3 pb-3">
-									{#each stack.items as item (item.id)}
-										<button
-											onclick={() => toggleHabitItem(item.id)}
-											class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-sm transition-all
-												{item.isCompletedToday 
-													? 'bg-green-100 text-green-700 hover:bg-green-200' 
-													: 'bg-white border border-gray-200 text-gray-700 hover:border-primary-300 hover:bg-primary-50'}"
-											title={item.habitDescription}
-										>
-											{#if item.isCompletedToday}
-												<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+								<!-- Habit Items - Connected Chain -->
+								<div class="px-3 pb-3">
+									<div class="flex items-center flex-wrap gap-y-2">
+										{#each stack.items as item, index (item.id)}
+											<!-- Chain connector (before item, except first) -->
+											{#if index > 0}
+												<div class="flex items-center px-1">
+													<svg 
+														class="w-4 h-4 {stack.items[index - 1]?.isCompletedToday ? 'text-green-400' : 'text-gray-300'}"
+														fill="none" stroke="currentColor" viewBox="0 0 24 24"
+													>
+														<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+													</svg>
+												</div>
+											{/if}
+											
+											<!-- Habit item -->
+											<button
+												onclick={() => toggleHabitItem(item.id)}
+												class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all
+													{item.isCompletedToday 
+														? 'bg-green-500 text-white shadow-sm hover:bg-green-600' 
+														: 'bg-white border-2 border-dashed border-gray-300 text-gray-600 hover:border-primary-400 hover:bg-primary-50 hover:text-primary-700'}"
+												style={item.isCompletedToday ? '' : `border-color: ${stack.identityColor || '#d1d5db'}50`}
+											>
+												{#if item.isCompletedToday}
+													<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+														<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+													</svg>
+												{:else}
+													<span class="w-4 h-4 flex items-center justify-center text-xs font-bold opacity-50">{index + 1}</span>
+												{/if}
+												<span class="truncate max-w-[120px] sm:max-w-[180px]">{item.habitDescription}</span>
+												{#if item.currentStreak > 0}
+													<span class="text-xs flex-shrink-0 {item.isCompletedToday ? 'text-green-100' : 'text-orange-500'}">
+														🔥{item.currentStreak}
+													</span>
+												{/if}
+											</button>
+										{/each}
+										
+										<!-- End indicator when all complete -->
+										{#if stack.completedCount === stack.totalCount && stack.totalCount > 0}
+											<div class="flex items-center px-1">
+												<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
 												</svg>
-											{:else}
-												<div class="w-3.5 h-3.5 rounded-full border-2 border-gray-300"></div>
-											{/if}
-											<span class="truncate max-w-[150px] {item.isCompletedToday ? 'line-through' : ''}">{item.habitDescription}</span>
-											{#if item.currentStreak > 0}
-												<span class="text-orange-500 text-xs flex-shrink-0" title="{item.currentStreak} day streak">
-													🔥{item.currentStreak}
-												</span>
-											{/if}
-										</button>
-									{/each}
+											</div>
+											<span class="text-green-500 text-lg">🎉</span>
+										{/if}
+									</div>
 								</div>
 							</div>
 						{/each}
