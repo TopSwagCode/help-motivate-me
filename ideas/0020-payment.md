@@ -35,3 +35,9 @@ Polar__Products__ProYearly=<product-uuid>
 
 Database Migration
 A migration AddSubscriptions was created and will run automatically on startup.
+
+https://sandbox.polar.sh/dashboard/topswagcode/settings/webhooks
+
+* Find product id's again
+* Find apikey
+* setup and test
