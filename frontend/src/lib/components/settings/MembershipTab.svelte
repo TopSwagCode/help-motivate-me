@@ -1,26 +1,79 @@
 <script lang="ts">
 	import { auth } from '$lib/stores/auth';
-	import { updateMembership } from '$lib/api/settings';
+	import { createCheckout, getSubscriptionStatus, cancelSubscription, type SubscriptionStatus } from '$lib/api/payment';
 	import { tiers, featureComparison } from '$lib/config/tiers';
 	import type { MembershipTier } from '$lib/types/auth';
+	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 
 	let loading = $state<MembershipTier | null>(null);
+	let cancelLoading = $state(false);
 	let error = $state('');
+	let success = $state('');
 	let billingPeriod = $state<'monthly' | 'yearly'>('yearly');
+	let subscriptionStatus = $state<SubscriptionStatus | null>(null);
+
+	onMount(async () => {
+		// Check for success param
+		if ($page.url.searchParams.get('checkout') === 'success') {
+			success = 'Your subscription has been activated! Thank you for your support.';
+			// Refresh user data
+			await auth.refreshUser();
+		}
+
+		// Load subscription status
+		try {
+			subscriptionStatus = await getSubscriptionStatus();
+		} catch (e) {
+			console.error('Failed to load subscription status', e);
+		}
+	});
 
 	async function handleUpgrade(tier: MembershipTier) {
+		if (tier === 'Free') {
+			// For downgrade to Free, show cancel flow if active subscription
+			if (subscriptionStatus?.hasActiveSubscription) {
+				await handleCancel();
+			}
+			return;
+		}
+
 		if (tier === $auth.user?.membershipTier) return;
 
 		loading = tier;
 		error = '';
 
 		try {
-			const updatedUser = await updateMembership({ tier });
-			auth.updateUser(updatedUser);
+			const session = await createCheckout({
+				tier: tier as 'Plus' | 'Pro',
+				billingInterval: billingPeriod
+			});
+
+			// Redirect to Polar checkout
+			window.location.href = session.checkoutUrl;
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to update membership';
-		} finally {
+			error = e instanceof Error ? e.message : 'Failed to start checkout';
 			loading = null;
+		}
+	}
+
+	async function handleCancel() {
+		if (!confirm('Are you sure you want to cancel your subscription? You will retain access until the end of your billing period.')) {
+			return;
+		}
+
+		cancelLoading = true;
+		error = '';
+
+		try {
+			await cancelSubscription();
+			subscriptionStatus = await getSubscriptionStatus();
+			success = 'Your subscription has been canceled. You will retain access until the end of your billing period.';
+			await auth.refreshUser();
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to cancel subscription';
+		} finally {
+			cancelLoading = false;
 		}
 	}
 
@@ -30,7 +83,7 @@
 
 	function formatPrice(tier: typeof tiers[0]): string {
 		if (tier.monthlyPrice === 0) return '$0';
-		
+
 		if (billingPeriod === 'yearly') {
 			return `$${tier.yearlyPrice}`;
 		}
@@ -39,7 +92,7 @@
 
 	function getPriceSubtext(tier: typeof tiers[0]): string {
 		if (tier.monthlyPrice === 0) return 'Forever free';
-		
+
 		if (billingPeriod === 'yearly') {
 			const monthlyEquivalent = (tier.yearlyPrice / 12).toFixed(2);
 			return `$${monthlyEquivalent}/mo billed yearly`;
@@ -50,7 +103,7 @@
 	function getFeatureValue(featureName: string, tierId: MembershipTier): string | boolean {
 		const feature = featureComparison.find(f => f.name === featureName);
 		if (!feature) return false;
-		
+
 		switch (tierId) {
 			case 'Free': return feature.free;
 			case 'Plus': return feature.plus;
@@ -58,13 +111,59 @@
 			default: return false;
 		}
 	}
+
+	function formatDate(dateStr: string | null): string {
+		if (!dateStr) return '';
+		return new Date(dateStr).toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric'
+		});
+	}
 </script>
 
 <div>
 	<h2 class="text-lg font-semibold text-gray-900 mb-2">Membership</h2>
-	<p class="text-sm text-gray-600 mb-6">
+	<p class="text-sm text-gray-600 mb-2">
 		Current plan: <span class="font-medium text-primary-600">{$auth.user?.membershipTier}</span>
 	</p>
+
+	{#if subscriptionStatus?.hasActiveSubscription}
+		<div class="bg-primary-50 border border-primary-200 rounded-lg p-4 mb-6">
+			<div class="flex items-center justify-between">
+				<div>
+					<p class="text-sm text-primary-800">
+						<span class="font-medium">{subscriptionStatus.tier}</span> plan
+						({subscriptionStatus.billingInterval})
+					</p>
+					{#if subscriptionStatus.currentPeriodEnd}
+						<p class="text-xs text-primary-600 mt-1">
+							{#if subscriptionStatus.cancelAtPeriodEnd}
+								Cancels on {formatDate(subscriptionStatus.currentPeriodEnd)}
+							{:else}
+								Renews on {formatDate(subscriptionStatus.currentPeriodEnd)}
+							{/if}
+						</p>
+					{/if}
+				</div>
+				{#if !subscriptionStatus.cancelAtPeriodEnd}
+					<button
+						onclick={handleCancel}
+						disabled={cancelLoading}
+						class="text-sm text-red-600 hover:text-red-700 font-medium"
+					>
+						{cancelLoading ? 'Canceling...' : 'Cancel subscription'}
+					</button>
+				{/if}
+			</div>
+		</div>
+	{/if}
+
+	{#if success}
+		<div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm mb-6">
+			{success}
+		</div>
+	{/if}
 
 	{#if error}
 		<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-6">
@@ -118,7 +217,7 @@
 				<div class="text-center">
 					<h3 class="text-lg font-semibold text-gray-900">{tier.name}</h3>
 					<p class="text-xs text-gray-500 mt-1">{tier.bestFor}</p>
-					
+
 					<div class="mt-3">
 						<span class="text-2xl font-bold text-gray-900">{formatPrice(tier)}</span>
 						{#if billingPeriod === 'yearly' && tier.monthlyPrice > 0}
@@ -126,20 +225,20 @@
 						{/if}
 					</div>
 					<p class="text-xs text-gray-500">{getPriceSubtext(tier)}</p>
-					
+
 					{#if billingPeriod === 'yearly' && tier.earlyBirdYearlyPrice}
 						<p class="text-xs text-green-600 font-medium mt-1">
-							✨ Early bird: ${tier.earlyBirdYearlyPrice}
+							Early bird: ${tier.earlyBirdYearlyPrice}
 						</p>
 					{/if}
-					
+
 					<p class="text-sm text-gray-600 mt-2 italic">"{tier.description}"</p>
 				</div>
 
 				<div class="mt-4">
 					{#if isCurrentTier}
-						<button disabled class="btn-secondary w-full cursor-default text-sm py-2"> 
-							Current Plan 
+						<button disabled class="btn-secondary w-full cursor-default text-sm py-2">
+							Current Plan
 						</button>
 					{:else if isUpgrade}
 						<button
@@ -147,16 +246,32 @@
 							disabled={loading !== null}
 							class="btn-primary w-full text-sm py-2"
 						>
-							{loading === tier.id ? 'Upgrading...' : `Upgrade to ${tier.name}`}
+							{loading === tier.id ? 'Processing...' : `Upgrade to ${tier.name}`}
 						</button>
 					{:else if isDowngrade}
-						<button
-							onclick={() => handleUpgrade(tier.id)}
-							disabled={loading !== null}
-							class="btn-secondary w-full text-sm py-2"
-						>
-							{loading === tier.id ? 'Changing...' : `Switch to ${tier.name}`}
-						</button>
+						{#if tier.id === 'Free' && subscriptionStatus?.hasActiveSubscription}
+							<button
+								onclick={handleCancel}
+								disabled={cancelLoading || subscriptionStatus?.cancelAtPeriodEnd}
+								class="btn-secondary w-full text-sm py-2"
+							>
+								{#if subscriptionStatus?.cancelAtPeriodEnd}
+									Cancellation pending
+								{:else if cancelLoading}
+									Canceling...
+								{:else}
+									Cancel subscription
+								{/if}
+							</button>
+						{:else}
+							<button
+								onclick={() => handleUpgrade(tier.id)}
+								disabled={loading !== null}
+								class="btn-secondary w-full text-sm py-2"
+							>
+								{loading === tier.id ? 'Processing...' : `Switch to ${tier.name}`}
+							</button>
+						{/if}
 					{/if}
 				</div>
 			</div>
@@ -166,7 +281,7 @@
 	<!-- Feature Comparison -->
 	<div class="bg-gray-50 rounded-xl p-4">
 		<h3 class="font-semibold text-gray-900 mb-4 text-center">Compare Plans</h3>
-		
+
 		<!-- Desktop Table -->
 		<div class="hidden md:block overflow-x-auto">
 			<table class="w-full text-sm">
@@ -193,7 +308,7 @@
 												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 											</svg>
 										{:else}
-											<span class="text-gray-300">—</span>
+											<span class="text-gray-300">-</span>
 										{/if}
 									{:else}
 										<span class="text-gray-600">{value}</span>
@@ -222,7 +337,7 @@
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 										</svg>
 									{:else}
-										<span class="text-gray-300">—</span>
+										<span class="text-gray-300">-</span>
 									{/if}
 								{:else}
 									<span class="text-gray-700 font-medium">{value}</span>
@@ -234,8 +349,4 @@
 			{/each}
 		</div>
 	</div>
-
-	<p class="text-xs text-gray-500 mt-6 text-center">
-		Note: This is a placeholder. Payment integration will be added in a future update.
-	</p>
 </div>

@@ -27,6 +27,7 @@ public class AppDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<WhitelistEntry> WhitelistEntries => Set<WhitelistEntry>();
     public DbSet<AiUsageLog> AiUsageLogs => Set<AiUsageLog>();
     public DbSet<NotificationPreferences> NotificationPreferences => Set<NotificationPreferences>();
+    public DbSet<Subscription> Subscriptions => Set<Subscription>();
 
     // Data Protection keys for persistent authentication across restarts and instances
     public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();

@@ -78,6 +78,15 @@ function createAuthStore() {
 
 		updateUser(updatedUser: User) {
 			update((state) => ({ ...state, user: updatedUser }));
+		},
+
+		async refreshUser() {
+			try {
+				const user = await apiGet<User>('/auth/me');
+				update((state) => ({ ...state, user }));
+			} catch {
+				// User may not be authenticated
+			}
 		}
 	};
 }

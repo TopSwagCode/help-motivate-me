@@ -1,11 +1,14 @@
 <script lang="ts">
+	import { auth } from '$lib/stores/auth';
+	import { createCheckout } from '$lib/api/payment';
 	import { tiers, featureComparison } from '$lib/config/tiers';
 
 	let billingPeriod = $state<'monthly' | 'yearly'>('yearly');
+	let loading = $state<string | null>(null);
 
 	function formatPrice(tier: typeof tiers[0]): string {
 		if (tier.monthlyPrice === 0) return '$0';
-		
+
 		if (billingPeriod === 'yearly') {
 			return `$${tier.yearlyPrice}`;
 		}
@@ -14,7 +17,7 @@
 
 	function getPriceSubtext(tier: typeof tiers[0]): string {
 		if (tier.monthlyPrice === 0) return 'Forever free';
-		
+
 		if (billingPeriod === 'yearly') {
 			const monthlyEquivalent = (tier.yearlyPrice / 12).toFixed(2);
 			return `$${monthlyEquivalent}/mo billed yearly`;
@@ -27,6 +30,36 @@
 			return `Early bird: $${tier.earlyBirdYearlyPrice}`;
 		}
 		return null;
+	}
+
+	async function handleSelectTier(tierId: string) {
+		if (tierId === 'Free') {
+			window.location.href = '/auth/register';
+			return;
+		}
+
+		if (!$auth.user) {
+			// Store intended tier and redirect to register
+			sessionStorage.setItem('pendingUpgrade', JSON.stringify({
+				tier: tierId,
+				billingPeriod
+			}));
+			window.location.href = '/auth/register?return=/settings?tab=membership';
+			return;
+		}
+
+		// User is logged in, start checkout
+		loading = tierId;
+		try {
+			const session = await createCheckout({
+				tier: tierId as 'Plus' | 'Pro',
+				billingInterval: billingPeriod
+			});
+			window.location.href = session.checkoutUrl;
+		} catch (e) {
+			console.error('Checkout error:', e);
+			loading = null;
+		}
 	}
 </script>
 
@@ -56,7 +89,7 @@
 	<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 		<div class="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
 			<p class="text-green-800 font-medium">
-				🌱 No tracking cookies. No data selling. Just tools to help you grow.
+				No tracking cookies. No data selling. Just tools to help you grow.
 			</p>
 		</div>
 	</div>
@@ -104,7 +137,7 @@
 					<div class="text-center">
 						<h3 class="text-xl font-bold text-gray-900">{tier.name}</h3>
 						<p class="text-sm text-gray-500 mt-1">{tier.bestFor}</p>
-						
+
 						<div class="mt-4">
 							<span class="text-4xl font-bold text-gray-900">{formatPrice(tier)}</span>
 							{#if billingPeriod === 'yearly' && tier.monthlyPrice > 0}
@@ -112,23 +145,30 @@
 							{/if}
 						</div>
 						<p class="text-sm text-gray-500 mt-1">{getPriceSubtext(tier)}</p>
-						
+
 						{#if getEarlyBirdSavings(tier)}
 							<p class="text-sm text-green-600 font-semibold mt-2 bg-green-50 rounded-lg py-1 px-2 inline-block">
-								✨ {getEarlyBirdSavings(tier)}
+								{getEarlyBirdSavings(tier)}
 							</p>
 						{/if}
-						
+
 						<p class="text-gray-600 mt-4 italic">"{tier.description}"</p>
 					</div>
 
 					<div class="mt-6 flex-grow">
-						<a
-							href="/auth/register"
+						<button
+							onclick={() => handleSelectTier(tier.id)}
+							disabled={loading !== null}
 							class="{tier.popular ? 'btn-primary' : 'btn-secondary'} w-full text-center block py-3"
 						>
-							{tier.id === 'Free' ? 'Get Started Free' : `Get ${tier.name}`}
-						</a>
+							{#if loading === tier.id}
+								Processing...
+							{:else if tier.id === 'Free'}
+								Get Started Free
+							{:else}
+								Get {tier.name}
+							{/if}
+						</button>
 					</div>
 				</div>
 			{/each}
@@ -139,7 +179,7 @@
 	<div class="bg-white border-y border-gray-200">
 		<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 			<h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Compare Plans</h2>
-			
+
 			<!-- Desktop Table -->
 			<div class="hidden md:block overflow-x-auto">
 				<table class="w-full">
@@ -164,7 +204,7 @@
 												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 											</svg>
 										{:else}
-											<span class="text-gray-300">—</span>
+											<span class="text-gray-300">-</span>
 										{/if}
 									{:else}
 										<span class="text-sm text-gray-600">{feature.free}</span>
@@ -177,7 +217,7 @@
 												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 											</svg>
 										{:else}
-											<span class="text-gray-300">—</span>
+											<span class="text-gray-300">-</span>
 										{/if}
 									{:else}
 										<span class="text-sm text-gray-600 font-medium">{feature.plus}</span>
@@ -190,7 +230,7 @@
 												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 											</svg>
 										{:else}
-											<span class="text-gray-300">—</span>
+											<span class="text-gray-300">-</span>
 										{/if}
 									{:else}
 										<span class="text-sm text-gray-600 font-medium">{feature.pro}</span>
@@ -216,7 +256,7 @@
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 										</svg>
 									{:else}
-										<span class="text-gray-300">—</span>
+										<span class="text-gray-300">-</span>
 									{/if}
 								{:else}
 									<span class="text-gray-700">{feature.free}</span>
@@ -230,7 +270,7 @@
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 										</svg>
 									{:else}
-										<span class="text-gray-300">—</span>
+										<span class="text-gray-300">-</span>
 									{/if}
 								{:else}
 									<span class="text-gray-700 font-medium">{feature.plus}</span>
@@ -244,7 +284,7 @@
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 										</svg>
 									{:else}
-										<span class="text-gray-300">—</span>
+										<span class="text-gray-300">-</span>
 									{/if}
 								{:else}
 									<span class="text-gray-700 font-medium">{feature.pro}</span>
@@ -304,7 +344,7 @@
 				</div>
 				<div>
 					<h3 class="font-semibold text-gray-900">What payment methods do you accept?</h3>
-					<p class="text-gray-600 mt-1">We accept major credit cards. Payment processing is handled securely.</p>
+					<p class="text-gray-600 mt-1">We accept major credit cards. Payment processing is handled securely by Polar.</p>
 				</div>
 				<div>
 					<h3 class="font-semibold text-gray-900">Is there a free trial for paid plans?</h3>
@@ -334,12 +374,5 @@
 				Contact Us
 			</a>
 		</div>
-	</div>
-
-	<!-- Note -->
-	<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-		<p class="text-xs text-gray-500 text-center">
-			Note: Payment integration will be added in a future update. Currently, all features are available during beta.
-		</p>
 	</div>
 </div>

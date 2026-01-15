@@ -43,6 +43,9 @@ builder.Services.AddSingleton<IStorageService, LocalFileStorageService>();
 // OpenAI Service
 builder.Services.AddHttpClient<IOpenAiService, OpenAiService>();
 
+// Polar Payment Service
+builder.Services.AddHttpClient<IPolarService, PolarService>();
+
 // Identity Score Service
 builder.Services.AddScoped<IdentityScoreService>();
 
