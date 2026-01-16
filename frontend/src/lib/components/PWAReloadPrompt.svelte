@@ -67,10 +67,10 @@
 
 {#if offlineReady}
 	<div
-		class="fixed bottom-4 right-4 z-50 flex items-center gap-3 rounded-lg bg-green-600 px-4 py-3 text-white shadow-lg"
+		class="fixed bottom-20 left-4 right-4 sm:left-auto sm:right-4 sm:bottom-20 z-[100] flex items-center justify-between gap-3 rounded-lg bg-green-600 px-4 py-3 text-white shadow-lg"
 	>
 		<span>App ready to work offline</span>
-		<button onclick={close} class="text-white/80 hover:text-white" aria-label="Dismiss">
+		<button onclick={close} class="p-2 text-white/80 hover:text-white touch-manipulation" aria-label="Dismiss">
 			<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path
 					stroke-linecap="round"
@@ -84,25 +84,27 @@
 {/if}
 
 {#if needRefresh}
-	<div class="fixed bottom-4 right-4 z-50 rounded-lg bg-indigo-600 px-4 py-3 text-white shadow-lg">
-		<div class="flex items-center gap-4">
-			<span>New version available!</span>
-			<button
-				onclick={handleUpdate}
-				class="rounded bg-white px-3 py-1 font-medium text-indigo-600 hover:bg-indigo-50"
-			>
-				Update
-			</button>
-			<button onclick={close} class="text-white/80 hover:text-white" aria-label="Dismiss">
-				<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M6 18L18 6M6 6l12 12"
-					/>
-				</svg>
-			</button>
+	<div class="fixed bottom-20 left-4 right-4 sm:left-auto sm:right-4 sm:bottom-20 z-[100] rounded-lg bg-indigo-600 px-4 py-3 text-white shadow-lg">
+		<div class="flex items-center justify-between gap-4">
+			<span class="font-medium">New version available!</span>
+			<div class="flex items-center gap-2">
+				<button
+					onclick={handleUpdate}
+					class="rounded-lg bg-white px-4 py-2 font-semibold text-indigo-600 hover:bg-indigo-50 active:bg-indigo-100 touch-manipulation min-h-[44px] min-w-[80px]"
+				>
+					Update
+				</button>
+				<button onclick={close} class="p-2 text-white/80 hover:text-white touch-manipulation min-h-[44px]" aria-label="Dismiss">
+					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M6 18L18 6M6 6l12 12"
+						/>
+					</svg>
+				</button>
+			</div>
 		</div>
 	</div>
 {/if}
