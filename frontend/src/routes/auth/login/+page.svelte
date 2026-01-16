@@ -17,17 +17,6 @@
 
 	// Handle token from URL (magic link callback)
 	onMount(async () => {
-		// Initialize auth if not already done
-		if (!$auth.initialized) {
-			await auth.init();
-		}
-		
-		// Redirect if already logged in
-		if ($auth.user) {
-			goto('/today');
-			return;
-		}
-
 		const token = $page.url.searchParams.get('token');
 		if (token) {
 			loading = true;

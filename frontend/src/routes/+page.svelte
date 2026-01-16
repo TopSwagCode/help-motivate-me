@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
 	import { auth } from '$lib/stores/auth';
 	import { signupForWaitlist } from '$lib/api/waitlist';
 
@@ -9,16 +8,6 @@
 	let waitlistLoading = $state(false);
 	let waitlistSuccess = $state(false);
 	let waitlistError = $state('');
-
-	// Redirect logged-in users to Today page
-	onMount(async () => {
-		if (!$auth.initialized) {
-			await auth.init();
-		}
-		if ($auth.user) {
-			goto('/today');
-		}
-	});
 
 	function handleGetStarted() {
 		if ($auth.user) {
