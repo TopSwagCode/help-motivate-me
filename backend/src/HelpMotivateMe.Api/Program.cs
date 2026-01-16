@@ -37,6 +37,9 @@ builder.Services.AddDataProtection()
 // Email Service
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 
+// Push Notification Service
+builder.Services.AddScoped<IPushNotificationService, WebPushNotificationService>();
+
 // Local File Storage Service
 builder.Services.AddSingleton<IStorageService, LocalFileStorageService>();
 

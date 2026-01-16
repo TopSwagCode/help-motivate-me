@@ -17,7 +17,13 @@
 		getWhitelist,
 		addToWhitelist,
 		removeFromWhitelist,
-		getUserActivity
+		getUserActivity,
+		getPushStats,
+		sendPushToAll,
+		sendPushToUser,
+		getUsersWithPushStatus,
+		type PushStats,
+		type UserPushStatus
 	} from '$lib/api/admin';
 	import type { AdminStats, AdminUser, DailyStats, UserRole, UserActivity } from '$lib/types';
 	import type { WaitlistEntry, WhitelistEntry } from '$lib/types/waitlist';
@@ -48,6 +54,24 @@
 	let activityModalLoading = $state(false);
 	let selectedUserActivity = $state<UserActivity | null>(null);
 
+	// Push notifications
+	let pushStats = $state<PushStats | null>(null);
+	let pushTitle = $state('');
+	let pushBody = $state('');
+	let pushUrl = $state('');
+	let pushSending = $state(false);
+	let pushResult = $state<{ success: boolean; message: string } | null>(null);
+	let userPushStatuses = $state<Map<string, UserPushStatus>>(new Map());
+	
+	// Individual user push modal
+	let pushModalOpen = $state(false);
+	let pushModalUser = $state<{ id: string; username: string } | null>(null);
+	let pushModalTitle = $state('');
+	let pushModalBody = $state('');
+	let pushModalUrl = $state('');
+	let pushModalSending = $state(false);
+	let pushModalResult = $state<{ success: boolean; message: string } | null>(null);
+
 	// Debounce search
 	let searchTimeout: ReturnType<typeof setTimeout>;
 
@@ -75,13 +99,15 @@
 		error = '';
 
 		try {
-			const [statsData, dailyStatsData, usersData, settingsData, waitlistData, whitelistData] = await Promise.all([
+			const [statsData, dailyStatsData, usersData, settingsData, waitlistData, whitelistData, pushStatsData, pushUsersData] = await Promise.all([
 				getAdminStats(),
 				getDailyStats(selectedDate),
 				loadUsers(),
 				getAdminSettings(),
 				getWaitlist(),
-				getWhitelist()
+				getWhitelist(),
+				getPushStats().catch(() => null), // Push stats might not be configured yet
+				getUsersWithPushStatus().catch(() => []) // Get users with push status
 			]);
 			stats = statsData;
 			dailyStats = dailyStatsData;
@@ -89,6 +115,10 @@
 			allowSignups = settingsData.allowSignups;
 			waitlistEntries = waitlistData;
 			whitelistEntries = whitelistData;
+			pushStats = pushStatsData;
+			
+			// Build map of user push statuses for quick lookup
+			userPushStatuses = new Map(pushUsersData.map((u: UserPushStatus) => [u.userId, u]));
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Failed to load admin data';
 		} finally {
@@ -262,6 +292,88 @@
 		} finally {
 			inviteLoading = false;
 		}
+	}
+
+	// Push notification handlers
+	async function handleSendPushToAll(e: Event) {
+		e.preventDefault();
+		if (!pushTitle.trim() || !pushBody.trim()) return;
+
+		pushSending = true;
+		pushResult = null;
+		try {
+			const result = await sendPushToAll(
+				pushTitle.trim(),
+				pushBody.trim(),
+				pushUrl.trim() || undefined
+			);
+			pushResult = {
+				success: true,
+				message: `Sent to ${result.successCount} subscriptions (${result.failureCount} failed)`
+			};
+			// Refresh push stats
+			pushStats = await getPushStats().catch(() => null);
+			// Clear form on success
+			pushTitle = '';
+			pushBody = '';
+			pushUrl = '';
+		} catch (err) {
+			pushResult = {
+				success: false,
+				message: err instanceof Error ? err.message : 'Failed to send push notification'
+			};
+		} finally {
+			pushSending = false;
+		}
+	}
+
+	function openPushModal(user: { id: string; username: string }) {
+		pushModalUser = user;
+		pushModalTitle = '';
+		pushModalBody = '';
+		pushModalUrl = '';
+		pushModalResult = null;
+		pushModalOpen = true;
+	}
+
+	function closePushModal() {
+		pushModalOpen = false;
+		pushModalUser = null;
+	}
+
+	async function handleSendPushToUser(e: Event) {
+		e.preventDefault();
+		if (!pushModalUser || !pushModalTitle.trim() || !pushModalBody.trim()) return;
+
+		pushModalSending = true;
+		pushModalResult = null;
+		try {
+			const result = await sendPushToUser(
+				pushModalUser.id,
+				pushModalTitle.trim(),
+				pushModalBody.trim(),
+				pushModalUrl.trim() || undefined
+			);
+			pushModalResult = {
+				success: true,
+				message: `Sent to ${result.successCount} device(s)`
+			};
+			// Clear form but keep modal open to show result
+			pushModalTitle = '';
+			pushModalBody = '';
+			pushModalUrl = '';
+		} catch (err) {
+			pushModalResult = {
+				success: false,
+				message: err instanceof Error ? err.message : 'Failed to send push notification'
+			};
+		} finally {
+			pushModalSending = false;
+		}
+	}
+
+	function getUserPushStatus(userId: string): UserPushStatus | undefined {
+		return userPushStatuses.get(userId);
 	}
 </script>
 
@@ -707,12 +819,25 @@
 										{/if}
 									</td>
 									<td class="px-6 py-4 whitespace-nowrap text-sm">
-										<button
-											onclick={() => handleToggleActive(user)}
-											class="text-primary-600 hover:text-primary-800 font-medium"
-										>
-											{user.isActive ? $t('admin.users.deactivate') : $t('admin.users.activate')}
-										</button>
+										<div class="flex items-center gap-2">
+											{#if getUserPushStatus(user.id)?.hasPushEnabled}
+												<button
+													onclick={(e) => { e.stopPropagation(); openPushModal({ id: user.id, username: user.username }); }}
+													class="text-blue-600 hover:text-blue-800"
+													title="Send push notification"
+												>
+													<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+														<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+													</svg>
+												</button>
+											{/if}
+											<button
+												onclick={() => handleToggleActive(user)}
+												class="text-primary-600 hover:text-primary-800 font-medium"
+											>
+												{user.isActive ? $t('admin.users.deactivate') : $t('admin.users.activate')}
+											</button>
+										</div>
 									</td>
 								</tr>
 							{:else}
@@ -915,6 +1040,161 @@
 				</div>
 			</div>
 		{/if}
+
+		<!-- Push Notifications Section -->
+		<div class="mt-8 mb-4">
+			<h2 class="text-xl font-bold text-gray-900">Push Notifications</h2>
+			<p class="text-gray-500 mt-1">
+				{#if pushStats}
+					<span class="inline-flex items-center gap-1.5">
+						<span class="w-2 h-2 bg-green-500 rounded-full"></span>
+						{pushStats.usersWithPush} users with push enabled ({pushStats.totalSubscriptions} subscriptions)
+					</span>
+				{:else}
+					<span class="inline-flex items-center gap-1.5">
+						<span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+						Push notifications not configured
+					</span>
+				{/if}
+			</p>
+		</div>
+
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+			<!-- Send Push Notification Form -->
+			<div class="card p-6">
+				<h3 class="text-lg font-semibold text-gray-900 mb-4">Send Push Notification to All Users</h3>
+				
+				<form onsubmit={handleSendPushToAll} class="space-y-4">
+					<div>
+						<label for="push-title" class="block text-sm font-medium text-gray-700 mb-1">
+							Title <span class="text-red-500">*</span>
+						</label>
+						<input
+							id="push-title"
+							type="text"
+							bind:value={pushTitle}
+							placeholder="Notification title"
+							class="input w-full"
+							required
+							maxlength="100"
+						/>
+					</div>
+
+					<div>
+						<label for="push-body" class="block text-sm font-medium text-gray-700 mb-1">
+							Message <span class="text-red-500">*</span>
+						</label>
+						<textarea
+							id="push-body"
+							bind:value={pushBody}
+							placeholder="Notification message"
+							class="input w-full h-24 resize-none"
+							required
+							maxlength="500"
+						></textarea>
+					</div>
+
+					<div>
+						<label for="push-url" class="block text-sm font-medium text-gray-700 mb-1">
+							Click URL (optional)
+						</label>
+						<input
+							id="push-url"
+							type="text"
+							bind:value={pushUrl}
+							placeholder="/today or https://example.com"
+							class="input w-full"
+						/>
+						<p class="text-xs text-gray-500 mt-1">Where users go when they click the notification</p>
+					</div>
+
+					{#if pushResult}
+						<div class="p-3 rounded-lg {pushResult.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}">
+							{pushResult.message}
+						</div>
+					{/if}
+
+					<button
+						type="submit"
+						disabled={pushSending || !pushTitle.trim() || !pushBody.trim() || !pushStats || pushStats.usersWithPush === 0}
+						class="btn btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+					>
+						{#if pushSending}
+							<svg class="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24">
+								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+							</svg>
+							Sending...
+						{:else}
+							<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+							</svg>
+							Send to All ({pushStats?.usersWithPush ?? 0} users)
+						{/if}
+					</button>
+				</form>
+			</div>
+
+			<!-- Push Stats Card -->
+			<div class="card p-6">
+				<h3 class="text-lg font-semibold text-gray-900 mb-4">Push Notification Stats</h3>
+				
+				{#if pushStats}
+					<div class="space-y-4">
+						<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+							<div class="flex items-center gap-3">
+								<div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+									<svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+									</svg>
+								</div>
+								<div>
+									<p class="text-sm text-gray-500">Users with Push Enabled</p>
+									<p class="text-xl font-bold text-gray-900">{pushStats.usersWithPush}</p>
+								</div>
+							</div>
+							<div class="text-right">
+								<p class="text-2xl font-bold text-blue-600">{pushStats.percentageWithPush.toFixed(0)}%</p>
+								<p class="text-xs text-gray-500">of all users</p>
+							</div>
+						</div>
+
+						<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+							<div class="flex items-center gap-3">
+								<div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+									<svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+									</svg>
+								</div>
+								<div>
+									<p class="text-sm text-gray-500">Total Subscriptions</p>
+									<p class="text-xl font-bold text-gray-900">{pushStats.totalSubscriptions}</p>
+								</div>
+							</div>
+							<p class="text-xs text-gray-500">Across all devices</p>
+						</div>
+
+						<div class="pt-4 border-t border-gray-200">
+							<p class="text-sm text-gray-500">
+								Users can have multiple subscriptions if they enable push notifications on different devices or browsers.
+							</p>
+						</div>
+					</div>
+				{:else}
+					<div class="text-center py-8">
+						<div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+							<svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+							</svg>
+						</div>
+						<p class="text-gray-500 mb-2">Push notifications not configured</p>
+						<p class="text-sm text-gray-400">
+							Configure VAPID keys in appsettings to enable push notifications.
+						</p>
+					</div>
+				{/if}
+			</div>
+		</div>
 	</main>
 </div>
 
@@ -1071,6 +1351,113 @@
 					</div>
 				{/if}
 			</div>
+		</div>
+	</div>
+{/if}
+
+<!-- Push Notification Modal -->
+{#if pushModalOpen && pushModalUser}
+	<div
+		class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+		onclick={closePushModal}
+		role="presentation"
+	>
+		<div
+			class="bg-white rounded-lg shadow-xl max-w-md w-full"
+			onclick={(e) => e.stopPropagation()}
+			onkeydown={(e) => e.key === 'Escape' && closePushModal()}
+			role="dialog"
+			aria-modal="true"
+			tabindex="-1"
+		>
+			<!-- Header -->
+			<div class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+				<div>
+					<h2 class="text-lg font-semibold text-gray-900">Send Push Notification</h2>
+					<p class="text-sm text-gray-500 mt-1">To: {pushModalUser.username}</p>
+				</div>
+				<button
+					onclick={closePushModal}
+					class="text-gray-400 hover:text-gray-600 transition-colors"
+					aria-label="Close"
+				>
+					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+					</svg>
+				</button>
+			</div>
+
+			<!-- Form -->
+			<form onsubmit={handleSendPushToUser} class="p-6 space-y-4">
+				<div>
+					<label for="push-modal-title" class="block text-sm font-medium text-gray-700 mb-1">
+						Title <span class="text-red-500">*</span>
+					</label>
+					<input
+						id="push-modal-title"
+						type="text"
+						bind:value={pushModalTitle}
+						placeholder="Notification title"
+						class="input w-full"
+						required
+						maxlength="100"
+					/>
+				</div>
+
+				<div>
+					<label for="push-modal-body" class="block text-sm font-medium text-gray-700 mb-1">
+						Message <span class="text-red-500">*</span>
+					</label>
+					<textarea
+						id="push-modal-body"
+						bind:value={pushModalBody}
+						placeholder="Notification message"
+						class="input w-full h-24 resize-none"
+						required
+						maxlength="500"
+					></textarea>
+				</div>
+
+				<div>
+					<label for="push-modal-url" class="block text-sm font-medium text-gray-700 mb-1">
+						Click URL (optional)
+					</label>
+					<input
+						id="push-modal-url"
+						type="text"
+						bind:value={pushModalUrl}
+						placeholder="/today or https://example.com"
+						class="input w-full"
+					/>
+				</div>
+
+				{#if pushModalResult}
+					<div class="p-3 rounded-lg {pushModalResult.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}">
+						{pushModalResult.message}
+					</div>
+				{/if}
+
+				<div class="flex gap-3 pt-2">
+					<button
+						type="button"
+						onclick={closePushModal}
+						class="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+					>
+						Cancel
+					</button>
+					<button
+						type="submit"
+						disabled={pushModalSending || !pushModalTitle.trim() || !pushModalBody.trim()}
+						class="flex-1 btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+					>
+						{#if pushModalSending}
+							Sending...
+						{:else}
+							Send
+						{/if}
+					</button>
+				</div>
+			</form>
 		</div>
 	</div>
 {/if}

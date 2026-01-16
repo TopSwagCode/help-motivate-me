@@ -95,6 +95,9 @@ services:
       - OpenAI__ApiKey=${OPENAI_API_KEY}
       - OAuth__GitHub__ClientId=${GITHUB_OAUTH_CLIENT_ID}
       - OAuth__GitHub__ClientSecret=${GITHUB_OAUTH_CLIENT_SECRET}
+      - Vapid__Subject=${VAPID_SUBJECT:-mailto:admin@helpmotivate.me}
+      - Vapid__PublicKey=${VAPID_PUBLIC_KEY}
+      - Vapid__PrivateKey=${VAPID_PRIVATE_KEY}
     expose:
       - "5001"
     volumes:
@@ -139,6 +142,9 @@ services:
       - OpenAI__ApiKey=${OPENAI_API_KEY}
       - OAuth__GitHub__ClientId=${GITHUB_OAUTH_CLIENT_ID}
       - OAuth__GitHub__ClientSecret=${GITHUB_OAUTH_CLIENT_SECRET}
+      - Vapid__Subject=${VAPID_SUBJECT:-mailto:admin@helpmotivate.me}
+      - Vapid__PublicKey=${VAPID_PUBLIC_KEY}
+      - Vapid__PrivateKey=${VAPID_PRIVATE_KEY}
     expose:
       - "5001"
     volumes:
@@ -183,6 +189,9 @@ services:
       - OpenAI__ApiKey=${OPENAI_API_KEY}
       - OAuth__GitHub__ClientId=${GITHUB_OAUTH_CLIENT_ID}
       - OAuth__GitHub__ClientSecret=${GITHUB_OAUTH_CLIENT_SECRET}
+      - Vapid__Subject=${VAPID_SUBJECT:-mailto:admin@helpmotivate.me}
+      - Vapid__PublicKey=${VAPID_PUBLIC_KEY}
+      - Vapid__PrivateKey=${VAPID_PRIVATE_KEY}
     expose:
       - "5001"
     volumes:

@@ -317,3 +317,6 @@ K0765354823
 docker exec helpmotivateme-db \
   psql -U postgres -d helpmotivateme \
   -c "UPDATE users SET \"Role\" = 'Admin' WHERE \"Email\" = 'joshua.ryder@outlook.com';"
+
+vapid keys
+{"publicKey":"BBy6LMRE7djhKqTihlm5SFY1M6OGfIHilpXtzjdqJQHgPODanL8MZCiGva0zyMNIwtbiMz-bOln3lqYJ0RNwGfU","privateKey":"3FxEaX2AuxKXNAMgrGNqBtv2yzu0pgBDORAOYoltJeg"}

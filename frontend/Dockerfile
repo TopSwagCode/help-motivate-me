@@ -11,9 +11,11 @@ RUN npm install
 # Copy source files
 COPY . .
 
-# Set build-time environment variable
+# Set build-time environment variables
 ARG VITE_API_URL
+ARG VITE_VAPID_PUBLIC_KEY
 ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_VAPID_PUBLIC_KEY=$VITE_VAPID_PUBLIC_KEY
 
 # Build the application
 RUN npm run build

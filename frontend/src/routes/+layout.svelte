@@ -5,6 +5,8 @@
 	import TopNav from '$lib/components/layout/TopNav.svelte';
 	import BetaBanner from '$lib/components/layout/BetaBanner.svelte';
 	import CommandBar from '$lib/components/ai/CommandBar.svelte';
+	import PWAReloadPrompt from '$lib/components/PWAReloadPrompt.svelte';
+	import OfflineBanner from '$lib/components/OfflineBanner.svelte';
 	import { initI18n, setLocale, getLocaleFromLanguage } from '$lib/i18n';
 	import { onMount } from 'svelte';
 	import { createGoal, getGoals } from '$lib/api/goals';
@@ -120,6 +122,12 @@
 </svelte:head>
 
 {#if i18nReady}
+	<!-- PWA Update Prompt -->
+	<PWAReloadPrompt />
+	
+	<!-- Offline Banner -->
+	<OfflineBanner />
+
 	<!-- Beta Banner (shown on all pages) -->
 	<BetaBanner />
 

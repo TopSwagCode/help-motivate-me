@@ -96,3 +96,72 @@ export async function addToWhitelist(email: string): Promise<WhitelistEntry> {
 export async function removeFromWhitelist(id: string): Promise<void> {
 	return apiDelete<void>(`/admin/whitelist/${id}`);
 }
+
+// Push Notification management
+export interface PushNotificationResult {
+	totalSubscriptions: number;
+	successCount: number;
+	failureCount: number;
+	errors: string[];
+}
+
+export interface UserPushStatus {
+	userId: string;
+	username: string;
+	email: string;
+	hasPushEnabled: boolean;
+	subscriptionCount: number;
+	lastPushSentAt: string | null;
+}
+
+export interface PushStats {
+	totalSubscriptions: number;
+	usersWithPush: number;
+	totalUsers: number;
+	percentageWithPush: number;
+}
+
+export async function getPushStats(): Promise<PushStats> {
+	return apiGet<PushStats>('/notifications/push/admin/stats');
+}
+
+export async function getUsersWithPushStatus(params?: {
+	hasPush?: boolean;
+	search?: string;
+}): Promise<UserPushStatus[]> {
+	const searchParams = new URLSearchParams();
+	if (params?.hasPush !== undefined) searchParams.set('hasPush', params.hasPush.toString());
+	if (params?.search) searchParams.set('search', params.search);
+
+	const queryString = searchParams.toString();
+	const endpoint = queryString
+		? `/notifications/push/admin/users?${queryString}`
+		: '/notifications/push/admin/users';
+	return apiGet<UserPushStatus[]>(endpoint);
+}
+
+export async function sendPushToUser(
+	userId: string,
+	title: string,
+	body: string,
+	url?: string
+): Promise<PushNotificationResult> {
+	return apiPost<PushNotificationResult>('/notifications/push/admin/send-to-user', {
+		userId,
+		title,
+		body,
+		url
+	});
+}
+
+export async function sendPushToAll(
+	title: string,
+	body: string,
+	url?: string
+): Promise<PushNotificationResult> {
+	return apiPost<PushNotificationResult>('/notifications/push/admin/send-to-all', {
+		title,
+		body,
+		url
+	});
+}

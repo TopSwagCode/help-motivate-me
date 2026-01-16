@@ -4,11 +4,25 @@
 	import { getNotificationPreferences, updateNotificationPreferences } from '$lib/api/notifications';
 	import type { NotificationPreferences, UpdateNotificationPreferencesRequest } from '$lib/types';
 	import { NotificationDays } from '$lib/types';
+	import {
+		isPushSupported,
+		isSubscribedToPush,
+		subscribeToPushNotifications,
+		unsubscribeFromPushNotifications,
+		requestPushPermission,
+		checkPushPermission
+	} from '$lib/services/pushNotifications';
 
 	let loading = $state(true);
 	let saving = $state(false);
 	let error = $state('');
 	let preferences = $state<NotificationPreferences | null>(null);
+
+	// Push notification state
+	let pushSupported = $state(false);
+	let pushPermission = $state<NotificationPermission>('default');
+	let pushEnabled = $state(false);
+	let pushLoading = $state(false);
 
 	// Day flags
 	const days = [
@@ -48,6 +62,13 @@
 			detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 		} catch {
 			detectedTimezone = 'UTC';
+		}
+
+		// Check push notification support and status
+		pushSupported = isPushSupported();
+		if (pushSupported) {
+			pushPermission = await checkPushPermission();
+			pushEnabled = await isSubscribedToPush();
 		}
 
 		await loadPreferences();
@@ -102,6 +123,48 @@
 	async function toggleNotificationType(field: keyof NotificationPreferences) {
 		if (!preferences) return;
 		await savePreference({ [field]: !preferences[field] });
+	}
+
+	// Push notification toggle
+	async function togglePush() {
+		if (!pushSupported) return;
+		
+		pushLoading = true;
+		error = '';
+		
+		try {
+			if (pushEnabled) {
+				// Unsubscribe
+				const success = await unsubscribeFromPushNotifications();
+				if (success) {
+					pushEnabled = false;
+				} else {
+					error = $t('settings.notifications.push.errors.unsubscribeFailed');
+				}
+			} else {
+				// First request permission if needed
+				if (pushPermission !== 'granted') {
+					pushPermission = await requestPushPermission();
+					if (pushPermission !== 'granted') {
+						error = $t('settings.notifications.push.errors.permissionDenied');
+						pushLoading = false;
+						return;
+					}
+				}
+				
+				// Subscribe
+				const success = await subscribeToPushNotifications();
+				if (success) {
+					pushEnabled = true;
+				} else {
+					error = $t('settings.notifications.push.errors.subscribeFailed');
+				}
+			}
+		} catch (e) {
+			error = e instanceof Error ? e.message : $t('settings.notifications.push.errors.generic');
+		} finally {
+			pushLoading = false;
+		}
 	}
 
 	// Day selection
@@ -314,6 +377,59 @@
 							></div>
 						</div>
 					</button>
+
+					<!-- Push Notifications -->
+					{#if pushSupported}
+						<button
+							onclick={togglePush}
+							disabled={pushLoading}
+							class="w-full flex items-center justify-between p-3 rounded-lg border transition-all duration-200 {pushEnabled
+								? 'border-primary-300 bg-primary-50'
+								: 'border-gray-200 bg-white hover:border-gray-300'}"
+						>
+							<div class="flex items-center gap-3">
+								<div
+									class="w-8 h-8 rounded-full flex items-center justify-center {pushEnabled
+										? 'bg-primary-100 text-primary-600'
+										: 'bg-gray-100 text-gray-500'}"
+								>
+									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+										/>
+									</svg>
+								</div>
+								<div class="text-left">
+									<p class="font-medium text-gray-900">{$t('settings.notifications.channels.push')}</p>
+									<p class="text-xs text-gray-500">
+										{#if pushPermission === 'denied'}
+											{$t('settings.notifications.channels.pushBlocked')}
+										{:else}
+											{$t('settings.notifications.channels.pushDescription')}
+										{/if}
+									</p>
+								</div>
+							</div>
+							{#if pushLoading}
+								<div class="animate-spin w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full"></div>
+							{:else}
+								<div
+									class="w-10 h-5 rounded-full transition-colors duration-200 {pushEnabled
+										? 'bg-primary-600'
+										: 'bg-gray-300'} {pushPermission === 'denied' ? 'opacity-50' : ''}"
+								>
+									<div
+										class="w-4 h-4 mt-0.5 bg-white rounded-full shadow-sm transition-transform duration-200 {pushEnabled
+											? 'translate-x-5'
+											: 'translate-x-0.5'}"
+									></div>
+								</div>
+							{/if}
+						</button>
+					{/if}
 
 					<!-- Phone (Coming Soon) -->
 					<div
