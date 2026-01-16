@@ -24,7 +24,7 @@ public class EnglishEmailTemplates : IEmailTemplates
                 </a>
             </p>
             <p style='color: {GrayColor}; font-size: 14px;'>
-                <strong>Tip:</strong> Use "Open in App" if you have the app installed. Use "Open in Browser" if you prefer to use your web browser.
+                <strong>Tip:</strong> Use ""Open in App"" if you have the app installed. Use ""Open in Browser"" if you prefer to use your web browser.
             </p>
             <p style='color: {GrayColor}; font-size: 14px;'>
                 If you didn't request this login link, you can safely ignore this email.

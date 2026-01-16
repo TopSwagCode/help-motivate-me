@@ -24,7 +24,7 @@ public class DanishEmailTemplates : IEmailTemplates
                 </a>
             </p>
             <p style='color: {GrayColor}; font-size: 14px;'>
-                <strong>Tip:</strong> Brug "Åbn i app" hvis du har appen installeret. Brug "Åbn i browser" hvis du foretrækker at bruge din webbrowser.
+                <strong>Tip:</strong> Brug ""Åbn i app"" hvis du har appen installeret. Brug ""Åbn i browser"" hvis du foretrækker at bruge din webbrowser.
             </p>
             <p style='color: {GrayColor}; font-size: 14px;'>
                 Hvis du ikke har anmodet om dette login-link, kan du trygt ignorere denne e-mail.
