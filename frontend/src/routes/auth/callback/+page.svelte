@@ -18,7 +18,7 @@
 
 		// Refresh auth state and redirect
 		await auth.init();
-		goto('/dashboard');
+		goto('/today');
 	});
 </script>
 

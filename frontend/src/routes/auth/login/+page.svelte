@@ -17,13 +17,24 @@
 
 	// Handle token from URL (magic link callback)
 	onMount(async () => {
+		// Initialize auth if not already done
+		if (!$auth.initialized) {
+			await auth.init();
+		}
+		
+		// Redirect if already logged in
+		if ($auth.user) {
+			goto('/today');
+			return;
+		}
+
 		const token = $page.url.searchParams.get('token');
 		if (token) {
 			loading = true;
 			try {
 				const user = await loginWithToken(token);
 				auth.setUser(user);
-				goto('/dashboard');
+				goto('/today');
 			} catch (err: unknown) {
 				if (err instanceof ApiError && err.code === 'not_whitelisted') {
 					const userEmail = err.data?.email as string;
@@ -45,7 +56,7 @@
 		loading = false;
 
 		if (result.success) {
-			goto('/dashboard');
+			goto('/today');
 		} else {
 			error = result.error || 'Login failed';
 		}

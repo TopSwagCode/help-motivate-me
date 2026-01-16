@@ -43,8 +43,8 @@ export default defineConfig({
 			workbox: {
 				globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
 				navigationPreload: true,
-				navigationFallback: '/',
-				navigationFallbackDenylist: [/^\/api/, /^\/auth\/callback/],
+				navigateFallback: '/',
+				navigateFallbackDenylist: [/^\/api/, /^\/auth\/callback/],
 				runtimeCaching: [
 					{
 						urlPattern: /^https?:\/\/.*\/api\/(goals|identities|today|habit-stacks|journal)/,
