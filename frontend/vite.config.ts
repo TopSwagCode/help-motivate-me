@@ -10,6 +10,8 @@ export default defineConfig({
 			mode: 'production',
 			strategies: 'generateSW',
 			registerType: 'prompt',
+			scope: '/',
+			base: '/',
 			manifest: {
 				name: 'Help Motivate Me',
 				short_name: 'Motivate Me',
@@ -40,6 +42,9 @@ export default defineConfig({
 			},
 			workbox: {
 				globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
+				navigationPreload: true,
+				navigationFallback: '/',
+				navigationFallbackDenylist: [/^\/api/, /^\/auth\/callback/],
 				runtimeCaching: [
 					{
 						urlPattern: /^https?:\/\/.*\/api\/(goals|identities|today|habit-stacks|journal)/,
