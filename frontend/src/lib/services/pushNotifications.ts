@@ -120,8 +120,8 @@ export async function isSubscribedToPush(): Promise<boolean> {
  */
 export async function getPushStatus(): Promise<{ subscribed: boolean; subscriptionCount: number }> {
 	try {
-		const response = await apiGet<{ subscribed: boolean; subscriptionCount: number }>('/notifications/push/status');
-		return response;
+		const response = await apiGet<{ hasSubscriptions: boolean; subscriptionCount: number }>('/notifications/push/status');
+		return { subscribed: response.hasSubscriptions, subscriptionCount: response.subscriptionCount };
 	} catch {
 		return { subscribed: false, subscriptionCount: 0 };
 	}

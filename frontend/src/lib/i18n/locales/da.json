@@ -268,6 +268,7 @@
 				"smsDescription": "Modtag notifikationer via SMS",
 				"push": "Push-notifikationer",
 				"pushDescription": "Modtag øjeblikkelige notifikationer på denne enhed",
+				"pushEnabled": "Aktiveret på denne enhed",
 				"pushBlocked": "Push-notifikationer er blokeret i dine browserindstillinger",
 				"phone": "Telefonopkald",
 				"phoneDescription": "Modtag notifikationer via telefonopkald",

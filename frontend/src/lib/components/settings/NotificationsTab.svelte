@@ -10,7 +10,8 @@
 		subscribeToPushNotifications,
 		unsubscribeFromPushNotifications,
 		requestPushPermission,
-		checkPushPermission
+		checkPushPermission,
+		getPushStatus
 	} from '$lib/services/pushNotifications';
 
 	let loading = $state(true);
@@ -23,6 +24,7 @@
 	let pushPermission = $state<NotificationPermission>('default');
 	let pushEnabled = $state(false);
 	let pushLoading = $state(false);
+	let totalDevices = $state(0);
 
 	// Day flags
 	const days = [
@@ -69,6 +71,9 @@
 		if (pushSupported) {
 			pushPermission = await checkPushPermission();
 			pushEnabled = await isSubscribedToPush();
+			// Get total devices from backend
+			const status = await getPushStatus();
+			totalDevices = status.subscriptionCount;
 		}
 
 		await loadPreferences();
@@ -138,6 +143,8 @@
 				const success = await unsubscribeFromPushNotifications();
 				if (success) {
 					pushEnabled = false;
+					const status = await getPushStatus();
+					totalDevices = status.subscriptionCount;
 				} else {
 					error = $t('settings.notifications.push.errors.unsubscribeFailed');
 				}
@@ -156,6 +163,8 @@
 				const success = await subscribeToPushNotifications();
 				if (success) {
 					pushEnabled = true;
+					const status = await getPushStatus();
+					totalDevices = status.subscriptionCount;
 				} else {
 					error = $t('settings.notifications.push.errors.subscribeFailed');
 				}
@@ -380,45 +389,48 @@
 
 					<!-- Push Notifications -->
 					{#if pushSupported}
-						<button
-							onclick={togglePush}
-							disabled={pushLoading}
-							class="w-full flex items-center justify-between p-3 rounded-lg border transition-all duration-200 {pushEnabled
-								? 'border-primary-300 bg-primary-50'
-								: 'border-gray-200 bg-white hover:border-gray-300'}"
-						>
-							<div class="flex items-center gap-3">
-								<div
-									class="w-8 h-8 rounded-full flex items-center justify-center {pushEnabled
-										? 'bg-primary-100 text-primary-600'
-										: 'bg-gray-100 text-gray-500'}"
-								>
-									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-										/>
-									</svg>
+						<div class="space-y-2">
+							<button
+								onclick={togglePush}
+								disabled={pushLoading}
+								class="w-full flex items-center justify-between p-3 rounded-lg border transition-all duration-200 {pushEnabled
+									? 'border-primary-300 bg-primary-50'
+									: 'border-gray-200 bg-white hover:border-gray-300'}"
+							>
+								<div class="flex items-center gap-3">
+									<div
+										class="w-8 h-8 rounded-full flex items-center justify-center {pushEnabled
+											? 'bg-primary-100 text-primary-600'
+											: 'bg-gray-100 text-gray-500'}"
+									>
+										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+											/>
+										</svg>
+									</div>
+									<div class="text-left">
+										<p class="font-medium text-gray-900">{$t('settings.notifications.channels.push')}</p>
+										<p class="text-xs text-gray-500">
+											{#if pushPermission === 'denied'}
+												{$t('settings.notifications.channels.pushBlocked')}
+											{:else if pushEnabled}
+												{$t('settings.notifications.channels.pushEnabled')} · {totalDevices} {totalDevices === 1 ? 'device' : 'devices'}
+											{:else}
+												{$t('settings.notifications.channels.pushDescription')}
+											{/if}
+										</p>
+									</div>
 								</div>
-								<div class="text-left">
-									<p class="font-medium text-gray-900">{$t('settings.notifications.channels.push')}</p>
-									<p class="text-xs text-gray-500">
-										{#if pushPermission === 'denied'}
-											{$t('settings.notifications.channels.pushBlocked')}
-										{:else}
-											{$t('settings.notifications.channels.pushDescription')}
-										{/if}
-									</p>
-								</div>
-							</div>
-							{#if pushLoading}
-								<div class="animate-spin w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full"></div>
-							{:else}
-								<div
-									class="w-10 h-5 rounded-full transition-colors duration-200 {pushEnabled
-										? 'bg-primary-600'
+								{#if pushLoading}
+									<div class="animate-spin w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full"></div>
+								{:else}
+									<div
+										class="w-10 h-5 rounded-full transition-colors duration-200 {pushEnabled
+											? 'bg-primary-600'
 										: 'bg-gray-300'} {pushPermission === 'denied' ? 'opacity-50' : ''}"
 								>
 									<div
@@ -429,6 +441,17 @@
 								</div>
 							{/if}
 						</button>
+						{#if totalDevices > 0}
+							<p class="text-xs text-gray-500 px-3 py-1 bg-gray-50 rounded">
+								💡 Push notifications are enabled on <strong>{totalDevices}</strong> {totalDevices === 1 ? 'device' : 'devices'}. 
+								Enable on each device separately via Settings → Notifications.
+							</p>
+						{:else if pushEnabled}
+							<p class="text-xs text-amber-600 px-3 py-1 bg-amber-50 rounded">
+								⚠️ This device is subscribed but not registered. Try toggling off and on again.
+							</p>
+						{/if}
+						</div>
 					{/if}
 
 					<!-- Phone (Coming Soon) -->
