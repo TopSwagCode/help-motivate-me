@@ -338,9 +338,15 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = "Invalid or expired login link" });
         }
 
+        // Allow token reuse within 2 minutes of first use (for PWA/browser switching)
         if (token.IsUsed)
         {
-            return Unauthorized(new { message = "This login link has already been used" });
+            var gracePeriod = TimeSpan.FromMinutes(2);
+            if (token.UsedAt == null || DateTime.UtcNow - token.UsedAt.Value > gracePeriod)
+            {
+                return Unauthorized(new { message = "This login link has already been used" });
+            }
+            // Token is within grace period, allow reuse
         }
 
         if (token.ExpiresAt < DateTime.UtcNow)
@@ -353,9 +359,12 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = "Account is disabled" });
         }
 
-        // Mark token as used
-        token.UsedAt = DateTime.UtcNow;
-        await _db.SaveChangesAsync();
+        // Mark token as used (only on first use)
+        if (!token.IsUsed)
+        {
+            token.UsedAt = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
+        }
 
         await SignInUser(token.User);
 
