@@ -338,6 +338,63 @@
 				"loadFailed": "Kunne ikke indlæse notifikationsindstillinger",
 				"saveFailed": "Kunne ikke gemme notifikationsindstillinger"
 			}
+		},
+		"app": {
+			"title": "App",
+			"description": "Installer HelpMotivateMe som en app på din enhed",
+			"installed": {
+				"title": "App installeret",
+				"description": "Du bruger HelpMotivateMe som en installeret app. Nyd den fulde oplevelse!"
+			},
+			"install": {
+				"title": "Installer app",
+				"description": "Tilføj HelpMotivateMe til din startskærm for hurtig adgang",
+				"button": "Installer app"
+			},
+			"manual": {
+				"title": "Installation tilgængelig",
+				"description": "Følg instruktionerne nedenfor for at installere appen på din enhed"
+			},
+			"instructions": {
+				"title": "Sådan installerer du",
+				"ios": {
+					"title": "iPhone & iPad",
+					"step1": "Tryk på Del-knappen nederst i Safari",
+					"step2": "Rul ned og tryk på \"Føj til hjemmeskærm\"",
+					"step3": "Tryk på \"Tilføj\" for at bekræfte"
+				},
+				"android": {
+					"title": "Android",
+					"step1": "Tryk på menuknappen (tre prikker) i Chrome",
+					"step2": "Tryk på \"Føj til startskærm\" eller \"Installer app\"",
+					"step3": "Tryk på \"Tilføj\" eller \"Installer\" for at bekræfte"
+				},
+				"desktop": {
+					"title": "Computer (Chrome, Edge)",
+					"step1": "Se efter installer-ikonet i adresselinjen (⊕)",
+					"step2": "Klik på \"Installer\" i popup-dialogen",
+					"step3": "Appen åbner i sit eget vindue"
+				}
+			},
+			"benefits": {
+				"title": "Fordele ved at installere",
+				"offline": {
+					"title": "Virker offline",
+					"description": "Få adgang til dine vaner og mål selv uden internetforbindelse"
+				},
+				"fast": {
+					"title": "Lynhurtig",
+					"description": "Appen indlæses øjeblikkeligt fra din enhed, ingen ventetid"
+				},
+				"notifications": {
+					"title": "Push-notifikationer",
+					"description": "Få påmindelser og motivation direkte på din enhed"
+				},
+				"homescreen": {
+					"title": "Hurtig adgang",
+					"description": "Start appen øjeblikkeligt fra din startskærm eller dock"
+				}
+			}
 		}
 	},
 	"goals": {

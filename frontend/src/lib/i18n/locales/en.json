@@ -338,6 +338,63 @@
 				"loadFailed": "Failed to load notification preferences",
 				"saveFailed": "Failed to save notification preferences"
 			}
+		},
+		"app": {
+			"title": "App",
+			"description": "Install HelpMotivateMe as an app on your device",
+			"installed": {
+				"title": "App Installed",
+				"description": "You're using HelpMotivateMe as an installed app. Enjoy the full experience!"
+			},
+			"install": {
+				"title": "Install App",
+				"description": "Add HelpMotivateMe to your home screen for quick access",
+				"button": "Install App"
+			},
+			"manual": {
+				"title": "Installation Available",
+				"description": "Follow the instructions below to install the app on your device"
+			},
+			"instructions": {
+				"title": "How to Install",
+				"ios": {
+					"title": "iPhone & iPad",
+					"step1": "Tap the Share button at the bottom of Safari",
+					"step2": "Scroll down and tap \"Add to Home Screen\"",
+					"step3": "Tap \"Add\" to confirm"
+				},
+				"android": {
+					"title": "Android",
+					"step1": "Tap the menu button (three dots) in Chrome",
+					"step2": "Tap \"Add to Home screen\" or \"Install app\"",
+					"step3": "Tap \"Add\" or \"Install\" to confirm"
+				},
+				"desktop": {
+					"title": "Desktop (Chrome, Edge)",
+					"step1": "Look for the install icon in the address bar (⊕)",
+					"step2": "Click \"Install\" in the popup dialog",
+					"step3": "The app will open in its own window"
+				}
+			},
+			"benefits": {
+				"title": "Benefits of Installing",
+				"offline": {
+					"title": "Works Offline",
+					"description": "Access your habits and goals even without internet connection"
+				},
+				"fast": {
+					"title": "Lightning Fast",
+					"description": "App loads instantly from your device, no waiting for downloads"
+				},
+				"notifications": {
+					"title": "Push Notifications",
+					"description": "Get reminders and motivation directly on your device"
+				},
+				"homescreen": {
+					"title": "One-Tap Access",
+					"description": "Launch the app instantly from your home screen or dock"
+				}
+			}
 		}
 	},
 	"goals": {

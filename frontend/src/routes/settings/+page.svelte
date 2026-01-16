@@ -9,8 +9,9 @@
 	import MembershipTab from '$lib/components/settings/MembershipTab.svelte';
 	import LanguageTab from '$lib/components/settings/LanguageTab.svelte';
 	import NotificationsTab from '$lib/components/settings/NotificationsTab.svelte';
+	import AppTab from '$lib/components/settings/AppTab.svelte';
 
-	type Tab = 'profile' | 'password' | 'membership' | 'language' | 'notifications';
+	type Tab = 'profile' | 'password' | 'membership' | 'language' | 'notifications' | 'app';
 
 	let activeTab = $state<Tab>('profile');
 	let loading = $state(true);
@@ -18,7 +19,7 @@
 	// Read tab from URL hash
 	$effect(() => {
 		const hash = $page.url.hash.slice(1) as Tab;
-		if (['profile', 'password', 'membership', 'language', 'notifications'].includes(hash)) {
+		if (['profile', 'password', 'membership', 'language', 'notifications', 'app'].includes(hash)) {
 			activeTab = hash;
 		}
 	});
@@ -44,7 +45,8 @@
 		{ id: 'password', labelKey: 'settings.password.title', show: $auth.user?.hasPassword ?? false },
 		{ id: 'membership', labelKey: 'settings.membership.title', show: true },
 		{ id: 'language', labelKey: 'settings.language.title', show: true },
-		{ id: 'notifications', labelKey: 'settings.notifications.title', show: true }
+		{ id: 'notifications', labelKey: 'settings.notifications.title', show: true },
+		{ id: 'app', labelKey: 'settings.app.title', show: true }
 	]);
 </script>
 
@@ -92,6 +94,8 @@
 					<LanguageTab />
 				{:else if activeTab === 'notifications'}
 					<NotificationsTab />
+				{:else if activeTab === 'app'}
+					<AppTab />
 				{/if}
 			</div>
 		{/if}
