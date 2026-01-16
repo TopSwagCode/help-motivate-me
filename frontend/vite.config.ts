@@ -22,6 +22,17 @@ export default defineConfig({
 				display: 'standalone',
 				scope: '/',
 				start_url: '/',
+				// Enable deep linking - links to this domain open in PWA
+				handle_links: 'preferred',
+				// Declare which URLs this PWA can handle
+				url_handlers: [
+					{
+						origin: 'https://helpmotivateme.dk'
+					},
+					{
+						origin: 'https://*.helpmotivateme.dk'
+					}
+				],
 				icons: [
 					{
 						src: 'android-chrome-192x192.png',

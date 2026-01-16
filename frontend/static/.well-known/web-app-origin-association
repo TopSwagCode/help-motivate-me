@@ -1,0 +1,10 @@
+{
+  "web_apps": [
+    {
+      "manifest": "/manifest.webmanifest",
+      "details": {
+        "paths": ["/*"]
+      }
+    }
+  ]
+}

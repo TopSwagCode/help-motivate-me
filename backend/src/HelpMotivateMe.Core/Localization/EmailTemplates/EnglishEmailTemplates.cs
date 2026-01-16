@@ -12,18 +12,25 @@ public class EnglishEmailTemplates : IEmailTemplates
         <html>
         <body style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
             <h1 style='color: {PrimaryColor};'>Login to Help Motivate Me</h1>
-            <p>Click the button below to log in to your account. This link will expire in 24 hours and can only be used once.</p>
+            <p>Click one of the buttons below to log in to your account. This link will expire in 24 hours and can only be used once.</p>
             <p style='margin: 30px 0;'>
                 <a href='{loginUrl}'
-                   style='background-color: {PrimaryColor}; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
-                    Log In
+                   style='background-color: {PrimaryColor}; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-right: 10px;'>
+                    📱 Open in App
                 </a>
+                <a href='{loginUrl}'
+                   style='background-color: #6B7280; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                    🌐 Open in Browser
+                </a>
+            </p>
+            <p style='color: {GrayColor}; font-size: 14px;'>
+                <strong>Tip:</strong> Use "Open in App" if you have the app installed. Use "Open in Browser" if you prefer to use your web browser.
             </p>
             <p style='color: {GrayColor}; font-size: 14px;'>
                 If you didn't request this login link, you can safely ignore this email.
             </p>
             <p style='color: {GrayColor}; font-size: 14px;'>
-                If the button doesn't work, copy and paste this link into your browser:<br/>
+                If the buttons don't work, copy and paste this link into your browser:<br/>
                 <a href='{loginUrl}' style='color: {PrimaryColor};'>{loginUrl}</a>
             </p>
         </body>
@@ -31,9 +38,13 @@ public class EnglishEmailTemplates : IEmailTemplates
 
     public string GetLoginLinkTextBody(string loginUrl) => $@"Login to Help Motivate Me
 
-Click the link below to log in to your account. This link will expire in 24 hours and can only be used once.
+Click one of the links below to log in to your account. This link will expire in 24 hours and can only be used once.
 
-{loginUrl}
+Open in App: {loginUrl}
+
+Open in Browser: {loginUrl}
+
+Tip: Use the App link if you have the app installed. Use the Browser link if you prefer your web browser.
 
 If you didn't request this login link, you can safely ignore this email.";
 
