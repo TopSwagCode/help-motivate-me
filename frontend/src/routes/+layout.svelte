@@ -15,10 +15,12 @@
 	import { createGoal, getGoals } from '$lib/api/goals';
 	import { createTask } from '$lib/api/tasks';
 	import { createHabitStack } from '$lib/api/habitStacks';
+	import { createIdentityFromAi } from '$lib/api/aiGeneral';
 	import type {
 		TaskPreviewData,
 		GoalPreviewData,
-		HabitStackPreviewData
+		HabitStackPreviewData,
+		IdentityPreviewData
 	} from '$lib/api/aiGeneral';
 
 	let i18nReady = $state(false);
@@ -106,7 +108,8 @@
 		await createGoal({
 			title: data.title,
 			description: data.description ?? undefined,
-			targetDate: data.targetDate ?? undefined
+			targetDate: data.targetDate ?? undefined,
+			identityId: data.identityId ?? undefined
 		});
 	}
 
@@ -122,6 +125,11 @@
 				habitDescription: h.habitDescription
 			}))
 		});
+	}
+
+	// Handle identity creation from AI
+	async function handleCreateIdentity(data: IdentityPreviewData) {
+		await createIdentityFromAi(data);
 	}
 </script>
 
@@ -159,6 +167,7 @@
 			onCreateTask={handleCreateTask}
 			onCreateGoal={handleCreateGoal}
 			onCreateHabitStack={handleCreateHabitStack}
+			onCreateIdentity={handleCreateIdentity}
 		/>
 		
 		<!-- Floating AI Assistant Button -->

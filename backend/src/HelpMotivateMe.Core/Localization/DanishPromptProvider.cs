@@ -228,6 +228,52 @@ public class DanishPromptProvider : IPromptProvider
         BRUGERENS IDENTITETER (foreslå linking når relevant):
         {identities}
 
+        IDENTITETSANBEFALINGSSYSTEM:
+        Når du opretter opgaver, mål eller vanestakke, SKAL du analysere om de relaterer til brugerens eksisterende identiteter.
+
+        IDENTITETSMATCHING REGLER:
+        - Sundheds/fitness aktiviteter (træning, kost, søvn, sport) → "Sund Person", "Atlet", "Fit Person", "Løber"
+        - Læsning, læring, kurser, studier → "Lærende", "Studerende", "Intellektuel", "Læser"
+        - Skrivning, kunst, musik, design → "Forfatter", "Kunstner", "Kreativ", "Musiker"
+        - Produktivitet, organisering, planlægning → "Produktiv Person", "Organiseret Person", "Effektiv Person"
+        - Meditation, mindfulness, refleksion → "Mindful Person", "Zen Person", "Reflekterende Person"
+        - Forretning, iværksætteri, lederskab → "Leder", "Iværksætter", "Virksomhedsejer"
+        - Sociale forbindelser, relationer → "Ven", "Social Person", "Forbinder"
+
+        HVIS STÆRKT MATCH FUNDET (semantisk lighed med brugerens identitetsnavn/beskrivelse):
+        - Inkluder identityId og identityName i forhåndsvisningsdata
+        - Tilføj kort begrundelse: "Dette understøtter din [Identitetsnavn] identitet!"
+        - Øg tillid: +0.1 til samlet tillidsscore
+        - Vis identitetsforbindelsen tydeligt i dit svar
+
+        HVIS INTET MATCH MEN AKTIVITETEN VIRKER IDENTITETSVÆRDIG:
+        - Foreslå at oprette en ny identitet først
+        - Brug intent: "create_identity"
+        - Giv foreslået navn, beskrivelse, ikon (emoji) og farve (#hexfarve)
+        - Tilføj begrundelse der forklarer hvorfor denne identitet vil hjælpe
+        - Spørg: "Vil du oprette en [Identitetsnavn] identitet først? Dette vil hjælpe med at spore dine fremskridt!"
+
+        FOR IDENTITETSOPRETTELSE - Responsformat:
+        "Dette ligner et nyt vækstområde! Jeg anbefaler at oprette en ny identitet til at understøtte dette."
+        ```json
+        {"intent":"create_identity","confidence":0.85,"preview":{"type":"identity","data":{"name":"Foreslået Identitetsnavn","description":"Kort beskrivelse af hvad denne identitet repræsenterer","icon":"emoji","color":"#hexfarve","reasoning":"Hvorfor denne identitet vil hjælpe dig med at få succes"}},"clarifyingQuestion":"Vil du oprette denne identitet først, og derefter tilføje din [opgave/mål/vane]?","actions":["confirm","skip","cancel"]}
+        ```
+
+        Vælg passende identitetsattributter:
+        - Sundhed/Fitness: 💪🏃‍♂️🧘‍♀️🏋️ #22c55e (grøn)
+        - Læring/Vækst: 📚🎓🧠📖 #3b82f6 (blå)
+        - Kreativitet: 🎨✍️🎵🎭 #a855f7 (lilla)
+        - Produktivitet: ⚡💼📈🎯 #f59e0b (rav)
+        - Mindfulness: 🧘‍♀️🌿☮️🕉️ #14b8a6 (blågrøn)
+        - Social/Lederskab: 👥🤝🎤💬 #ec4899 (pink)
+        - Teknisk/Udvikler: 💻🔧⚙️🖥️ #6366f1 (indigo)
+
+        KRITISK FOR IDENTITETSLINKING:
+        - Inkluder altid identityId OG identityName når du foreslår en forbindelse
+        - Vis begrundelse kort og samtaleagtigt i dit svar
+        - Hvis du opretter identitet først, forklar at den automatisk vil blive forbundet til opgaven/målet/vanen
+        - Efter identiteten er oprettet, skal den næste opgave/mål/vane automatisk forbindes til den
+
         **KRITISK KRAV**: Du SKAL inkludere en JSON-blok til SIDST i HVER respons.
         Indpak det i ```json kodeblokke præcis som vist.
 
@@ -266,10 +312,13 @@ public class DanishPromptProvider : IPromptProvider
         {"type":"task","data":{"title":"streng (påkrævet)","description":"streng eller null","dueDate":"ÅÅÅÅ-MM-DD eller null","identityId":"guid eller null","identityName":"streng eller null"}}
 
         Mål:
-        {"type":"goal","data":{"title":"streng (påkrævet)","description":"streng eller null","targetDate":"ÅÅÅÅ-MM-DD eller null"}}
+        {"type":"goal","data":{"title":"streng (påkrævet)","description":"streng eller null","targetDate":"ÅÅÅÅ-MM-DD eller null","identityId":"guid eller null","identityName":"streng eller null"}}
 
         Vanestak:
         {"type":"habitStack","data":{"name":"streng (påkrævet)","description":"streng eller null","triggerCue":"Efter jeg... (påkrævet)","identityId":"guid eller null","identityName":"streng eller null","habits":[{"cueDescription":"vågner","habitDescription":"drikker et glas vand"}]}}
+
+        Identitet:
+        {"type":"identity","data":{"name":"streng (påkrævet)","description":"streng eller null","icon":"emoji","color":"#hexfarve","reasoning":"streng der forklarer hvorfor denne identitet anbefales"}}
 
         KRITISK FOR VANESTAKKE:
         - triggerCue SKAL starte med "Efter jeg" (f.eks. "Efter jeg vågner")

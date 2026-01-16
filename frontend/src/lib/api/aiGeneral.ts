@@ -2,7 +2,7 @@ const API_BASE = import.meta.env.VITE_API_URL !== undefined ? import.meta.env.VI
 
 // Types for AI Intent Response
 export interface AiIntentResponse {
-	intent: string; // "create_task", "create_goal", "create_habit_stack", "clarify", "confirmed"
+	intent: string; // "create_task", "create_goal", "create_habit_stack", "create_identity", "clarify", "confirmed"
 	confidence: number; // 0.0 - 1.0
 	preview: AiPreview | null;
 	clarifyingQuestion: string | null;
@@ -11,8 +11,8 @@ export interface AiIntentResponse {
 }
 
 export interface AiPreview {
-	type: 'task' | 'goal' | 'habitStack';
-	data: TaskPreviewData | GoalPreviewData | HabitStackPreviewData;
+	type: 'task' | 'goal' | 'habitStack' | 'identity';
+	data: TaskPreviewData | GoalPreviewData | HabitStackPreviewData | IdentityPreviewData;
 }
 
 export interface TaskPreviewData {
@@ -21,12 +21,16 @@ export interface TaskPreviewData {
 	dueDate?: string | null;
 	identityId?: string | null;
 	identityName?: string | null;
+	reasoning?: string | null;
 }
 
 export interface GoalPreviewData {
 	title: string;
 	description?: string | null;
 	targetDate?: string | null;
+	identityId?: string | null;
+	identityName?: string | null;
+	reasoning?: string | null;
 }
 
 export interface HabitStackPreviewData {
@@ -35,7 +39,16 @@ export interface HabitStackPreviewData {
 	triggerCue: string;
 	identityId?: string | null;
 	identityName?: string | null;
+	reasoning?: string | null;
 	habits: Array<{ cueDescription: string; habitDescription: string }>;
+}
+
+export interface IdentityPreviewData {
+	name: string;
+	description?: string | null;
+	icon?: string | null;
+	color?: string | null;
+	reasoning?: string | null;
 }
 
 export interface GeneralChatChunk {
@@ -142,12 +155,12 @@ function parseIntentData(raw: Record<string, unknown> | null | undefined): AiInt
 	let preview: AiPreview | null = null;
 
 	if (rawPreview) {
-		const previewType = (rawPreview.Type ?? rawPreview.type) as 'task' | 'goal' | 'habitStack';
+		const previewType = (rawPreview.Type ?? rawPreview.type) as 'task' | 'goal' | 'habitStack' | 'identity';
 		const previewData = (rawPreview.Data ?? rawPreview.data) as Record<string, unknown>;
 
 		preview = {
 			type: previewType,
-			data: previewData as unknown as TaskPreviewData | GoalPreviewData | HabitStackPreviewData
+			data: previewData as unknown as TaskPreviewData | GoalPreviewData | HabitStackPreviewData | IdentityPreviewData
 		};
 	}
 
@@ -278,4 +291,44 @@ export async function* streamGeneralChat(
  */
 export function stripJsonBlocks(content: string): string {
 	return content.replace(/```json[\s\S]*?```/g, '').trim();
+}
+
+/**
+ * Create identity from AI recommendation.
+ */
+export async function createIdentityFromAi(data: IdentityPreviewData): Promise<Identity> {
+	const response = await fetch(`${API_BASE}/api/ai/general/create-identity`, {
+		method: 'POST',
+		credentials: 'include',
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRF': '1'
+		},
+		body: JSON.stringify({
+			name: data.name,
+			description: data.description,
+			icon: data.icon,
+			color: data.color
+		})
+	});
+
+	if (!response.ok) {
+		throw new Error(`Failed to create identity: ${response.status}`);
+	}
+
+	return response.json();
+}
+
+// Import Identity type (this should already be imported elsewhere in your app)
+export interface Identity {
+	id: string;
+	name: string;
+	description: string | null;
+	color: string | null;
+	icon: string | null;
+	totalTasks?: number;
+	completedTasks?: number;
+	tasksCompletedLast7Days?: number;
+	completionRate?: number;
+	createdAt: string;
 }
