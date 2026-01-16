@@ -12,25 +12,18 @@ public class DanishEmailTemplates : IEmailTemplates
         <html>
         <body style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
             <h1 style='color: {PrimaryColor};'>Log ind på Help Motivate Me</h1>
-            <p>Klik på en af knapperne nedenfor for at logge ind på din konto. Dette link udløber om 24 timer og kan kun bruges én gang.</p>
+            <p>Klik på knappen nedenfor for at logge ind på din konto. Dette link udløber om 24 timer.</p>
             <p style='margin: 30px 0;'>
                 <a href='{loginUrl}'
-                   style='background-color: {PrimaryColor}; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-right: 10px;'>
-                    📱 Åbn i app
+                   style='background-color: {PrimaryColor}; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-size: 16px;'>
+                    Log ind på Help Motivate Me
                 </a>
-                <a href='{loginUrl}'
-                   style='background-color: #6B7280; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
-                    🌐 Åbn i browser
-                </a>
-            </p>
-            <p style='color: {GrayColor}; font-size: 14px;'>
-                <strong>Tip:</strong> Brug ""Åbn i app"" hvis du har appen installeret. Brug ""Åbn i browser"" hvis du foretrækker at bruge din webbrowser.
             </p>
             <p style='color: {GrayColor}; font-size: 14px;'>
                 Hvis du ikke har anmodet om dette login-link, kan du trygt ignorere denne e-mail.
             </p>
             <p style='color: {GrayColor}; font-size: 14px;'>
-                Hvis knapperne ikke virker, kopier og indsæt dette link i din browser:<br/>
+                Hvis knappen ikke virker, kopier og indsæt dette link i din browser:<br/>
                 <a href='{loginUrl}' style='color: {PrimaryColor};'>{loginUrl}</a>
             </p>
         </body>
@@ -38,13 +31,9 @@ public class DanishEmailTemplates : IEmailTemplates
 
     public string GetLoginLinkTextBody(string loginUrl) => $@"Log ind på Help Motivate Me
 
-Klik på et af linkene nedenfor for at logge ind på din konto. Dette link udløber om 24 timer og kan kun bruges én gang.
+Klik på linket nedenfor for at logge ind på din konto. Dette link udløber om 24 timer.
 
-Åbn i app: {loginUrl}
-
-Åbn i browser: {loginUrl}
-
-Tip: Brug app-linket hvis du har appen installeret. Brug browser-linket hvis du foretrækker din webbrowser.
+{loginUrl}
 
 Hvis du ikke har anmodet om dette login-link, kan du trygt ignorere denne e-mail.";
 
