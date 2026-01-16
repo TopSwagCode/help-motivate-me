@@ -59,8 +59,20 @@
 	}
 
 	async function handleUpdate() {
+		console.log('[PWA] Update button clicked, updateSW:', !!updateSW);
 		if (updateSW) {
-			await updateSW(true);
+			try {
+				console.log('[PWA] Calling updateSW(true) to activate new service worker...');
+				await updateSW(true);
+				console.log('[PWA] updateSW completed, page should reload');
+			} catch (error) {
+				console.error('[PWA] Error during update:', error);
+				// Fallback: force reload the page
+				window.location.reload();
+			}
+		} else {
+			console.warn('[PWA] updateSW not available, forcing reload');
+			window.location.reload();
 		}
 	}
 </script>
