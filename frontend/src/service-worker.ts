@@ -15,7 +15,7 @@ self.addEventListener('push', (event) => {
 		return;
 	}
 	
-	let data: { title?: string; body?: string; url?: string; icon?: string };
+	let data: { title?: string; body?: string; url?: string; icon?: string; tag?: string };
 	
 	try {
 		data = event.data.json();
@@ -33,7 +33,8 @@ self.addEventListener('push', (event) => {
 			url: data.url || '/'
 		},
 		requireInteraction: false,
-		tag: 'help-motivate-me-notification'
+		// Use unique tag per notification to prevent collapsing, or use provided tag for grouping
+		tag: data.tag || `hmm-${Date.now()}`
 	};
 	
 	event.waitUntil(
