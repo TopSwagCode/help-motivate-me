@@ -12,8 +12,6 @@ export default defineConfig({
 			registerType: 'prompt',
 			scope: '/',
 			base: '/',
-			// Disable automatic navigation handling - SvelteKit handles routing
-			injectRegister: false,
 			manifest: {
 				name: 'Help Motivate Me',
 				short_name: 'Motivate Me',
@@ -43,28 +41,13 @@ export default defineConfig({
 				]
 			},
 			workbox: {
+				// Only cache static assets, not pages
 				globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,woff,woff2}'],
-				// Don't precache HTML files - let SvelteKit handle navigation
-				globIgnores: ['**/*.html'],
-				// Disable navigation preload to prevent cancellation warnings
+				globIgnores: ['**/sw*', '**/*.html'],
+				// Completely disable navigation preload
 				navigationPreload: false,
+				// Don't handle navigation requests - let the network handle them
 				runtimeCaching: [
-					// Cache page navigations with NetworkFirst
-					{
-						urlPattern: ({ request }) => request.mode === 'navigate',
-						handler: 'NetworkFirst',
-						options: {
-							cacheName: 'pages-cache',
-							expiration: {
-								maxEntries: 50,
-								maxAgeSeconds: 60 * 60 * 24
-							},
-							cacheableResponse: {
-								statuses: [0, 200]
-							},
-							networkTimeoutSeconds: 3
-						}
-					},
 					{
 						urlPattern: /^https?:\/\/.*\/api\/(goals|identities|today|habit-stacks|journal)/,
 						handler: 'NetworkFirst',
@@ -109,11 +92,17 @@ export default defineConfig({
 							}
 						}
 					}
-				]
+				],
+				// Skip waiting to activate new service worker immediately
+				skipWaiting: true,
+				clientsClaim: true
+			},
+			// Disable kit integration that enables navigation preload
+			kit: {
+				includeVersionFile: true
 			},
 			devOptions: {
-				enabled: true,
-				type: 'module'
+				enabled: false
 			}
 		})
 	],
