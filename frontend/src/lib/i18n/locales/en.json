@@ -394,6 +394,10 @@
 					"title": "One-Tap Access",
 					"description": "Launch the app instantly from your home screen or dock"
 				}
+			},
+			"chromeTip": {
+				"title": "Using Chrome or Edge?",
+				"description": "Look for the install icon (⊕) in the right side of the address bar, or use the browser menu (⋮) and select 'Install app' or 'Add to Home screen'."
 			}
 		}
 	},

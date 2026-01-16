@@ -394,6 +394,10 @@
 					"title": "Hurtig adgang",
 					"description": "Start appen øjeblikkeligt fra din startskærm eller dock"
 				}
+			},
+			"chromeTip": {
+				"title": "Bruger du Chrome eller Edge?",
+				"description": "Se efter installer-ikonet (⊕) i højre side af adresselinjen, eller brug browsermenuen (⋮) og vælg 'Installer app' eller 'Føj til startskærm'."
 			}
 		}
 	},
