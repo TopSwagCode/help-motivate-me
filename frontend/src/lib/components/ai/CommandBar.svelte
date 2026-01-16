@@ -5,6 +5,7 @@
 	import TaskPreviewCard from './previews/TaskPreviewCard.svelte';
 	import GoalPreviewCard from './previews/GoalPreviewCard.svelte';
 	import HabitStackPreviewCard from './previews/HabitStackPreviewCard.svelte';
+	import IdentityPreviewCard from './previews/IdentityPreviewCard.svelte';
 	import {
 		streamGeneralChat,
 		stripJsonBlocks,
@@ -13,7 +14,8 @@
 		type AiPreview,
 		type TaskPreviewData,
 		type GoalPreviewData,
-		type HabitStackPreviewData
+		type HabitStackPreviewData,
+		type IdentityPreviewData
 	} from '$lib/api/aiGeneral';
 
 	interface Props {
@@ -22,9 +24,10 @@
 		onCreateTask?: (data: TaskPreviewData) => Promise<void>;
 		onCreateGoal?: (data: GoalPreviewData) => Promise<void>;
 		onCreateHabitStack?: (data: HabitStackPreviewData) => Promise<void>;
+		onCreateIdentity?: (data: IdentityPreviewData) => Promise<void>;
 	}
 
-	let { isOpen, onClose, onCreateTask, onCreateGoal, onCreateHabitStack }: Props = $props();
+	let { isOpen, onClose, onCreateTask, onCreateGoal, onCreateHabitStack, onCreateIdentity }: Props = $props();
 
 	let inputValue = $state('');
 	let isLoading = $state(false);
@@ -132,6 +135,9 @@
 			} else if (preview.type === 'habitStack' && onCreateHabitStack) {
 				await onCreateHabitStack(preview.data as HabitStackPreviewData);
 				successMessage = $t('ai.successMessages.habitStackCreated');
+			} else if (preview.type === 'identity' && onCreateIdentity) {
+				await onCreateIdentity(preview.data as IdentityPreviewData);
+				successMessage = $t('ai.successMessages.identityCreated');
 			}
 
 			// Show success briefly then close
@@ -266,6 +272,8 @@
 									<GoalPreviewCard data={currentIntent.preview.data as GoalPreviewData} />
 								{:else if currentIntent.preview.type === 'habitStack'}
 									<HabitStackPreviewCard data={currentIntent.preview.data as HabitStackPreviewData} />
+								{:else if currentIntent.preview.type === 'identity'}
+									<IdentityPreviewCard data={currentIntent.preview.data as IdentityPreviewData} />
 								{/if}
 							</div>
 						{/if}

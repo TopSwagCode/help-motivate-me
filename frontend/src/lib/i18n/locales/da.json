@@ -649,8 +649,10 @@
 			"task": "Opgave",
 			"goal": "Mål",
 			"habitStack": "Vanestak",
+			"identity": "Identitet",
 			"targetDate": "Målsdato",
-			"trigger": "Trigger"
+			"trigger": "Trigger",
+			"identityRecommendation": "AI anbefaler"
 		},
 		"actions": {
 			"confirm": "Opret",
@@ -659,7 +661,9 @@
 			"task": "Gør det til en opgave",
 			"goal": "Gør det til et mål",
 			"habitStack": "Gør det til en vane",
-			"makeTask": "Gør det til en opgave"
+			"makeTask": "Gør det til en opgave",
+			"creating": "Opretter...",
+			"createIdentity": "Opret identitet"
 		},
 		"confidence": {
 			"high": "Klar til at oprette",
@@ -669,7 +673,8 @@
 		"successMessages": {
 			"taskCreated": "Opgave oprettet!",
 			"goalCreated": "Mål oprettet!",
-			"habitStackCreated": "Vanestak oprettet!"
+			"habitStackCreated": "Vanestak oprettet!",
+			"identityCreated": "Identitet oprettet!"
 		},
 		"errors": {
 			"requestFailed": "Kunne ikke behandle anmodning. Prøv venligst igen.",

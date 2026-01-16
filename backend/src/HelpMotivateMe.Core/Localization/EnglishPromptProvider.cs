@@ -228,6 +228,52 @@ public class EnglishPromptProvider : IPromptProvider
         USER'S IDENTITIES (suggest linking when relevant):
         {identities}
 
+        IDENTITY RECOMMENDATION SYSTEM:
+        When creating tasks, goals, or habit stacks, you MUST analyze if they relate to the user's existing identities.
+
+        IDENTITY MATCHING RULES:
+        - Health/fitness activities (exercise, diet, sleep, sports) → "Healthy Person", "Athlete", "Fit Person", "Runner"
+        - Reading, learning, courses, studying → "Learner", "Student", "Intellectual", "Reader"
+        - Writing, art, music, design → "Writer", "Artist", "Creative", "Musician"
+        - Productivity, organization, planning → "Productive Person", "Organized Person", "Efficient Person"
+        - Meditation, mindfulness, reflection → "Mindful Person", "Zen Person", "Reflective Person"
+        - Business, entrepreneurship, leadership → "Leader", "Entrepreneur", "Business Owner"
+        - Social connections, relationships → "Friend", "Social Person", "Connector"
+
+        IF STRONG MATCH FOUND (semantic similarity to user's identity name/description):
+        - Include identityId and identityName in preview data
+        - Add brief reasoning: "This supports your [Identity Name] identity!"
+        - Boost confidence: +0.1 to overall confidence score
+        - Show the identity link prominently in your response
+
+        IF NO MATCH BUT ACTIVITY SEEMS IDENTITY-WORTHY:
+        - Suggest creating a new identity first
+        - Use intent: "create_identity"
+        - Provide suggested name, description, icon (emoji), and color (#hexcolor)
+        - Add reasoning explaining why this identity would help
+        - Ask: "Would you like to create a [Identity Name] identity first? This will help track your progress!"
+
+        FOR IDENTITY CREATION - Response format:
+        "This looks like a new area of growth! I'd recommend creating a new identity to support this."
+        ```json
+        {"intent":"create_identity","confidence":0.85,"preview":{"type":"identity","data":{"name":"Suggested Identity Name","description":"Brief description of what this identity represents","icon":"emoji","color":"#hexcolor","reasoning":"Why this identity will help you succeed"}},"clarifyingQuestion":"Would you like to create this identity first, then add your [task/goal/habit]?","actions":["confirm","skip","cancel"]}
+        ```
+
+        Choose appropriate identity attributes:
+        - Health/Fitness: 💪🏃‍♂️🧘‍♀️🏋️ #22c55e (green)
+        - Learning/Growth: 📚🎓🧠📖 #3b82f6 (blue)
+        - Creativity: 🎨✍️🎵🎭 #a855f7 (purple)
+        - Productivity: ⚡💼📈🎯 #f59e0b (amber)
+        - Mindfulness: 🧘‍♀️🌿☮️🕉️ #14b8a6 (teal)
+        - Social/Leadership: 👥🤝🎤💬 #ec4899 (pink)
+        - Technical/Developer: 💻🔧⚙️🖥️ #6366f1 (indigo)
+
+        CRITICAL FOR IDENTITY LINKING:
+        - Always include identityId AND identityName when suggesting a link
+        - Show reasoning briefly and conversationally in your response
+        - If creating identity first, explain it will be automatically linked to the task/goal/habit
+        - After identity is created, the next task/goal/habit should automatically link to it
+
         **CRITICAL REQUIREMENT**: You MUST include a JSON block at the END of EVERY response.
         Wrap it in ```json code blocks exactly as shown.
 
@@ -266,10 +312,13 @@ public class EnglishPromptProvider : IPromptProvider
         {"type":"task","data":{"title":"string (required)","description":"string or null","dueDate":"YYYY-MM-DD or null","identityId":"guid or null","identityName":"string or null"}}
 
         Goal:
-        {"type":"goal","data":{"title":"string (required)","description":"string or null","targetDate":"YYYY-MM-DD or null"}}
+        {"type":"goal","data":{"title":"string (required)","description":"string or null","targetDate":"YYYY-MM-DD or null","identityId":"guid or null","identityName":"string or null"}}
 
         Habit Stack:
         {"type":"habitStack","data":{"name":"string (required)","description":"string or null","triggerCue":"After I... (required)","identityId":"guid or null","identityName":"string or null","habits":[{"cueDescription":"wake up","habitDescription":"drink a glass of water"}]}}
+
+        Identity:
+        {"type":"identity","data":{"name":"string (required)","description":"string or null","icon":"emoji","color":"#hexcolor","reasoning":"string explaining why this identity is recommended"}}
 
         CRITICAL FOR HABIT STACKS:
         - triggerCue MUST start with "After I" (e.g., "After I wake up")

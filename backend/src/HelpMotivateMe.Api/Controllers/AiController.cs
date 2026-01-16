@@ -187,6 +187,34 @@ public class AiController : ControllerBase
         return Ok(new AiContextResponse(identities, goals));
     }
 
+    /// <summary>
+    /// Create identity from AI recommendation.
+    /// Used when AI suggests creating a new identity for a task/goal/habit.
+    /// </summary>
+    [HttpPost("general/create-identity")]
+    public async Task<ActionResult<Core.Entities.Identity>> CreateIdentityFromAi(
+        [FromBody] CreateIdentityFromAiRequest request,
+        CancellationToken cancellationToken)
+    {
+        var userId = GetUserId();
+
+        var identity = new Core.Entities.Identity
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            Name = request.Name,
+            Description = request.Description,
+            Icon = request.Icon,
+            Color = request.Color,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _db.Identities.Add(identity);
+        await _db.SaveChangesAsync(cancellationToken);
+
+        return Ok(identity);
+    }
+
     private Guid GetUserId()
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
