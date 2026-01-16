@@ -12,6 +12,8 @@ export default defineConfig({
 			registerType: 'prompt',
 			scope: '/',
 			base: '/',
+			// Disable automatic navigation handling - SvelteKit handles routing
+			injectRegister: false,
 			manifest: {
 				name: 'Help Motivate Me',
 				short_name: 'Motivate Me',
@@ -41,8 +43,26 @@ export default defineConfig({
 				]
 			},
 			workbox: {
-				globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
+				globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,woff,woff2}'],
+				// Don't precache HTML files - let SvelteKit handle navigation
+				globIgnores: ['**/*.html'],
 				runtimeCaching: [
+					// Cache page navigations with NetworkFirst
+					{
+						urlPattern: ({ request }) => request.mode === 'navigate',
+						handler: 'NetworkFirst',
+						options: {
+							cacheName: 'pages-cache',
+							expiration: {
+								maxEntries: 50,
+								maxAgeSeconds: 60 * 60 * 24
+							},
+							cacheableResponse: {
+								statuses: [0, 200]
+							},
+							networkTimeoutSeconds: 3
+						}
+					},
 					{
 						urlPattern: /^https?:\/\/.*\/api\/(goals|identities|today|habit-stacks|journal)/,
 						handler: 'NetworkFirst',
