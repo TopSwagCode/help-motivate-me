@@ -9,6 +9,8 @@
 	import OfflineBanner from '$lib/components/OfflineBanner.svelte';
 	import { initI18n, setLocale, getLocaleFromLanguage } from '$lib/i18n';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { browser } from '$app/environment';
 	import { createGoal, getGoals } from '$lib/api/goals';
 	import { createTask } from '$lib/api/tasks';
 	import { createHabitStack } from '$lib/api/habitStacks';
@@ -19,11 +21,19 @@
 	} from '$lib/api/aiGeneral';
 
 	let i18nReady = $state(false);
+	let authChecked = $state(false);
 
-	// Initialize i18n and wait for it to be ready
+	// Initialize i18n and auth on mount
 	onMount(async () => {
+		// Initialize i18n first
 		await initI18n();
 		i18nReady = true;
+		
+		// Check if user is logged in (validates cookie with backend)
+		if (browser) {
+			await auth.init();
+			authChecked = true;
+		}
 	});
 
 	let { children } = $props();

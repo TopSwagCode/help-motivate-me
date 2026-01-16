@@ -9,6 +9,13 @@
 	let waitlistSuccess = $state(false);
 	let waitlistError = $state('');
 
+	// Redirect to /today if already logged in
+	$effect(() => {
+		if ($auth.initialized && $auth.user) {
+			goto('/today');
+		}
+	});
+
 	function handleGetStarted() {
 		if ($auth.user) {
 			goto('/today');
