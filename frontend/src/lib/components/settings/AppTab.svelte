@@ -1,66 +1,19 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
-	import { onMount } from 'svelte';
-	import { browser } from '$app/environment';
+	import { pwaStore } from '$lib/stores/pwa';
 
-	// PWA install prompt
-	let deferredPrompt: any = null;
-	let canInstall = $state(false);
-	let isInstalled = $state(false);
-	let isIOS = $state(false);
-	let isAndroid = $state(false);
-	let isMacOS = $state(false);
 	let installing = $state(false);
 
-	onMount(() => {
-		if (!browser) return;
-
-		// Detect platform
-		const userAgent = navigator.userAgent.toLowerCase();
-		isIOS = /iphone|ipad|ipod/.test(userAgent) && !(window as any).MSStream;
-		isAndroid = /android/.test(userAgent);
-		isMacOS = /macintosh|mac os x/.test(userAgent) && !isIOS;
-
-		// Check if already installed (standalone mode)
-		isInstalled = window.matchMedia('(display-mode: standalone)').matches 
-			|| (window.navigator as any).standalone === true;
-
-		// Listen for beforeinstallprompt event
-		window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-
-		// Listen for app installed event
-		window.addEventListener('appinstalled', () => {
-			isInstalled = true;
-			canInstall = false;
-			deferredPrompt = null;
-		});
-
-		return () => {
-			window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-		};
-	});
-
-	function handleBeforeInstallPrompt(e: Event) {
-		e.preventDefault();
-		deferredPrompt = e;
-		canInstall = true;
-	}
+	// Reactive values from store
+	let canInstall = $derived($pwaStore.canInstall);
+	let isInstalled = $derived($pwaStore.isInstalled);
+	let isIOS = $derived($pwaStore.isIOS);
+	let isAndroid = $derived($pwaStore.isAndroid);
 
 	async function installApp() {
-		if (!deferredPrompt) return;
-
 		installing = true;
 		try {
-			deferredPrompt.prompt();
-			const { outcome } = await deferredPrompt.userChoice;
-			
-			if (outcome === 'accepted') {
-				isInstalled = true;
-				canInstall = false;
-			}
-			deferredPrompt = null;
-		} catch (e) {
-			console.error('Install failed:', e);
+			await pwaStore.install();
 		} finally {
 			installing = false;
 		}
