@@ -266,9 +266,20 @@
 				"emailDescription": "Receive notifications via email",
 				"sms": "SMS",
 				"smsDescription": "Receive notifications via text message",
+				"push": "Push Notifications",
+				"pushDescription": "Receive instant notifications on this device",
+				"pushBlocked": "Push notifications are blocked in your browser settings",
 				"phone": "Phone Call",
 				"phoneDescription": "Receive notifications via phone call",
 				"comingSoon": "Coming Soon"
+			},
+			"push": {
+				"errors": {
+					"subscribeFailed": "Failed to enable push notifications. Please try again.",
+					"unsubscribeFailed": "Failed to disable push notifications. Please try again.",
+					"permissionDenied": "You need to allow notifications in your browser settings.",
+					"generic": "An error occurred with push notifications."
+				}
 			},
 			"types": {
 				"title": "Notification Types",

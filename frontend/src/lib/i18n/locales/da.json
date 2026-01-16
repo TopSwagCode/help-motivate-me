@@ -266,9 +266,20 @@
 				"emailDescription": "Modtag notifikationer via e-mail",
 				"sms": "SMS",
 				"smsDescription": "Modtag notifikationer via SMS",
+				"push": "Push-notifikationer",
+				"pushDescription": "Modtag øjeblikkelige notifikationer på denne enhed",
+				"pushBlocked": "Push-notifikationer er blokeret i dine browserindstillinger",
 				"phone": "Telefonopkald",
 				"phoneDescription": "Modtag notifikationer via telefonopkald",
 				"comingSoon": "Kommer snart"
+			},
+			"push": {
+				"errors": {
+					"subscribeFailed": "Kunne ikke aktivere push-notifikationer. Prøv igen.",
+					"unsubscribeFailed": "Kunne ikke deaktivere push-notifikationer. Prøv igen.",
+					"permissionDenied": "Du skal tillade notifikationer i dine browserindstillinger.",
+					"generic": "Der opstod en fejl med push-notifikationer."
+				}
 			},
 			"types": {
 				"title": "Notifikationstyper",

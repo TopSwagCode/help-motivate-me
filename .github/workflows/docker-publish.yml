@@ -119,4 +119,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           build-args: |
             VITE_API_URL=
-            VITE_API_URL=
+            VITE_VAPID_PUBLIC_KEY=${{ secrets.VITE_VAPID_PUBLIC_KEY }}

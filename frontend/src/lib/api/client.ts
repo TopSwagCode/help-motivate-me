@@ -1,3 +1,5 @@
+import { browser } from '$app/environment';
+
 const API_BASE = import.meta.env.VITE_API_URL !== undefined ? import.meta.env.VITE_API_URL : '';
 
 export class ApiError extends Error {
@@ -10,6 +12,17 @@ export class ApiError extends Error {
 		super(message);
 		this.name = 'ApiError';
 	}
+}
+
+export class OfflineError extends Error {
+	constructor() {
+		super('You are offline. This action requires an internet connection.');
+		this.name = 'OfflineError';
+	}
+}
+
+function isOnline(): boolean {
+	return !browser || navigator.onLine;
 }
 
 async function handleResponse<T>(response: Response): Promise<T> {
@@ -54,6 +67,10 @@ export async function apiGet<T>(endpoint: string): Promise<T> {
 }
 
 export async function apiPost<T>(endpoint: string, data?: unknown): Promise<T> {
+	if (!isOnline()) {
+		throw new OfflineError();
+	}
+
 	const response = await fetch(`${API_BASE}/api${endpoint}`, {
 		method: 'POST',
 		credentials: 'include',
@@ -67,6 +84,10 @@ export async function apiPost<T>(endpoint: string, data?: unknown): Promise<T> {
 }
 
 export async function apiPut<T>(endpoint: string, data: unknown): Promise<T> {
+	if (!isOnline()) {
+		throw new OfflineError();
+	}
+
 	const response = await fetch(`${API_BASE}/api${endpoint}`, {
 		method: 'PUT',
 		credentials: 'include',
@@ -80,6 +101,10 @@ export async function apiPut<T>(endpoint: string, data: unknown): Promise<T> {
 }
 
 export async function apiPatch<T>(endpoint: string, data?: unknown): Promise<T> {
+	if (!isOnline()) {
+		throw new OfflineError();
+	}
+
 	const response = await fetch(`${API_BASE}/api${endpoint}`, {
 		method: 'PATCH',
 		credentials: 'include',
@@ -93,6 +118,10 @@ export async function apiPatch<T>(endpoint: string, data?: unknown): Promise<T> 
 }
 
 export async function apiDelete<T>(endpoint: string): Promise<T> {
+	if (!isOnline()) {
+		throw new OfflineError();
+	}
+
 	const response = await fetch(`${API_BASE}/api${endpoint}`, {
 		method: 'DELETE',
 		credentials: 'include',
@@ -105,6 +134,10 @@ export async function apiDelete<T>(endpoint: string): Promise<T> {
 }
 
 export async function apiUpload<T>(endpoint: string, file: File): Promise<T> {
+	if (!isOnline()) {
+		throw new OfflineError();
+	}
+
 	const formData = new FormData();
 	formData.append('file', file);
 
