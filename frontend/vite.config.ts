@@ -21,7 +21,7 @@ export default defineConfig({
 				background_color: '#ffffff',
 				display: 'standalone',
 				scope: '/',
-				start_url: '/',
+				start_url: '/today',
 				// Enable deep linking - links to this domain open in PWA
 				handle_links: 'preferred',
 				// Declare which URLs this PWA can handle
