@@ -1084,5 +1084,15 @@
 		},
 		"success": "Thank you! We'll get back to you soon.",
 		"error": "Failed to send message. Please try again."
+	},
+	"pushPrompt": {
+		"title": "Stay Motivated!",
+		"subtitle": "Enable notifications",
+		"description": "Get timely reminders to help you build habits and reach your goals. You can customize or disable notifications anytime in settings.",
+		"benefit1": "Daily habit reminders",
+		"benefit2": "Goal progress updates",
+		"benefit3": "Motivational messages",
+		"enable": "Enable",
+		"notNow": "Not Now"
 	}
 }

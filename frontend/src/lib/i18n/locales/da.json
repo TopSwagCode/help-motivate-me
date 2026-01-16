@@ -1084,5 +1084,15 @@
 		},
 		"success": "Tak! Vi vender tilbage til dig snart.",
 		"error": "Kunne ikke sende besked. Prøv venligst igen."
+	},
+	"pushPrompt": {
+		"title": "Bliv motiveret!",
+		"subtitle": "Aktivér notifikationer",
+		"description": "Få rettidige påmindelser der hjælper dig med at opbygge vaner og nå dine mål. Du kan tilpasse eller deaktivere notifikationer når som helst i indstillinger.",
+		"benefit1": "Daglige vanepåmindelser",
+		"benefit2": "Opdateringer om målfremdrift",
+		"benefit3": "Motiverende beskeder",
+		"enable": "Aktivér",
+		"notNow": "Ikke nu"
 	}
 }

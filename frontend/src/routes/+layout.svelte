@@ -6,6 +6,7 @@
 	import BetaBanner from '$lib/components/layout/BetaBanner.svelte';
 	import CommandBar from '$lib/components/ai/CommandBar.svelte';
 	import PWAReloadPrompt from '$lib/components/PWAReloadPrompt.svelte';
+	import PushPermissionPrompt from '$lib/components/PushPermissionPrompt.svelte';
 	import OfflineBanner from '$lib/components/OfflineBanner.svelte';
 	import { initI18n, setLocale, getLocaleFromLanguage } from '$lib/i18n';
 	import { onMount } from 'svelte';
@@ -134,6 +135,9 @@
 {#if i18nReady}
 	<!-- PWA Update Prompt -->
 	<PWAReloadPrompt />
+	
+	<!-- Push Notification Permission Prompt -->
+	<PushPermissionPrompt />
 	
 	<!-- Offline Banner -->
 	<OfflineBanner />
