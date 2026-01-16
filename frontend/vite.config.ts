@@ -7,8 +7,9 @@ export default defineConfig({
 		sveltekit(),
 		SvelteKitPWA({
 			srcDir: 'src',
+			filename: 'service-worker.ts',
 			mode: 'production',
-			strategies: 'generateSW',
+			strategies: 'injectManifest',
 			registerType: 'prompt',
 			scope: '/',
 			base: '/',
@@ -40,64 +41,10 @@ export default defineConfig({
 					}
 				]
 			},
-			workbox: {
-				// Only cache static assets, not pages
+			injectManifest: {
 				globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,woff,woff2}'],
-				globIgnores: ['**/sw*', '**/*.html'],
-				// Completely disable navigation preload
-				navigationPreload: false,
-				// Don't handle navigation requests - let the network handle them
-				runtimeCaching: [
-					{
-						urlPattern: /^https?:\/\/.*\/api\/(goals|identities|today|habit-stacks|journal)/,
-						handler: 'NetworkFirst',
-						options: {
-							cacheName: 'api-cache',
-							expiration: {
-								maxEntries: 100,
-								maxAgeSeconds: 60 * 60 * 24
-							},
-							cacheableResponse: {
-								statuses: [0, 200]
-							},
-							networkTimeoutSeconds: 3
-						}
-					},
-					{
-						urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
-						handler: 'CacheFirst',
-						options: {
-							cacheName: 'image-cache',
-							expiration: {
-								maxEntries: 50,
-								maxAgeSeconds: 60 * 60 * 24 * 30
-							}
-						}
-					},
-					{
-						urlPattern: /^https:\/\/fonts\.googleapis\.com/,
-						handler: 'StaleWhileRevalidate',
-						options: {
-							cacheName: 'google-fonts-stylesheets'
-						}
-					},
-					{
-						urlPattern: /^https:\/\/fonts\.gstatic\.com/,
-						handler: 'CacheFirst',
-						options: {
-							cacheName: 'google-fonts-webfonts',
-							expiration: {
-								maxEntries: 20,
-								maxAgeSeconds: 60 * 60 * 24 * 365
-							}
-						}
-					}
-				],
-				// Skip waiting to activate new service worker immediately
-				skipWaiting: true,
-				clientsClaim: true
+				globIgnores: ['**/sw*', '**/*.html']
 			},
-			// Disable kit integration that enables navigation preload
 			kit: {
 				includeVersionFile: true
 			},

@@ -15,6 +15,9 @@ const config = {
 		}),
 		prerender: {
 			entries: []
+		},
+		serviceWorker: {
+			register: false // Let vite-pwa handle registration
 		}
 	}
 };
