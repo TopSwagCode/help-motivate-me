@@ -46,6 +46,8 @@ export default defineConfig({
 				globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,woff,woff2}'],
 				// Don't precache HTML files - let SvelteKit handle navigation
 				globIgnores: ['**/*.html'],
+				// Disable navigation preload to prevent cancellation warnings
+				navigationPreload: false,
 				runtimeCaching: [
 					// Cache page navigations with NetworkFirst
 					{
