@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { tick } from 'svelte';
-	import type { CreateHabitStackRequest, HabitStackItemRequest } from '$lib/types';
+	import { tick, onMount } from 'svelte';
+	import type { CreateHabitStackRequest, HabitStackItemRequest, Identity } from '$lib/types';
+	import { getIdentities } from '$lib/api/identities';
 
 	interface Props {
 		onsubmit: (data: CreateHabitStackRequest) => Promise<void>;
@@ -10,12 +11,22 @@
 	let { onsubmit, oncancel }: Props = $props();
 
 	let name = $state('');
+	let identityId = $state('');
+	let identities = $state<Identity[]>([]);
 	let items = $state<HabitStackItemRequest[]>([
 		{ cueDescription: '', habitDescription: '' }
 	]);
 	let loading = $state(false);
 	let error = $state('');
 	let formContainerRef = $state<HTMLElement | null>(null);
+
+	onMount(async () => {
+		try {
+			identities = await getIdentities();
+		} catch (e) {
+			console.error('Failed to load identities', e);
+		}
+	});
 
 	async function addItem() {
 		const lastItem = items[items.length - 1];
@@ -87,7 +98,11 @@
 		error = '';
 
 		try {
-			await onsubmit({ name: name.trim(), items: validItems });
+			await onsubmit({
+				name: name.trim(),
+				items: validItems,
+				identityId: identityId || undefined
+			});
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Failed to create habit stack';
 		} finally {
@@ -114,6 +129,28 @@
 			required
 		/>
 	</div>
+
+	{#if identities.length > 0}
+		<div>
+			<label for="identityId" class="block text-sm font-medium text-gray-700 mb-1">
+				Identity <span class="text-gray-500 text-sm">(Optional)</span>
+			</label>
+			<select
+				id="identityId"
+				bind:value={identityId}
+				class="input"
+				disabled={loading}
+			>
+				<option value="">No identity</option>
+				{#each identities as identity (identity.id)}
+					<option value={identity.id}>
+						{identity.icon ? `${identity.icon} ` : ''}{identity.name}
+					</option>
+				{/each}
+			</select>
+			<p class="text-xs text-gray-500 mt-1">Link this habit stack to an identity</p>
+		</div>
+	{/if}
 
 	<div>
 		<label class="block text-sm font-medium text-gray-700 mb-3">Habit Chain</label>

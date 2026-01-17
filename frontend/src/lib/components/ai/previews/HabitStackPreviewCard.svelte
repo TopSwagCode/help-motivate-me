@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
 	import type { HabitStackPreviewData } from '$lib/api/aiGeneral';
+	import IdentityRecommendationBadge from '../IdentityRecommendationBadge.svelte';
 
 	interface Props {
 		data: HabitStackPreviewData;
@@ -65,5 +66,9 @@
 				{data.identityName}
 			</span>
 		</div>
+	{/if}
+
+	{#if data.identityName && data.reasoning}
+		<IdentityRecommendationBadge identityName={data.identityName} reasoning={data.reasoning} />
 	{/if}
 </div>

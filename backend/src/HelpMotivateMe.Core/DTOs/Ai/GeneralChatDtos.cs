@@ -62,3 +62,24 @@ public record GoalSummary(
     Guid Id,
     string Title
 );
+
+/// <summary>
+/// Preview data for identity creation from AI recommendation.
+/// </summary>
+public record IdentityPreviewData(
+    string Name,
+    string? Description,
+    string? Icon,
+    string? Color,
+    string? Reasoning
+);
+
+/// <summary>
+/// Request to create an identity from AI recommendation.
+/// </summary>
+public record CreateIdentityFromAiRequest(
+    string Name,
+    string? Description,
+    string? Icon,
+    string? Color
+);

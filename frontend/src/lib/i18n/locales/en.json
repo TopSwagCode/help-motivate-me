@@ -649,8 +649,10 @@
 			"task": "Task",
 			"goal": "Goal",
 			"habitStack": "Habit Stack",
+			"identity": "Identity",
 			"targetDate": "Target",
-			"trigger": "Trigger"
+			"trigger": "Trigger",
+			"identityRecommendation": "AI recommends"
 		},
 		"actions": {
 			"confirm": "Create",
@@ -659,7 +661,9 @@
 			"task": "Make it a task",
 			"goal": "Make it a goal",
 			"habitStack": "Make it a habit",
-			"makeTask": "Make it a task"
+			"makeTask": "Make it a task",
+			"creating": "Creating...",
+			"createIdentity": "Create Identity"
 		},
 		"confidence": {
 			"high": "Ready to create",
@@ -669,7 +673,8 @@
 		"successMessages": {
 			"taskCreated": "Task created successfully!",
 			"goalCreated": "Goal created successfully!",
-			"habitStackCreated": "Habit stack created successfully!"
+			"habitStackCreated": "Habit stack created successfully!",
+			"identityCreated": "Identity created successfully!"
 		},
 		"errors": {
 			"requestFailed": "Failed to process request. Please try again.",
