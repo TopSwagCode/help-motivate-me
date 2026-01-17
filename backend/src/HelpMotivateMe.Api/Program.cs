@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using AspNet.Security.OAuth.GitHub;
+using Microsoft.AspNetCore.Authentication.Google;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
 using HelpMotivateMe.Api.Services;
@@ -117,6 +118,13 @@ builder.Services.AddAuthentication(options =>
 
             return Task.CompletedTask;
         };
+    })
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["OAuth:Google:ClientId"] ?? "";
+        options.ClientSecret = builder.Configuration["OAuth:Google:ClientSecret"] ?? "";
+        options.SaveTokens = true;
+        options.CallbackPath = "/api/signin-google";
     });
 
 builder.Services.AddControllers()
