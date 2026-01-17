@@ -21,7 +21,8 @@ function createAuthStore() {
 		async init() {
 			update((state) => ({ ...state, loading: true }));
 			try {
-				const user = await apiGet<User>('/auth/me');
+				// Skip auth redirect when checking auth status to avoid redirect loops
+				const user = await apiGet<User>('/auth/me', { skipAuthRedirect: true });
 				set({ user, loading: false, initialized: true });
 			} catch {
 				set({ user: null, loading: false, initialized: true });

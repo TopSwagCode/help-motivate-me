@@ -25,10 +25,10 @@ function isOnline(): boolean {
 	return !browser || navigator.onLine;
 }
 
-async function handleResponse<T>(response: Response): Promise<T> {
+async function handleResponse<T>(response: Response, skipAuthRedirect = false): Promise<T> {
 	if (!response.ok) {
-		if (response.status === 401) {
-			// Redirect to login on unauthorized
+		if (response.status === 401 && !skipAuthRedirect) {
+			// Redirect to login on unauthorized (unless we're checking auth status)
 			window.location.href = '/auth/login';
 		}
 
@@ -54,7 +54,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
 	return response.json();
 }
 
-export async function apiGet<T>(endpoint: string): Promise<T> {
+export async function apiGet<T>(endpoint: string, options?: { skipAuthRedirect?: boolean }): Promise<T> {
 	const response = await fetch(`${API_BASE}/api${endpoint}`, {
 		method: 'GET',
 		credentials: 'include',
@@ -63,7 +63,7 @@ export async function apiGet<T>(endpoint: string): Promise<T> {
 			'X-CSRF': '1'
 		}
 	});
-	return handleResponse<T>(response);
+	return handleResponse<T>(response, options?.skipAuthRedirect);
 }
 
 export async function apiPost<T>(endpoint: string, data?: unknown): Promise<T> {
