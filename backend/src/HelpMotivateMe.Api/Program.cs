@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using AspNet.Security.OAuth.GitHub;
+using AspNet.Security.OAuth.LinkedIn;
 using Microsoft.AspNetCore.Authentication.Google;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
@@ -125,6 +126,13 @@ builder.Services.AddAuthentication(options =>
         options.ClientSecret = builder.Configuration["OAuth:Google:ClientSecret"] ?? "";
         options.SaveTokens = true;
         options.CallbackPath = "/api/signin-google";
+    })
+    .AddLinkedIn(options =>
+    {
+        options.ClientId = builder.Configuration["OAuth:LinkedIn:ClientId"] ?? "";
+        options.ClientSecret = builder.Configuration["OAuth:LinkedIn:ClientSecret"] ?? "";
+        options.SaveTokens = true;
+        options.CallbackPath = "/api/signin-linkedin";
     });
 
 builder.Services.AddControllers()

@@ -27,7 +27,9 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 ["OAuth:GitHub:ClientId"] = "test-client-id",
                 ["OAuth:GitHub:ClientSecret"] = "test-client-secret",
                 ["OAuth:Google:ClientId"] = "test-client-id",
-                ["OAuth:Google:ClientSecret"] = "test-client-secret"
+                ["OAuth:Google:ClientSecret"] = "test-client-secret",
+                ["OAuth:LinkedIn:ClientId"] = "test-client-id",
+                ["OAuth:LinkedIn:ClientSecret"] = "test-client-secret"
             });
         });
 

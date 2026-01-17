@@ -67,6 +67,7 @@ function createAuthStore() {
 				// Ignore errors, just clear local state
 			}
 			set({ user: null, loading: false, initialized: true });
+			window.location.href = '/';
 		},
 
 		loginWithGitHub() {
@@ -75,6 +76,10 @@ function createAuthStore() {
 
 		loginWithGoogle() {
 			window.location.href = getOAuthUrl('Google');
+		},
+
+		loginWithLinkedIn() {
+			window.location.href = getOAuthUrl('LinkedIn');
 		},
 
 		setUser(user: User) {
