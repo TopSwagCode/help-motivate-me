@@ -77,24 +77,6 @@
 	}
 </script>
 
-{#if offlineReady}
-	<div
-		class="fixed bottom-20 left-4 right-4 sm:left-auto sm:right-4 sm:bottom-20 z-[100] flex items-center justify-between gap-3 rounded-lg bg-green-600 px-4 py-3 text-white shadow-lg"
-	>
-		<span>App ready to work offline</span>
-		<button onclick={close} class="p-2 text-white/80 hover:text-white touch-manipulation" aria-label="Dismiss">
-			<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M6 18L18 6M6 6l12 12"
-				/>
-			</svg>
-		</button>
-	</div>
-{/if}
-
 {#if needRefresh}
 	<div class="fixed bottom-20 left-4 right-4 sm:left-auto sm:right-4 sm:bottom-20 z-[100] rounded-lg bg-indigo-600 px-4 py-3 text-white shadow-lg">
 		<div class="flex items-center justify-between gap-4">

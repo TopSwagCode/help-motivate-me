@@ -82,6 +82,10 @@ function createAuthStore() {
 			window.location.href = getOAuthUrl('LinkedIn');
 		},
 
+		loginWithFacebook() {
+			window.location.href = getOAuthUrl('Facebook');
+		},
+
 		setUser(user: User) {
 			set({ user, loading: false, initialized: true });
 		},

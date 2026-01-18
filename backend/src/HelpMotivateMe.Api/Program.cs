@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using AspNet.Security.OAuth.GitHub;
 using AspNet.Security.OAuth.LinkedIn;
+using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
@@ -133,6 +134,13 @@ builder.Services.AddAuthentication(options =>
         options.ClientSecret = builder.Configuration["OAuth:LinkedIn:ClientSecret"] ?? "";
         options.SaveTokens = true;
         options.CallbackPath = "/api/signin-linkedin";
+    })
+    .AddFacebook(options =>
+    {
+        options.AppId = builder.Configuration["OAuth:Facebook:AppId"] ?? "";
+        options.AppSecret = builder.Configuration["OAuth:Facebook:AppSecret"] ?? "";
+        options.SaveTokens = true;
+        options.CallbackPath = "/api/signin-facebook";
     });
 
 builder.Services.AddControllers()
