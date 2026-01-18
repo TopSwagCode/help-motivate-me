@@ -198,8 +198,9 @@ app.RunCronBackgroundWorker("0 */6 * * *",
     logger.LogError(ex, "Error in scheduled push notification worker");
 });
 
-app.RunPeriodicBackgroundWorker(TimeSpan.FromMinutes(5), (ILogger<Program> logger) =>
+app.RunPeriodicBackgroundWorker(TimeSpan.FromMinutes(5), (ILoggerFactory loggerFactory) =>
 {
+    var logger = loggerFactory.CreateLogger<Program>();
     logger.LogInformation("Heartbeat at {Time}", DateTime.UtcNow);
 });
 
