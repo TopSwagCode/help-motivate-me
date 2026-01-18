@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
+using MinimalWorker;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,7 @@ builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 
 // Push Notification Service
 builder.Services.AddScoped<IPushNotificationService, WebPushNotificationService>();
+builder.Services.AddScoped<ScheduledPushNotificationService>();
 
 // Local File Storage Service
 builder.Services.AddSingleton<IStorageService, LocalFileStorageService>();
@@ -181,6 +183,20 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Background Workers - Scheduled Push Notifications
+app.RunCronBackgroundWorker("0 */6 * * *",
+    async (CancellationToken ct, ScheduledPushNotificationService service, ILogger<Program> logger) =>
+{
+    logger.LogInformation("Scheduled push notification worker executing at {Time}", DateTime.UtcNow);
+    await service.SendScheduledNotificationAsync();
+})
+.WithName("scheduled-push-notifications")
+.WithErrorHandler(ex =>
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "Error in scheduled push notification worker");
+});
 
 // Apply migrations on startup with lock to prevent race conditions
 using (var scope = app.Services.CreateScope())
