@@ -198,10 +198,10 @@ app.RunCronBackgroundWorker("0 */6 * * *",
     logger.LogError(ex, "Error in scheduled push notification worker");
 });
 
-app.RunPeriodicBackgroundWorker(TimeSpan.FromMinutes(5), (ILoggerFactory loggerFactory) =>
+app.RunPeriodicBackgroundWorker(TimeSpan.FromMinutes(5), async (ILogger<Program> logger) =>
 {
-    var logger = loggerFactory.CreateLogger<Program>();
     logger.LogInformation("Heartbeat at {Time}", DateTime.UtcNow);
+    await Task.Delay(1);
 });
 
 // Apply migrations on startup with lock to prevent race conditions
