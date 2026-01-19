@@ -54,6 +54,25 @@ builder.Services.AddHttpClient<IOpenAiService, OpenAiService>();
 // Identity Score Service
 builder.Services.AddScoped<IdentityScoreService>();
 
+// Analytics Service
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+
+// Session (for analytics session tracking)
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.Name = ".HelpMotivateMe.Session";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.SameSite = builder.Environment.IsDevelopment()
+        ? SameSiteMode.Lax
+        : SameSiteMode.None;
+    options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+        ? CookieSecurePolicy.SameAsRequest
+        : CookieSecurePolicy.Always;
+});
+
 // Database Seeder
 builder.Services.AddHostedService<AdminUserSeeder>();
 
@@ -180,6 +199,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
+app.UseSession();
 app.UseAuthorization();
 
 app.MapControllers();

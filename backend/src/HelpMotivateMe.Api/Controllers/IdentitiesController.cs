@@ -2,6 +2,7 @@ using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.Identities;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
+using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,9 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/identities")]
 public class IdentitiesController : ControllerBase
 {
+    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
+    private readonly IAnalyticsService _analyticsService;
     private static readonly string[] ReinforcementTemplates = [
         "That's what a {0} does!",
         "You're becoming a {0}!",
@@ -23,15 +26,19 @@ public class IdentitiesController : ControllerBase
         "A true {0} moment!"
     ];
 
-    public IdentitiesController(AppDbContext db)
+    public IdentitiesController(AppDbContext db, IAnalyticsService analyticsService)
     {
         _db = db;
+        _analyticsService = analyticsService;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<IdentityResponse>>> GetIdentities()
     {
         var userId = GetUserId();
+        var sessionId = GetSessionId();
+
+        await _analyticsService.LogEventAsync(userId, sessionId, "IdentitiesPageLoaded");
 
         var identities = await _db.Identities
             .Where(i => i.UserId == userId)
@@ -153,6 +160,19 @@ public class IdentitiesController : ControllerBase
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         return Guid.Parse(userIdClaim!);
+    }
+
+    private Guid GetSessionId()
+    {
+        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
+        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
+        {
+            return sessionId;
+        }
+
+        var newSessionId = Guid.NewGuid();
+        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
+        return newSessionId;
     }
 
     private static IdentityResponse MapToResponse(Identity identity)

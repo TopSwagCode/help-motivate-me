@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.Analytics;
 using HelpMotivateMe.Core.Enums;
+using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,17 +14,23 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/analytics")]
 public class AnalyticsController : ControllerBase
 {
+    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
+    private readonly IAnalyticsService _analyticsService;
 
-    public AnalyticsController(AppDbContext db)
+    public AnalyticsController(AppDbContext db, IAnalyticsService analyticsService)
     {
         _db = db;
+        _analyticsService = analyticsService;
     }
 
     [HttpGet("streaks")]
     public async Task<ActionResult<StreakSummaryResponse>> GetAllStreaks()
     {
         var userId = GetUserId();
+        var sessionId = GetSessionId();
+
+        await _analyticsService.LogEventAsync(userId, sessionId, "AnalyticsPageLoaded");
 
         // Get all tasks
         var tasks = await _db.TaskItems
@@ -108,5 +115,18 @@ public class AnalyticsController : ControllerBase
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         return Guid.Parse(userIdClaim!);
+    }
+
+    private Guid GetSessionId()
+    {
+        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
+        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
+        {
+            return sessionId;
+        }
+
+        var newSessionId = Guid.NewGuid();
+        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
+        return newSessionId;
     }
 }

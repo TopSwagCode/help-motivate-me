@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.HabitStacks;
 using HelpMotivateMe.Core.Entities;
+using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,17 +14,23 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/habit-stacks")]
 public class HabitStacksController : ControllerBase
 {
+    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
+    private readonly IAnalyticsService _analyticsService;
 
-    public HabitStacksController(AppDbContext db)
+    public HabitStacksController(AppDbContext db, IAnalyticsService analyticsService)
     {
         _db = db;
+        _analyticsService = analyticsService;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<HabitStackResponse>>> GetHabitStacks()
     {
         var userId = GetUserId();
+        var sessionId = GetSessionId();
+
+        await _analyticsService.LogEventAsync(userId, sessionId, "HabitStacksPageLoaded");
 
         var stacks = await _db.HabitStacks
             .Include(hs => hs.Identity)
@@ -274,6 +281,8 @@ public class HabitStacksController : ControllerBase
 
         var existingCompletion = item.Completions.FirstOrDefault(c => c.CompletedDate == targetDate);
 
+        var wasCompleted = existingCompletion != null;
+
         if (existingCompletion != null)
         {
             // Toggle off - remove completion
@@ -301,6 +310,12 @@ public class HabitStacksController : ControllerBase
         }
 
         await _db.SaveChangesAsync();
+
+        if (!wasCompleted)
+        {
+            var sessionId = GetSessionId();
+            await _analyticsService.LogEventAsync(userId, sessionId, "HabitCompleted", new { habitStackId = item.HabitStackId, itemId });
+        }
 
         return Ok(new HabitStackItemCompletionResponse(
             item.Id,
@@ -429,6 +444,19 @@ public class HabitStacksController : ControllerBase
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         return Guid.Parse(userIdClaim!);
+    }
+
+    private Guid GetSessionId()
+    {
+        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
+        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
+        {
+            return sessionId;
+        }
+
+        var newSessionId = Guid.NewGuid();
+        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
+        return newSessionId;
     }
 
     private static HabitStackResponse MapToResponse(HabitStack stack)

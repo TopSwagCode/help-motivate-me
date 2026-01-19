@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.HabitStacks;
 using HelpMotivateMe.Core.Enums;
+using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
 using HelpMotivateMe.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -14,13 +15,16 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/today")]
 public class TodayController : ControllerBase
 {
+    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
     private readonly IdentityScoreService _identityScoreService;
+    private readonly IAnalyticsService _analyticsService;
 
-    public TodayController(AppDbContext db, IdentityScoreService identityScoreService)
+    public TodayController(AppDbContext db, IdentityScoreService identityScoreService, IAnalyticsService analyticsService)
     {
         _db = db;
         _identityScoreService = identityScoreService;
+        _analyticsService = analyticsService;
     }
 
     /// <summary>
@@ -30,7 +34,10 @@ public class TodayController : ControllerBase
     public async Task<ActionResult<TodayViewResponse>> GetTodayView([FromQuery] DateOnly? date = null)
     {
         var userId = GetUserId();
+        var sessionId = GetSessionId();
         var targetDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
+
+        await _analyticsService.LogEventAsync(userId, sessionId, "TodayPageLoaded", new { date = targetDate });
 
         // Get habit stacks with completions
         var habitStacks = await GetTodayHabitStacks(userId, targetDate);
@@ -217,6 +224,19 @@ public class TodayController : ControllerBase
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         return Guid.Parse(userIdClaim!);
+    }
+
+    private Guid GetSessionId()
+    {
+        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
+        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
+        {
+            return sessionId;
+        }
+
+        var newSessionId = Guid.NewGuid();
+        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
+        return newSessionId;
     }
 }
 

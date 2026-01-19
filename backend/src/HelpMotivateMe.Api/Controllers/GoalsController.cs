@@ -2,6 +2,7 @@ using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.Goals;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
+using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,17 +15,23 @@ namespace HelpMotivateMe.Api.Controllers;
 [Authorize]
 public class GoalsController : ControllerBase
 {
+    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
+    private readonly IAnalyticsService _analyticsService;
 
-    public GoalsController(AppDbContext db)
+    public GoalsController(AppDbContext db, IAnalyticsService analyticsService)
     {
         _db = db;
+        _analyticsService = analyticsService;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<GoalResponse>>> GetGoals()
     {
         var userId = GetUserId();
+        var sessionId = GetSessionId();
+
+        await _analyticsService.LogEventAsync(userId, sessionId, "GoalsPageLoaded");
 
         var goals = await _db.Goals
             .Include(g => g.Tasks)
@@ -41,6 +48,9 @@ public class GoalsController : ControllerBase
     public async Task<ActionResult<GoalResponse>> GetGoal(Guid id)
     {
         var userId = GetUserId();
+        var sessionId = GetSessionId();
+
+        await _analyticsService.LogEventAsync(userId, sessionId, "GoalDetailLoaded", new { goalId = id });
 
         var goal = await _db.Goals
             .Include(g => g.Tasks)
@@ -77,6 +87,9 @@ public class GoalsController : ControllerBase
 
         _db.Goals.Add(goal);
         await _db.SaveChangesAsync();
+
+        var sessionId = GetSessionId();
+        await _analyticsService.LogEventAsync(userId, sessionId, "GoalCreated", new { goalId = goal.Id });
 
         // Load identity for response
         if (goal.IdentityId.HasValue)
@@ -163,6 +176,12 @@ public class GoalsController : ControllerBase
 
         await _db.SaveChangesAsync();
 
+        if (goal.IsCompleted)
+        {
+            var sessionId = GetSessionId();
+            await _analyticsService.LogEventAsync(userId, sessionId, "GoalCompleted", new { goalId = id });
+        }
+
         return Ok(MapToResponse(goal));
     }
 
@@ -193,6 +212,19 @@ public class GoalsController : ControllerBase
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         return Guid.Parse(userIdClaim!);
+    }
+
+    private Guid GetSessionId()
+    {
+        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
+        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
+        {
+            return sessionId;
+        }
+
+        var newSessionId = Guid.NewGuid();
+        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
+        return newSessionId;
     }
 
     private static GoalResponse MapToResponse(Goal goal)

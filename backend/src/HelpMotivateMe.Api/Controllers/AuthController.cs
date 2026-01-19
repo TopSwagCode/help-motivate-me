@@ -18,15 +18,18 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/auth")]
 public class AuthController : ControllerBase
 {
+    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
     private readonly IConfiguration _configuration;
     private readonly IEmailService _emailService;
+    private readonly IAnalyticsService _analyticsService;
 
-    public AuthController(AppDbContext db, IConfiguration configuration, IEmailService emailService)
+    public AuthController(AppDbContext db, IConfiguration configuration, IEmailService emailService, IAnalyticsService analyticsService)
     {
         _db = db;
         _configuration = configuration;
         _emailService = emailService;
+        _analyticsService = analyticsService;
     }
 
     [HttpPost("register")]
@@ -65,6 +68,9 @@ public class AuthController : ControllerBase
 
         await SignInUser(user);
 
+        var sessionId = GetSessionId();
+        await _analyticsService.LogEventAsync(user.Id, sessionId, "UserRegistered");
+
         return Ok(MapToResponse(user));
     }
 
@@ -86,6 +92,9 @@ public class AuthController : ControllerBase
         }
 
         await SignInUser(user);
+
+        var sessionId = GetSessionId();
+        await _analyticsService.LogEventAsync(user.Id, sessionId, "UserLoggedIn");
 
         return Ok(MapToResponse(user));
     }
@@ -116,6 +125,9 @@ public class AuthController : ControllerBase
         {
             return NotFound();
         }
+
+        var sessionId = GetSessionId();
+        await _analyticsService.LogEventAsync(userId.Value, sessionId, "SettingsPageLoaded");
 
         return Ok(MapToResponse(user));
     }
@@ -668,6 +680,19 @@ public class AuthController : ControllerBase
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         return Guid.TryParse(userIdClaim, out var userId) ? userId : null;
+    }
+
+    private Guid GetSessionId()
+    {
+        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
+        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
+        {
+            return sessionId;
+        }
+
+        var newSessionId = Guid.NewGuid();
+        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
+        return newSessionId;
     }
 
     private static UserResponse MapToResponse(User user)

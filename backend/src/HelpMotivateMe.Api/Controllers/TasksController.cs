@@ -2,6 +2,7 @@ using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.Tasks;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
+using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,14 @@ namespace HelpMotivateMe.Api.Controllers;
 [Authorize]
 public class TasksController : ControllerBase
 {
+    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
+    private readonly IAnalyticsService _analyticsService;
 
-    public TasksController(AppDbContext db)
+    public TasksController(AppDbContext db, IAnalyticsService analyticsService)
     {
         _db = db;
+        _analyticsService = analyticsService;
     }
 
     [HttpGet("api/goals/{goalId:guid}/tasks")]
@@ -229,6 +233,8 @@ public class TasksController : ControllerBase
             return NotFound();
         }
 
+        var wasCompleted = task.Status == TaskItemStatus.Completed;
+
         if (task.Status == TaskItemStatus.Completed)
         {
             // Un-complete
@@ -240,11 +246,17 @@ public class TasksController : ControllerBase
             // Complete
             task.Status = TaskItemStatus.Completed;
             task.CompletedAt = targetDate;
-            
+
         }
 
         task.UpdatedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
+
+        if (!wasCompleted && task.Status == TaskItemStatus.Completed)
+        {
+            var sessionId = GetSessionId();
+            await _analyticsService.LogEventAsync(userId, sessionId, "TaskCompleted", new { taskId = id });
+        }
 
         return Ok(MapToResponse(task));
     }
@@ -383,6 +395,19 @@ public class TasksController : ControllerBase
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         return Guid.Parse(userIdClaim!);
+    }
+
+    private Guid GetSessionId()
+    {
+        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
+        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
+        {
+            return sessionId;
+        }
+
+        var newSessionId = Guid.NewGuid();
+        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
+        return newSessionId;
     }
 
     private static TaskResponse MapToResponse(TaskItem task)

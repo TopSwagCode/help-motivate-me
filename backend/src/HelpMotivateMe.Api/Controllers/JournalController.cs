@@ -15,22 +15,28 @@ namespace HelpMotivateMe.Api.Controllers;
 [Authorize]
 public class JournalController : ControllerBase
 {
+    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
     private readonly IStorageService _storage;
+    private readonly IAnalyticsService _analyticsService;
     private static readonly string[] AllowedContentTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
     private const int MaxImageSizeBytes = 5 * 1024 * 1024; // 5MB
     private const int MaxImagesPerEntry = 5;
 
-    public JournalController(AppDbContext db, IStorageService storage)
+    public JournalController(AppDbContext db, IStorageService storage, IAnalyticsService analyticsService)
     {
         _db = db;
         _storage = storage;
+        _analyticsService = analyticsService;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<JournalEntryResponse>>> GetEntries()
     {
         var userId = GetUserId();
+        var sessionId = GetSessionId();
+
+        await _analyticsService.LogEventAsync(userId, sessionId, "JournalPageLoaded");
 
         var entries = await _db.JournalEntries
             .Include(j => j.HabitStack)
@@ -101,6 +107,9 @@ public class JournalController : ControllerBase
 
         _db.JournalEntries.Add(entry);
         await _db.SaveChangesAsync();
+
+        var sessionId = GetSessionId();
+        await _analyticsService.LogEventAsync(userId, sessionId, "JournalEntryCreated", new { entryId = entry.Id });
 
         // Reload with navigation properties
         await _db.Entry(entry).Reference(e => e.HabitStack).LoadAsync();
@@ -304,6 +313,19 @@ public class JournalController : ControllerBase
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         return Guid.Parse(userIdClaim!);
+    }
+
+    private Guid GetSessionId()
+    {
+        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
+        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
+        {
+            return sessionId;
+        }
+
+        var newSessionId = Guid.NewGuid();
+        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
+        return newSessionId;
     }
 
     private JournalEntryResponse MapToResponse(JournalEntry entry)

@@ -165,3 +165,38 @@ export async function sendPushToAll(
 		url
 	});
 }
+
+// Analytics Events management
+export interface EventTypeCount {
+	eventType: string;
+	count: number;
+}
+
+export interface DailyEventCount {
+	date: string;
+	count: number;
+}
+
+export interface SessionSummary {
+	sessionId: string;
+	userId: string;
+	username: string;
+	firstEvent: string;
+	lastEvent: string;
+	eventCount: number;
+	durationMinutes: number;
+}
+
+export interface AnalyticsOverviewResponse {
+	totalEvents: number;
+	uniqueUsers: number;
+	uniqueSessions: number;
+	avgEventsPerSession: number;
+	topEventTypes: EventTypeCount[];
+	dailyEventCounts: DailyEventCount[];
+	recentSessions: SessionSummary[];
+}
+
+export async function getAnalyticsOverview(days: number = 30): Promise<AnalyticsOverviewResponse> {
+	return apiGet<AnalyticsOverviewResponse>(`/admin/analytics/overview?days=${days}`);
+}

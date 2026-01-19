@@ -16,17 +16,20 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/buddies")]
 public class AccountabilityBuddyController : ControllerBase
 {
+    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
     private readonly IConfiguration _configuration;
     private readonly IEmailService _emailService;
     private readonly IStorageService _storage;
+    private readonly IAnalyticsService _analyticsService;
 
-    public AccountabilityBuddyController(AppDbContext db, IConfiguration configuration, IEmailService emailService, IStorageService storage)
+    public AccountabilityBuddyController(AppDbContext db, IConfiguration configuration, IEmailService emailService, IStorageService storage, IAnalyticsService analyticsService)
     {
         _db = db;
         _configuration = configuration;
         _emailService = emailService;
         _storage = storage;
+        _analyticsService = analyticsService;
     }
 
     /// <summary>
@@ -36,6 +39,9 @@ public class AccountabilityBuddyController : ControllerBase
     public async Task<ActionResult<BuddyRelationshipsResponse>> GetBuddyRelationships()
     {
         var userId = GetUserId();
+        var sessionId = GetSessionId();
+
+        await _analyticsService.LogEventAsync(userId, sessionId, "BuddiesPageLoaded");
 
         // Get my accountability buddies (people I've added)
         var myBuddies = await _db.AccountabilityBuddies
@@ -214,6 +220,9 @@ public class AccountabilityBuddyController : ControllerBase
         }
 
         var targetDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
+
+        var sessionId = GetSessionId();
+        await _analyticsService.LogEventAsync(userId, sessionId, "BuddyDetailLoaded", new { buddyUserId = targetUserId });
 
         // Get target user info
         var targetUser = await _db.Users.FirstAsync(u => u.Id == targetUserId);
@@ -594,6 +603,19 @@ public class AccountabilityBuddyController : ControllerBase
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         return Guid.Parse(userIdClaim!);
+    }
+
+    private Guid GetSessionId()
+    {
+        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
+        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
+        {
+            return sessionId;
+        }
+
+        var newSessionId = Guid.NewGuid();
+        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
+        return newSessionId;
     }
 }
 

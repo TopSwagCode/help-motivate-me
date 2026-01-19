@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.Admin;
 using HelpMotivateMe.Core.DTOs.Waitlist;
+using static HelpMotivateMe.Core.DTOs.Admin.AnalyticsOverviewResponse;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
@@ -568,6 +569,99 @@ public class AdminController : ControllerBase
         await _db.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    // ==================== Analytics Events ====================
+
+    [HttpGet("analytics/overview")]
+    public async Task<ActionResult<AnalyticsOverviewResponse>> GetAnalyticsOverview([FromQuery] int days = 30)
+    {
+        var startDate = DateTime.UtcNow.AddDays(-days);
+
+        // Total events in period
+        var totalEvents = await _db.AnalyticsEvents
+            .Where(e => e.CreatedAt >= startDate)
+            .CountAsync();
+
+        // Unique users
+        var uniqueUsers = await _db.AnalyticsEvents
+            .Where(e => e.CreatedAt >= startDate)
+            .Select(e => e.UserId)
+            .Distinct()
+            .CountAsync();
+
+        // Unique sessions
+        var uniqueSessions = await _db.AnalyticsEvents
+            .Where(e => e.CreatedAt >= startDate)
+            .Select(e => e.SessionId)
+            .Distinct()
+            .CountAsync();
+
+        // Average events per session
+        var avgEventsPerSession = uniqueSessions > 0 ? (double)totalEvents / uniqueSessions : 0;
+
+        // Top event types
+        var topEventTypes = await _db.AnalyticsEvents
+            .Where(e => e.CreatedAt >= startDate)
+            .GroupBy(e => e.EventType)
+            .Select(g => new EventTypeCount(g.Key, g.Count()))
+            .OrderByDescending(x => x.Count)
+            .Take(10)
+            .ToListAsync();
+
+        // Daily event counts
+        var dailyEventCounts = await _db.AnalyticsEvents
+            .Where(e => e.CreatedAt >= startDate)
+            .GroupBy(e => e.CreatedAt.Date)
+            .Select(g => new { Date = g.Key, Count = g.Count() })
+            .OrderBy(x => x.Date)
+            .ToListAsync();
+
+        var dailyEvents = dailyEventCounts
+            .Select(x => new DailyEventCount(x.Date.ToString("yyyy-MM-dd"), x.Count))
+            .ToList();
+
+        // Recent sessions with duration
+        var recentSessionsRaw = await _db.AnalyticsEvents
+            .Where(e => e.CreatedAt >= startDate)
+            .GroupBy(e => new { e.SessionId, e.UserId })
+            .Select(g => new
+            {
+                g.Key.SessionId,
+                g.Key.UserId,
+                FirstEvent = g.Min(e => e.CreatedAt),
+                LastEvent = g.Max(e => e.CreatedAt),
+                EventCount = g.Count()
+            })
+            .OrderByDescending(x => x.LastEvent)
+            .Take(20)
+            .ToListAsync();
+
+        // Fetch usernames
+        var userIds = recentSessionsRaw.Select(s => s.UserId).Distinct().ToList();
+        var users = await _db.Users
+            .Where(u => userIds.Contains(u.Id))
+            .ToDictionaryAsync(u => u.Id, u => u.Username);
+
+        var recentSessions = recentSessionsRaw.Select(s => new SessionSummary(
+            s.SessionId,
+            s.UserId,
+            users.GetValueOrDefault(s.UserId, "Unknown"),
+            s.FirstEvent,
+            s.LastEvent,
+            s.EventCount,
+            Math.Round((s.LastEvent - s.FirstEvent).TotalMinutes, 1)
+        )).ToList();
+
+        return Ok(new AnalyticsOverviewResponse(
+            totalEvents,
+            uniqueUsers,
+            uniqueSessions,
+            Math.Round(avgEventsPerSession, 2),
+            topEventTypes,
+            dailyEvents,
+            recentSessions
+        ));
     }
 
     private Guid? GetUserId()
