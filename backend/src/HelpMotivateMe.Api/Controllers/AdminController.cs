@@ -601,13 +601,17 @@ public class AdminController : ControllerBase
         var avgEventsPerSession = uniqueSessions > 0 ? (double)totalEvents / uniqueSessions : 0;
 
         // Top event types
-        var topEventTypes = await _db.AnalyticsEvents
+        var topEventTypesRaw = await _db.AnalyticsEvents
             .Where(e => e.CreatedAt >= startDate)
             .GroupBy(e => e.EventType)
-            .Select(g => new EventTypeCount(g.Key, g.Count()))
+            .Select(g => new { EventType = g.Key, Count = g.Count() })
             .OrderByDescending(x => x.Count)
             .Take(10)
             .ToListAsync();
+
+        var topEventTypes = topEventTypesRaw
+            .Select(x => new EventTypeCount(x.EventType, x.Count))
+            .ToList();
 
         // Daily event counts
         var dailyEventCounts = await _db.AnalyticsEvents
