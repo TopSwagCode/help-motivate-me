@@ -355,13 +355,9 @@
 													</div>
 												{:else}
 													<div 
-														class="w-5 h-5 rounded-full border-2 bg-white/50 flex items-center justify-center"
-														style="border-color: {stack.identityColor || '#d1d5db'}60"
-													>
-														<span class="text-[9px] font-medium" style="color: {stack.identityColor || '#9ca3af'}">
-															{index + 1}
-														</span>
-													</div>
+														class="w-5 h-5 rounded-full border-2 bg-white"
+														style="border-color: {stack.identityColor || '#6366f1'}"
+													></div>
 												{/if}
 												{#if index < stack.items.length - 1}
 													<div 
