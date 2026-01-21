@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
 	import { onMount, onDestroy } from 'svelte';
+	import { closeEmojiPicker } from '$lib/stores/emojiPickerStore';
 
 	interface Props {
 		onSelect: (emoji: string) => void;
@@ -50,42 +51,103 @@
 	let showExtended = $state(false);
 	let activeCategory = $state(0);
 	let isMobile = $state(false);
+	let pickerStyle = $state('');
+	let pickerRef: HTMLDivElement | undefined = $state(undefined);
 
 	// Check if we're on mobile
 	function checkMobile() {
 		isMobile = window.innerWidth < 640;
 	}
 
+	// Calculate best position for the picker
+	function calculatePosition() {
+		if (isMobile || !anchorElement) {
+			pickerStyle = '';
+			return;
+		}
+
+		const rect = anchorElement.getBoundingClientRect();
+		const pickerWidth = 300;
+		const pickerHeight = showExtended ? 280 : 60;
+		const padding = 12;
+		const viewportWidth = window.innerWidth;
+		const viewportHeight = window.innerHeight;
+
+		let left = rect.left;
+		let top = rect.top - pickerHeight - padding;
+
+		// Adjust horizontal position if it would overflow
+		if (left + pickerWidth > viewportWidth - padding) {
+			left = viewportWidth - pickerWidth - padding;
+		}
+		if (left < padding) {
+			left = padding;
+		}
+
+		// If not enough space above, position below
+		if (top < padding) {
+			top = rect.bottom + padding;
+		}
+
+		// If still not enough space below, center vertically
+		if (top + pickerHeight > viewportHeight - padding) {
+			top = Math.max(padding, (viewportHeight - pickerHeight) / 2);
+		}
+
+		pickerStyle = `left: ${left}px; top: ${top}px;`;
+	}
+
 	onMount(() => {
 		checkMobile();
+		calculatePosition();
 		window.addEventListener('resize', checkMobile);
+		window.addEventListener('resize', calculatePosition);
+		window.addEventListener('scroll', calculatePosition, true);
+		
+		// Recalculate when extended state changes
+		const interval = setInterval(calculatePosition, 100);
+		setTimeout(() => clearInterval(interval), 500);
 	});
 
 	onDestroy(() => {
 		if (typeof window !== 'undefined') {
 			window.removeEventListener('resize', checkMobile);
+			window.removeEventListener('resize', calculatePosition);
+			window.removeEventListener('scroll', calculatePosition, true);
 		}
 	});
 
-	function handleQuickSelect(emoji: string) {
+	// Recalculate position when extended changes
+	$effect(() => {
+		if (showExtended !== undefined) {
+			setTimeout(calculatePosition, 10);
+		}
+	});
+
+	function handleQuickSelect(e: MouseEvent | TouchEvent, emoji: string) {
+		e.preventDefault();
+		e.stopPropagation();
 		onSelect(emoji);
 	}
 
-	function handleExtendedSelect(emoji: string) {
+	function handleExtendedSelect(e: MouseEvent | TouchEvent, emoji: string) {
+		e.preventDefault();
+		e.stopPropagation();
 		onSelect(emoji);
 		showExtended = false;
 	}
 
-	function toggleExtended(e: MouseEvent) {
+	function toggleExtended(e: MouseEvent | TouchEvent) {
+		e.preventDefault();
 		e.stopPropagation();
 		showExtended = !showExtended;
 	}
 
-	function handleBackdropClick(event: MouseEvent) {
-		const target = event.target as HTMLElement;
-		if (!target.closest('.emoji-picker-content')) {
-			onClose();
-		}
+	function handleBackdropClick(event: MouseEvent | TouchEvent) {
+		event.preventDefault();
+		event.stopPropagation();
+		closeEmojiPicker();
+		onClose();
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
@@ -93,9 +155,23 @@
 			if (showExtended) {
 				showExtended = false;
 			} else {
+				closeEmojiPicker();
 				onClose();
 			}
 		}
+	}
+
+	function handleCloseButton(e: MouseEvent | TouchEvent) {
+		e.preventDefault();
+		e.stopPropagation();
+		closeEmojiPicker();
+		onClose();
+	}
+
+	function selectCategory(e: MouseEvent | TouchEvent, index: number) {
+		e.preventDefault();
+		e.stopPropagation();
+		activeCategory = index;
 	}
 </script>
 
@@ -105,19 +181,21 @@
 	<!-- Mobile: Full-screen modal from bottom -->
 	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<!-- svelte-ignore a11y_interactive_supports_focus -->
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<div 
 		class="fixed inset-0 bg-black/50 flex items-end justify-center"
 		style="z-index: 10000;"
 		role="dialog"
 		aria-modal="true"
 		onclick={handleBackdropClick}
-		onkeydown={handleKeydown}
+		ontouchend={handleBackdropClick}
 	>
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div 
 			class="emoji-picker-content bg-white rounded-t-2xl w-full max-h-[70vh] overflow-hidden animate-slide-up"
 			onclick={(e) => e.stopPropagation()}
+			ontouchstart={(e) => e.stopPropagation()}
 		>
 			<!-- Handle bar -->
 			<div class="flex justify-center py-3">
@@ -131,12 +209,13 @@
 				</h3>
 				<button
 					type="button"
-					onclick={() => onClose()}
-					class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 
-						hover:bg-gray-100 rounded-full transition-colors"
+					onclick={handleCloseButton}
+					ontouchend={handleCloseButton}
+					class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600 
+						hover:bg-gray-100 rounded-full transition-colors active:bg-gray-200"
 					aria-label="Close"
 				>
-					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
 					</svg>
 				</button>
@@ -153,9 +232,10 @@
 							{#each quickEmojis as emoji}
 								<button
 									type="button"
-									onclick={(e) => { e.stopPropagation(); handleQuickSelect(emoji); }}
+									onclick={(e) => handleQuickSelect(e, emoji)}
+									ontouchend={(e) => handleQuickSelect(e, emoji)}
 									class="w-14 h-14 flex items-center justify-center text-3xl rounded-xl transition-all
-										hover:bg-primary-100 active:scale-95"
+										hover:bg-primary-100 active:scale-95 active:bg-primary-100"
 								>
 									{emoji}
 								</button>
@@ -166,8 +246,9 @@
 					<button
 						type="button"
 						onclick={toggleExtended}
+						ontouchend={toggleExtended}
 						class="w-full py-3 text-center text-primary-600 font-medium 
-							hover:bg-primary-50 rounded-xl transition-colors"
+							hover:bg-primary-50 active:bg-primary-100 rounded-xl transition-colors"
 					>
 						{$t('journal.reactions.moreEmojis')} →
 					</button>
@@ -177,7 +258,8 @@
 						<button
 							type="button"
 							onclick={toggleExtended}
-							class="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+							ontouchend={toggleExtended}
+							class="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 active:text-gray-900"
 						>
 							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -195,11 +277,12 @@
 							{#each emojiCategories as category, index}
 								<button
 									type="button"
-									onclick={(e) => { e.stopPropagation(); activeCategory = index; }}
+									onclick={(e) => selectCategory(e, index)}
+									ontouchend={(e) => selectCategory(e, index)}
 									class="flex-1 min-w-[44px] h-11 flex items-center justify-center text-xl rounded-lg transition-all
 										{activeCategory === index 
 											? 'bg-white shadow-sm' 
-											: 'hover:bg-white/50'}"
+											: 'hover:bg-white/50 active:bg-white/70'}"
 								>
 									{category.label}
 								</button>
@@ -212,9 +295,10 @@
 						{#each emojiCategories[activeCategory].emojis as emoji}
 							<button
 								type="button"
-								onclick={(e) => { e.stopPropagation(); handleExtendedSelect(emoji); }}
+								onclick={(e) => handleExtendedSelect(e, emoji)}
+								ontouchend={(e) => handleExtendedSelect(e, emoji)}
 								class="w-12 h-12 flex items-center justify-center text-2xl rounded-xl transition-all
-									hover:bg-primary-100 active:scale-95"
+									hover:bg-primary-100 active:scale-95 active:bg-primary-100"
 							>
 								{emoji}
 							</button>
@@ -225,22 +309,24 @@
 		</div>
 	</div>
 {:else}
-	<!-- Desktop: Dropdown picker -->
+	<!-- Desktop: Fixed position picker with smart positioning -->
 	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<div 
 		class="fixed inset-0"
 		style="z-index: 9998;"
 		role="presentation"
 		onclick={handleBackdropClick}
-		onkeydown={handleKeydown}
+		ontouchstart={handleBackdropClick}
 	></div>
 
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<div 
-		class="emoji-picker-content bg-white rounded-xl shadow-xl border border-gray-200 p-3"
-		style="min-width: 280px; z-index: 9999;"
+		bind:this={pickerRef}
+		class="emoji-picker-content fixed bg-white rounded-xl shadow-xl border border-gray-200 p-3"
+		style="min-width: 300px; z-index: 9999; {pickerStyle}"
 		onclick={(e) => e.stopPropagation()}
+		ontouchstart={(e) => e.stopPropagation()}
 	>
 		{#if !showExtended}
 			<!-- Quick emoji bar -->
@@ -249,9 +335,10 @@
 					{#each quickEmojis as emoji}
 						<button
 							type="button"
-							onclick={(e) => { e.stopPropagation(); handleQuickSelect(emoji); }}
+							onclick={(e) => handleQuickSelect(e, emoji)}
+							ontouchend={(e) => handleQuickSelect(e, emoji)}
 							class="emoji-btn w-10 h-10 flex items-center justify-center text-xl rounded-lg transition-all cursor-pointer
-								hover:bg-primary-100 active:scale-95"
+								hover:bg-primary-100 active:scale-95 active:bg-primary-100"
 							title={emoji}
 						>
 							{emoji}
@@ -260,6 +347,7 @@
 					<button
 						type="button"
 						onclick={toggleExtended}
+						ontouchend={toggleExtended}
 						class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-primary-600 
 							hover:bg-primary-50 rounded-lg transition-all ml-1 cursor-pointer border border-dashed border-gray-300 hover:border-primary-400"
 						title={$t('journal.reactions.moreEmojis')}
@@ -278,6 +366,7 @@
 					<button
 						type="button"
 						onclick={toggleExtended}
+						ontouchend={toggleExtended}
 						class="w-7 h-7 flex items-center justify-center text-gray-500 hover:text-gray-700 
 							hover:bg-gray-100 rounded-md transition-all cursor-pointer"
 						title={$t('journal.reactions.hideMore')}
@@ -300,7 +389,8 @@
 						{#each emojiCategories as category, index}
 							<button
 								type="button"
-								onclick={(e) => { e.stopPropagation(); activeCategory = index; }}
+								onclick={(e) => selectCategory(e, index)}
+								ontouchend={(e) => selectCategory(e, index)}
 								class="category-btn flex-1 h-8 flex items-center justify-center text-base rounded-md transition-all cursor-pointer
 									{activeCategory === index 
 										? 'bg-white shadow-sm border border-gray-200' 
@@ -318,9 +408,10 @@
 					{#each emojiCategories[activeCategory].emojis as emoji}
 						<button
 							type="button"
-							onclick={(e) => { e.stopPropagation(); handleExtendedSelect(emoji); }}
+							onclick={(e) => handleExtendedSelect(e, emoji)}
+							ontouchend={(e) => handleExtendedSelect(e, emoji)}
 							class="emoji-btn w-10 h-10 flex items-center justify-center text-xl rounded-lg transition-all cursor-pointer
-								hover:bg-primary-100 active:scale-95"
+								hover:bg-primary-100 active:scale-95 active:bg-primary-100"
 						>
 							{emoji}
 						</button>

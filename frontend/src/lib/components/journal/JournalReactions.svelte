@@ -3,6 +3,7 @@
 	import type { JournalReaction } from '$lib/types';
 	import type { BuddyJournalReaction } from '$lib/types/buddy';
 	import EmojiPicker from './EmojiPicker.svelte';
+	import { activeEmojiPickerId, openEmojiPicker, closeEmojiPicker } from '$lib/stores/emojiPickerStore';
 
 	// Generic reaction type that works for both
 	type ReactionData = JournalReaction | BuddyJournalReaction;
@@ -13,6 +14,7 @@
 		onAddReaction: (emoji: string) => Promise<void>;
 		onRemoveReaction: (reactionId: string) => Promise<void>;
 		compact?: boolean;
+		entryId: string; // Required to track which picker is open
 	}
 
 	let {
@@ -20,12 +22,16 @@
 		currentUserId,
 		onAddReaction,
 		onRemoveReaction,
-		compact = false
+		compact = false,
+		entryId
 	}: Props = $props();
 
-	let showPicker = $state(false);
 	let loading = $state(false);
 	let hoveredReactionId = $state<string | null>(null);
+	let addButtonRef: HTMLButtonElement | undefined = $state(undefined);
+
+	// Derived state - check if this entry's picker is open
+	let showPicker = $derived($activeEmojiPickerId === entryId);
 
 	// Check if the current user can remove a reaction (only their own)
 	function canRemove(reaction: ReactionData): boolean {
@@ -37,7 +43,7 @@
 		return currentUserId === reaction.userId;
 	}
 
-	async function handleReactionClick(event: MouseEvent, reaction: ReactionData) {
+	async function handleReactionClick(event: MouseEvent | TouchEvent, reaction: ReactionData) {
 		event.preventDefault();
 		event.stopPropagation();
 		
@@ -57,7 +63,7 @@
 	async function handleAddNewReaction(emoji: string) {
 		if (loading || !currentUserId) return;
 		
-		showPicker = false;
+		closeEmojiPicker();
 		
 		loading = true;
 		try {
@@ -67,14 +73,15 @@
 		}
 	}
 
-	function openPicker(event: MouseEvent) {
+	function handleOpenPicker(event: MouseEvent | TouchEvent) {
 		event.preventDefault();
 		event.stopPropagation();
-		showPicker = true;
+		// This will close any other open picker and open this one
+		openEmojiPicker(entryId);
 	}
 
-	function closePicker() {
-		showPicker = false;
+	function handleClosePicker() {
+		closeEmojiPicker();
 	}
 
 	function showTooltip(reactionId: string) {
@@ -93,6 +100,7 @@
 			<button
 				type="button"
 				onclick={(e) => handleReactionClick(e, reaction)}
+				ontouchend={(e) => handleReactionClick(e, reaction)}
 				onmouseenter={() => showTooltip(reaction.id)}
 				onmouseleave={hideTooltip}
 				onfocus={() => showTooltip(reaction.id)}
@@ -140,12 +148,15 @@
 	{#if currentUserId}
 		<div class="relative">
 			<button
+				bind:this={addButtonRef}
 				type="button"
-				onclick={openPicker}
+				onclick={handleOpenPicker}
+				ontouchend={handleOpenPicker}
 				disabled={loading}
 				class="add-reaction-btn inline-flex items-center gap-1.5 rounded-full bg-white
 					border-2 border-dashed border-gray-300 hover:border-primary-400 hover:bg-primary-50
 					text-gray-500 hover:text-primary-600 transition-all duration-200 
+					active:bg-primary-100 active:border-primary-500
 					{compact ? 'px-2 py-1' : 'px-3 py-1.5'}"
 				title={$t('journal.reactions.addReaction')}
 				aria-label={$t('journal.reactions.addReaction')}
@@ -159,13 +170,11 @@
 			</button>
 
 			{#if showPicker}
-				<!-- Fixed position picker that won't get clipped -->
-				<div class="fixed inset-0 sm:absolute sm:inset-auto sm:bottom-full sm:right-0 sm:mb-2" style="z-index: 10000;">
-					<EmojiPicker 
-						onSelect={handleAddNewReaction}
-						onClose={closePicker}
-					/>
-				</div>
+				<EmojiPicker 
+					onSelect={handleAddNewReaction}
+					onClose={handleClosePicker}
+					anchorElement={addButtonRef}
+				/>
 			{/if}
 		</div>
 	{/if}

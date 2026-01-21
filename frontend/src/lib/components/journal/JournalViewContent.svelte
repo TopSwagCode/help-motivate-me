@@ -303,11 +303,13 @@
 					<div 
 						class="reactions-section px-5 py-3 border-t-2 border-gray-100 bg-gray-50"
 						onclick={(e) => e.stopPropagation()}
+						ontouchstart={(e) => e.stopPropagation()}
 						onmousedown={(e) => e.stopPropagation()}
 					>
 						<JournalReactions
 							reactions={getReactions(entry)}
 							{currentUserId}
+							entryId={entry.id}
 							onAddReaction={(emoji) => handleAddReaction(entry.id, emoji)}
 							onRemoveReaction={(reactionId) => handleRemoveReaction(entry.id, reactionId)}
 						/>
