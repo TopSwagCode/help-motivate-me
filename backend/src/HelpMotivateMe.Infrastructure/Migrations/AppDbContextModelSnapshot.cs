@@ -240,6 +240,39 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                     b.ToTable("email_login_tokens", (string)null);
                 });
 
+            modelBuilder.Entity("HelpMotivateMe.Core.Entities.EmailVerificationToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UsedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EmailVerificationTokens");
+                });
+
             modelBuilder.Entity("HelpMotivateMe.Core.Entities.Goal", b =>
                 {
                     b.Property<Guid>("Id")
@@ -826,6 +859,9 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
+                    b.Property<bool>("IsEmailVerified")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("MembershipTier")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -1054,6 +1090,17 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("HelpMotivateMe.Core.Entities.EmailLoginToken", b =>
+                {
+                    b.HasOne("HelpMotivateMe.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HelpMotivateMe.Core.Entities.EmailVerificationToken", b =>
                 {
                     b.HasOne("HelpMotivateMe.Core.Entities.User", "User")
                         .WithMany()

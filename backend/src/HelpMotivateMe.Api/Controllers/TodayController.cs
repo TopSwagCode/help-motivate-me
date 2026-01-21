@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.HabitStacks;
+using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
@@ -16,13 +17,22 @@ namespace HelpMotivateMe.Api.Controllers;
 public class TodayController : ControllerBase
 {
     private const string SessionIdKey = "AnalyticsSessionId";
-    private readonly AppDbContext _db;
+    private readonly IQueryInterface<HabitStack> _habitStacks;
+    private readonly IQueryInterface<TaskItem> _tasks;
+    private readonly IQueryInterface<Identity> _identities;
     private readonly IdentityScoreService _identityScoreService;
     private readonly IAnalyticsService _analyticsService;
 
-    public TodayController(AppDbContext db, IdentityScoreService identityScoreService, IAnalyticsService analyticsService)
+    public TodayController(
+        IQueryInterface<HabitStack> habitStacks,
+        IQueryInterface<TaskItem> tasks,
+        IQueryInterface<Identity> identities,
+        IdentityScoreService identityScoreService,
+        IAnalyticsService analyticsService)
     {
-        _db = db;
+        _habitStacks = habitStacks;
+        _tasks = tasks;
+        _identities = identities;
         _identityScoreService = identityScoreService;
         _analyticsService = analyticsService;
     }
@@ -77,10 +87,11 @@ public class TodayController : ControllerBase
 
     private async Task<List<TodayHabitStackResponse>> GetTodayHabitStacks(Guid userId, DateOnly targetDate)
     {
-        var stacks = await _db.HabitStacks
+        // Use filtered include to only load completions for the target date
+        var stacks = await _habitStacks
             .Include(s => s.Identity)
             .Include(s => s.Items.OrderBy(i => i.SortOrder))
-                .ThenInclude(i => i.Completions)
+                .ThenInclude(i => i.Completions.Where(c => c.CompletedDate == targetDate))
             .Where(s => s.UserId == userId && s.IsActive)
             .OrderBy(s => s.SortOrder)
             .ThenBy(s => s.Name)
@@ -97,10 +108,10 @@ public class TodayController : ControllerBase
             s.Items.Select(i => new TodayHabitStackItemResponse(
                 i.Id,
                 i.HabitDescription,
-                i.Completions.Any(c => c.CompletedDate == targetDate),
+                i.Completions.Any(), // Already filtered to targetDate
                 i.CurrentStreak
             )),
-            s.Items.Count(i => i.Completions.Any(c => c.CompletedDate == targetDate)),
+            s.Items.Count(i => i.Completions.Any()), // Already filtered to targetDate
             s.Items.Count
         )).ToList();
     }
@@ -111,7 +122,7 @@ public class TodayController : ControllerBase
 
         // Include tasks with due date within 7 days OR tasks without any due date
         // Exclude completed tasks and tasks from completed goals
-        var tasks = await _db.TaskItems
+        var tasks = await _tasks
             .Include(t => t.Goal)
             .Include(t => t.Identity)
             .Where(t => t.Goal.UserId == userId &&
@@ -144,7 +155,7 @@ public class TodayController : ControllerBase
         // Exclude tasks from completed goals
         var weekFromNow = targetDate.AddDays(7);
 
-        var tasks = await _db.TaskItems
+        var tasks = await _tasks
             .Include(t => t.Goal)
             .Include(t => t.Identity)
             .Where(t => t.Goal.UserId == userId &&
@@ -172,28 +183,26 @@ public class TodayController : ControllerBase
 
     private async Task<List<TodayIdentityFeedbackResponse>> GetIdentityFeedback(Guid userId, DateOnly targetDate)
     {
-        // Get identities with their habit stacks and tasks
-        var identities = await _db.Identities
+        // Get identities with only today's completions (filtered at database level)
+        var identities = await _identities
             .Include(i => i.HabitStacks)
                 .ThenInclude(hs => hs.Items)
-                    .ThenInclude(hsi => hsi.Completions)
-            .Include(i => i.Tasks)
+                    .ThenInclude(hsi => hsi.Completions.Where(c => c.CompletedDate == targetDate))
+            .Include(i => i.Tasks.Where(t => t.Status == TaskItemStatus.Completed &&
+                                             t.CompletedAt == targetDate))
             .Where(i => i.UserId == userId)
             .ToListAsync();
 
         return identities.Select(i =>
         {
-            // Count habit stack item completions for this identity
+            // Count habit stack item completions (already filtered to targetDate)
             var habitCompletionsToday = i.HabitStacks
                 .SelectMany(hs => hs.Items)
-                .SelectMany(hsi => hsi.Completions.Where(c => c.CompletedDate == targetDate))
+                .SelectMany(hsi => hsi.Completions)
                 .Count();
 
-            // Count task completions for this identity (tasks completed on this date)
-            var taskCompletionsToday = i.Tasks
-                .Count(t => t.Status == TaskItemStatus.Completed &&
-                           t.CompletedAt.HasValue &&
-                           t.CompletedAt.Value == targetDate);
+            // Count task completions (already filtered to targetDate)
+            var taskCompletionsToday = i.Tasks.Count;
 
             var totalToday = habitCompletionsToday + taskCompletionsToday;
 

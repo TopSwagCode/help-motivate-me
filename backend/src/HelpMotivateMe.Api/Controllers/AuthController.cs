@@ -33,7 +33,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<UserResponse>> Register([FromBody] RegisterRequest request)
+    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
         // Check if signups are allowed
         if (!IsSignupAllowed())
@@ -60,18 +60,40 @@ public class AuthController : ControllerBase
             Username = request.Username,
             Email = request.Email,
             PasswordHash = HashPassword(request.Password),
-            DisplayName = request.DisplayName
+            DisplayName = request.DisplayName,
+            IsEmailVerified = false
         };
 
         _db.Users.Add(user);
         await _db.SaveChangesAsync();
 
-        await SignInUser(user);
+        // Generate verification token
+        var tokenBytes = RandomNumberGenerator.GetBytes(32);
+        var token = Convert.ToBase64String(tokenBytes)
+            .Replace("+", "-")
+            .Replace("/", "_")
+            .TrimEnd('=');
+
+        var verificationToken = new EmailVerificationToken
+        {
+            UserId = user.Id,
+            Token = token,
+            Email = request.Email,
+            ExpiresAt = DateTime.UtcNow.AddHours(24)
+        };
+
+        _db.EmailVerificationTokens.Add(verificationToken);
+        await _db.SaveChangesAsync();
+
+        // Send verification email
+        var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
+        var verificationUrl = $"{frontendUrl}/auth/verify-email?token={token}";
+        await _emailService.SendVerificationEmailAsync(request.Email, verificationUrl, user.PreferredLanguage);
 
         var sessionId = GetSessionId();
         await _analyticsService.LogEventAsync(user.Id, sessionId, "UserRegistered");
 
-        return Ok(MapToResponse(user));
+        return Ok(new { message = "Please check your email to verify your account.", email = request.Email });
     }
 
     [HttpPost("login")]
@@ -89,6 +111,11 @@ public class AuthController : ControllerBase
         if (!user.IsActive)
         {
             return Unauthorized(new { message = "Account is disabled" });
+        }
+
+        if (!user.IsEmailVerified)
+        {
+            return Unauthorized(new { code = "email_not_verified", message = "Please verify your email before logging in.", email = user.Email });
         }
 
         await SignInUser(user);
@@ -198,12 +225,13 @@ public class AuthController : ControllerBase
                     }
                 }
 
-                // Create new user
+                // Create new user - OAuth users are automatically verified since their email is verified by the provider
                 user = new User
                 {
                     Username = await GenerateUniqueUsername(name ?? "user"),
                     Email = email ?? $"{externalId}@{provider}.local",
-                    DisplayName = name
+                    DisplayName = name,
+                    IsEmailVerified = true
                 };
                 _db.Users.Add(user);
                 await _db.SaveChangesAsync(); // Save to get the user ID
@@ -290,11 +318,12 @@ public class AuthController : ControllerBase
                 }
             }
 
-            // Auto-create account for new users
+            // Auto-create account for new users - email is verified since they're using magic link
             user = new User
             {
                 Username = await GenerateUniqueUsername(email.Split('@')[0]),
-                Email = email
+                Email = email,
+                IsEmailVerified = true
             };
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
@@ -375,12 +404,99 @@ public class AuthController : ControllerBase
         if (!token.IsUsed)
         {
             token.UsedAt = DateTime.UtcNow;
-            await _db.SaveChangesAsync();
         }
+
+        // Using a magic link also verifies the email
+        if (!token.User.IsEmailVerified)
+        {
+            token.User.IsEmailVerified = true;
+            token.User.UpdatedAt = DateTime.UtcNow;
+        }
+
+        await _db.SaveChangesAsync();
 
         await SignInUser(token.User);
 
         return Ok(MapToResponse(token.User));
+    }
+
+    [HttpPost("verify-email")]
+    public async Task<ActionResult<UserResponse>> VerifyEmail([FromBody] VerifyEmailRequest request)
+    {
+        var token = await _db.EmailVerificationTokens
+            .Include(t => t.User)
+                .ThenInclude(u => u.ExternalLogins)
+            .FirstOrDefaultAsync(t => t.Token == request.Token);
+
+        if (token == null)
+        {
+            return BadRequest(new { message = "Invalid verification link" });
+        }
+
+        if (token.IsUsed)
+        {
+            return BadRequest(new { message = "This verification link has already been used" });
+        }
+
+        if (token.ExpiresAt < DateTime.UtcNow)
+        {
+            return BadRequest(new { message = "This verification link has expired" });
+        }
+
+        // Mark token as used
+        token.UsedAt = DateTime.UtcNow;
+
+        // Mark user as verified
+        token.User.IsEmailVerified = true;
+        token.User.UpdatedAt = DateTime.UtcNow;
+
+        await _db.SaveChangesAsync();
+
+        // Auto-login the user
+        await SignInUser(token.User);
+
+        var sessionId = GetSessionId();
+        await _analyticsService.LogEventAsync(token.User.Id, sessionId, "EmailVerified");
+
+        return Ok(MapToResponse(token.User));
+    }
+
+    [HttpPost("resend-verification")]
+    public async Task<IActionResult> ResendVerification([FromBody] ResendVerificationRequest request)
+    {
+        var email = request.Email.ToLowerInvariant();
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email);
+
+        // Always return success to prevent email enumeration
+        if (user == null || user.IsEmailVerified || !user.IsActive)
+        {
+            return Ok(new { message = "If an unverified account exists with this email, a verification link has been sent." });
+        }
+
+        // Generate new verification token
+        var tokenBytes = RandomNumberGenerator.GetBytes(32);
+        var token = Convert.ToBase64String(tokenBytes)
+            .Replace("+", "-")
+            .Replace("/", "_")
+            .TrimEnd('=');
+
+        var verificationToken = new EmailVerificationToken
+        {
+            UserId = user.Id,
+            Token = token,
+            Email = email,
+            ExpiresAt = DateTime.UtcNow.AddHours(24)
+        };
+
+        _db.EmailVerificationTokens.Add(verificationToken);
+        await _db.SaveChangesAsync();
+
+        // Send verification email
+        var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
+        var verificationUrl = $"{frontendUrl}/auth/verify-email?token={token}";
+        await _emailService.SendVerificationEmailAsync(email, verificationUrl, user.PreferredLanguage);
+
+        return Ok(new { message = "If an unverified account exists with this email, a verification link has been sent." });
     }
 
     [HttpPatch("profile")]
@@ -651,6 +767,65 @@ public class AuthController : ControllerBase
             token.InviterUserId,
             token.InviterUser.DisplayName ?? token.InviterUser.Username
         ));
+    }
+
+    [HttpDelete("account")]
+    [Authorize]
+    public async Task<IActionResult> DeleteAccount([FromBody] DeleteAccountRequest request)
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
+
+        var user = await _db.Users
+            .Include(u => u.ExternalLogins)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user == null) return NotFound();
+
+        // If user has a password, require password verification
+        if (user.PasswordHash != null)
+        {
+            if (string.IsNullOrEmpty(request.Password))
+            {
+                return BadRequest(new { message = "Password is required to delete your account" });
+            }
+
+            if (!VerifyPassword(request.Password, user.PasswordHash))
+            {
+                return BadRequest(new { message = "Incorrect password" });
+            }
+        }
+
+        // Delete related entities (many are configured with cascade delete, but handle explicitly for clarity)
+        // Delete notification preferences
+        var notificationPrefs = await _db.NotificationPreferences.FirstOrDefaultAsync(np => np.UserId == userId);
+        if (notificationPrefs != null)
+            _db.NotificationPreferences.Remove(notificationPrefs);
+
+        // Delete push subscriptions
+        var pushSubscriptions = await _db.PushSubscriptions.Where(ps => ps.UserId == userId).ToListAsync();
+        _db.PushSubscriptions.RemoveRange(pushSubscriptions);
+
+        // Delete email login tokens
+        var emailLoginTokens = await _db.EmailLoginTokens.Where(t => t.UserId == userId).ToListAsync();
+        _db.EmailLoginTokens.RemoveRange(emailLoginTokens);
+
+        // Delete email verification tokens
+        var verificationTokens = await _db.EmailVerificationTokens.Where(t => t.UserId == userId).ToListAsync();
+        _db.EmailVerificationTokens.RemoveRange(verificationTokens);
+
+        // Delete external logins
+        _db.UserExternalLogins.RemoveRange(user.ExternalLogins);
+
+        // Delete the user (cascade should handle goals, identities, habit stacks, etc.)
+        _db.Users.Remove(user);
+
+        await _db.SaveChangesAsync();
+
+        // Sign out the user
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        return NoContent();
     }
 
     private async Task SignInUser(User user)

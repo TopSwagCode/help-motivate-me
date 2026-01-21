@@ -19,6 +19,7 @@ public class AppDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<HabitStackItem> HabitStackItems => Set<HabitStackItem>();
     public DbSet<HabitStackItemCompletion> HabitStackItemCompletions => Set<HabitStackItemCompletion>();
     public DbSet<EmailLoginToken> EmailLoginTokens => Set<EmailLoginToken>();
+    public DbSet<EmailVerificationToken> EmailVerificationTokens => Set<EmailVerificationToken>();
     public DbSet<JournalEntry> JournalEntries => Set<JournalEntry>();
     public DbSet<JournalImage> JournalImages => Set<JournalImage>();
     public DbSet<AccountabilityBuddy> AccountabilityBuddies => Set<AccountabilityBuddy>();

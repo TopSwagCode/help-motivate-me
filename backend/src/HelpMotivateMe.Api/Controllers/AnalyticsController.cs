@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.Analytics;
+using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
@@ -15,12 +16,12 @@ namespace HelpMotivateMe.Api.Controllers;
 public class AnalyticsController : ControllerBase
 {
     private const string SessionIdKey = "AnalyticsSessionId";
-    private readonly AppDbContext _db;
+    private readonly IQueryInterface<TaskItem> _tasks;
     private readonly IAnalyticsService _analyticsService;
 
-    public AnalyticsController(AppDbContext db, IAnalyticsService analyticsService)
+    public AnalyticsController(IQueryInterface<TaskItem> tasks, IAnalyticsService analyticsService)
     {
-        _db = db;
+        _tasks = tasks;
         _analyticsService = analyticsService;
     }
 
@@ -32,8 +33,8 @@ public class AnalyticsController : ControllerBase
 
         await _analyticsService.LogEventAsync(userId, sessionId, "AnalyticsPageLoaded");
 
-        // Get all tasks
-        var tasks = await _db.TaskItems
+        // Get all tasks using read-only query interface
+        var tasks = await _tasks
             .Include(t => t.Goal)
             .Where(t => t.Goal.UserId == userId)
             .ToListAsync();
@@ -62,8 +63,8 @@ public class AnalyticsController : ControllerBase
     {
         var userId = GetUserId();
 
-        // Get all tasks for this user
-        var tasks = await _db.TaskItems
+        // Get all tasks for this user using read-only query interface
+        var tasks = await _tasks
             .Include(t => t.Goal)
             .Where(t => t.Goal.UserId == userId)
             .ToListAsync();
@@ -92,21 +93,17 @@ public class AnalyticsController : ControllerBase
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var startDate = today.AddDays(-days);
 
-        // Without TaskCompletion, we can show tasks completed by their CompletedAt date
-        var completedTasks = await _db.TaskItems
-            .Include(t => t.Goal)
+        // Group and count at database level for better performance
+        var heatmapData = await _tasks
             .Where(t => t.Goal.UserId == userId &&
                         t.Status == TaskItemStatus.Completed &&
                         t.CompletedAt.HasValue &&
-                        t.CompletedAt.Value >= startDate)
-            .ToListAsync();
-
-        var heatmapData = completedTasks
-            .Where(t => t.CompletedAt.HasValue)
+                        t.CompletedAt.Value >= startDate &&
+                        t.CompletedAt.Value <= today)
             .GroupBy(t => t.CompletedAt!.Value)
             .Select(g => new { Date = g.Key, Count = g.Count() })
             .OrderBy(x => x.Date)
-            .ToList();
+            .ToListAsync();
 
         return Ok(heatmapData);
     }

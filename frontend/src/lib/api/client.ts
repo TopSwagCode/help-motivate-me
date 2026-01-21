@@ -117,7 +117,7 @@ export async function apiPatch<T>(endpoint: string, data?: unknown): Promise<T> 
 	return handleResponse<T>(response);
 }
 
-export async function apiDelete<T>(endpoint: string): Promise<T> {
+export async function apiDelete<T>(endpoint: string, data?: unknown): Promise<T> {
 	if (!isOnline()) {
 		throw new OfflineError();
 	}
@@ -128,7 +128,8 @@ export async function apiDelete<T>(endpoint: string): Promise<T> {
 		headers: {
 			'Content-Type': 'application/json',
 			'X-CSRF': '1'
-		}
+		},
+		body: data ? JSON.stringify(data) : undefined
 	});
 	return handleResponse<T>(response);
 }

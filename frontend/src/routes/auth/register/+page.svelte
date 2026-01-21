@@ -23,7 +23,8 @@
 		loading = false;
 
 		if (result.success) {
-			goto('/dashboard');
+			// Redirect to verify-pending page with the email
+			goto(`/auth/verify-pending?email=${encodeURIComponent(result.email || email)}`);
 		} else if (result.code === 'signup_disabled') {
 			// Redirect directly to waitlist page
 			goto(`/waitlist?email=${encodeURIComponent(email)}&name=${encodeURIComponent(displayName || username)}`);

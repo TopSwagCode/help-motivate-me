@@ -1,3 +1,5 @@
+using HelpMotivateMe.Core.Enums;
+using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +9,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HelpMotivateMe.IntegrationTests.Infrastructure;
+
+public class MockEmailService : IEmailService
+{
+    public Task SendLoginLinkAsync(string email, string loginUrl, Language language) => Task.CompletedTask;
+    public Task SendVerificationEmailAsync(string email, string verificationUrl, Language language) => Task.CompletedTask;
+    public Task SendBuddyInviteAsync(string email, string inviterName, string loginUrl, Language language) => Task.CompletedTask;
+    public Task SendBuddyJournalNotificationAsync(string email, string buddyName, string entryTitle, string journalUrl, Language language) => Task.CompletedTask;
+    public Task SendWaitlistConfirmationAsync(string email, string name, Language language) => Task.CompletedTask;
+    public Task SendWhitelistInviteAsync(string email, string loginUrl, Language language) => Task.CompletedTask;
+}
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
@@ -29,7 +41,9 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 ["OAuth:Google:ClientId"] = "test-client-id",
                 ["OAuth:Google:ClientSecret"] = "test-client-secret",
                 ["OAuth:LinkedIn:ClientId"] = "test-client-id",
-                ["OAuth:LinkedIn:ClientSecret"] = "test-client-secret"
+                ["OAuth:LinkedIn:ClientSecret"] = "test-client-secret",
+                ["OAuth:Facebook:AppId"] = "test-app-id",
+                ["OAuth:Facebook:AppSecret"] = "test-app-secret"
             });
         });
 
@@ -58,6 +72,15 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             services.AddAuthentication()
                 .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
                     TestAuthHandler.AuthenticationScheme, _ => { });
+
+            // Replace email service with mock to avoid SMTP connection issues
+            var emailServiceDescriptor = services.SingleOrDefault(
+                d => d.ServiceType == typeof(IEmailService));
+            if (emailServiceDescriptor != null)
+            {
+                services.Remove(emailServiceDescriptor);
+            }
+            services.AddSingleton<IEmailService, MockEmailService>();
 
             // Build the service provider
             var sp = services.BuildServiceProvider();

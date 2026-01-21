@@ -191,6 +191,23 @@
 			"signIn": "Sign in",
 			"passwordRequirements": "Password must be at least 8 characters"
 		},
+		"verifyPending": {
+			"title": "Check Your Email",
+			"description": "We've sent a verification link to:",
+			"resend": "Resend Verification Email",
+			"resending": "Sending...",
+			"resent": "Verification email sent! Check your inbox.",
+			"backToLogin": "Back to Login",
+			"checkSpam": "Can't find the email? Check your spam folder."
+		},
+		"verifyEmail": {
+			"verifying": "Verifying your email...",
+			"success": "Email Verified!",
+			"redirecting": "Redirecting you to the app...",
+			"failed": "Verification Failed",
+			"createAccount": "Create New Account",
+			"backToLogin": "Back to Login"
+		},
 		"logout": "Log out",
 		"github": "GitHub"
 	},
@@ -251,6 +268,20 @@
 			"restarting": "Resetting...",
 			"confirmReset": "Are you sure you want to restart the onboarding process? This will take you through the setup wizard again.",
 			"failedReset": "Failed to reset onboarding"
+		},
+		"deleteAccount": {
+			"title": "Danger Zone",
+			"description": "Permanently delete your account and all associated data. This action cannot be undone.",
+			"button": "Delete Account",
+			"modalTitle": "Delete Your Account",
+			"warning": "This will permanently delete your account, including all your identities, goals, habit stacks, tasks, and journal entries. This action cannot be undone.",
+			"passwordLabel": "Enter your password to confirm",
+			"passwordPlaceholder": "Your password",
+			"confirmLabel": "Type DELETE to confirm",
+			"confirmationRequired": "Please type DELETE to confirm",
+			"confirmButton": "Delete My Account",
+			"deleting": "Deleting...",
+			"failed": "Failed to delete account"
 		},
 		"notifications": {
 			"title": "Notifications",

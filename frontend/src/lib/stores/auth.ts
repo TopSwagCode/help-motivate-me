@@ -37,9 +37,12 @@ function createAuthStore() {
 				return { success: true };
 			} catch (error) {
 				update((state) => ({ ...state, loading: false }));
+				const apiError = error instanceof ApiError ? error : null;
 				return {
 					success: false,
-					error: error instanceof Error ? error.message : 'Login failed'
+					error: error instanceof Error ? error.message : 'Login failed',
+					code: apiError?.code,
+					email: apiError?.data?.email as string | undefined
 				};
 			}
 		},
@@ -47,9 +50,9 @@ function createAuthStore() {
 		async register(data: RegisterRequest) {
 			update((state) => ({ ...state, loading: true }));
 			try {
-				const user = await apiPost<User>('/auth/register', data);
-				set({ user, loading: false, initialized: true });
-				return { success: true };
+				const response = await apiPost<{ message: string; email: string }>('/auth/register', data);
+				update((state) => ({ ...state, loading: false }));
+				return { success: true, email: response.email };
 			} catch (error) {
 				update((state) => ({ ...state, loading: false }));
 				return {

@@ -39,6 +39,29 @@ public class SmtpEmailService : IEmailService
         await SendMessageAsync(message);
     }
 
+    public async Task SendVerificationEmailAsync(string email, string verificationUrl, Language language)
+    {
+        var templates = EmailTemplateProvider.GetTemplates(language);
+
+        using var message = new MimeMessage();
+        message.From.Add(new MailboxAddress(
+            _configuration["Email:FromName"] ?? "Help Motivate Me",
+            _configuration["Email:FromAddress"] ?? "noreply@helpmotivateme.local"
+        ));
+        message.To.Add(new MailboxAddress(email, email));
+        message.Subject = templates.VerificationSubject;
+
+        var builder = new BodyBuilder
+        {
+            HtmlBody = templates.GetVerificationHtmlBody(verificationUrl),
+            TextBody = templates.GetVerificationTextBody(verificationUrl)
+        };
+
+        message.Body = builder.ToMessageBody();
+
+        await SendMessageAsync(message);
+    }
+
     public async Task SendBuddyInviteAsync(string email, string inviterName, string loginUrl, Language language)
     {
         var templates = EmailTemplateProvider.GetTemplates(language);

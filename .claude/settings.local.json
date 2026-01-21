@@ -3,7 +3,12 @@
     "allow": [
       "Bash(dotnet list:*)",
       "Bash(dotnet add:*)",
-      "Bash(dotnet build:*)"
+      "Bash(dotnet build:*)",
+      "Bash(grep:*)",
+      "Bash(dotnet test:*)",
+      "Bash(./generate-migration.sh:*)",
+      "Bash(npm run check:*)",
+      "Bash(npx svelte-check:*)"
     ]
   }
 }

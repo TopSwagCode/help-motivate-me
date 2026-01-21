@@ -1,5 +1,6 @@
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
+using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,20 +13,27 @@ namespace HelpMotivateMe.Infrastructure.Services;
 /// </summary>
 public class IdentityScoreService
 {
-    private readonly AppDbContext _db;
-    
+    private readonly IQueryInterface<Identity> _identities;
+    private readonly IQueryInterface<HabitStackItemCompletion> _completions;
+    private readonly IQueryInterface<TaskItem> _tasks;
+
     // Maximum votes counted per identity per day to prevent gaming
     private const int MaxDailyVotes = 10;
-    
+
     // Maximum evaluation window in days
     private const int MaxWindowDays = 14;
-    
+
     // Daily decay factor when no actions are completed
     private const double DailyDecayFactor = 0.97;
 
-    public IdentityScoreService(AppDbContext db)
+    public IdentityScoreService(
+        IQueryInterface<Identity> identities,
+        IQueryInterface<HabitStackItemCompletion> completions,
+        IQueryInterface<TaskItem> tasks)
     {
-        _db = db;
+        _identities = identities;
+        _completions = completions;
+        _tasks = tasks;
     }
 
     /// <summary>
@@ -33,30 +41,71 @@ public class IdentityScoreService
     /// </summary>
     public async Task<List<IdentityScoreResult>> CalculateScoresAsync(Guid userId, DateOnly targetDate)
     {
-        var identities = await _db.Identities
+        // Calculate date range for queries - only fetch data we need
+        var startDate = targetDate.AddDays(-MaxWindowDays);
+
+        // Load identities with habit stacks and items, but filter completions at DB level
+        var identities = await _identities
             .Include(i => i.HabitStacks)
                 .ThenInclude(hs => hs.Items)
-                    .ThenInclude(hsi => hsi.Completions)
-            .Include(i => i.Tasks)
+                    .ThenInclude(hsi => hsi.Completions.Where(c => c.CompletedDate >= startDate && c.CompletedDate <= targetDate))
+            .Include(i => i.Tasks.Where(t => t.CompletedAt >= startDate && t.CompletedAt <= targetDate))
             .Where(i => i.UserId == userId)
             .ToListAsync();
+
+        // Get first action dates per identity (separate query for efficiency)
+        var firstActionDates = await GetFirstActionDatesAsync(userId, identities.Select(i => i.Id).ToList());
 
         var results = new List<IdentityScoreResult>();
 
         foreach (var identity in identities)
         {
-            var score = CalculateIdentityScore(identity, targetDate);
+            var firstActionDate = firstActionDates.GetValueOrDefault(identity.Id);
+            var score = CalculateIdentityScore(identity, targetDate, firstActionDate);
             results.Add(score);
         }
 
         return results.OrderByDescending(r => r.Score).ToList();
     }
 
-    private IdentityScoreResult CalculateIdentityScore(Identity identity, DateOnly targetDate)
+    private async Task<Dictionary<Guid, DateOnly?>> GetFirstActionDatesAsync(Guid userId, List<Guid> identityIds)
     {
-        // Get the first action date for this identity (for account age calculation)
-        var firstActionDate = GetFirstActionDate(identity);
-        
+        // Get earliest habit completion date per identity
+        var habitFirstDates = await _completions
+            .Where(c => c.HabitStackItem.HabitStack.UserId == userId &&
+                       identityIds.Contains(c.HabitStackItem.HabitStack.IdentityId!.Value))
+            .GroupBy(c => c.HabitStackItem.HabitStack.IdentityId!.Value)
+            .Select(g => new { IdentityId = g.Key, FirstDate = g.Min(c => c.CompletedDate) })
+            .ToDictionaryAsync(x => x.IdentityId, x => (DateOnly?)x.FirstDate);
+
+        // Get earliest task completion date per identity
+        var taskFirstDates = await _tasks
+            .Where(t => t.Goal.UserId == userId &&
+                       t.IdentityId.HasValue &&
+                       identityIds.Contains(t.IdentityId.Value) &&
+                       t.CompletedAt.HasValue)
+            .GroupBy(t => t.IdentityId!.Value)
+            .Select(g => new { IdentityId = g.Key, FirstDate = g.Min(t => t.CompletedAt!.Value) })
+            .ToDictionaryAsync(x => x.IdentityId, x => (DateOnly?)x.FirstDate);
+
+        // Merge and get earliest date for each identity
+        var result = new Dictionary<Guid, DateOnly?>();
+        foreach (var identityId in identityIds)
+        {
+            var habitDate = habitFirstDates.GetValueOrDefault(identityId);
+            var taskDate = taskFirstDates.GetValueOrDefault(identityId);
+
+            if (habitDate.HasValue && taskDate.HasValue)
+                result[identityId] = habitDate.Value < taskDate.Value ? habitDate : taskDate;
+            else
+                result[identityId] = habitDate ?? taskDate;
+        }
+
+        return result;
+    }
+
+    private IdentityScoreResult CalculateIdentityScore(Identity identity, DateOnly targetDate, DateOnly? firstActionDate)
+    {
         // If no actions ever, return dormant score
         if (!firstActionDate.HasValue)
         {
@@ -168,24 +217,6 @@ public class IdentityScoreService
             accountAgeDays,
             showNumericScore
         );
-    }
-
-    private DateOnly? GetFirstActionDate(Identity identity)
-    {
-        var habitDates = identity.HabitStacks
-            .SelectMany(hs => hs.Items)
-            .SelectMany(hsi => hsi.Completions)
-            .Select(c => c.CompletedDate)
-            .ToList();
-
-        var taskDates = identity.Tasks
-            .Where(t => t.CompletedAt.HasValue)
-            .Select(t => t.CompletedAt!.Value)
-            .ToList();
-
-        var allDates = habitDates.Concat(taskDates).ToList();
-        
-        return allDates.Count > 0 ? allDates.Min() : null;
     }
 
     private int GetDayVotes(Identity identity, DateOnly date)

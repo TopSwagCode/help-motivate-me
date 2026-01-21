@@ -57,6 +57,9 @@ builder.Services.AddScoped<IdentityScoreService>();
 // Analytics Service
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
+// Query Interface - read-only queries with AsNoTracking for better performance
+builder.Services.AddScoped(typeof(IQueryInterface<>), typeof(QueryInterface<>));
+
 // Session (for analytics session tracking)
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

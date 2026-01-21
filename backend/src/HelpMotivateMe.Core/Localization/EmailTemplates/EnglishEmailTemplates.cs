@@ -37,6 +37,39 @@ Click the link below to log in to your account. This link will expire in 24 hour
 
 If you didn't request this login link, you can safely ignore this email.";
 
+    public string VerificationSubject => "Verify Your Email - Help Motivate Me";
+
+    public string GetVerificationHtmlBody(string verificationUrl) => $@"
+        <html>
+        <body style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+            <h1 style='color: {PrimaryColor};'>Verify Your Email</h1>
+            <p>Thank you for creating an account with Help Motivate Me! Please verify your email address to complete your registration.</p>
+            <p style='margin: 30px 0;'>
+                <a href='{verificationUrl}'
+                   style='background-color: {PrimaryColor}; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-size: 16px;'>
+                    Verify Email
+                </a>
+            </p>
+            <p style='color: {GrayColor}; font-size: 14px;'>
+                This link will expire in 24 hours. If you didn't create an account, you can safely ignore this email.
+            </p>
+            <p style='color: {GrayColor}; font-size: 14px;'>
+                If the button doesn't work, copy and paste this link into your browser:<br/>
+                <a href='{verificationUrl}' style='color: {PrimaryColor};'>{verificationUrl}</a>
+            </p>
+        </body>
+        </html>";
+
+    public string GetVerificationTextBody(string verificationUrl) => $@"Verify Your Email
+
+Thank you for creating an account with Help Motivate Me! Please verify your email address to complete your registration.
+
+Click the link below to verify your email:
+
+{verificationUrl}
+
+This link will expire in 24 hours. If you didn't create an account, you can safely ignore this email.";
+
     public string GetBuddyInviteSubject(string inviterName) => $"{inviterName} wants you as their accountability buddy!";
 
     public string GetBuddyInviteHtmlBody(string inviterName, string loginUrl) => $@"

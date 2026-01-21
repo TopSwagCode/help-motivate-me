@@ -5,12 +5,18 @@
 	import { auth } from '$lib/stores/auth';
 	import { updateProfile } from '$lib/api/settings';
 	import { resetOnboarding } from '$lib/api/onboarding';
+	import { deleteAccount } from '$lib/api/auth';
 
 	let displayName = $state($auth.user?.displayName ?? '');
 	let loading = $state(false);
 	let resetLoading = $state(false);
+	let deleteLoading = $state(false);
+	let showDeleteModal = $state(false);
+	let deletePassword = $state('');
+	let deleteConfirmation = $state('');
 	let error = $state('');
 	let success = $state('');
+	let deleteError = $state('');
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
@@ -46,6 +52,41 @@
 		} catch (e) {
 			error = e instanceof Error ? e.message : get(t)('settings.onboarding.failedReset');
 			resetLoading = false;
+		}
+	}
+
+	function openDeleteModal() {
+		showDeleteModal = true;
+		deletePassword = '';
+		deleteConfirmation = '';
+		deleteError = '';
+	}
+
+	function closeDeleteModal() {
+		showDeleteModal = false;
+		deletePassword = '';
+		deleteConfirmation = '';
+		deleteError = '';
+	}
+
+	async function handleDeleteAccount() {
+		if (deleteConfirmation !== 'DELETE') {
+			deleteError = get(t)('settings.deleteAccount.confirmationRequired');
+			return;
+		}
+
+		deleteLoading = true;
+		deleteError = '';
+
+		try {
+			// Only send password if user has one set
+			const password = $auth.user?.hasPassword ? deletePassword : undefined;
+			await deleteAccount(password);
+			// Redirect to home after deletion
+			window.location.href = '/';
+		} catch (e) {
+			deleteError = e instanceof Error ? e.message : get(t)('settings.deleteAccount.failed');
+			deleteLoading = false;
 		}
 	}
 </script>
@@ -142,4 +183,84 @@
 			{resetLoading ? $t('settings.onboarding.restarting') : $t('settings.onboarding.restart')}
 		</button>
 	</div>
+
+	<!-- Danger Zone -->
+	<div class="mt-8 pt-6 border-t border-red-200">
+		<h3 class="text-md font-medium text-red-600 mb-2">{$t('settings.deleteAccount.title')}</h3>
+		<p class="text-sm text-gray-500 mb-3">
+			{$t('settings.deleteAccount.description')}
+		</p>
+		<button
+			onclick={openDeleteModal}
+			class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md transition-colors"
+		>
+			{$t('settings.deleteAccount.button')}
+		</button>
+	</div>
 </div>
+
+<!-- Delete Account Modal -->
+{#if showDeleteModal}
+	<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+		<div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+			<h3 class="text-lg font-bold text-red-600 mb-4">{$t('settings.deleteAccount.modalTitle')}</h3>
+
+			<div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+				<p class="text-sm text-red-700">
+					{$t('settings.deleteAccount.warning')}
+				</p>
+			</div>
+
+			{#if deleteError}
+				<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+					{deleteError}
+				</div>
+			{/if}
+
+			<div class="space-y-4">
+				{#if $auth.user?.hasPassword}
+					<div>
+						<label for="deletePassword" class="label">{$t('settings.deleteAccount.passwordLabel')}</label>
+						<input
+							id="deletePassword"
+							type="password"
+							bind:value={deletePassword}
+							class="input"
+							placeholder={$t('settings.deleteAccount.passwordPlaceholder')}
+						/>
+					</div>
+				{/if}
+
+				<div>
+					<label for="deleteConfirmation" class="label">
+						{$t('settings.deleteAccount.confirmLabel')}
+					</label>
+					<input
+						id="deleteConfirmation"
+						type="text"
+						bind:value={deleteConfirmation}
+						class="input"
+						placeholder="DELETE"
+					/>
+				</div>
+			</div>
+
+			<div class="mt-6 flex gap-3 justify-end">
+				<button
+					onclick={closeDeleteModal}
+					disabled={deleteLoading}
+					class="btn-secondary"
+				>
+					{$t('common.cancel')}
+				</button>
+				<button
+					onclick={handleDeleteAccount}
+					disabled={deleteLoading || deleteConfirmation !== 'DELETE'}
+					class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 disabled:bg-red-300 rounded-md transition-colors"
+				>
+					{deleteLoading ? $t('settings.deleteAccount.deleting') : $t('settings.deleteAccount.confirmButton')}
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}

@@ -24,6 +24,7 @@ public class TestDataBuilder
             Email = email ?? _faker.Internet.Email(),
             DisplayName = _faker.Name.FullName(),
             IsActive = true,
+            IsEmailVerified = true, // Verified for testing
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };

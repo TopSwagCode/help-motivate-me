@@ -33,10 +33,9 @@ public class AuthControllerTests : IntegrationTestBase
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var user = await response.Content.ReadFromJsonAsync<UserResponse>();
-        user!.Username.Should().Be("newuser");
-        user.Email.Should().Be("newuser@example.com");
-        user.DisplayName.Should().Be("New User");
+        var result = await response.Content.ReadFromJsonAsync<RegisterResponse>();
+        result!.Email.Should().Be("newuser@example.com");
+        result.Message.Should().Contain("verify");
     }
 
     [Fact]
@@ -411,6 +410,7 @@ public class AuthControllerTests : IntegrationTestBase
             PasswordHash = HashPassword(password),
             DisplayName = username,
             IsActive = true,
+            IsEmailVerified = true, // Verified for testing
             CreatedAt = DateTime.UtcNow
         };
         Db.Users.Add(user);
@@ -437,5 +437,7 @@ public record UserResponse(
     DateTime CreatedAt,
     IEnumerable<string> ExternalLogins
 );
+
+public record RegisterResponse(string Message, string Email);
 
 public record ErrorResponse(string Message);

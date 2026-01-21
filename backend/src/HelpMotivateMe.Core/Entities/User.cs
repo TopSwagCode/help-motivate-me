@@ -10,6 +10,7 @@ public class User
     public string? PasswordHash { get; set; }
     public string? DisplayName { get; set; }
     public bool IsActive { get; set; } = true;
+    public bool IsEmailVerified { get; set; } = false;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public MembershipTier MembershipTier { get; set; } = MembershipTier.Free;

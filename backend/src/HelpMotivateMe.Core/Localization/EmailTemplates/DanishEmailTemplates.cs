@@ -37,6 +37,39 @@ Klik på linket nedenfor for at logge ind på din konto. Dette link udløber om 
 
 Hvis du ikke har anmodet om dette login-link, kan du trygt ignorere denne e-mail.";
 
+    public string VerificationSubject => "Bekræft din e-mail - Help Motivate Me";
+
+    public string GetVerificationHtmlBody(string verificationUrl) => $@"
+        <html>
+        <body style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+            <h1 style='color: {PrimaryColor};'>Bekræft din e-mail</h1>
+            <p>Tak fordi du oprettede en konto hos Help Motivate Me! Bekræft venligst din e-mailadresse for at fuldføre din registrering.</p>
+            <p style='margin: 30px 0;'>
+                <a href='{verificationUrl}'
+                   style='background-color: {PrimaryColor}; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-size: 16px;'>
+                    Bekræft e-mail
+                </a>
+            </p>
+            <p style='color: {GrayColor}; font-size: 14px;'>
+                Dette link udløber om 24 timer. Hvis du ikke oprettede en konto, kan du trygt ignorere denne e-mail.
+            </p>
+            <p style='color: {GrayColor}; font-size: 14px;'>
+                Hvis knappen ikke virker, kopier og indsæt dette link i din browser:<br/>
+                <a href='{verificationUrl}' style='color: {PrimaryColor};'>{verificationUrl}</a>
+            </p>
+        </body>
+        </html>";
+
+    public string GetVerificationTextBody(string verificationUrl) => $@"Bekræft din e-mail
+
+Tak fordi du oprettede en konto hos Help Motivate Me! Bekræft venligst din e-mailadresse for at fuldføre din registrering.
+
+Klik på linket nedenfor for at bekræfte din e-mail:
+
+{verificationUrl}
+
+Dette link udløber om 24 timer. Hvis du ikke oprettede en konto, kan du trygt ignorere denne e-mail.";
+
     public string GetBuddyInviteSubject(string inviterName) => $"{inviterName} vil have dig som deres ansvarsven!";
 
     public string GetBuddyInviteHtmlBody(string inviterName, string loginUrl) => $@"

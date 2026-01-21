@@ -7,6 +7,11 @@ public interface IEmailTemplates
     string GetLoginLinkHtmlBody(string loginUrl);
     string GetLoginLinkTextBody(string loginUrl);
 
+    // Email Verification
+    string VerificationSubject { get; }
+    string GetVerificationHtmlBody(string verificationUrl);
+    string GetVerificationTextBody(string verificationUrl);
+
     // Buddy Invite
     string GetBuddyInviteSubject(string inviterName);
     string GetBuddyInviteHtmlBody(string inviterName, string loginUrl);

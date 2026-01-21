@@ -46,6 +46,9 @@
 
 		if (result.success) {
 			goto('/today');
+		} else if (result.code === 'email_not_verified') {
+			// Redirect to verify-pending page
+			goto(`/auth/verify-pending?email=${encodeURIComponent(result.email || username)}`);
 		} else {
 			error = result.error || 'Login failed';
 		}

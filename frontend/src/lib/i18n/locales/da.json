@@ -191,6 +191,23 @@
 			"signIn": "Log ind",
 			"passwordRequirements": "Adgangskoden skal være mindst 8 tegn"
 		},
+		"verifyPending": {
+			"title": "Tjek din e-mail",
+			"description": "Vi har sendt et bekræftelseslink til:",
+			"resend": "Send bekræftelsesmail igen",
+			"resending": "Sender...",
+			"resent": "Bekræftelsesmail sendt! Tjek din indbakke.",
+			"backToLogin": "Tilbage til login",
+			"checkSpam": "Kan du ikke finde e-mailen? Tjek din spam-mappe."
+		},
+		"verifyEmail": {
+			"verifying": "Bekræfter din e-mail...",
+			"success": "E-mail bekræftet!",
+			"redirecting": "Omdirigerer dig til appen...",
+			"failed": "Bekræftelse mislykkedes",
+			"createAccount": "Opret ny konto",
+			"backToLogin": "Tilbage til login"
+		},
 		"logout": "Log ud",
 		"github": "GitHub"
 	},
@@ -251,6 +268,20 @@
 			"restarting": "Nulstiller...",
 			"confirmReset": "Er du sikker på, at du vil genstarte onboarding-processen? Dette vil tage dig gennem opsætningsguiden igen.",
 			"failedReset": "Kunne ikke nulstille onboarding"
+		},
+		"deleteAccount": {
+			"title": "Farezone",
+			"description": "Slet permanent din konto og alle tilknyttede data. Denne handling kan ikke fortrydes.",
+			"button": "Slet konto",
+			"modalTitle": "Slet din konto",
+			"warning": "Dette vil permanent slette din konto, inklusiv alle dine identiteter, mål, vanestakke, opgaver og dagbogsindlæg. Denne handling kan ikke fortrydes.",
+			"passwordLabel": "Indtast din adgangskode for at bekræfte",
+			"passwordPlaceholder": "Din adgangskode",
+			"confirmLabel": "Skriv DELETE for at bekræfte",
+			"confirmationRequired": "Skriv venligst DELETE for at bekræfte",
+			"confirmButton": "Slet min konto",
+			"deleting": "Sletter...",
+			"failed": "Kunne ikke slette konto"
 		},
 		"notifications": {
 			"title": "Notifikationer",
