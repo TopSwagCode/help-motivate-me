@@ -159,7 +159,8 @@
 			</button>
 
 			{#if showPicker}
-				<div class="absolute bottom-full left-0 mb-2" style="z-index: 10000;">
+				<!-- Fixed position picker that won't get clipped -->
+				<div class="fixed inset-0 sm:absolute sm:inset-auto sm:bottom-full sm:right-0 sm:mb-2" style="z-index: 10000;">
 					<EmojiPicker 
 						onSelect={handleAddNewReaction}
 						onClose={closePicker}

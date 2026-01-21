@@ -682,7 +682,9 @@
 			"clickToRemove": "Click to remove",
 			"you": "You",
 			"reacted": "reacted with",
-			"category": "Category"
+			"category": "Category",
+			"quickReactions": "Quick reactions",
+			"hideMore": "Back to quick reactions"
 		},
 		"emptyFriendsTitle": "No entries from friends yet",
 		"emptyFriendsDescription": "When your accountability buddies write journal entries, they'll appear here."

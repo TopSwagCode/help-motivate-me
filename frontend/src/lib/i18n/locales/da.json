@@ -682,7 +682,9 @@
 			"clickToRemove": "Klik for at fjerne",
 			"you": "Dig",
 			"reacted": "reagerede med",
-			"category": "Kategori"
+			"category": "Kategori",
+			"quickReactions": "Hurtige reaktioner",
+			"hideMore": "Tilbage til hurtige reaktioner"
 		},
 		"emptyFriendsTitle": "Ingen indlæg fra venner endnu",
 		"emptyFriendsDescription": "Når dine accountability partnere skriver dagbogsindlæg, vil de blive vist her."
