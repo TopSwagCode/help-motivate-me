@@ -679,7 +679,9 @@
 			"moreEmojis": "Flere emojis",
 			"react": "Reager",
 			"from": "fra",
-			"clickToRemove": "Klik for at fjerne"
+			"clickToRemove": "Klik for at fjerne",
+			"you": "Dig",
+			"reacted": "reagerede med"
 		},
 		"emptyFriendsTitle": "Ingen indlæg fra venner endnu",
 		"emptyFriendsDescription": "Når dine accountability partnere skriver dagbogsindlæg, vil de blive vist her."

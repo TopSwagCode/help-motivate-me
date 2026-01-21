@@ -679,7 +679,9 @@
 			"moreEmojis": "More emojis",
 			"react": "React",
 			"from": "from",
-			"clickToRemove": "Click to remove"
+			"clickToRemove": "Click to remove",
+			"you": "You",
+			"reacted": "reacted with"
 		},
 		"emptyFriendsTitle": "No entries from friends yet",
 		"emptyFriendsDescription": "When your accountability buddies write journal entries, they'll appear here."
