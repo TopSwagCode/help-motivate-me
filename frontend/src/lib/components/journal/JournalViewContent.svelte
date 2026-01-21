@@ -323,7 +323,7 @@
 <style>
 	.reactions-section {
 		position: relative;
-		z-index: 20;
+		z-index: auto;
 		pointer-events: auto;
 	}
 </style>

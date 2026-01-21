@@ -183,7 +183,6 @@
 <style>
 	.reactions-container {
 		position: relative;
-		z-index: 5;
 	}
 
 	.reaction-wrapper {
@@ -194,8 +193,6 @@
 	.add-reaction-btn {
 		cursor: pointer;
 		position: relative;
-		z-index: 10;
-		pointer-events: auto !important;
 	}
 
 	.reaction-btn:hover {
