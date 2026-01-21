@@ -68,14 +68,14 @@
 </script>
 
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-<div class="flex items-center gap-1.5 flex-wrap" role="group" aria-label="Reactions" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
+<div class="flex items-center gap-1.5 flex-wrap relative z-10" role="group" aria-label="Reactions">
 	<!-- Individual reactions with tooltips -->
 	{#each reactions as reaction (reaction.id)}
 		<button
 			type="button"
-			onclick={() => handleReactionClick(reaction)}
+			onclick={(e) => { e.stopPropagation(); handleReactionClick(reaction); }}
 			disabled={loading || !canRemove(reaction)}
-			class="group relative inline-flex items-center justify-center w-7 h-7 rounded-full text-base transition-all duration-150
+			class="group relative inline-flex items-center justify-center w-7 h-7 rounded-full text-base transition-all duration-150 z-10
 				{canRemove(reaction) 
 					? 'bg-primary-100 border border-primary-300 hover:bg-primary-200 hover:scale-110 cursor-pointer' 
 					: 'bg-gray-100 border border-gray-200 cursor-default'}
@@ -89,7 +89,7 @@
 
 	<!-- Add reaction button -->
 	{#if currentUserId}
-		<div class="relative">
+		<div class="relative z-20">
 			<button
 				type="button"
 				onclick={openPicker}
@@ -107,7 +107,7 @@
 			</button>
 
 			{#if showPicker}
-				<div class="absolute bottom-full left-0 mb-2" style="z-index: 50;">
+				<div class="absolute bottom-full left-0 mb-2 z-50">
 					<EmojiPicker 
 						onSelect={handleAddNewReaction}
 						onClose={closePicker}

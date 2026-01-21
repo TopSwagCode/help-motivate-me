@@ -298,7 +298,12 @@
 
 				<!-- Reactions Section - Always visible with clear add button -->
 				{#if onAddReaction && onRemoveReaction}
-					<div class="px-5 py-3 border-t-2 border-gray-100 bg-gray-50">
+					<!-- svelte-ignore a11y_click_events_have_key_events -->
+					<!-- svelte-ignore a11y_no_static_element_interactions -->
+					<div 
+						class="px-5 py-3 border-t-2 border-gray-100 bg-gray-50 relative z-10"
+						onclick={(e) => e.stopPropagation()}
+					>
 						<JournalReactions
 							reactions={getReactions(entry)}
 							{currentUserId}
