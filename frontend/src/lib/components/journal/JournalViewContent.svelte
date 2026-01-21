@@ -243,18 +243,10 @@
 				<!-- Entry Header - Clear visual separation -->
 				<div class="px-5 py-4 bg-gradient-to-r from-slate-100 via-gray-50 to-slate-100 border-b-2 border-gray-200">
 					<div class="flex items-center justify-between gap-3">
-						<div class="flex items-center gap-3 min-w-0">
-							<!-- Author Avatar -->
-							<div class="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0 shadow-sm">
-								<span class="text-white font-bold text-sm">
-									{getAuthorDisplay(entry).charAt(0).toUpperCase()}
-								</span>
-							</div>
-							<div class="min-w-0">
-								<div class="font-semibold text-gray-900 truncate">{getAuthorDisplay(entry)}</div>
-								<div class="text-gray-500 text-sm" title={formatFullDate(entry.entryDate)}>
-									{formatRelativeDate(entry.entryDate)}
-								</div>
+						<div class="min-w-0">
+							<div class="font-semibold text-gray-900">{getAuthorDisplay(entry)}</div>
+							<div class="text-gray-500 text-sm" title={formatFullDate(entry.entryDate)}>
+								{formatRelativeDate(entry.entryDate)}
 							</div>
 						</div>
 						{#if hasLinkingFields(entry) && (entry.habitStackName || entry.taskItemTitle)}

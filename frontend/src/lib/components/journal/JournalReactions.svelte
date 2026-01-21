@@ -114,34 +114,7 @@
 
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <div class="flex items-center gap-2 flex-wrap" role="group" aria-label="Reactions" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
-	<!-- Add reaction button - Now more prominent and always first -->
-	{#if currentUserId}
-		<div class="relative">
-			<button
-				type="button"
-				onclick={openPicker}
-				disabled={loading}
-				class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-gray-50 
-					border border-gray-300 hover:border-gray-400 transition-all shadow-sm hover:shadow
-					text-gray-600 hover:text-gray-800 text-sm font-medium"
-				title={$t('journal.reactions.addReaction')}
-			>
-				<span class="text-base">😊</span>
-				<span>{$t('journal.reactions.react')}</span>
-			</button>
-
-			{#if showPicker && pickerAnchor}
-				<div class="absolute bottom-full left-0 mb-2" style="z-index: 50;">
-					<EmojiPicker 
-						onSelect={handleAddNewReaction}
-						onClose={closePicker}
-					/>
-				</div>
-			{/if}
-		</div>
-	{/if}
-
-	<!-- Existing reactions -->
+	<!-- Existing reactions first -->
 	{#each reactionSummaries as summary (summary.emoji)}
 		<button
 			type="button"
@@ -159,4 +132,33 @@
 			<span class="font-semibold">{summary.count}</span>
 		</button>
 	{/each}
+
+	<!-- Add reaction button - Clear and visible -->
+	{#if currentUserId}
+		<div class="relative">
+			<button
+				type="button"
+				onclick={openPicker}
+				disabled={loading}
+				class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white hover:bg-primary-50 
+					border-2 border-gray-300 hover:border-primary-400 transition-all shadow-sm hover:shadow
+					text-gray-500 hover:text-primary-600"
+				title={$t('journal.reactions.addReaction')}
+				aria-label={$t('journal.reactions.addReaction')}
+			>
+				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+				</svg>
+			</button>
+
+			{#if showPicker && pickerAnchor}
+				<div class="absolute bottom-full left-0 mb-2" style="z-index: 50;">
+					<EmojiPicker 
+						onSelect={handleAddNewReaction}
+						onClose={closePicker}
+					/>
+				</div>
+			{/if}
+		</div>
+	{/if}
 </div>
