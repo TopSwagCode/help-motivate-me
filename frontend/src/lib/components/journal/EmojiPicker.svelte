@@ -302,7 +302,7 @@
 						<div class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
 							{$t('journal.reactions.category')}
 						</div>
-						<div class="flex gap-2 p-1.5 bg-gray-100 rounded-xl overflow-x-auto">
+						<div class="flex gap-2 p-1.5 bg-gray-100 rounded-xl overflow-x-auto overflow-y-hidden">
 							{#each emojiCategories as category, index}
 								<button
 									type="button"
