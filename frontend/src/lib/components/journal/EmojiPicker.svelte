@@ -57,10 +57,10 @@
 	let positionStyle = $state('');
 	let openDirection = $state<'up' | 'down'>('up'); // Whether picker opens upward or downward
 
-	// Picker dimensions
-	const PICKER_WIDTH = 300;
+	// Picker dimensions - wider to fit all emojis comfortably
+	const PICKER_WIDTH = 340;
 	const QUICK_HEIGHT = 56;
-	const EXTENDED_HEIGHT = 220;
+	const EXTENDED_HEIGHT = 240;
 
 	// Check if we're on mobile
 	function checkMobile() {
@@ -75,15 +75,15 @@
 		}
 
 		const rect = anchorElement.getBoundingClientRect();
-		const padding = 8;
+		const padding = 12;
 		const viewportWidth = window.innerWidth;
 		const viewportHeight = window.innerHeight;
 		
 		// Current height based on state
 		const currentHeight = showExtended ? EXTENDED_HEIGHT : QUICK_HEIGHT;
 
-		// Calculate horizontal position - try to align with button, but keep in viewport
-		let left = rect.left;
+		// Calculate horizontal position - center on button if possible, keep in viewport
+		let left = rect.left + (rect.width / 2) - (PICKER_WIDTH / 2);
 		if (left + PICKER_WIDTH > viewportWidth - padding) {
 			left = viewportWidth - PICKER_WIDTH - padding;
 		}
@@ -97,27 +97,23 @@
 		const spaceBelow = viewportHeight - rect.bottom;
 		
 		// We need enough space for the EXTENDED height (since it might expand)
-		const neededSpace = EXTENDED_HEIGHT + padding;
+		const neededSpace = EXTENDED_HEIGHT + padding * 2;
 
 		let top: number;
 		
+		// Prefer positioning above the button
 		if (spaceAbove >= neededSpace) {
 			// Position above - anchor to bottom of picker
 			openDirection = 'up';
 			top = rect.top - currentHeight - padding;
 		} else if (spaceBelow >= neededSpace) {
-			// Position below
+			// Position below if more space there
 			openDirection = 'down';
 			top = rect.bottom + padding;
-		} else if (spaceAbove > spaceBelow) {
-			// More space above, but not enough - position at top of viewport
-			openDirection = 'up';
-			top = padding;
 		} else {
-			// More space below - position below anchor
+			// Not enough space either way - position in center of viewport
 			openDirection = 'down';
-			top = rect.bottom + padding;
-			// Clamp to viewport
+			top = Math.max(padding, (viewportHeight - currentHeight) / 2);
 			if (top + currentHeight > viewportHeight - padding) {
 				top = viewportHeight - currentHeight - padding;
 			}
@@ -213,7 +209,7 @@
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<div 
 		class="fixed inset-0 bg-black/50 flex items-end justify-center"
-		style="z-index: 10000;"
+		style="z-index: 49999;"
 		role="dialog"
 		aria-modal="true"
 		onclick={handleBackdropClick}
@@ -342,7 +338,7 @@
 	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<div 
 		class="fixed inset-0"
-		style="z-index: 9998;"
+		style="z-index: 50000;"
 		role="presentation"
 		onclick={handleBackdropClick}
 		ontouchstart={handleBackdropClick}
@@ -352,15 +348,15 @@
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<div 
 		bind:this={pickerRef}
-		class="emoji-picker-content fixed bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden"
-		style="width: {PICKER_WIDTH}px; height: {currentHeight}px; z-index: 9999; {positionStyle}"
+		class="emoji-picker-content fixed bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
+		style="width: {PICKER_WIDTH}px; height: {currentHeight}px; z-index: 50001; {positionStyle}"
 		onclick={(e) => e.stopPropagation()}
 		ontouchstart={(e) => e.stopPropagation()}
 	>
 		{#if !showExtended}
 			<!-- Quick emoji bar -->
-			<div class="quick-emojis h-full flex items-center justify-center p-2">
-				<div class="flex items-center gap-1.5">
+			<div class="quick-emojis h-full flex items-center justify-center px-2">
+				<div class="flex items-center gap-1">
 					{#each quickEmojis as emoji}
 						<button
 							type="button"
