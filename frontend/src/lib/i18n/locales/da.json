@@ -681,7 +681,8 @@
 			"from": "fra",
 			"clickToRemove": "Klik for at fjerne",
 			"you": "Dig",
-			"reacted": "reagerede med"
+			"reacted": "reagerede med",
+			"category": "Kategori"
 		},
 		"emptyFriendsTitle": "Ingen indlæg fra venner endnu",
 		"emptyFriendsDescription": "Når dine accountability partnere skriver dagbogsindlæg, vil de blive vist her."
