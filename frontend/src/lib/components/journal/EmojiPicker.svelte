@@ -58,7 +58,7 @@
 	let openDirection = $state<'up' | 'down'>('up'); // Whether picker opens upward or downward
 
 	// Picker dimensions
-	const PICKER_WIDTH = 300;
+	const PICKER_WIDTH = 330;
 	const QUICK_HEIGHT = 56;
 	const EXTENDED_HEIGHT = 220;
 
