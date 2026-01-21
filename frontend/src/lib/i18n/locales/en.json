@@ -493,7 +493,8 @@
 			"optional": "optional",
 			"identity": "Identity",
 			"linkToIdentity": "Link to identity (optional)",
-			"identityHint": "Tasks created under this goal will inherit this identity by default"
+			"identityHint": "Tasks created under this goal will inherit this identity by default",
+			"createIdentity": "Create an identity first →"
 		}
 	},
 	"identities": {

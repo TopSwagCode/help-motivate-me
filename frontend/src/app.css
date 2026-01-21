@@ -39,6 +39,24 @@
 			min-h-[44px];
 	}
 
+	/* Date input placeholder styling */
+	input[type="date"]:invalid::-webkit-datetime-edit {
+		color: #9ca3af; /* gray-400 */
+	}
+	
+	input[type="date"]::-webkit-datetime-edit-text,
+	input[type="date"]::-webkit-datetime-edit-month-field,
+	input[type="date"]::-webkit-datetime-edit-day-field,
+	input[type="date"]::-webkit-datetime-edit-year-field {
+		padding: 0;
+	}
+	
+	/* Show placeholder when empty */
+	input[type="date"]:not(:focus):not([value])::-webkit-datetime-edit,
+	input[type="date"]:not(:focus)[value=""]::-webkit-datetime-edit {
+		color: #9ca3af; /* gray-400 - same as placeholder */
+	}
+
 	.label {
 		@apply block text-sm font-medium text-gray-700 mb-1;
 	}

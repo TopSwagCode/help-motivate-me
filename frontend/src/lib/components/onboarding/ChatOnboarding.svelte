@@ -33,7 +33,7 @@
 	let hasInitialized = $state(false);
 	let successNotification = $state<{ name: string; icon: string; color: string } | null>(null);
 	let extractedDataProcessed = $state(false);
-	let suggestedActions = $state<string[]>([]);
+	let suggestedActions = $state<Array<{ key: string; label: string }>>([]);
 
 	// Track created items to prevent duplicates (using JSON stringified key)
 	const createdItems = new Set<string>();
@@ -206,7 +206,11 @@
 		// Use tick() to ensure state updates before setting suggested actions
 		await tick();
 		if (extractedData?.suggestedActions?.length) {
-			suggestedActions = extractedData.suggestedActions;
+			// Map string actions to { key, label } format
+			suggestedActions = extractedData.suggestedActions.map(action => ({
+				key: action,
+				label: action
+			}));
 		} else {
 			suggestedActions = getDefaultSuggestedActions();
 		}

@@ -493,7 +493,8 @@
 			"optional": "valgfri",
 			"identity": "Identitet",
 			"linkToIdentity": "Tilknyt til identitet (valgfri)",
-			"identityHint": "Opgaver oprettet under dette mål vil arve denne identitet som standard"
+			"identityHint": "Opgaver oprettet under dette mål vil arve denne identitet som standard",
+			"createIdentity": "Opret en identitet først →"
 		}
 	},
 	"identities": {

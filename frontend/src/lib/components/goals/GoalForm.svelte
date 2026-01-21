@@ -92,6 +92,30 @@
 	</div>
 
 	<div>
+		<label for="identityId" class="label">{$t('goals.form.identity')} <span class="text-gray-500 text-sm">({$t('common.optional')})</span></label>
+		<select
+			id="identityId"
+			bind:value={identityId}
+			class="input"
+			disabled={loading}
+		>
+			<option value="">{$t('goals.noIdentity')}</option>
+			{#each identities as identity (identity.id)}
+				<option value={identity.id}>
+					{identity.icon ? `${identity.icon} ` : ''}{identity.name}
+				</option>
+			{/each}
+		</select>
+		{#if identities.length > 0}
+			<p class="text-xs text-gray-500 mt-1">{$t('goals.form.identityHint')}</p>
+		{:else}
+			<p class="text-xs text-gray-500 mt-1">
+				<a href="/identities" class="text-primary-600 hover:text-primary-700">{$t('goals.form.createIdentity')}</a>
+			</p>
+		{/if}
+	</div>
+
+	<div>
 		<label for="targetDate" class="label">{$t('goals.form.targetDate')}</label>
 		<input
 			id="targetDate"
@@ -101,26 +125,6 @@
 			disabled={loading}
 		/>
 	</div>
-
-	{#if identities.length > 0}
-		<div>
-			<label for="identityId" class="label">{$t('goals.form.identity')} <span class="text-gray-500 text-sm">({$t('common.optional')})</span></label>
-			<select
-				id="identityId"
-				bind:value={identityId}
-				class="input"
-				disabled={loading}
-			>
-				<option value="">{$t('goals.noIdentity')}</option>
-				{#each identities as identity (identity.id)}
-					<option value={identity.id}>
-						{identity.icon ? `${identity.icon} ` : ''}{identity.name}
-					</option>
-				{/each}
-			</select>
-			<p class="text-xs text-gray-500 mt-1">{$t('goals.form.identityHint')}</p>
-		</div>
-	{/if}
 
 	<div class="flex gap-3 pt-4">
 		<button type="submit" disabled={loading || !title.trim()} class="btn-primary flex-1">

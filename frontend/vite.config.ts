@@ -25,6 +25,7 @@ export default defineConfig({
 				// Enable deep linking - links to this domain open in PWA
 				handle_links: 'preferred',
 				// Declare which URLs this PWA can handle
+				// @ts-expect-error - url_handlers is a valid web manifest property not yet in vite-pwa types
 				url_handlers: [
 					{
 						origin: 'https://helpmotivateme.dk'

@@ -10,24 +10,10 @@ declare global {
 	}
 }
 
-// PWA Virtual Module Types
+// PWA Virtual Module Types - these are provided by vite-plugin-pwa at runtime
 declare module 'virtual:pwa-register/svelte' {
-	import type { Writable } from 'svelte/store';
-
-	export interface RegisterSWOptions {
-		immediate?: boolean;
-		onNeedRefresh?: () => void;
-		onOfflineReady?: () => void;
-		onRegistered?: (registration: ServiceWorkerRegistration | undefined) => void;
-		onRegisteredSW?: (swUrl: string, registration: ServiceWorkerRegistration | undefined) => void;
-		onRegisterError?: (error: Error) => void;
-	}
-
-	export function useRegisterSW(options?: RegisterSWOptions): {
-		needRefresh: Writable<boolean>;
-		offlineReady: Writable<boolean>;
-		updateServiceWorker: (reloadPage?: boolean) => Promise<void>;
-	};
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	export function useRegisterSW(options?: any): any;
 }
 
 export {};

@@ -440,14 +440,29 @@
 			<!-- Add Task Form -->
 			{#if !goal.isCompleted}
 				<form onsubmit={handleAddTask} class="card p-4 mb-6">
-					<div class="flex flex-col sm:flex-row gap-3">
+					<!-- Desktop: Title, Identity, Date on first row -->
+					<!-- Mobile: Stack vertically in same order -->
+					<div class="grid grid-cols-1 sm:grid-cols-[1fr,auto,auto] gap-3">
 						<input
 							type="text"
 							bind:value={newTaskTitle}
 							placeholder={$t('goals.addTaskPlaceholder')}
-							class="input flex-1"
+							class="input"
 							disabled={addingTask}
 						/>
+						{#if identities.length > 0}
+							<select
+								bind:value={newTaskIdentityId}
+								class="input sm:w-44"
+								disabled={addingTask}
+								title={$t('goals.form.linkToIdentity')}
+							>
+								<option value="">{$t('goals.noIdentity')}</option>
+								{#each identities as identity (identity.id)}
+									<option value={identity.id}>{identity.icon ? `${identity.icon} ` : ''}{identity.name}</option>
+								{/each}
+							</select>
+						{/if}
 						<input
 							type="date"
 							bind:value={newTaskDueDate}
@@ -455,31 +470,28 @@
 							disabled={addingTask}
 							title={$t('goals.dueDate')}
 						/>
-						<button type="submit" disabled={addingTask || !newTaskTitle.trim()} class="btn-primary">
-							{addingTask ? $t('goals.adding') : $t('goals.addTask')}
-						</button>
 					</div>
-					<div class="flex flex-col sm:flex-row gap-3 mt-3">
+					
+					<!-- Description (larger box) -->
+					<div class="mt-3">
 						<textarea
 							bind:value={newTaskDescription}
 							placeholder={$t('goals.form.taskDescriptionPlaceholder')}
-							class="input flex-1 resize-none"
+							class="input w-full resize-none"
 							rows="2"
 							disabled={addingTask}
 						></textarea>
-						{#if identities.length > 0}
-							<select
-								bind:value={newTaskIdentityId}
-								class="input sm:w-48"
-								disabled={addingTask}
-								title={$t('goals.form.linkToIdentity')}
-							>
-								<option value="">{$t('goals.noIdentity')}</option>
-								{#each identities as identity (identity.id)}
-									<option value={identity.id}>{identity.name}</option>
-								{/each}
-							</select>
-						{/if}
+					</div>
+					
+					<!-- Submit button - right aligned on desktop, full width on mobile -->
+					<div class="mt-3 flex justify-end">
+						<button 
+							type="submit" 
+							disabled={addingTask || !newTaskTitle.trim()} 
+							class="btn-primary w-full sm:w-auto"
+						>
+							{addingTask ? $t('goals.adding') : $t('goals.addTask')}
+						</button>
 					</div>
 				</form>
 			{/if}

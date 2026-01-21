@@ -40,7 +40,7 @@
 		if (!isPushSupported()) return;
 
 		// Check current permission
-		const permission = checkPushPermission();
+		const permission = await checkPushPermission();
 		
 		// Don't show if already granted or denied
 		if (permission === 'granted' || permission === 'denied') return;
