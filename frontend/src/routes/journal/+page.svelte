@@ -12,7 +12,10 @@
 		uploadJournalImage,
 		deleteJournalImage,
 		getLinkableHabitStacks,
-		getLinkableTasks
+		getLinkableTasks,
+		addJournalReaction,
+		removeJournalReaction,
+		type JournalFilter
 	} from '$lib/api/journal';
 	import { processMultipleImages, formatFileSize } from '$lib/utils/imageProcessing';
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
@@ -27,6 +30,7 @@
 	let entries = $state<JournalEntry[]>([]);
 	let loading = $state(true);
 	let error = $state('');
+	let activeFilter = $state<JournalFilter>('all');
 
 	// Linkable items for dropdowns
 	let habitStacks = $state<LinkableHabitStack[]>([]);
@@ -73,7 +77,7 @@
 	async function loadData() {
 		try {
 			const [entriesData, stacksData, tasksData] = await Promise.all([
-				getJournalEntries(),
+				getJournalEntries(activeFilter),
 				getLinkableHabitStacks(),
 				getLinkableTasks()
 			]);
@@ -84,6 +88,55 @@
 			error = e instanceof Error ? e.message : get(t)('journal.errors.loadFailed');
 		} finally {
 			loading = false;
+		}
+	}
+
+	async function handleFilterChange(filter: JournalFilter) {
+		activeFilter = filter;
+		loading = true;
+		error = '';
+		try {
+			entries = await getJournalEntries(filter);
+		} catch (e) {
+			error = e instanceof Error ? e.message : get(t)('journal.errors.loadFailed');
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function handleAddReaction(entryId: string, emoji: string) {
+		try {
+			const reaction = await addJournalReaction(entryId, emoji);
+			// Update local state
+			entries = entries.map(entry => {
+				if (entry.id === entryId) {
+					return {
+						...entry,
+						reactions: [...(entry.reactions || []), reaction]
+					};
+				}
+				return entry;
+			});
+		} catch (e) {
+			error = e instanceof Error ? e.message : get(t)('journal.errors.addReactionFailed');
+		}
+	}
+
+	async function handleRemoveReaction(entryId: string, reactionId: string) {
+		try {
+			await removeJournalReaction(entryId, reactionId);
+			// Update local state
+			entries = entries.map(entry => {
+				if (entry.id === entryId) {
+					return {
+						...entry,
+						reactions: (entry.reactions || []).filter(r => r.id !== reactionId)
+					};
+				}
+				return entry;
+			});
+		} catch (e) {
+			error = e instanceof Error ? e.message : get(t)('journal.errors.removeReactionFailed');
 		}
 	}
 
@@ -345,11 +398,15 @@
 		{:else}
 			<JournalViewContent
 				{entries}
-				mode="own"
+				mode="feed"
+				{activeFilter}
 				currentUserId={$auth.user?.id}
 				onCreateEntry={openCreateModal}
 				onEditEntry={(entry) => openEditModal(entry as JournalEntry)}
 				onOpenLightbox={openLightbox}
+				onFilterChange={handleFilterChange}
+				onAddReaction={handleAddReaction}
+				onRemoveReaction={handleRemoveReaction}
 			/>
 		{/if}
 	</main>

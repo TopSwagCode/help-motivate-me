@@ -661,8 +661,26 @@
 			"loadFailed": "Failed to load journal",
 			"titleRequired": "Title is required",
 			"deleteImageFailed": "Failed to delete image",
-			"deleteFailed": "Failed to delete entry"
-		}
+			"deleteFailed": "Failed to delete entry",
+			"addReactionFailed": "Failed to add reaction",
+			"removeReactionFailed": "Failed to remove reaction"
+		},
+		"filter": {
+			"all": "All",
+			"you": "You",
+			"friends": "Friends"
+		},
+		"feed": {
+			"you": "You",
+			"anonymous": "Anonymous"
+		},
+		"reactions": {
+			"addReaction": "Add reaction",
+			"moreEmojis": "More emojis",
+			"react": "React"
+		},
+		"emptyFriendsTitle": "No entries from friends yet",
+		"emptyFriendsDescription": "When your accountability buddies write journal entries, they'll appear here."
 	},
 	"ai": {
 		"commandBar": {

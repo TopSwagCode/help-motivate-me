@@ -661,8 +661,26 @@
 			"loadFailed": "Kunne ikke indlæse dagbog",
 			"titleRequired": "Titel er påkrævet",
 			"deleteImageFailed": "Kunne ikke slette billede",
-			"deleteFailed": "Kunne ikke slette indlæg"
-		}
+			"deleteFailed": "Kunne ikke slette indlæg",
+			"addReactionFailed": "Kunne ikke tilføje reaktion",
+			"removeReactionFailed": "Kunne ikke fjerne reaktion"
+		},
+		"filter": {
+			"all": "Alle",
+			"you": "Dig",
+			"friends": "Venner"
+		},
+		"feed": {
+			"you": "Dig",
+			"anonymous": "Anonym"
+		},
+		"reactions": {
+			"addReaction": "Tilføj reaktion",
+			"moreEmojis": "Flere emojis",
+			"react": "Reager"
+		},
+		"emptyFriendsTitle": "Ingen indlæg fra venner endnu",
+		"emptyFriendsDescription": "Når dine accountability partnere skriver dagbogsindlæg, vil de blive vist her."
 	},
 	"ai": {
 		"commandBar": {
