@@ -51,8 +51,16 @@
 	let showExtended = $state(false);
 	let activeCategory = $state(0);
 	let isMobile = $state(false);
-	let pickerStyle = $state('');
 	let pickerRef: HTMLDivElement | undefined = $state(undefined);
+	
+	// Position state
+	let positionStyle = $state('');
+	let openDirection = $state<'up' | 'down'>('up'); // Whether picker opens upward or downward
+
+	// Picker dimensions
+	const PICKER_WIDTH = 300;
+	const QUICK_HEIGHT = 56;
+	const EXTENDED_HEIGHT = 220;
 
 	// Check if we're on mobile
 	function checkMobile() {
@@ -60,25 +68,22 @@
 	}
 
 	// Calculate best position for the picker
-	// Use fixed height to prevent jumping when switching modes
-	const PICKER_WIDTH = 300;
-	const PICKER_HEIGHT = 220; // Fixed height for both modes
-
 	function calculatePosition() {
 		if (isMobile || !anchorElement) {
-			pickerStyle = '';
+			positionStyle = '';
 			return;
 		}
 
 		const rect = anchorElement.getBoundingClientRect();
-		const padding = 12;
+		const padding = 8;
 		const viewportWidth = window.innerWidth;
 		const viewportHeight = window.innerHeight;
+		
+		// Current height based on state
+		const currentHeight = showExtended ? EXTENDED_HEIGHT : QUICK_HEIGHT;
 
+		// Calculate horizontal position - try to align with button, but keep in viewport
 		let left = rect.left;
-		let top = rect.top - PICKER_HEIGHT - padding;
-
-		// Adjust horizontal position if it would overflow
 		if (left + PICKER_WIDTH > viewportWidth - padding) {
 			left = viewportWidth - PICKER_WIDTH - padding;
 		}
@@ -86,17 +91,39 @@
 			left = padding;
 		}
 
-		// If not enough space above, position below
-		if (top < padding) {
+		// Calculate vertical position
+		// Check space above and below the anchor
+		const spaceAbove = rect.top;
+		const spaceBelow = viewportHeight - rect.bottom;
+		
+		// We need enough space for the EXTENDED height (since it might expand)
+		const neededSpace = EXTENDED_HEIGHT + padding;
+
+		let top: number;
+		
+		if (spaceAbove >= neededSpace) {
+			// Position above - anchor to bottom of picker
+			openDirection = 'up';
+			top = rect.top - currentHeight - padding;
+		} else if (spaceBelow >= neededSpace) {
+			// Position below
+			openDirection = 'down';
 			top = rect.bottom + padding;
+		} else if (spaceAbove > spaceBelow) {
+			// More space above, but not enough - position at top of viewport
+			openDirection = 'up';
+			top = padding;
+		} else {
+			// More space below - position below anchor
+			openDirection = 'down';
+			top = rect.bottom + padding;
+			// Clamp to viewport
+			if (top + currentHeight > viewportHeight - padding) {
+				top = viewportHeight - currentHeight - padding;
+			}
 		}
 
-		// If still not enough space below, center vertically
-		if (top + PICKER_HEIGHT > viewportHeight - padding) {
-			top = Math.max(padding, (viewportHeight - PICKER_HEIGHT) / 2);
-		}
-
-		pickerStyle = `left: ${left}px; top: ${top}px;`;
+		positionStyle = `left: ${left}px; top: ${top}px;`;
 	}
 
 	onMount(() => {
@@ -112,6 +139,14 @@
 			window.removeEventListener('resize', checkMobile);
 			window.removeEventListener('resize', calculatePosition);
 			window.removeEventListener('scroll', calculatePosition, true);
+		}
+	});
+
+	// Recalculate position when extended state changes
+	$effect(() => {
+		if (showExtended !== undefined && !isMobile) {
+			// Small delay to let the transition start
+			requestAnimationFrame(calculatePosition);
 		}
 	});
 
@@ -164,6 +199,9 @@
 		e.stopPropagation();
 		activeCategory = index;
 	}
+
+	// Computed height for animation
+	let currentHeight = $derived(showExtended ? EXTENDED_HEIGHT : QUICK_HEIGHT);
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
@@ -314,15 +352,15 @@
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<div 
 		bind:this={pickerRef}
-		class="emoji-picker-content fixed bg-white rounded-xl shadow-xl border border-gray-200 p-3 overflow-hidden"
-		style="width: 300px; height: 220px; z-index: 9999; {pickerStyle}"
+		class="emoji-picker-content fixed bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden"
+		style="width: {PICKER_WIDTH}px; height: {currentHeight}px; z-index: 9999; {positionStyle}"
 		onclick={(e) => e.stopPropagation()}
 		ontouchstart={(e) => e.stopPropagation()}
 	>
 		{#if !showExtended}
-			<!-- Quick emoji bar - centered in container -->
-			<div class="quick-emojis h-full flex flex-col justify-center">
-				<div class="flex items-center gap-1.5 justify-center">
+			<!-- Quick emoji bar -->
+			<div class="quick-emojis h-full flex items-center justify-center p-2">
+				<div class="flex items-center gap-1.5">
 					{#each quickEmojis as emoji}
 						<button
 							type="button"
@@ -351,9 +389,9 @@
 			</div>
 		{:else}
 			<!-- Extended emoji picker -->
-			<div class="extended-emojis">
+			<div class="extended-emojis p-3 h-full flex flex-col">
 				<!-- Header with back button -->
-				<div class="flex items-center gap-2 pb-2 mb-2 border-b border-gray-100">
+				<div class="flex items-center gap-2 pb-2 mb-2 border-b border-gray-100 flex-shrink-0">
 					<button
 						type="button"
 						onclick={toggleExtended}
@@ -371,8 +409,8 @@
 					</span>
 				</div>
 
-				<!-- Category tabs with clear label -->
-				<div class="mb-2">
+				<!-- Category tabs -->
+				<div class="mb-2 flex-shrink-0">
 					<div class="text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-1.5 px-0.5">
 						{$t('journal.reactions.category')}
 					</div>
@@ -395,7 +433,7 @@
 				</div>
 
 				<!-- Emoji grid -->
-				<div class="emoji-grid grid grid-cols-6 gap-1">
+				<div class="emoji-grid grid grid-cols-6 gap-1 flex-1 overflow-hidden">
 					{#each emojiCategories[activeCategory].emojis as emoji}
 						<button
 							type="button"
@@ -416,14 +454,15 @@
 <style>
 	.emoji-picker-content {
 		animation: fadeInScale 150ms ease-out;
+		transition: height 200ms ease-out;
 	}
 
 	.quick-emojis {
-		animation: fadeIn 150ms ease-out;
+		animation: fadeIn 100ms ease-out;
 	}
 
 	.extended-emojis {
-		animation: slideIn 200ms ease-out;
+		animation: fadeIn 150ms ease-out;
 	}
 
 	.emoji-btn:hover {
@@ -447,17 +486,6 @@
 		}
 		to {
 			opacity: 1;
-		}
-	}
-
-	@keyframes slideIn {
-		from {
-			opacity: 0;
-			transform: translateX(-8px);
-		}
-		to {
-			opacity: 1;
-			transform: translateX(0);
 		}
 	}
 
