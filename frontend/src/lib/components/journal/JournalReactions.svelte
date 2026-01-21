@@ -31,7 +31,10 @@
 		return currentUserId === reaction.userId;
 	}
 
-	async function handleReactionClick(reaction: ReactionData) {
+	async function handleReactionClick(event: MouseEvent, reaction: ReactionData) {
+		event.preventDefault();
+		event.stopPropagation();
+		
 		if (loading || !currentUserId) return;
 		
 		// Only allow removing your own reactions
@@ -57,7 +60,9 @@
 			loading = false;
 		}
 	}
+
 	function openPicker(event: MouseEvent) {
+		event.preventDefault();
 		event.stopPropagation();
 		showPicker = true;
 	}
@@ -67,47 +72,46 @@
 	}
 </script>
 
-<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-<div class="flex items-center gap-1.5 flex-wrap relative z-10" role="group" aria-label="Reactions">
+<div class="reactions-container flex items-center gap-2 flex-wrap" role="group" aria-label="Reactions">
 	<!-- Individual reactions with tooltips -->
 	{#each reactions as reaction (reaction.id)}
 		<button
 			type="button"
-			onclick={(e) => { e.stopPropagation(); handleReactionClick(reaction); }}
-			disabled={loading || !canRemove(reaction)}
-			class="group relative inline-flex items-center justify-center w-7 h-7 rounded-full text-base transition-all duration-150 z-10
+			onclick={(e) => handleReactionClick(e, reaction)}
+			disabled={loading}
+			class="reaction-btn inline-flex items-center justify-center rounded-full text-lg transition-all duration-200
 				{canRemove(reaction) 
-					? 'bg-primary-100 border border-primary-300 hover:bg-primary-200 hover:scale-110 cursor-pointer' 
-					: 'bg-gray-100 border border-gray-200 cursor-default'}
+					? 'bg-primary-100 border-2 border-primary-300 hover:bg-primary-200 hover:border-primary-400 hover:shadow-md active:scale-95' 
+					: 'bg-gray-100 border-2 border-gray-200 hover:bg-gray-200 hover:border-gray-300'}
 				{loading ? 'opacity-50' : ''}
-				{compact ? 'w-6 h-6 text-sm' : ''}"
+				{compact ? 'w-7 h-7 text-base' : 'w-9 h-9'}"
 			title="{reaction.emoji} {$t('journal.reactions.from')} {reaction.userDisplayName}{canRemove(reaction) ? ` - ${$t('journal.reactions.clickToRemove')}` : ''}"
 		>
-			{reaction.emoji}
+			<span class="reaction-emoji">{reaction.emoji}</span>
 		</button>
 	{/each}
 
 	<!-- Add reaction button -->
 	{#if currentUserId}
-		<div class="relative z-20">
+		<div class="relative">
 			<button
 				type="button"
 				onclick={openPicker}
 				disabled={loading}
-				class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white hover:bg-primary-50 
-					border-2 border-dashed border-gray-300 hover:border-primary-400 transition-all hover:scale-110
-					text-gray-400 hover:text-primary-600
-					{compact ? 'w-6 h-6' : ''}"
+				class="add-reaction-btn inline-flex items-center justify-center rounded-full bg-white
+					border-2 border-dashed border-gray-300 hover:border-primary-400 hover:bg-primary-50
+					text-gray-400 hover:text-primary-600 transition-all duration-200 hover:shadow-md active:scale-95
+					{compact ? 'w-7 h-7' : 'w-9 h-9'}"
 				title={$t('journal.reactions.addReaction')}
 				aria-label={$t('journal.reactions.addReaction')}
 			>
-				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
 				</svg>
 			</button>
 
 			{#if showPicker}
-				<div class="absolute bottom-full left-0 mb-2 z-50">
+				<div class="absolute bottom-full left-0 mb-2" style="z-index: 10000;">
 					<EmojiPicker 
 						onSelect={handleAddNewReaction}
 						onClose={closePicker}
@@ -117,3 +121,36 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	.reactions-container {
+		position: relative;
+		z-index: 5;
+	}
+
+	.reaction-btn,
+	.add-reaction-btn {
+		cursor: pointer;
+		position: relative;
+		z-index: 10;
+		pointer-events: auto !important;
+	}
+
+	.reaction-btn:hover .reaction-emoji,
+	.add-reaction-btn:hover svg {
+		transform: scale(1.2);
+	}
+
+	.reaction-emoji {
+		transition: transform 0.2s ease;
+		display: inline-block;
+	}
+
+	.add-reaction-btn svg {
+		transition: transform 0.2s ease;
+	}
+
+	.reaction-btn:disabled {
+		cursor: default;
+	}
+</style>

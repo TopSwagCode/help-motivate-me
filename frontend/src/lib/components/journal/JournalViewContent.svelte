@@ -301,8 +301,9 @@
 					<!-- svelte-ignore a11y_click_events_have_key_events -->
 					<!-- svelte-ignore a11y_no_static_element_interactions -->
 					<div 
-						class="px-5 py-3 border-t-2 border-gray-100 bg-gray-50 relative z-10"
+						class="reactions-section px-5 py-3 border-t-2 border-gray-100 bg-gray-50"
 						onclick={(e) => e.stopPropagation()}
+						onmousedown={(e) => e.stopPropagation()}
 					>
 						<JournalReactions
 							reactions={getReactions(entry)}
@@ -316,3 +317,11 @@
 		{/each}
 	</div>
 {/if}
+
+<style>
+	.reactions-section {
+		position: relative;
+		z-index: 20;
+		pointer-events: auto;
+	}
+</style>

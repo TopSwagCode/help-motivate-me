@@ -80,21 +80,28 @@
 <!-- Backdrop to capture outside clicks -->
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <div 
-	class="fixed inset-0 z-40"
+	class="fixed inset-0"
+	style="z-index: 9998;"
 	role="presentation"
 	onclick={handleClickOutside}
 	onkeydown={handleKeydown}
 ></div>
 
 <!-- Emoji picker popup -->
-<div class="emoji-picker-container bg-white rounded-xl shadow-lg border border-gray-200 p-2 z-50" style="min-width: 240px;">
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<div 
+	class="emoji-picker-container bg-white rounded-xl shadow-lg border border-gray-200 p-2 relative"
+	style="min-width: 240px; z-index: 9999;"
+	onclick={(e) => e.stopPropagation()}
+>
 	<!-- Quick emoji bar -->
 	<div class="flex items-center gap-1 pb-2 border-b border-gray-100">
 		{#each quickEmojis as emoji}
 			<button
 				type="button"
-				onclick={() => handleQuickSelect(emoji)}
-				class="w-8 h-8 flex items-center justify-center text-lg hover:bg-gray-100 rounded-lg transition-colors"
+				onclick={(e) => { e.stopPropagation(); handleQuickSelect(emoji); }}
+				class="w-8 h-8 flex items-center justify-center text-lg hover:bg-primary-100 hover:scale-110 rounded-lg transition-all cursor-pointer"
 				title={emoji}
 			>
 				{emoji}
@@ -102,8 +109,8 @@
 		{/each}
 		<button
 			type="button"
-			onclick={() => showExtended = !showExtended}
-			class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-lg transition-colors ml-auto"
+			onclick={(e) => { e.stopPropagation(); showExtended = !showExtended; }}
+			class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-primary-100 hover:text-primary-600 rounded-lg transition-all ml-auto cursor-pointer"
 			title={$t('journal.reactions.moreEmojis')}
 		>
 			<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,8 +127,8 @@
 				{#each emojiCategories as category, index}
 					<button
 						type="button"
-						onclick={() => activeCategory = index}
-						class="w-7 h-7 flex items-center justify-center text-sm rounded-md transition-colors {activeCategory === index ? 'bg-primary-100 text-primary-700' : 'hover:bg-gray-100'}"
+						onclick={(e) => { e.stopPropagation(); activeCategory = index; }}
+						class="w-7 h-7 flex items-center justify-center text-sm rounded-md transition-all cursor-pointer {activeCategory === index ? 'bg-primary-100 text-primary-700' : 'hover:bg-gray-100'}"
 					>
 						{category.label}
 					</button>
@@ -133,8 +140,8 @@
 				{#each emojiCategories[activeCategory].emojis as emoji}
 					<button
 						type="button"
-						onclick={() => handleExtendedSelect(emoji)}
-						class="w-8 h-8 flex items-center justify-center text-lg hover:bg-gray-100 rounded-lg transition-colors"
+						onclick={(e) => { e.stopPropagation(); handleExtendedSelect(emoji); }}
+						class="w-8 h-8 flex items-center justify-center text-lg hover:bg-primary-100 hover:scale-110 rounded-lg transition-all cursor-pointer"
 					>
 						{emoji}
 					</button>
