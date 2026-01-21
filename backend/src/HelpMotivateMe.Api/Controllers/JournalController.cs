@@ -31,21 +31,37 @@ public class JournalController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<JournalEntryResponse>>> GetEntries()
+    public async Task<ActionResult<List<JournalEntryResponse>>> GetEntries([FromQuery] string? filter = null)
     {
         var userId = GetUserId();
         var sessionId = GetSessionId();
 
         await _analyticsService.LogEventAsync(userId, sessionId, "JournalPageLoaded");
 
-        var entries = await _db.JournalEntries
+        // Start with all entries belonging to this user's journal
+        var query = _db.JournalEntries
             .Include(j => j.HabitStack)
             .Include(j => j.TaskItem)
             .Include(j => j.Author)
             .Include(j => j.Images.OrderBy(i => i.SortOrder))
             .Include(j => j.Reactions)
                 .ThenInclude(r => r.User)
-            .Where(j => j.UserId == userId)
+            .Where(j => j.UserId == userId);
+
+        // Apply filter based on who authored the entry
+        if (filter == "own")
+        {
+            // Only entries written by the user themselves (AuthorUserId is null for legacy or equals userId)
+            query = query.Where(j => j.AuthorUserId == null || j.AuthorUserId == userId);
+        }
+        else if (filter == "buddies")
+        {
+            // Only entries written by buddies (AuthorUserId is set and not equal to userId)
+            query = query.Where(j => j.AuthorUserId != null && j.AuthorUserId != userId);
+        }
+        // "all" or no filter = return everything
+
+        var entries = await query
             .OrderByDescending(j => j.EntryDate)
             .ThenByDescending(j => j.CreatedAt)
             .ToListAsync();
