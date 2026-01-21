@@ -636,10 +636,11 @@
 					{#if preferences.preferredTimeSlot === 'Custom'}
 						<div class="mt-3 flex gap-3">
 							<div class="flex-1">
-								<label class="block text-xs font-medium text-gray-700 mb-1">
+								<label for="customTimeStart" class="block text-xs font-medium text-gray-700 mb-1">
 									{$t('settings.notifications.schedule.timeSlot.customStart')}
 								</label>
 								<input
+									id="customTimeStart"
 									type="time"
 									value={preferences.customTimeStart || ''}
 									onchange={updateCustomTimeStart}
@@ -648,10 +649,11 @@
 								/>
 							</div>
 							<div class="flex-1">
-								<label class="block text-xs font-medium text-gray-700 mb-1">
+								<label for="customTimeEnd" class="block text-xs font-medium text-gray-700 mb-1">
 									{$t('settings.notifications.schedule.timeSlot.customEnd')}
 								</label>
 								<input
+									id="customTimeEnd"
 									type="time"
 									value={preferences.customTimeEnd || ''}
 									onchange={updateCustomTimeEnd}

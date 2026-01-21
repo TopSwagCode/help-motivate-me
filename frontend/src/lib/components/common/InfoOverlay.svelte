@@ -63,8 +63,10 @@
 	<div
 		class="fixed inset-0 bg-gradient-to-br from-black/60 via-black/50 to-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in"
 		onclick={handleBackdropClick}
+		onkeydown={(e) => e.key === 'Escape' && handleBackdropClick(e as unknown as MouseEvent)}
 		role="button"
-		tabindex="-1"
+		tabindex="0"
+		aria-label={get(t)('common.close')}
 	>
 		<!-- Modal -->
 		<div

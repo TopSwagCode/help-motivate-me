@@ -424,7 +424,7 @@
 						<h2 class="text-lg sm:text-xl font-semibold text-gray-900">
 							{isEditing ? $t('journal.modal.editTitle') : $t('journal.modal.createTitle')}
 						</h2>
-						<button onclick={closeModal} class="text-gray-400 hover:text-gray-600 p-1">
+						<button onclick={closeModal} class="text-gray-400 hover:text-gray-600 p-1" aria-label={$t('common.close')}>
 							<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
 									stroke-linecap="round"
@@ -482,7 +482,7 @@
 						</div>
 
 						<div>
-							<label class="block text-sm font-medium text-gray-700 mb-2">{$t('journal.form.linkTo')}</label>
+							<span class="block text-sm font-medium text-gray-700 mb-2">{$t('journal.form.linkTo')}</span>
 							<div class="flex gap-2 mb-2">
 								<button
 									type="button"
@@ -545,7 +545,7 @@
 
 						<!-- Images Section -->
 						<div>
-							<label class="block text-sm font-medium text-gray-700 mb-2">{$t('journal.images.title')}</label>
+							<span class="block text-sm font-medium text-gray-700 mb-2">{$t('journal.images.title')}</span>
 
 							<!-- Existing images (edit mode) -->
 							{#if isEditing && editingEntry && editingEntry.images.length > 0}
@@ -561,6 +561,7 @@
 												type="button"
 												onclick={() => handleDeleteImage(editingEntry!, image)}
 												class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+												aria-label={$t('journal.images.delete')}
 											>
 												<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 													<path
@@ -590,6 +591,7 @@
 												type="button"
 												onclick={() => removePendingImage(index)}
 												class="absolute -top-2 -right-2 w-6 h-6 bg-gray-500 text-white rounded-full flex items-center justify-center"
+												aria-label={$t('journal.images.delete')}
 											>
 												<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 													<path
@@ -732,6 +734,8 @@
 			<div
 				class="max-w-[90vw] max-h-[90vh] flex items-center justify-center"
 				onclick={(e) => e.stopPropagation()}
+				onkeydown={(e) => e.stopPropagation()}
+				role="presentation"
 			>
 				<img
 					src={lightboxImages[lightboxIndex].url}

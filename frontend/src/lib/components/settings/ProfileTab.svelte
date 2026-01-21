@@ -109,8 +109,9 @@
 
 		<!-- Read-only fields -->
 		<div>
-			<label class="label">{$t('settings.profile.username')}</label>
+			<label for="username" class="label">{$t('settings.profile.username')}</label>
 			<input
+				id="username"
 				type="text"
 				value={$auth.user?.username}
 				disabled
@@ -119,8 +120,9 @@
 		</div>
 
 		<div>
-			<label class="label">{$t('settings.profile.email')}</label>
+			<label for="email" class="label">{$t('settings.profile.email')}</label>
 			<input
+				id="email"
 				type="email"
 				value={$auth.user?.email}
 				disabled

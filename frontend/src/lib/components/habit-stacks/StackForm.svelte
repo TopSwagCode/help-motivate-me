@@ -153,7 +153,7 @@
 	{/if}
 
 	<div>
-		<label class="block text-sm font-medium text-gray-700 mb-3">Habit Chain</label>
+		<span class="block text-sm font-medium text-gray-700 mb-3">Habit Chain</span>
 		<div class="space-y-4">
 			{#each items as item, i (i)}
 				<div class="relative pl-6 pb-4 {i < items.length - 1 ? 'border-l-2 border-gray-200 ml-3' : 'ml-3'}">
@@ -163,8 +163,9 @@
 					<div class="bg-gray-50 rounded-lg p-4">
 						<div class="space-y-3">
 							<div>
-								<label class="block text-xs font-medium text-gray-500 mb-1">After I...</label>
+								<label for="cue-input-{i}" class="block text-xs font-medium text-gray-500 mb-1">After I...</label>
 								<input
+									id="cue-input-{i}"
 									type="text"
 									value={item.cueDescription}
 									oninput={(e) => updateItem(i, 'cueDescription', (e.target as HTMLInputElement).value)}
@@ -173,7 +174,7 @@
 								/>
 							</div>
 							<div>
-								<label class="block text-xs font-medium text-gray-500 mb-1">I will...</label>
+								<label for="habit-input-{i}" class="block text-xs font-medium text-gray-500 mb-1">I will...</label>
 								<input
 									id="habit-input-{i}"
 									type="text"

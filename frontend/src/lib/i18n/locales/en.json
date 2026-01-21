@@ -600,7 +600,9 @@
 			"title": "Reorder Stacks",
 			"description": "Drag items or use arrows to reorder your habit stacks.",
 			"saving": "Saving...",
-			"saveOrder": "Save Order"
+			"saveOrder": "Save Order",
+			"moveUp": "Move up",
+			"moveDown": "Move down"
 		},
 		"errors": {
 			"stackNameRequired": "Stack name is required",

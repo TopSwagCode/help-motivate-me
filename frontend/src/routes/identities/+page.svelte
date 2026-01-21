@@ -141,7 +141,7 @@
 						<h2 class="text-xl font-semibold text-gray-900">
 							{isEditing ? $t('identities.edit') : $t('identities.newIdentity')}
 						</h2>
-						<button onclick={closeModal} class="text-gray-400 hover:text-gray-600">
+						<button onclick={closeModal} class="text-gray-400 hover:text-gray-600" aria-label={$t('common.close')}>
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
 									stroke-linecap="round"

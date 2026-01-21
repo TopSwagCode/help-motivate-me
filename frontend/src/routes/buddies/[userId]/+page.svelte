@@ -559,7 +559,7 @@
 
 						<!-- Images Section -->
 						<div>
-							<label class="block text-sm font-medium text-gray-700 mb-2">Images</label>
+							<span class="block text-sm font-medium text-gray-700 mb-2">Images</span>
 
 							<!-- Pending images -->
 							{#if pendingImages.length > 0}
@@ -575,6 +575,7 @@
 												type="button"
 												onclick={() => removePendingImage(index)}
 												class="absolute -top-2 -right-2 w-6 h-6 bg-gray-500 text-white rounded-full flex items-center justify-center"
+												aria-label="Remove image"
 											>
 												<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 													<path
@@ -700,6 +701,8 @@
 			<div
 				class="max-w-[90vw] max-h-[90vh] flex items-center justify-center"
 				onclick={(e) => e.stopPropagation()}
+				onkeydown={(e) => e.stopPropagation()}
+				role="presentation"
 			>
 				<img
 					src={lightboxImages[lightboxIndex].url}

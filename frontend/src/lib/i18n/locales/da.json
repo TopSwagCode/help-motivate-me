@@ -600,7 +600,9 @@
 			"title": "Omarranger stakke",
 			"description": "Træk elementer eller brug pilene til at omordne dine vanestakke.",
 			"saving": "Gemmer...",
-			"saveOrder": "Gem rækkefølge"
+			"saveOrder": "Gem rækkefølge",
+			"moveUp": "Flyt op",
+			"moveDown": "Flyt ned"
 		},
 		"errors": {
 			"stackNameRequired": "Staknavn er påkrævet",

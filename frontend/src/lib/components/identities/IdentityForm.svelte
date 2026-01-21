@@ -11,12 +11,20 @@
 
 	let { identity, onsubmit, oncancel }: Props = $props();
 
-	let name = $state(identity?.name ?? '');
-	let description = $state(identity?.description ?? '');
-	let color = $state(identity?.color ?? '#6366f1');
-	let icon = $state(identity?.icon ?? '');
+	let name = $state('');
+	let description = $state('');
+	let color = $state('#6366f1');
+	let icon = $state('');
 	let loading = $state(false);
 	let error = $state('');
+
+	// Initialize form fields from identity prop
+	$effect(() => {
+		name = identity?.name ?? '';
+		description = identity?.description ?? '';
+		color = identity?.color ?? '#6366f1';
+		icon = identity?.icon ?? '';
+	});
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();

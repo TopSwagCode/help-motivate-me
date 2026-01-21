@@ -12,13 +12,21 @@
 
 	let { goal, onsubmit, oncancel }: Props = $props();
 
-	let title = $state(goal?.title ?? '');
-	let description = $state(goal?.description ?? '');
-	let targetDate = $state(goal?.targetDate ?? '');
-	let identityId = $state(goal?.identityId ?? '');
+	let title = $state('');
+	let description = $state('');
+	let targetDate = $state('');
+	let identityId = $state('');
 	let identities = $state<Identity[]>([]);
 	let loading = $state(false);
 	let error = $state('');
+
+	// Initialize form fields from goal prop
+	$effect(() => {
+		title = goal?.title ?? '';
+		description = goal?.description ?? '';
+		targetDate = goal?.targetDate ?? '';
+		identityId = goal?.identityId ?? '';
+	});
 
 	onMount(async () => {
 		try {

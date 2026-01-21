@@ -522,7 +522,7 @@
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-6">
 						<h2 class="text-xl font-semibold text-gray-900">{$t('habitStacks.createPopup.title')}</h2>
-						<button onclick={closeCreatePopup} class="text-gray-400 hover:text-gray-600">
+						<button onclick={closeCreatePopup} class="text-gray-400 hover:text-gray-600" aria-label={$t('common.close')}>
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
 									stroke-linecap="round"
@@ -577,7 +577,7 @@
 						</div>
 
 						<div>
-							<label class="block text-sm font-medium text-gray-700 mb-3">{$t('habitStacks.createPopup.habitChain')}</label>
+							<span class="block text-sm font-medium text-gray-700 mb-3">{$t('habitStacks.createPopup.habitChain')}</span>
 							<div class="space-y-4">
 								{#each createItems as item, i (i)}
 									<div
@@ -593,10 +593,11 @@
 										<div class="bg-gray-50 rounded-lg p-4">
 											<div class="space-y-3">
 												<div>
-													<label class="block text-xs font-medium text-gray-500 mb-1"
+													<label for="create-cue-input-{i}" class="block text-xs font-medium text-gray-500 mb-1"
 														>{$t('habitStacks.createPopup.afterI')}</label
 													>
 													<input
+														id="create-cue-input-{i}"
 														type="text"
 														value={item.cueDescription}
 														oninput={(e) =>
@@ -610,7 +611,7 @@
 													/>
 												</div>
 												<div>
-													<label class="block text-xs font-medium text-gray-500 mb-1"
+													<label for="create-habit-input-{i}" class="block text-xs font-medium text-gray-500 mb-1"
 														>{$t('habitStacks.createPopup.iWillDo')}</label
 													>
 													<input
@@ -691,7 +692,7 @@
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-6">
 						<h2 class="text-xl font-semibold text-gray-900">{$t('habitStacks.editPopup.title')}</h2>
-						<button onclick={closeEditPopup} class="text-gray-400 hover:text-gray-600">
+						<button onclick={closeEditPopup} class="text-gray-400 hover:text-gray-600" aria-label={$t('common.close')}>
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
 									stroke-linecap="round"
@@ -746,6 +747,9 @@
 									type="button"
 									id="editActive"
 									onclick={() => (editIsActive = !editIsActive)}
+									role="switch"
+									aria-checked={editIsActive}
+									aria-label={$t('habitStacks.editPopup.active')}
 									class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 {editIsActive
 										? 'bg-primary-600'
 										: 'bg-gray-200'}"
@@ -839,8 +843,9 @@
 							<h3 class="text-sm font-medium text-gray-700 mb-3">{$t('habitStacks.editPopup.addNewHabit')}</h3>
 							<div class="bg-gray-50 rounded-lg p-4 space-y-3">
 								<div>
-									<label class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.afterI')}</label>
+									<label for="newItemCue" class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.afterI')}</label>
 									<input
+										id="newItemCue"
 										type="text"
 										bind:value={newItemCue}
 										onkeydown={(e) => handleEditItemKeyPress(e, 'cue')}
@@ -851,9 +856,10 @@
 									/>
 								</div>
 								<div>
-									<label class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.iWillDo')}</label>
+									<label for="newItemHabit" class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.iWillDo')}</label>
 									<input
 										bind:this={newItemHabitInputRef}
+										id="newItemHabit"
 										type="text"
 										bind:value={newItemHabit}
 										onkeydown={(e) => handleEditItemKeyPress(e, 'habit')}
@@ -922,6 +928,7 @@
 								ondragstart={() => handleDragStart(index)}
 								ondragover={(e) => handleDragOver(e, index)}
 								ondragend={handleDragEnd}
+								role="listitem"
 								class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-move hover:bg-gray-100 transition-colors {draggedIndex === index ? 'opacity-50 border-primary-500' : ''}"
 							>
 								<!-- Drag handle -->
@@ -944,6 +951,7 @@
 										onclick={() => moveItemUp(index)}
 										disabled={index === 0}
 										class="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+										aria-label={$t('habitStacks.reorderPopup.moveUp')}
 									>
 										<svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
@@ -954,6 +962,7 @@
 										onclick={() => moveItemDown(index)}
 										disabled={index === reorderList.length - 1}
 										class="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+										aria-label={$t('habitStacks.reorderPopup.moveDown')}
 									>
 										<svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
