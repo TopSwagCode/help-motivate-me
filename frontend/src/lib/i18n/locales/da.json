@@ -733,6 +733,7 @@
 		"all": "Alle",
 		"done": "Færdig",
 		"tapToComplete": "Tryk for at fuldføre",
+		"pending": "Afventer",
 		"completed": "Fuldført",
 		"noPendingTasks": "Ingen ventende opgaver for denne dag",
 		"noCompletedTasks": "Ingen fuldførte opgaver endnu",

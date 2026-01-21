@@ -334,47 +334,53 @@
 								{#each stack.items as item, index (item.id)}
 									{#if readonly}
 										<div
-											class="w-full flex items-center gap-2 px-2 py-1.5 rounded text-left
-												{item.isCompletedToday ? 'bg-green-500/10' : ''}"
+											class="w-full flex items-center gap-2 px-2 py-2 rounded-lg text-left
+												{item.isCompletedToday 
+													? 'bg-green-500/15' 
+													: 'bg-white/40'}"
 										>
-											<!-- Connector line + checkbox -->
-											<div class="flex flex-col items-center w-4 flex-shrink-0">
+											<!-- Checkbox area -->
+											<div class="flex flex-col items-center w-5 flex-shrink-0">
 												{#if index > 0}
 													<div 
-														class="w-0.5 h-1 -mt-1 mb-0.5 rounded-full"
+														class="w-0.5 h-1.5 -mt-2 mb-0.5 rounded-full"
 														style="background-color: {stack.items[index - 1]?.isCompletedToday ? '#22c55e' : (stack.identityColor || '#d1d5db')}40"
 													></div>
 												{/if}
 												{#if item.isCompletedToday}
-													<div class="w-4 h-4 rounded-full bg-green-500 flex items-center justify-center">
-														<svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center shadow-sm">
+														<svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 															<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
 														</svg>
 													</div>
 												{:else}
 													<div 
-														class="w-4 h-4 rounded-full border-2 flex items-center justify-center text-[8px] font-bold"
-														style="border-color: {stack.identityColor || '#d1d5db'}60; color: {stack.identityColor || '#9ca3af'}"
+														class="w-5 h-5 rounded-full border-2 bg-white/50 flex items-center justify-center"
+														style="border-color: {stack.identityColor || '#d1d5db'}60"
 													>
-														{index + 1}
+														<span class="text-[9px] font-medium" style="color: {stack.identityColor || '#9ca3af'}">
+															{index + 1}
+														</span>
 													</div>
 												{/if}
 												{#if index < stack.items.length - 1}
 													<div 
-														class="w-0.5 h-1 mt-0.5 -mb-1 rounded-full"
+														class="w-0.5 h-1.5 mt-0.5 -mb-2 rounded-full"
 														style="background-color: {item.isCompletedToday ? '#22c55e' : (stack.identityColor || '#d1d5db')}40"
 													></div>
 												{/if}
 											</div>
 											
 											<!-- Habit text -->
-											<span class="flex-1 text-xs truncate {item.isCompletedToday ? 'text-green-700 line-through' : 'text-gray-700'}">
+											<span class="flex-1 text-xs {item.isCompletedToday ? 'text-green-700 line-through' : 'text-gray-700'}">
 												{item.habitDescription}
 											</span>
 											
-											<!-- Streak -->
+											<!-- Streak or pending indicator -->
 											{#if item.currentStreak > 0}
 												<span class="text-[10px] text-orange-500 flex-shrink-0">🔥{item.currentStreak}</span>
+											{:else if !item.isCompletedToday}
+												<span class="text-[10px] text-gray-400 flex-shrink-0">{$t('today.pending')}</span>
 											{/if}
 										</div>
 									{:else}

@@ -733,6 +733,7 @@
 		"all": "All",
 		"done": "Done",
 		"tapToComplete": "Tap to complete",
+		"pending": "Pending",
 		"completed": "Completed",
 		"noPendingTasks": "No pending tasks for this day",
 		"noCompletedTasks": "No completed tasks yet",
