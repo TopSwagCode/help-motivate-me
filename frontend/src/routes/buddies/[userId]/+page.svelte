@@ -7,7 +7,9 @@
 		getBuddyTodayView,
 		getBuddyJournal,
 		createBuddyJournalEntry,
-		uploadBuddyJournalImage
+		uploadBuddyJournalImage,
+		addBuddyJournalReaction,
+		removeBuddyJournalReaction
 	} from '$lib/api/buddies';
 	import { processMultipleImages, formatFileSize } from '$lib/utils/imageProcessing';
 	import TodayViewContent from '$lib/components/today/TodayViewContent.svelte';
@@ -306,6 +308,43 @@
 		}
 	}
 
+	// Reaction handlers
+	async function handleAddReaction(entryId: string, emoji: string) {
+		try {
+			const reaction = await addBuddyJournalReaction($page.params.userId!, entryId, emoji);
+			// Update local state
+			journalEntries = journalEntries.map(entry => {
+				if (entry.id === entryId) {
+					return {
+						...entry,
+						reactions: [...(entry.reactions || []), reaction]
+					};
+				}
+				return entry;
+			});
+		} catch (e) {
+			console.error('Failed to add reaction:', e);
+		}
+	}
+
+	async function handleRemoveReaction(entryId: string, reactionId: string) {
+		try {
+			await removeBuddyJournalReaction($page.params.userId!, entryId, reactionId);
+			// Update local state
+			journalEntries = journalEntries.map(entry => {
+				if (entry.id === entryId) {
+					return {
+						...entry,
+						reactions: (entry.reactions || []).filter(r => r.id !== reactionId)
+					};
+				}
+				return entry;
+			});
+		} catch (e) {
+			console.error('Failed to remove reaction:', e);
+		}
+	}
+
 	// Get display name from todayData
 	const userDisplayName = $derived(todayData?.userDisplayName ?? 'User');
 </script>
@@ -445,6 +484,8 @@
 						currentUserId={$auth.user?.id}
 						onCreateEntry={openCreateModal}
 						onOpenLightbox={openLightbox}
+						onAddReaction={handleAddReaction}
+						onRemoveReaction={handleRemoveReaction}
 					/>
 				{/if}
 			{/if}

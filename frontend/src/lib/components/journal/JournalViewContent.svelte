@@ -2,13 +2,14 @@
 	import { t, locale } from 'svelte-i18n';
 	import { get } from 'svelte/store';
 	import type { JournalEntry, JournalImage, JournalReaction } from '$lib/types';
-	import type { BuddyJournalEntry, BuddyJournalImage } from '$lib/types/buddy';
+	import type { BuddyJournalEntry, BuddyJournalImage, BuddyJournalReaction } from '$lib/types/buddy';
 	import JournalReactions from './JournalReactions.svelte';
 	import type { JournalFilter } from '$lib/api/journal';
 
 	// Unified type to accept both JournalEntry and BuddyJournalEntry
 	type EntryData = JournalEntry | BuddyJournalEntry;
 	type ImageData = JournalImage | BuddyJournalImage;
+	type ReactionData = JournalReaction | BuddyJournalReaction;
 
 	interface Props {
 		entries: EntryData[];
@@ -47,9 +48,12 @@
 		return 'habitStackId' in entry;
 	}
 
-	// Type guard to check if entry has reactions
-	function hasReactions(entry: EntryData): entry is JournalEntry {
-		return 'reactions' in entry && Array.isArray((entry as JournalEntry).reactions);
+	// Get reactions from entry (works for both JournalEntry and BuddyJournalEntry)
+	function getReactions(entry: EntryData): ReactionData[] {
+		if ('reactions' in entry && Array.isArray(entry.reactions)) {
+			return entry.reactions;
+		}
+		return [];
 	}
 
 	function formatRelativeDate(dateStr: string): string {
@@ -296,7 +300,7 @@
 				{#if onAddReaction && onRemoveReaction}
 					<div class="px-5 py-3 border-t-2 border-gray-100 bg-gray-50">
 						<JournalReactions
-							reactions={hasReactions(entry) ? (entry as JournalEntry).reactions : []}
+							reactions={getReactions(entry)}
 							{currentUserId}
 							onAddReaction={(emoji) => handleAddReaction(entry.id, emoji)}
 							onRemoveReaction={(reactionId) => handleRemoveReaction(entry.id, reactionId)}

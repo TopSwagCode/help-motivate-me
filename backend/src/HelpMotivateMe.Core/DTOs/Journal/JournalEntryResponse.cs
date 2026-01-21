@@ -12,6 +12,7 @@ public record JournalEntryResponse(
     Guid? AuthorUserId,
     string? AuthorDisplayName,
     IEnumerable<JournalImageResponse> Images,
+    IEnumerable<JournalReactionResponse> Reactions,
     DateTime CreatedAt,
     DateTime UpdatedAt
 );

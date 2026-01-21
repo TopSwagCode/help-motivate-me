@@ -677,7 +677,9 @@
 		"reactions": {
 			"addReaction": "Add reaction",
 			"moreEmojis": "More emojis",
-			"react": "React"
+			"react": "React",
+			"from": "from",
+			"clickToRemove": "Click to remove"
 		},
 		"emptyFriendsTitle": "No entries from friends yet",
 		"emptyFriendsDescription": "When your accountability buddies write journal entries, they'll appear here."

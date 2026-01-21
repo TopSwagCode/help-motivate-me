@@ -5,6 +5,7 @@ import type {
 	BuddyTodayViewResponse,
 	BuddyJournalEntry,
 	BuddyJournalImage,
+	BuddyJournalReaction,
 	CreateBuddyJournalEntryRequest,
 	BuddyLoginResponse
 } from '$lib/types';
@@ -51,4 +52,21 @@ export async function uploadBuddyJournalImage(
 	file: File
 ): Promise<BuddyJournalImage> {
 	return apiUpload<BuddyJournalImage>(`/buddies/${userId}/journal/${entryId}/images`, file);
+}
+
+// Buddy Journal Reaction APIs
+export async function addBuddyJournalReaction(
+	userId: string,
+	entryId: string,
+	emoji: string
+): Promise<BuddyJournalReaction> {
+	return apiPost<BuddyJournalReaction>(`/buddies/${userId}/journal/${entryId}/reactions`, { emoji });
+}
+
+export async function removeBuddyJournalReaction(
+	userId: string,
+	entryId: string,
+	reactionId: string
+): Promise<void> {
+	return apiDelete<void>(`/buddies/${userId}/journal/${entryId}/reactions/${reactionId}`);
 }

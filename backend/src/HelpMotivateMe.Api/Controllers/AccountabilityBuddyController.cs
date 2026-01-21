@@ -270,6 +270,8 @@ public class AccountabilityBuddyController : ControllerBase
         var entries = await _db.JournalEntries
             .Include(j => j.Author)
             .Include(j => j.Images.OrderBy(i => i.SortOrder))
+            .Include(j => j.Reactions)
+                .ThenInclude(r => r.User)
             .Where(j => j.UserId == targetUserId)
             .OrderByDescending(j => j.EntryDate)
             .ThenByDescending(j => j.CreatedAt)
@@ -283,6 +285,7 @@ public class AccountabilityBuddyController : ControllerBase
             j.AuthorUserId,
             j.Author != null ? j.Author.DisplayName ?? j.Author.Username : null,
             j.Images.Select(i => new BuddyJournalImageResponse(i.Id, i.FileName, _storage.GetPresignedUrl(i.S3Key), i.SortOrder)).ToList(),
+            j.Reactions.Select(r => new BuddyJournalReactionResponse(r.Id, r.Emoji, r.UserId, r.User.DisplayName ?? r.User.Username, r.CreatedAt)).ToList(),
             j.CreatedAt
         )).ToList();
 
@@ -346,6 +349,7 @@ public class AccountabilityBuddyController : ControllerBase
             entry.AuthorUserId,
             authorName,
             new List<BuddyJournalImageResponse>(),
+            new List<BuddyJournalReactionResponse>(),
             entry.CreatedAt
         ));
     }
@@ -439,6 +443,100 @@ public class AccountabilityBuddyController : ControllerBase
             _storage.GetPresignedUrl(image.S3Key),
             image.SortOrder
         ));
+    }
+
+    /// <summary>
+    /// Add a reaction to a buddy's journal entry.
+    /// </summary>
+    [HttpPost("{targetUserId:guid}/journal/{entryId:guid}/reactions")]
+    public async Task<ActionResult<BuddyJournalReactionResponse>> AddBuddyJournalReaction(
+        Guid targetUserId,
+        Guid entryId,
+        [FromBody] AddBuddyJournalReactionRequest request)
+    {
+        var userId = GetUserId();
+
+        // Verify buddy relationship exists
+        var isBuddy = await _db.AccountabilityBuddies
+            .AnyAsync(ab => ab.UserId == targetUserId && ab.BuddyUserId == userId);
+
+        if (!isBuddy)
+        {
+            return Forbid();
+        }
+
+        // Verify the entry exists and belongs to the target user
+        var entry = await _db.JournalEntries
+            .FirstOrDefaultAsync(j => j.Id == entryId && j.UserId == targetUserId);
+
+        if (entry == null)
+        {
+            return NotFound(new { message = "Journal entry not found" });
+        }
+
+        // Check if user already reacted with this emoji
+        var existingReaction = await _db.JournalReactions
+            .FirstOrDefaultAsync(r => r.JournalEntryId == entryId && r.UserId == userId && r.Emoji == request.Emoji);
+
+        if (existingReaction != null)
+        {
+            return BadRequest(new { message = "You have already added this reaction" });
+        }
+
+        var user = await _db.Users.FindAsync(userId);
+
+        var reaction = new JournalReaction
+        {
+            JournalEntryId = entryId,
+            UserId = userId,
+            Emoji = request.Emoji
+        };
+
+        _db.JournalReactions.Add(reaction);
+        await _db.SaveChangesAsync();
+
+        return Ok(new BuddyJournalReactionResponse(
+            reaction.Id,
+            reaction.Emoji,
+            reaction.UserId,
+            user!.DisplayName ?? user.Username,
+            reaction.CreatedAt
+        ));
+    }
+
+    /// <summary>
+    /// Remove a reaction from a buddy's journal entry (only own reactions).
+    /// </summary>
+    [HttpDelete("{targetUserId:guid}/journal/{entryId:guid}/reactions/{reactionId:guid}")]
+    public async Task<IActionResult> RemoveBuddyJournalReaction(
+        Guid targetUserId,
+        Guid entryId,
+        Guid reactionId)
+    {
+        var userId = GetUserId();
+
+        // Verify buddy relationship exists
+        var isBuddy = await _db.AccountabilityBuddies
+            .AnyAsync(ab => ab.UserId == targetUserId && ab.BuddyUserId == userId);
+
+        if (!isBuddy)
+        {
+            return Forbid();
+        }
+
+        // Only allow removing own reactions
+        var reaction = await _db.JournalReactions
+            .FirstOrDefaultAsync(r => r.Id == reactionId && r.JournalEntryId == entryId && r.UserId == userId);
+
+        if (reaction == null)
+        {
+            return NotFound();
+        }
+
+        _db.JournalReactions.Remove(reaction);
+        await _db.SaveChangesAsync();
+
+        return NoContent();
     }
 
     // Helper methods copied from TodayController for consistency
@@ -662,6 +760,7 @@ public record BuddyJournalEntryResponse(
     Guid? AuthorUserId,
     string? AuthorDisplayName,
     List<BuddyJournalImageResponse> Images,
+    List<BuddyJournalReactionResponse> Reactions,
     DateTime CreatedAt
 );
 
@@ -670,6 +769,18 @@ public record BuddyJournalImageResponse(
     string FileName,
     string Url,
     int SortOrder
+);
+
+public record BuddyJournalReactionResponse(
+    Guid Id,
+    string Emoji,
+    Guid UserId,
+    string UserDisplayName,
+    DateTime CreatedAt
+);
+
+public record AddBuddyJournalReactionRequest(
+    string Emoji
 );
 
 public record CreateBuddyJournalEntryRequest(

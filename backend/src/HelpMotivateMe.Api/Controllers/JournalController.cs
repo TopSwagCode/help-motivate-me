@@ -43,6 +43,8 @@ public class JournalController : ControllerBase
             .Include(j => j.TaskItem)
             .Include(j => j.Author)
             .Include(j => j.Images.OrderBy(i => i.SortOrder))
+            .Include(j => j.Reactions)
+                .ThenInclude(r => r.User)
             .Where(j => j.UserId == userId)
             .OrderByDescending(j => j.EntryDate)
             .ThenByDescending(j => j.CreatedAt)
@@ -61,6 +63,8 @@ public class JournalController : ControllerBase
             .Include(j => j.TaskItem)
             .Include(j => j.Author)
             .Include(j => j.Images.OrderBy(i => i.SortOrder))
+            .Include(j => j.Reactions)
+                .ThenInclude(r => r.User)
             .FirstOrDefaultAsync(j => j.Id == id && j.UserId == userId);
 
         if (entry == null) return NotFound();
@@ -278,6 +282,75 @@ public class JournalController : ControllerBase
         return NoContent();
     }
 
+    // Reaction endpoints
+    [HttpPost("{entryId:guid}/reactions")]
+    public async Task<ActionResult<JournalReactionResponse>> AddReaction(Guid entryId, [FromBody] AddJournalReactionRequest request)
+    {
+        var userId = GetUserId();
+
+        // Verify the entry exists and user has access (either owns it or is a buddy)
+        var entry = await _db.JournalEntries
+            .FirstOrDefaultAsync(j => j.Id == entryId && j.UserId == userId);
+
+        // If not own entry, check if user is a buddy of the entry owner
+        if (entry == null)
+        {
+            entry = await _db.JournalEntries
+                .Where(j => j.Id == entryId)
+                .Where(j => _db.AccountabilityBuddies.Any(b => 
+                    b.UserId == j.UserId && b.BuddyUserId == userId))
+                .FirstOrDefaultAsync();
+        }
+
+        if (entry == null) return NotFound();
+
+        // Check if user already reacted with this emoji
+        var existingReaction = await _db.JournalReactions
+            .FirstOrDefaultAsync(r => r.JournalEntryId == entryId && r.UserId == userId && r.Emoji == request.Emoji);
+
+        if (existingReaction != null)
+        {
+            return BadRequest(new { message = "You have already added this reaction" });
+        }
+
+        var user = await _db.Users.FindAsync(userId);
+
+        var reaction = new JournalReaction
+        {
+            JournalEntryId = entryId,
+            UserId = userId,
+            Emoji = request.Emoji
+        };
+
+        _db.JournalReactions.Add(reaction);
+        await _db.SaveChangesAsync();
+
+        return Ok(new JournalReactionResponse(
+            reaction.Id,
+            reaction.Emoji,
+            reaction.UserId,
+            user!.DisplayName ?? user.Username,
+            reaction.CreatedAt
+        ));
+    }
+
+    [HttpDelete("{entryId:guid}/reactions/{reactionId:guid}")]
+    public async Task<IActionResult> RemoveReaction(Guid entryId, Guid reactionId)
+    {
+        var userId = GetUserId();
+
+        // Only allow removing own reactions
+        var reaction = await _db.JournalReactions
+            .FirstOrDefaultAsync(r => r.Id == reactionId && r.JournalEntryId == entryId && r.UserId == userId);
+
+        if (reaction == null) return NotFound();
+
+        _db.JournalReactions.Remove(reaction);
+        await _db.SaveChangesAsync();
+
+        return NoContent();
+    }
+
     // Endpoints to get linkable items for dropdowns
     [HttpGet("linkable/habit-stacks")]
     public async Task<ActionResult<List<LinkableHabitStackResponse>>> GetLinkableHabitStacks()
@@ -346,6 +419,13 @@ public class JournalController : ControllerBase
                 i.FileName,
                 _storage.GetPresignedUrl(i.S3Key),
                 i.SortOrder
+            )),
+            entry.Reactions.Select(r => new JournalReactionResponse(
+                r.Id,
+                r.Emoji,
+                r.UserId,
+                r.User.DisplayName ?? r.User.Username,
+                r.CreatedAt
             )),
             entry.CreatedAt,
             entry.UpdatedAt

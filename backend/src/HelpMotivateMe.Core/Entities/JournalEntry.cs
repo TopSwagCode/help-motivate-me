@@ -24,4 +24,5 @@ public class JournalEntry
     public HabitStack? HabitStack { get; set; }
     public TaskItem? TaskItem { get; set; }
     public ICollection<JournalImage> Images { get; set; } = [];
+    public ICollection<JournalReaction> Reactions { get; set; } = [];
 }

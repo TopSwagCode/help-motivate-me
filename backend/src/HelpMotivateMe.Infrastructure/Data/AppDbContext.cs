@@ -22,6 +22,7 @@ public class AppDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<EmailVerificationToken> EmailVerificationTokens => Set<EmailVerificationToken>();
     public DbSet<JournalEntry> JournalEntries => Set<JournalEntry>();
     public DbSet<JournalImage> JournalImages => Set<JournalImage>();
+    public DbSet<JournalReaction> JournalReactions => Set<JournalReaction>();
     public DbSet<AccountabilityBuddy> AccountabilityBuddies => Set<AccountabilityBuddy>();
     public DbSet<BuddyInviteToken> BuddyInviteTokens => Set<BuddyInviteToken>();
     public DbSet<WaitlistEntry> WaitlistEntries => Set<WaitlistEntry>();

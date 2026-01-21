@@ -80,6 +80,7 @@ export interface BuddyJournalEntry {
 	authorUserId: string | null;
 	authorDisplayName: string | null;
 	images: BuddyJournalImage[];
+	reactions: BuddyJournalReaction[];
 	createdAt: string;
 }
 
@@ -88,6 +89,14 @@ export interface BuddyJournalImage {
 	fileName: string;
 	url: string;
 	sortOrder: number;
+}
+
+export interface BuddyJournalReaction {
+	id: string;
+	emoji: string;
+	userId: string;
+	userDisplayName: string;
+	createdAt: string;
 }
 
 export interface CreateBuddyJournalEntryRequest {
