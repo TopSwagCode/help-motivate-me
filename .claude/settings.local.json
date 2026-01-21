@@ -8,7 +8,9 @@
       "Bash(dotnet test:*)",
       "Bash(./generate-migration.sh:*)",
       "Bash(npm run check:*)",
-      "Bash(npx svelte-check:*)"
+      "Bash(npx svelte-check:*)",
+      "Bash(git stash:*)",
+      "Bash(docker compose:*)"
     ]
   }
 }

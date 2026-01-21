@@ -12,6 +12,11 @@ RUN dotnet restore src/HelpMotivateMe.Api/HelpMotivateMe.Api.csproj
 
 # Copy everything else and build
 COPY src/ src/
+
+# Clean any stale obj/bin folders that may have been copied
+RUN find /src -type d -name "obj" -exec rm -rf {} + 2>/dev/null || true
+RUN find /src -type d -name "bin*" -exec rm -rf {} + 2>/dev/null || true
+
 WORKDIR /src/src/HelpMotivateMe.Api
 RUN dotnet build -c Release -o /app/build
 
