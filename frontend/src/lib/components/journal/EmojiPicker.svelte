@@ -60,6 +60,10 @@
 	}
 
 	// Calculate best position for the picker
+	// Use fixed height to prevent jumping when switching modes
+	const PICKER_WIDTH = 300;
+	const PICKER_HEIGHT = 220; // Fixed height for both modes
+
 	function calculatePosition() {
 		if (isMobile || !anchorElement) {
 			pickerStyle = '';
@@ -67,18 +71,16 @@
 		}
 
 		const rect = anchorElement.getBoundingClientRect();
-		const pickerWidth = 300;
-		const pickerHeight = showExtended ? 280 : 60;
 		const padding = 12;
 		const viewportWidth = window.innerWidth;
 		const viewportHeight = window.innerHeight;
 
 		let left = rect.left;
-		let top = rect.top - pickerHeight - padding;
+		let top = rect.top - PICKER_HEIGHT - padding;
 
 		// Adjust horizontal position if it would overflow
-		if (left + pickerWidth > viewportWidth - padding) {
-			left = viewportWidth - pickerWidth - padding;
+		if (left + PICKER_WIDTH > viewportWidth - padding) {
+			left = viewportWidth - PICKER_WIDTH - padding;
 		}
 		if (left < padding) {
 			left = padding;
@@ -90,8 +92,8 @@
 		}
 
 		// If still not enough space below, center vertically
-		if (top + pickerHeight > viewportHeight - padding) {
-			top = Math.max(padding, (viewportHeight - pickerHeight) / 2);
+		if (top + PICKER_HEIGHT > viewportHeight - padding) {
+			top = Math.max(padding, (viewportHeight - PICKER_HEIGHT) / 2);
 		}
 
 		pickerStyle = `left: ${left}px; top: ${top}px;`;
@@ -103,10 +105,6 @@
 		window.addEventListener('resize', checkMobile);
 		window.addEventListener('resize', calculatePosition);
 		window.addEventListener('scroll', calculatePosition, true);
-		
-		// Recalculate when extended state changes
-		const interval = setInterval(calculatePosition, 100);
-		setTimeout(() => clearInterval(interval), 500);
 	});
 
 	onDestroy(() => {
@@ -114,13 +112,6 @@
 			window.removeEventListener('resize', checkMobile);
 			window.removeEventListener('resize', calculatePosition);
 			window.removeEventListener('scroll', calculatePosition, true);
-		}
-	});
-
-	// Recalculate position when extended changes
-	$effect(() => {
-		if (showExtended !== undefined) {
-			setTimeout(calculatePosition, 10);
 		}
 	});
 
@@ -323,15 +314,15 @@
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<div 
 		bind:this={pickerRef}
-		class="emoji-picker-content fixed bg-white rounded-xl shadow-xl border border-gray-200 p-3"
-		style="min-width: 300px; z-index: 9999; {pickerStyle}"
+		class="emoji-picker-content fixed bg-white rounded-xl shadow-xl border border-gray-200 p-3 overflow-hidden"
+		style="width: 300px; height: 220px; z-index: 9999; {pickerStyle}"
 		onclick={(e) => e.stopPropagation()}
 		ontouchstart={(e) => e.stopPropagation()}
 	>
 		{#if !showExtended}
-			<!-- Quick emoji bar -->
-			<div class="quick-emojis">
-				<div class="flex items-center gap-1.5">
+			<!-- Quick emoji bar - centered in container -->
+			<div class="quick-emojis h-full flex flex-col justify-center">
+				<div class="flex items-center gap-1.5 justify-center">
 					{#each quickEmojis as emoji}
 						<button
 							type="button"
