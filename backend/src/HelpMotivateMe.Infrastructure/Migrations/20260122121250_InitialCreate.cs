@@ -36,11 +36,13 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                     PasswordHash = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     DisplayName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    IsEmailVerified = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
                     MembershipTier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Free"),
                     HasCompletedOnboarding = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    Role = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "User")
+                    Role = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "User"),
+                    PreferredLanguage = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "English")
                 },
                 constraints: table =>
                 {
@@ -98,6 +100,7 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                     output_tokens = table.Column<int>(type: "integer", nullable: false),
                     audio_duration_seconds = table.Column<int>(type: "integer", nullable: true),
                     estimated_cost_usd = table.Column<decimal>(type: "numeric(10,6)", precision: 10, scale: 6, nullable: false),
+                    actual_cost_usd = table.Column<decimal>(type: "numeric(10,6)", precision: 10, scale: 6, nullable: false),
                     request_type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -106,6 +109,28 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                     table.PrimaryKey("PK_ai_usage_logs", x => x.id);
                     table.ForeignKey(
                         name: "FK_ai_usage_logs_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "analytics_events",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    session_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    event_type = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    metadata = table.Column<string>(type: "jsonb", nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_analytics_events", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_analytics_events_users_user_id",
                         column: x => x.user_id,
                         principalTable: "users",
                         principalColumn: "Id",
@@ -166,25 +191,22 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "goals",
+                name: "EmailVerificationTokens",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    TargetDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    IsCompleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    SortOrder = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
+                    Token = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UsedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_goals", x => x.Id);
+                    table.PrimaryKey("PK_EmailVerificationTokens", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_goals_users_UserId",
+                        name: "FK_EmailVerificationTokens_users_UserId",
                         column: x => x.UserId,
                         principalTable: "users",
                         principalColumn: "Id",
@@ -208,6 +230,67 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                     table.PrimaryKey("PK_identities", x => x.Id);
                     table.ForeignKey(
                         name: "FK_identities_users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "notification_preferences",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    NotificationsEnabled = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    EmailEnabled = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    SmsEnabled = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    PhoneEnabled = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    HabitRemindersEnabled = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    GoalRemindersEnabled = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    DailyDigestEnabled = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    StreakAlertsEnabled = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    MotivationalQuotesEnabled = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    WeeklyReviewEnabled = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    BuddyUpdatesEnabled = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    SelectedDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 127),
+                    PreferredTimeSlot = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Morning"),
+                    CustomTimeStart = table.Column<TimeOnly>(type: "time without time zone", nullable: true),
+                    CustomTimeEnd = table.Column<TimeOnly>(type: "time without time zone", nullable: true),
+                    TimezoneId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false, defaultValue: "UTC"),
+                    UtcOffsetMinutes = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_notification_preferences", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_notification_preferences_users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PushSubscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Endpoint = table.Column<string>(type: "character varying(2048)", maxLength: 2048, nullable: false),
+                    P256dh = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    Auth = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    UserAgent = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUsedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PushSubscriptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PushSubscriptions_users_UserId",
                         column: x => x.UserId,
                         principalTable: "users",
                         principalColumn: "Id",
@@ -255,6 +338,39 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                         principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "goals",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    TargetDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    IsCompleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    SortOrder = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
+                    IdentityId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_goals", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_goals_identities_IdentityId",
+                        column: x => x.IdentityId,
+                        principalTable: "identities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_goals_users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -451,6 +567,33 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "journal_reactions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    JournalEntryId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Emoji = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_journal_reactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_journal_reactions_journal_entries_JournalEntryId",
+                        column: x => x.JournalEntryId,
+                        principalTable: "journal_entries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_journal_reactions_users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_accountability_buddies_BuddyUserId",
                 table: "accountability_buddies",
@@ -476,6 +619,31 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                 name: "IX_ai_usage_logs_user_id",
                 table: "ai_usage_logs",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_analytics_events_created_at",
+                table: "analytics_events",
+                column: "created_at");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_analytics_events_event_type",
+                table: "analytics_events",
+                column: "event_type");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_analytics_events_session_id",
+                table: "analytics_events",
+                column: "session_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_analytics_events_user_id",
+                table: "analytics_events",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_analytics_events_user_id_created_at",
+                table: "analytics_events",
+                columns: new[] { "user_id", "created_at" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_buddy_invite_tokens_BuddyUserId",
@@ -513,6 +681,16 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                 name: "IX_email_login_tokens_UserId",
                 table: "email_login_tokens",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmailVerificationTokens_UserId",
+                table: "EmailVerificationTokens",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_goals_IdentityId",
+                table: "goals",
+                column: "IdentityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_goals_UserId",
@@ -579,6 +757,44 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                 name: "IX_journal_images_JournalEntryId",
                 table: "journal_images",
                 column: "JournalEntryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_journal_reactions_JournalEntryId",
+                table: "journal_reactions",
+                column: "JournalEntryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_journal_reactions_JournalEntryId_UserId_Emoji",
+                table: "journal_reactions",
+                columns: new[] { "JournalEntryId", "UserId", "Emoji" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_journal_reactions_UserId",
+                table: "journal_reactions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_notification_preferences_UserId",
+                table: "notification_preferences",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PushSubscriptions_Endpoint",
+                table: "PushSubscriptions",
+                column: "Endpoint");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PushSubscriptions_UserId",
+                table: "PushSubscriptions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PushSubscriptions_UserId_Endpoint",
+                table: "PushSubscriptions",
+                columns: new[] { "UserId", "Endpoint" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_task_items_FullVersionTaskId",
@@ -651,6 +867,9 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                 name: "ai_usage_logs");
 
             migrationBuilder.DropTable(
+                name: "analytics_events");
+
+            migrationBuilder.DropTable(
                 name: "buddy_invite_tokens");
 
             migrationBuilder.DropTable(
@@ -660,10 +879,22 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                 name: "email_login_tokens");
 
             migrationBuilder.DropTable(
+                name: "EmailVerificationTokens");
+
+            migrationBuilder.DropTable(
                 name: "habit_stack_item_completions");
 
             migrationBuilder.DropTable(
                 name: "journal_images");
+
+            migrationBuilder.DropTable(
+                name: "journal_reactions");
+
+            migrationBuilder.DropTable(
+                name: "notification_preferences");
+
+            migrationBuilder.DropTable(
+                name: "PushSubscriptions");
 
             migrationBuilder.DropTable(
                 name: "user_external_logins");

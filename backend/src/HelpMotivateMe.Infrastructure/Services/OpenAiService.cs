@@ -52,8 +52,9 @@ public class OpenAiService : IOpenAiService
         // Estimate input tokens: chars / 4 (use ceiling to avoid underestimation for budget checks)
         var totalChars = systemPrompt.Length + messages.Sum(m => m.Content.Length);
         var estimatedInputTokens = (int)Math.Ceiling(totalChars / 4m);
-        // Assume output tokens = 3x input tokens (rough estimate for responses)
-        var estimatedOutputTokens = estimatedInputTokens * 3;
+        // Estimate output tokens: typically similar to or less than input for assistant responses
+        // Using 1.2x multiplier (was 3x which caused 7-10x overestimation)
+        var estimatedOutputTokens = (int)Math.Ceiling(estimatedInputTokens * 1.2m);
 
         return (estimatedInputTokens * InputCostPer1M / 1_000_000m) +
                (estimatedOutputTokens * OutputCostPer1M / 1_000_000m);

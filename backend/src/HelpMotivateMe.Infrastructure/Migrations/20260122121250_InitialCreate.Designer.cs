@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HelpMotivateMe.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260121125307_AddJournalReactions")]
-    partial class AddJournalReactions
+    [Migration("20260122121250_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,6 +61,11 @@ namespace HelpMotivateMe.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<decimal>("ActualCostUsd")
+                        .HasPrecision(10, 6)
+                        .HasColumnType("numeric(10,6)")
+                        .HasColumnName("actual_cost_usd");
 
                     b.Property<int?>("AudioDurationSeconds")
                         .HasColumnType("integer")
