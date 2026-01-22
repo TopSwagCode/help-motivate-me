@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from 'svelte-i18n';
 	import { createHabitStack } from '$lib/api/habitStacks';
 	import StackForm from '$lib/components/habit-stacks/StackForm.svelte';
 	import type { CreateHabitStackRequest } from '$lib/types';
@@ -32,26 +33,25 @@
 			<div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
 				<span class="text-2xl">🔗</span>
 			</div>
-			<h2 class="text-xl font-semibold text-gray-900">Build Habit Stacks</h2>
+			<h2 class="text-xl font-semibold text-gray-900">{$t('onboarding.manual.habitStack.title')}</h2>
 		</div>
 
 		<div class="prose prose-sm text-gray-600">
 			<p class="mb-3">
-				<strong>Habit stacking</strong> is one of the most effective strategies for building new
-				habits. The idea is simple: link a new habit to an existing one.
+				{@html $t('onboarding.manual.habitStack.intro')}
 			</p>
-			<p class="mb-3">The formula is:</p>
+			<p class="mb-3">{$t('onboarding.manual.habitStack.formula')}</p>
 			<div class="bg-gray-50 rounded-lg p-3 my-3 text-center font-medium">
-				"After I [CURRENT HABIT], I will [NEW HABIT]."
+				{$t('onboarding.manual.habitStack.formulaText')}
 			</div>
-			<p class="mb-3 text-sm">For example:</p>
+			<p class="mb-3 text-sm">{$t('onboarding.manual.habitStack.examplesIntro')}</p>
 			<ul class="list-disc list-inside space-y-1 text-sm">
-				<li>After I pour my morning coffee, I will meditate for 5 minutes.</li>
-				<li>After I finish lunch, I will write in my journal.</li>
-				<li>After I sit down at my desk, I will review my goals.</li>
+				<li>{$t('onboarding.manual.habitStack.examples.coffee')}</li>
+				<li>{$t('onboarding.manual.habitStack.examples.lunch')}</li>
+				<li>{$t('onboarding.manual.habitStack.examples.desk')}</li>
 			</ul>
 			<p class="mt-3 text-sm">
-				You can chain multiple habits together to create a powerful routine!
+				{$t('onboarding.manual.habitStack.chainHabits')}
 			</p>
 		</div>
 	</div>
@@ -64,7 +64,7 @@
 					<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
 				</svg>
 				<span class="text-green-700">
-					Habit stack "<strong>{createdStack}</strong>" created!
+					{@html $t('onboarding.manual.habitStack.created', { values: { name: `<strong>${createdStack}</strong>` } })}
 				</span>
 			</div>
 		</div>
@@ -85,7 +85,7 @@
 							d="M12 4v16m8-8H4"
 						/>
 					</svg>
-					Create My First Habit Stack
+					{$t('onboarding.manual.habitStack.createFirst')}
 				</button>
 			{:else}
 				<button onclick={() => (showForm = true)} class="btn-secondary w-full">
@@ -97,7 +97,7 @@
 							d="M12 4v16m8-8H4"
 						/>
 					</svg>
-					Create Another Habit Stack
+					{$t('onboarding.manual.habitStack.createAnother')}
 				</button>
 			{/if}
 
@@ -111,10 +111,10 @@
 							d="M15 19l-7-7 7-7"
 						/>
 					</svg>
-					Back
+					{$t('onboarding.manual.habitStack.back')}
 				</button>
 				<button onclick={onnext} class="btn-primary flex-1">
-					{createdStack ? 'Continue' : 'Skip & Continue'}
+					{createdStack ? $t('onboarding.manual.habitStack.continue') : $t('onboarding.manual.habitStack.skipContinue')}
 					<svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
 							stroke-linecap="round"

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from 'svelte-i18n';
 	import { createIdentity } from '$lib/api/identities';
 	import IdentityForm from '$lib/components/identities/IdentityForm.svelte';
 	import type { CreateIdentityRequest } from '$lib/types';
@@ -31,25 +32,23 @@
 			<div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
 				<span class="text-2xl">🎯</span>
 			</div>
-			<h2 class="text-xl font-semibold text-gray-900">Create Your Identity</h2>
+			<h2 class="text-xl font-semibold text-gray-900">{$t('onboarding.manual.identity.title')}</h2>
 		</div>
 
 		<div class="prose prose-sm text-gray-600">
 			<p class="mb-3">
-				<strong>Who do you want to become?</strong> Identity-based habits are the most powerful
-				way to change your behavior.
+				{@html $t('onboarding.manual.identity.intro')}
 			</p>
 			<p class="mb-3">
-				Instead of focusing on <em>what</em> you want to achieve, focus on <em>who</em> you want
-				to become. For example:
+				{@html $t('onboarding.manual.identity.explanation')}
 			</p>
 			<ul class="list-disc list-inside space-y-1 text-sm">
-				<li>"I am a healthy person" (not just "I want to lose weight")</li>
-				<li>"I am a writer" (not just "I want to write a book")</li>
-				<li>"I am an early riser" (not just "I want to wake up early")</li>
+				<li>{$t('onboarding.manual.identity.examples.healthy')}</li>
+				<li>{$t('onboarding.manual.identity.examples.writer')}</li>
+				<li>{$t('onboarding.manual.identity.examples.earlyRiser')}</li>
 			</ul>
 			<p class="mt-3 text-sm">
-				Every action you take is a vote for the type of person you want to become.
+				{$t('onboarding.manual.identity.everyAction')}
 			</p>
 		</div>
 	</div>
@@ -62,7 +61,7 @@
 					<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
 				</svg>
 				<span class="text-green-700">
-					Identity "<strong>{createdIdentity}</strong>" created!
+					{@html $t('onboarding.manual.identity.created', { values: { name: `<strong>${createdIdentity}</strong>` } })}
 				</span>
 			</div>
 		</div>
@@ -83,7 +82,7 @@
 							d="M12 4v16m8-8H4"
 						/>
 					</svg>
-					Create My First Identity
+					{$t('onboarding.manual.identity.createFirst')}
 				</button>
 			{:else}
 				<button onclick={() => (showForm = true)} class="btn-secondary w-full">
@@ -95,13 +94,13 @@
 							d="M12 4v16m8-8H4"
 						/>
 					</svg>
-					Create Another Identity
+					{$t('onboarding.manual.identity.createAnother')}
 				</button>
 			{/if}
 
 			<div class="flex gap-3">
 				<button onclick={onnext} class="btn-primary flex-1">
-					{createdIdentity ? 'Continue' : 'Skip & Continue'}
+					{createdIdentity ? $t('onboarding.manual.identity.continue') : $t('onboarding.manual.identity.skipContinue')}
 					<svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
 							stroke-linecap="round"

@@ -153,7 +153,78 @@
 			"goToDashboard": "Go to Dashboard"
 		},
 		"progress": {
-			"step": "Step {current} of {total}"
+			"step": "Step {current} of {total}",
+			"stepDescription": "Step {current} of {total}: {description}"
+		},
+		"wizard": {
+			"title": "Welcome to HelpMotivateMe",
+			"skipForNow": "Skip for now",
+			"steps": {
+				"identity": {
+					"title": "Identity",
+					"description": "Define who you want to become"
+				},
+				"habitStacks": {
+					"title": "Habit Stacks",
+					"description": "Build powerful habit chains"
+				},
+				"goals": {
+					"title": "Goals",
+					"description": "Set meaningful objectives"
+				}
+			}
+		},
+		"manual": {
+			"identity": {
+				"title": "Create Your Identity",
+				"intro": "<strong>Who do you want to become?</strong> Identity-based habits are the most powerful way to change your behavior.",
+				"explanation": "Instead of focusing on <em>what</em> you want to achieve, focus on <em>who</em> you want to become. For example:",
+				"examples": {
+					"healthy": "\"I am a healthy person\" (not just \"I want to lose weight\")",
+					"writer": "\"I am a writer\" (not just \"I want to write a book\")",
+					"earlyRiser": "\"I am an early riser\" (not just \"I want to wake up early\")"
+				},
+				"everyAction": "Every action you take is a vote for the type of person you want to become.",
+				"created": "Identity \"{name}\" created!",
+				"createFirst": "Create My First Identity",
+				"createAnother": "Create Another Identity",
+				"continue": "Continue",
+				"skipContinue": "Skip & Continue"
+			},
+			"habitStack": {
+				"title": "Build Habit Stacks",
+				"intro": "<strong>Habit stacking</strong> is one of the most effective strategies for building new habits. The idea is simple: link a new habit to an existing one.",
+				"formula": "The formula is:",
+				"formulaText": "\"After I [CURRENT HABIT], I will [NEW HABIT].\"",
+				"examplesIntro": "For example:",
+				"examples": {
+					"coffee": "After I pour my morning coffee, I will meditate for 5 minutes.",
+					"lunch": "After I finish lunch, I will write in my journal.",
+					"desk": "After I sit down at my desk, I will review my goals."
+				},
+				"chainHabits": "You can chain multiple habits together to create a powerful routine!",
+				"created": "Habit stack \"{name}\" created!",
+				"createFirst": "Create My First Habit Stack",
+				"createAnother": "Create Another Habit Stack",
+				"back": "Back",
+				"continue": "Continue",
+				"skipContinue": "Skip & Continue"
+			},
+			"goals": {
+				"title": "Set Your Goals",
+				"intro": "<strong>Goals give direction to your efforts.</strong> They help you focus on what truly matters and track your progress over time.",
+				"greatGoals": "Great goals are:",
+				"specific": "<strong>Specific</strong> - Clear and well-defined",
+				"meaningful": "<strong>Meaningful</strong> - Connected to your identity",
+				"actionable": "<strong>Actionable</strong> - Can be broken into tasks",
+				"addTasks": "You can add tasks to each goal later to break them down into manageable steps.",
+				"created": "Goal \"{name}\" created!",
+				"createFirst": "Create My First Goal",
+				"createAnother": "Create Another Goal",
+				"back": "Back",
+				"completeSetup": "Complete Setup",
+				"skipFinish": "Skip & Finish"
+			}
 		},
 		"welcome": {
 			"title": "Welcome to HelpMotivateMe!",

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from 'svelte-i18n';
 	import { createGoal } from '$lib/api/goals';
 	import GoalForm from '$lib/components/goals/GoalForm.svelte';
 	import type { CreateGoalRequest } from '$lib/types';
@@ -32,22 +33,21 @@
 			<div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
 				<span class="text-2xl">🎯</span>
 			</div>
-			<h2 class="text-xl font-semibold text-gray-900">Set Your Goals</h2>
+			<h2 class="text-xl font-semibold text-gray-900">{$t('onboarding.manual.goals.title')}</h2>
 		</div>
 
 		<div class="prose prose-sm text-gray-600">
 			<p class="mb-3">
-				<strong>Goals give direction to your efforts.</strong> They help you focus on what truly
-				matters and track your progress over time.
+				{@html $t('onboarding.manual.goals.intro')}
 			</p>
-			<p class="mb-3">Great goals are:</p>
+			<p class="mb-3">{$t('onboarding.manual.goals.greatGoals')}</p>
 			<ul class="list-disc list-inside space-y-1 text-sm">
-				<li><strong>Specific</strong> - Clear and well-defined</li>
-				<li><strong>Meaningful</strong> - Connected to your identity</li>
-				<li><strong>Actionable</strong> - Can be broken into tasks</li>
+				<li>{@html $t('onboarding.manual.goals.specific')}</li>
+				<li>{@html $t('onboarding.manual.goals.meaningful')}</li>
+				<li>{@html $t('onboarding.manual.goals.actionable')}</li>
 			</ul>
 			<p class="mt-3 text-sm">
-				You can add tasks to each goal later to break them down into manageable steps.
+				{$t('onboarding.manual.goals.addTasks')}
 			</p>
 		</div>
 	</div>
@@ -60,7 +60,7 @@
 					<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
 				</svg>
 				<span class="text-green-700">
-					Goal "<strong>{createdGoal}</strong>" created!
+					{@html $t('onboarding.manual.goals.created', { values: { name: `<strong>${createdGoal}</strong>` } })}
 				</span>
 			</div>
 		</div>
@@ -81,7 +81,7 @@
 							d="M12 4v16m8-8H4"
 						/>
 					</svg>
-					Create My First Goal
+					{$t('onboarding.manual.goals.createFirst')}
 				</button>
 			{:else}
 				<button onclick={() => (showForm = true)} class="btn-secondary w-full">
@@ -93,7 +93,7 @@
 							d="M12 4v16m8-8H4"
 						/>
 					</svg>
-					Create Another Goal
+					{$t('onboarding.manual.goals.createAnother')}
 				</button>
 			{/if}
 
@@ -107,10 +107,10 @@
 							d="M15 19l-7-7 7-7"
 						/>
 					</svg>
-					Back
+					{$t('onboarding.manual.goals.back')}
 				</button>
 				<button onclick={oncomplete} class="btn-primary flex-1">
-					{createdGoal ? 'Complete Setup' : 'Skip & Finish'}
+					{createdGoal ? $t('onboarding.manual.goals.completeSetup') : $t('onboarding.manual.goals.skipFinish')}
 					<svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
 							stroke-linecap="round"

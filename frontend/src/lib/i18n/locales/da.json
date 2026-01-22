@@ -153,7 +153,78 @@
 			"goToDashboard": "Gå til dashboard"
 		},
 		"progress": {
-			"step": "Trin {current} af {total}"
+			"step": "Trin {current} af {total}",
+			"stepDescription": "Trin {current} af {total}: {description}"
+		},
+		"wizard": {
+			"title": "Velkommen til HelpMotivateMe",
+			"skipForNow": "Spring over for nu",
+			"steps": {
+				"identity": {
+					"title": "Identitet",
+					"description": "Definer hvem du vil blive"
+				},
+				"habitStacks": {
+					"title": "Vanestakke",
+					"description": "Byg kraftfulde vanekæder"
+				},
+				"goals": {
+					"title": "Mål",
+					"description": "Sæt meningsfulde mål"
+				}
+			}
+		},
+		"manual": {
+			"identity": {
+				"title": "Skab din identitet",
+				"intro": "<strong>Hvem vil du blive?</strong> Identitetsbaserede vaner er den mest kraftfulde måde at ændre din adfærd på.",
+				"explanation": "I stedet for at fokusere på <em>hvad</em> du vil opnå, fokuser på <em>hvem</em> du vil blive. For eksempel:",
+				"examples": {
+					"healthy": "\"Jeg er en sund person\" (ikke bare \"Jeg vil tabe mig\")",
+					"writer": "\"Jeg er en forfatter\" (ikke bare \"Jeg vil skrive en bog\")",
+					"earlyRiser": "\"Jeg er en morgenfugl\" (ikke bare \"Jeg vil stå tidligt op\")"
+				},
+				"everyAction": "Hver handling du tager, er en stemme for den type person, du vil blive.",
+				"created": "Identitet \"{name}\" oprettet!",
+				"createFirst": "Opret min første identitet",
+				"createAnother": "Opret endnu en identitet",
+				"continue": "Fortsæt",
+				"skipContinue": "Spring over & fortsæt"
+			},
+			"habitStack": {
+				"title": "Byg vanestakke",
+				"intro": "<strong>Vanestabling</strong> er en af de mest effektive strategier til at opbygge nye vaner. Ideen er simpel: knyt en ny vane til en eksisterende.",
+				"formula": "Formlen er:",
+				"formulaText": "\"Efter jeg [NUVÆRENDE VANE], vil jeg [NY VANE].\"",
+				"examplesIntro": "For eksempel:",
+				"examples": {
+					"coffee": "Efter jeg hælder min morgenkaffe, vil jeg meditere i 5 minutter.",
+					"lunch": "Efter jeg er færdig med frokost, vil jeg skrive i min dagbog.",
+					"desk": "Efter jeg sætter mig ved mit skrivebord, vil jeg gennemgå mine mål."
+				},
+				"chainHabits": "Du kan kæde flere vaner sammen for at skabe en kraftfuld rutine!",
+				"created": "Vanestak \"{name}\" oprettet!",
+				"createFirst": "Opret min første vanestak",
+				"createAnother": "Opret endnu en vanestak",
+				"back": "Tilbage",
+				"continue": "Fortsæt",
+				"skipContinue": "Spring over & fortsæt"
+			},
+			"goals": {
+				"title": "Sæt dine mål",
+				"intro": "<strong>Mål giver retning til din indsats.</strong> De hjælper dig med at fokusere på det, der virkelig betyder noget, og spore dine fremskridt over tid.",
+				"greatGoals": "Gode mål er:",
+				"specific": "<strong>Specifikke</strong> - Klare og veldefinerede",
+				"meaningful": "<strong>Meningsfulde</strong> - Forbundet med din identitet",
+				"actionable": "<strong>Handlingsorienterede</strong> - Kan opdeles i opgaver",
+				"addTasks": "Du kan tilføje opgaver til hvert mål senere for at opdele dem i håndterbare trin.",
+				"created": "Mål \"{name}\" oprettet!",
+				"createFirst": "Opret mit første mål",
+				"createAnother": "Opret endnu et mål",
+				"back": "Tilbage",
+				"completeSetup": "Fuldfør opsætning",
+				"skipFinish": "Spring over & afslut"
+			}
 		},
 		"welcome": {
 			"title": "Velkommen til HelpMotivateMe!",
