@@ -1,5 +1,6 @@
 import { apiGet, apiPatch, apiPost, apiDelete } from './client';
 import type { AdminStats, AdminUser, DailyStats, UpdateRoleRequest, UserActivity } from '$lib/types';
+import type { AiUsageStats, AiUsageLog, PaginatedResponse } from '$lib/types/admin';
 import type { WaitlistEntry, WhitelistEntry, SignupSettingsResponse } from '$lib/types/waitlist';
 
 export async function getAdminStats(): Promise<AdminStats> {
@@ -199,4 +200,22 @@ export interface AnalyticsOverviewResponse {
 
 export async function getAnalyticsOverview(days: number = 30): Promise<AnalyticsOverviewResponse> {
 	return apiGet<AnalyticsOverviewResponse>(`/admin/analytics/overview?days=${days}`);
+}
+
+// AI Usage management
+export async function getAiUsageStats(): Promise<AiUsageStats> {
+	return apiGet<AiUsageStats>('/admin/ai-usage/stats');
+}
+
+export async function getAiUsageLogs(params?: {
+	page?: number;
+	pageSize?: number;
+}): Promise<PaginatedResponse<AiUsageLog>> {
+	const searchParams = new URLSearchParams();
+	if (params?.page) searchParams.set('page', params.page.toString());
+	if (params?.pageSize) searchParams.set('pageSize', params.pageSize.toString());
+
+	const queryString = searchParams.toString();
+	const endpoint = queryString ? `/admin/ai-usage?${queryString}` : '/admin/ai-usage';
+	return apiGet<PaginatedResponse<AiUsageLog>>(endpoint);
 }

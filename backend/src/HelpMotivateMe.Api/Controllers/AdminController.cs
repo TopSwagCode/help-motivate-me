@@ -20,12 +20,14 @@ public class AdminController : ControllerBase
     private readonly AppDbContext _db;
     private readonly IConfiguration _configuration;
     private readonly IEmailService _emailService;
+    private readonly IAiBudgetService _aiBudgetService;
 
-    public AdminController(AppDbContext db, IConfiguration configuration, IEmailService emailService)
+    public AdminController(AppDbContext db, IConfiguration configuration, IEmailService emailService, IAiBudgetService aiBudgetService)
     {
         _db = db;
         _configuration = configuration;
         _emailService = emailService;
+        _aiBudgetService = aiBudgetService;
     }
 
     [HttpGet("stats")]
@@ -665,6 +667,59 @@ public class AdminController : ControllerBase
             topEventTypes,
             dailyEvents,
             recentSessions
+        ));
+    }
+
+    // ==================== AI Usage ====================
+
+    [HttpGet("ai-usage/stats")]
+    public async Task<ActionResult<AiUsageStatsResponse>> GetAiUsageStats()
+    {
+        var stats = await _aiBudgetService.GetBudgetStatsAsync();
+        return Ok(new AiUsageStatsResponse(
+            stats.TotalEstimatedAllTime,
+            stats.TotalActualAllTime,
+            stats.TotalEstimatedLast30Days,
+            stats.TotalActualLast30Days,
+            stats.GlobalLimitLast30DaysUsd,
+            stats.PerUserLimitLast30DaysUsd
+        ));
+    }
+
+    [HttpGet("ai-usage")]
+    public async Task<ActionResult<PaginatedResponse<AiUsageLogResponse>>> GetAiUsageLogs(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 50)
+    {
+        var totalCount = await _db.AiUsageLogs.CountAsync();
+        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+        var logs = await _db.AiUsageLogs
+            .Include(l => l.User)
+            .OrderByDescending(l => l.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(l => new AiUsageLogResponse(
+                l.Id,
+                l.UserId,
+                l.User.Username,
+                l.Model,
+                l.InputTokens,
+                l.OutputTokens,
+                l.AudioDurationSeconds,
+                l.EstimatedCostUsd,
+                l.ActualCostUsd,
+                l.RequestType,
+                l.CreatedAt
+            ))
+            .ToListAsync();
+
+        return Ok(new PaginatedResponse<AiUsageLogResponse>(
+            logs,
+            totalCount,
+            page,
+            pageSize,
+            totalPages
         ));
     }
 
