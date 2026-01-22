@@ -9,7 +9,8 @@ public class AiUsageLog
     public int InputTokens { get; set; }
     public int OutputTokens { get; set; }
     public int? AudioDurationSeconds { get; set; }
-    public decimal EstimatedCostUsd { get; set; }
+    public decimal EstimatedCostUsd { get; set; }  // Pre-call estimate
+    public decimal ActualCostUsd { get; set; }     // Post-call actual
     public string RequestType { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

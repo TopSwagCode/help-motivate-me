@@ -63,3 +63,34 @@ export interface UserActivity {
 	lastWeek: UserActivityPeriod;
 	total: UserActivityPeriod;
 }
+
+export interface AiUsageStats {
+	totalEstimatedAllTime: number;
+	totalActualAllTime: number;
+	totalEstimatedLast30Days: number;
+	totalActualLast30Days: number;
+	globalLimitLast30DaysUsd: number;
+	perUserLimitLast30DaysUsd: number;
+}
+
+export interface AiUsageLog {
+	id: string;
+	userId: string;
+	username: string;
+	model: string;
+	inputTokens: number;
+	outputTokens: number;
+	audioDurationSeconds: number | null;
+	estimatedCostUsd: number;
+	actualCostUsd: number;
+	requestType: string;
+	createdAt: string;
+}
+
+export interface PaginatedResponse<T> {
+	items: T[];
+	totalCount: number;
+	page: number;
+	pageSize: number;
+	totalPages: number;
+}

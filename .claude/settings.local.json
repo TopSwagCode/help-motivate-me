@@ -10,7 +10,8 @@
       "Bash(npm run check:*)",
       "Bash(npx svelte-check:*)",
       "Bash(git stash:*)",
-      "Bash(docker compose:*)"
+      "Bash(docker compose:*)",
+      "Bash(dotnet ef migrations add:*)"
     ]
   }
 }

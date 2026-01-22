@@ -4,6 +4,7 @@ using AspNet.Security.OAuth.LinkedIn;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using HelpMotivateMe.Core.Interfaces;
+using HelpMotivateMe.Core.Options;
 using HelpMotivateMe.Infrastructure.Data;
 using HelpMotivateMe.Api.Services;
 using HelpMotivateMe.Infrastructure.Services;
@@ -50,6 +51,10 @@ builder.Services.AddSingleton<IStorageService, LocalFileStorageService>();
 
 // OpenAI Service
 builder.Services.AddHttpClient<IOpenAiService, OpenAiService>();
+
+// AI Budget Service
+builder.Services.Configure<AiBudgetOptions>(builder.Configuration.GetSection(AiBudgetOptions.SectionName));
+builder.Services.AddScoped<IAiBudgetService, AiBudgetService>();
 
 // Identity Score Service
 builder.Services.AddScoped<IdentityScoreService>();

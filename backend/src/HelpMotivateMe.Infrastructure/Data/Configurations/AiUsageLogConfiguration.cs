@@ -37,6 +37,10 @@ public class AiUsageLogConfiguration : IEntityTypeConfiguration<AiUsageLog>
             .HasColumnName("estimated_cost_usd")
             .HasPrecision(10, 6);
 
+        builder.Property(x => x.ActualCostUsd)
+            .HasColumnName("actual_cost_usd")
+            .HasPrecision(10, 6);
+
         builder.Property(x => x.RequestType)
             .HasColumnName("request_type")
             .HasMaxLength(50)
