@@ -24,6 +24,17 @@ services:
       - "8025:8025"  # Web UI
       - "1025:1025"  # SMTP
 
+  migrations:
+    build:
+      context: .
+      dockerfile: Dockerfile.migrations
+    container_name: helpmotivateme-migrations
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=helpmotivateme;Username=postgres;Password=postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   api:
     build:
       context: .
@@ -44,6 +55,8 @@ services:
         condition: service_healthy
       mailpit:
         condition: service_started
+      migrations:
+        condition: service_completed_successfully
 
 volumes:
   postgres_data:

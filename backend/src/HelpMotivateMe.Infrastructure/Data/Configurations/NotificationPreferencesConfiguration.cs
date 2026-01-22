@@ -34,9 +34,11 @@ public class NotificationPreferencesConfiguration : IEntityTypeConfiguration<Not
         builder.Property(np => np.BuddyUpdatesEnabled).HasDefaultValue(true);
 
         // Schedule - Days (store as integer for bit flags)
+        // HasSentinel tells EF: when value equals None (CLR default), use the DB default instead
         builder.Property(np => np.SelectedDays)
             .HasDefaultValue(NotificationDays.All)
-            .HasConversion<int>();
+            .HasConversion<int>()
+            .HasSentinel(NotificationDays.None);
 
         // Schedule - Time slot
         builder.Property(np => np.PreferredTimeSlot)
