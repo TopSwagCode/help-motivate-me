@@ -39,10 +39,10 @@ else
 fi
 
 # Run EF Core migrations
-#echo "Running EF Core migrations..."
+echo "Running EF Core migrations..."
 /root/.dotnet/tools/dotnet-ef database update \
     --project ../HelpMotivateMe.Infrastructure \
     --no-build \
     --configuration Release
 
-#echo "Migrations completed successfully."
+echo "Migrations completed successfully."
