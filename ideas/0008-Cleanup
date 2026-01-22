@@ -1,4 +1,1 @@
-Lets clean up code ALOT!. Eg. Stop using massive include statements and start using IQueryInterface instead that we looked at before! :) Make code cleaner and easier to use again.
-
-Skal fixe så onbparding er mere minimal og nemt som resten ai. 
-Skal fixe så edit / ai svar virker bedre
+AiBudgetExceededException is thrown from the service layer, but the API currently doesn’t appear to map this to a dedicated HTTP status (e.g., 429/403) or a consistent error payload. As-is, this is likely to surface as a generic 500 in non-streaming endpoints and an unstructured SSE error in streaming endpoints. Consider handling this exception explicitly (controller-level catch or global exception middleware) and returning a stable error contract.
