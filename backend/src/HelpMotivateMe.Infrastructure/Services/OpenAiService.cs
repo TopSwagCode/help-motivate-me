@@ -49,9 +49,9 @@ public class OpenAiService : IOpenAiService
 
     private static decimal EstimateChatCost(List<ChatMessage> messages, string systemPrompt)
     {
-        // Estimate input tokens: chars / 4
+        // Estimate input tokens: chars / 4 (use ceiling to avoid underestimation for budget checks)
         var totalChars = systemPrompt.Length + messages.Sum(m => m.Content.Length);
-        var estimatedInputTokens = totalChars / 4;
+        var estimatedInputTokens = (int)Math.Ceiling(totalChars / 4m);
         // Assume output tokens = 3x input tokens (rough estimate for responses)
         var estimatedOutputTokens = estimatedInputTokens * 3;
 
@@ -229,45 +229,65 @@ public class OpenAiService : IOpenAiService
         Guid userId,
         CancellationToken cancellationToken = default)
     {
-        // Get stream length for cost estimation (need to buffer since stream might not support Length)
-        using var memoryStream = new MemoryStream();
-        await audioStream.CopyToAsync(memoryStream, cancellationToken);
-        var audioLength = memoryStream.Length;
-        memoryStream.Position = 0;
+        // Get stream length for cost estimation, buffering only if necessary
+        Stream streamToUse;
+        MemoryStream? memoryStream = null;
+        long audioLength;
 
-        // Estimate cost and check budget BEFORE making the API call
-        var estimatedCost = EstimateWhisperCost(audioLength);
-        var budgetCheck = await _budgetService.CheckBudgetAsync(userId, estimatedCost, cancellationToken);
-        if (!budgetCheck.IsAllowed)
+        if (audioStream.CanSeek)
         {
-            throw new AiBudgetExceededException(budgetCheck.DenialReason ?? "Budget limit exceeded");
+            audioLength = audioStream.Length;
+            streamToUse = audioStream;
+        }
+        else
+        {
+            memoryStream = new MemoryStream();
+            await audioStream.CopyToAsync(memoryStream, cancellationToken);
+            audioLength = memoryStream.Length;
+            memoryStream.Position = 0;
+            streamToUse = memoryStream;
         }
 
-        using var content = new MultipartFormDataContent();
-        using var streamContent = new StreamContent(memoryStream);
+        try
+        {
+            // Estimate cost and check budget BEFORE making the API call
+            var estimatedCost = EstimateWhisperCost(audioLength);
+            var budgetCheck = await _budgetService.CheckBudgetAsync(userId, estimatedCost, cancellationToken);
+            if (!budgetCheck.IsAllowed)
+            {
+                throw new AiBudgetExceededException(budgetCheck.DenialReason ?? "Budget limit exceeded");
+            }
 
-        streamContent.Headers.ContentType = new MediaTypeHeaderValue("audio/webm");
-        content.Add(streamContent, "file", fileName);
-        content.Add(new StringContent(WhisperModel), "model");
-        content.Add(new StringContent("json"), "response_format");
+            using var content = new MultipartFormDataContent();
+            using var streamContent = new StreamContent(streamToUse);
 
-        var response = await _httpClient.PostAsync("audio/transcriptions", content, cancellationToken);
-        response.EnsureSuccessStatusCode();
+            streamContent.Headers.ContentType = new MediaTypeHeaderValue("audio/webm");
+            content.Add(streamContent, "file", fileName);
+            content.Add(new StringContent(WhisperModel), "model");
+            content.Add(new StringContent("json"), "response_format");
 
-        var responseJson = await response.Content.ReadAsStringAsync(cancellationToken);
-        using var doc = JsonDocument.Parse(responseJson);
+            var response = await _httpClient.PostAsync("audio/transcriptions", content, cancellationToken);
+            response.EnsureSuccessStatusCode();
 
-        var text = doc.RootElement.GetProperty("text").GetString() ?? "";
+            var responseJson = await response.Content.ReadAsStringAsync(cancellationToken);
+            using var doc = JsonDocument.Parse(responseJson);
 
-        // Estimate duration from audio (rough estimate based on typical speech rate)
-        // OpenAI doesn't return duration, so we estimate ~150 words per minute average
-        var wordCount = text.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length;
-        var estimatedDurationSeconds = (int)Math.Ceiling(wordCount / 2.5); // ~150 wpm = 2.5 words/sec
+            var text = doc.RootElement.GetProperty("text").GetString() ?? "";
 
-        // Log usage with both estimated and actual costs
-        await LogUsageAsync(userId, WhisperModel, 0, 0, estimatedDurationSeconds, "transcription", estimatedCost, cancellationToken);
+            // Estimate duration from audio (rough estimate based on typical speech rate)
+            // OpenAI doesn't return duration, so we estimate ~150 words per minute average
+            var wordCount = text.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length;
+            var estimatedDurationSeconds = (int)Math.Ceiling(wordCount / 2.5); // ~150 wpm = 2.5 words/sec
 
-        return new TranscriptionResponse(text, estimatedDurationSeconds);
+            // Log usage with both estimated and actual costs
+            await LogUsageAsync(userId, WhisperModel, 0, 0, estimatedDurationSeconds, "transcription", estimatedCost, cancellationToken);
+
+            return new TranscriptionResponse(text, estimatedDurationSeconds);
+        }
+        finally
+        {
+            memoryStream?.Dispose();
+        }
     }
 
     private ExtractedData? TryExtractJsonData(string content)

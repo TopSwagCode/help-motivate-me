@@ -695,7 +695,6 @@ public class AdminController : ControllerBase
         var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
         var logs = await _db.AiUsageLogs
-            .Include(l => l.User)
             .OrderByDescending(l => l.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)

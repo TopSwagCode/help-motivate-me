@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getAiUsageStats, getAiUsageLogs } from '$lib/api/admin';
-	import type { AiUsageStats, AiUsageLog, PaginatedResponse } from '$lib/types/admin';
+	import type { AiUsageStats, AiUsageLog, PaginatedResponse } from '$lib/types';
 	import { locale } from 'svelte-i18n';
 	import { get } from 'svelte/store';
 
