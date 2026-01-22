@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import confetti from 'canvas-confetti';
+	import { t } from 'svelte-i18n';
 
 	interface Props {
 		onclose: () => void;
@@ -67,40 +68,40 @@
 		</div>
 
 		<!-- Welcome message -->
-		<h2 class="text-2xl font-bold text-gray-900 mb-3">Welcome to HelpMotivateMe!</h2>
+		<h2 class="text-2xl font-bold text-gray-900 mb-3">{$t('onboarding.welcome.title')}</h2>
 
 		<p class="text-gray-600 mb-6">
-			You're all set! This is your <strong>Today</strong> page - your daily command center.
+			{@html $t('onboarding.welcome.subtitle')}
 		</p>
 
 		<!-- Feature highlights -->
 		<div class="bg-gray-50 rounded-xl p-4 mb-6 text-left">
-			<h3 class="font-medium text-gray-900 mb-3">Here you can:</h3>
+			<h3 class="font-medium text-gray-900 mb-3">{$t('onboarding.welcome.hereYouCan')}</h3>
 			<ul class="space-y-2 text-sm text-gray-600">
 				<li class="flex items-start gap-2">
 					<svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
 						<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
 					</svg>
-					<span>Track your daily habit stacks and build streaks</span>
+					<span>{$t('onboarding.welcome.features.trackHabits')}</span>
 				</li>
 				<li class="flex items-start gap-2">
 					<svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
 						<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
 					</svg>
-					<span>Complete tasks and see your progress toward goals</span>
+					<span>{$t('onboarding.welcome.features.completeTasks')}</span>
 				</li>
 				<li class="flex items-start gap-2">
 					<svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
 						<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
 					</svg>
-					<span>Reinforce your identity with every action you take</span>
+					<span>{$t('onboarding.welcome.features.reinforceIdentity')}</span>
 				</li>
 			</ul>
 		</div>
 
 		<!-- CTA button -->
 		<button onclick={onclose} class="btn-primary w-full text-lg py-3">
-			Let's Go!
+			{$t('onboarding.welcome.letsGo')}
 			<svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
 			</svg>

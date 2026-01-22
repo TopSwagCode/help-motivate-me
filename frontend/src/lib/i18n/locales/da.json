@@ -154,6 +154,17 @@
 		},
 		"progress": {
 			"step": "Trin {current} af {total}"
+		},
+		"welcome": {
+			"title": "Velkommen til HelpMotivateMe!",
+			"subtitle": "Du er klar! Dette er din <strong>I dag</strong>-side - dit daglige kontrolcenter.",
+			"hereYouCan": "Her kan du:",
+			"features": {
+				"trackHabits": "Følg dine daglige vanestakke og opbyg striber",
+				"completeTasks": "Fuldfør opgaver og se dine fremskridt mod mål",
+				"reinforceIdentity": "Forstærk din identitet med hver handling du tager"
+			},
+			"letsGo": "Lad os komme i gang!"
 		}
 	},
 	"auth": {

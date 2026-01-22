@@ -154,6 +154,17 @@
 		},
 		"progress": {
 			"step": "Step {current} of {total}"
+		},
+		"welcome": {
+			"title": "Welcome to HelpMotivateMe!",
+			"subtitle": "You're all set! This is your <strong>Today</strong> page - your daily command center.",
+			"hereYouCan": "Here you can:",
+			"features": {
+				"trackHabits": "Track your daily habit stacks and build streaks",
+				"completeTasks": "Complete tasks and see your progress toward goals",
+				"reinforceIdentity": "Reinforce your identity with every action you take"
+			},
+			"letsGo": "Let's Go!"
 		}
 	},
 	"auth": {
