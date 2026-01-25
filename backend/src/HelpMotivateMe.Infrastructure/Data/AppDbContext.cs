@@ -31,6 +31,7 @@ public class AppDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<NotificationPreferences> NotificationPreferences => Set<NotificationPreferences>();
     public DbSet<PushSubscription> PushSubscriptions => Set<PushSubscription>();
     public DbSet<AnalyticsEvent> AnalyticsEvents => Set<AnalyticsEvent>();
+    public DbSet<DailyIdentityCommitment> DailyIdentityCommitments => Set<DailyIdentityCommitment>();
 
     // Data Protection keys for persistent authentication across restarts and instances
     public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();

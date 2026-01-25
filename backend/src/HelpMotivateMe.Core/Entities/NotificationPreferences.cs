@@ -24,6 +24,10 @@ public class NotificationPreferences
     public bool WeeklyReviewEnabled { get; set; } = true;
     public bool BuddyUpdatesEnabled { get; set; } = true;
 
+    // Daily Identity Commitment
+    public bool DailyCommitmentEnabled { get; set; } = true;
+    public string CommitmentDefaultMode { get; set; } = "weakest"; // "weakest" or "strongest"
+
     // Schedule - Days
     public NotificationDays SelectedDays { get; set; } = NotificationDays.All;
 

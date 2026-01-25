@@ -59,6 +59,9 @@ builder.Services.AddScoped<IAiBudgetService, AiBudgetService>();
 // Identity Score Service
 builder.Services.AddScoped<IdentityScoreService>();
 
+// Daily Commitment Service
+builder.Services.AddScoped<DailyCommitmentService>();
+
 // Analytics Service
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 

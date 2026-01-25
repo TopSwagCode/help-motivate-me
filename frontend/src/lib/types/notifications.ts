@@ -29,6 +29,8 @@ export interface NotificationPreferences {
 	motivationalQuotesEnabled: boolean;
 	weeklyReviewEnabled: boolean;
 	buddyUpdatesEnabled: boolean;
+	dailyCommitmentEnabled: boolean;
+	commitmentDefaultMode: string;
 	selectedDays: number;
 	preferredTimeSlot: TimeSlot;
 	customTimeStart: string | null;
@@ -48,6 +50,8 @@ export interface UpdateNotificationPreferencesRequest {
 	motivationalQuotesEnabled?: boolean;
 	weeklyReviewEnabled?: boolean;
 	buddyUpdatesEnabled?: boolean;
+	dailyCommitmentEnabled?: boolean;
+	commitmentDefaultMode?: string;
 	selectedDays?: number;
 	preferredTimeSlot?: string;
 	customTimeStart?: string | null;
