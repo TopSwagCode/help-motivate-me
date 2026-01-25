@@ -9,9 +9,12 @@
 	import { completeStackItem, completeAllStackItems } from '$lib/api/habitStacks';
 	import { completeTask, postponeTask, updateTask, completeMultipleTasks } from '$lib/api/tasks';
 	import { getIdentities } from '$lib/api/identities';
+	import { completeDailyCommitment, dismissDailyCommitment } from '$lib/api/dailyCommitment';
 	import WelcomePopup from '$lib/components/onboarding/WelcomePopup.svelte';
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
 	import TodayViewContent from '$lib/components/today/TodayViewContent.svelte';
+	import DailyCommitmentCard from '$lib/components/today/DailyCommitmentCard.svelte';
+	import CommitmentFlowModal from '$lib/components/today/CommitmentFlowModal.svelte';
 	import type { TodayView, TodayTask, Identity } from '$lib/types';
 
 	let todayData = $state<TodayView | null>(null);
@@ -55,6 +58,9 @@
 	let snoozingTaskIds = $state<string[]>([]);
 	// Track tasks being removed after snooze (outside 7-day window)
 	let removingAfterSnoozeIds = $state<string[]>([]);
+
+	// Daily commitment modal state
+	let showCommitmentModal = $state(false);
 
 	onMount(async () => {
 		if (!$auth.initialized) {
@@ -480,6 +486,46 @@
 	function isToday(): boolean {
 		return currentDate === getLocalDateString();
 	}
+
+	// Daily commitment handlers
+	function handleStartCommitment() {
+		showCommitmentModal = true;
+	}
+
+	function handleCloseCommitmentModal() {
+		showCommitmentModal = false;
+	}
+
+	async function handleCommitmentCreated() {
+		// Reload today data to get the new commitment
+		await loadToday();
+	}
+
+	async function handleCompleteCommitment(commitmentId: string) {
+		if (!todayData) return;
+		try {
+			const updatedCommitment = await completeDailyCommitment(commitmentId);
+			todayData = {
+				...todayData,
+				dailyCommitment: updatedCommitment
+			};
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to complete commitment';
+		}
+	}
+
+	async function handleDismissCommitment(commitmentId: string) {
+		if (!todayData) return;
+		try {
+			const updatedCommitment = await dismissDailyCommitment(commitmentId);
+			todayData = {
+				...todayData,
+				dailyCommitment: updatedCommitment
+			};
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to dismiss commitment';
+		}
+	}
 </script>
 
 <div class="min-h-screen bg-gray-50">
@@ -560,6 +606,19 @@
 				<button onclick={() => (error = '')} class="float-right text-red-500 hover:text-red-700">&times;</button>
 			</div>
 		{:else if todayData}
+			<!-- Daily Commitment Card (only show if viewing today) -->
+			{#if isToday()}
+				<div class="mb-6">
+					<DailyCommitmentCard
+						commitment={todayData.dailyCommitment}
+						yesterdayCommitment={todayData.yesterdayCommitment}
+						onStartCommitment={handleStartCommitment}
+						onComplete={handleCompleteCommitment}
+						onDismiss={handleDismissCommitment}
+					/>
+				</div>
+			{/if}
+
 			<TodayViewContent
 				{todayData}
 				readonly={false}
@@ -700,4 +759,11 @@
 	{#if showWelcomePopup}
 		<WelcomePopup onclose={closeWelcomePopup} />
 	{/if}
+
+	<!-- Daily Commitment Flow Modal -->
+	<CommitmentFlowModal
+		isOpen={showCommitmentModal}
+		onClose={handleCloseCommitmentModal}
+		onCommitmentCreated={handleCommitmentCreated}
+	/>
 </div>

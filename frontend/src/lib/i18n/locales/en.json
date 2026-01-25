@@ -883,6 +883,45 @@
 			"noDate": "No date"
 		}
 	},
+	"dailyCommitment": {
+		"title": "Start Your Day",
+		"prompt": "Choose one identity to focus on and commit to a small action that proves you're becoming that person.",
+		"startButton": "Make My Commitment",
+		"completeButton": "Mark Complete",
+		"dismissButton": "Dismiss",
+		"completedLabel": "Completed",
+		"dismissedLabel": "Dismissed",
+		"reinforcement": "This is how a {identity} starts their day.",
+		"recoveryTitle": "Fresh Start",
+		"recoveryMessage": "Yesterday's commitment didn't happen - and that's okay. Today is a new opportunity to show up for {identity}.",
+		"modal": {
+			"titleIdentity": "Choose Your Focus",
+			"titleAction": "Your Commitment",
+			"titleConfirm": "Ready to Commit?",
+			"identityPrompt": "Which identity do you want to strengthen today?",
+			"actionPrompt": "What small action will prove you're a {identity}?",
+			"suggestions": "Suggestions",
+			"orCustom": "Or write your own",
+			"yourAction": "Your action",
+			"customPlaceholder": "I will...",
+			"recommended": "Suggested",
+			"continueButton": "Continue",
+			"commitButton": "I Commit to This",
+			"confirmPrompt": "Today you will:",
+			"asA": "as a {identity}",
+			"successTitle": "You're Committed!"
+		},
+		"settings": {
+			"title": "Daily Identity Commitment",
+			"description": "Start each day by committing to one small action for an identity",
+			"enabled": "Enable daily commitment",
+			"defaultMode": "Smart default identity",
+			"weakest": "Recovery nudge",
+			"weakestDescription": "Suggest the identity that needs the most attention",
+			"strongest": "Momentum nudge",
+			"strongestDescription": "Suggest the identity where you have the most momentum"
+		}
+	},
 	"analytics": {
 		"title": "Analytics",
 		"pageTitle": "Analytics",

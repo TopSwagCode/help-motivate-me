@@ -703,6 +703,10 @@ public class AuthController : ControllerBase
             prefs.WeeklyReviewEnabled = request.WeeklyReviewEnabled.Value;
         if (request.BuddyUpdatesEnabled.HasValue)
             prefs.BuddyUpdatesEnabled = request.BuddyUpdatesEnabled.Value;
+        if (request.DailyCommitmentEnabled.HasValue)
+            prefs.DailyCommitmentEnabled = request.DailyCommitmentEnabled.Value;
+        if (request.CommitmentDefaultMode != null)
+            prefs.CommitmentDefaultMode = request.CommitmentDefaultMode;
         if (request.SelectedDays.HasValue)
             prefs.SelectedDays = (NotificationDays)request.SelectedDays.Value;
         if (request.PreferredTimeSlot != null && Enum.TryParse<TimeSlot>(request.PreferredTimeSlot, true, out var timeSlot))
@@ -953,6 +957,8 @@ public class AuthController : ControllerBase
             prefs.MotivationalQuotesEnabled,
             prefs.WeeklyReviewEnabled,
             prefs.BuddyUpdatesEnabled,
+            prefs.DailyCommitmentEnabled,
+            prefs.CommitmentDefaultMode,
             (int)prefs.SelectedDays,
             prefs.PreferredTimeSlot.ToString(),
             prefs.CustomTimeStart?.ToString("HH:mm"),

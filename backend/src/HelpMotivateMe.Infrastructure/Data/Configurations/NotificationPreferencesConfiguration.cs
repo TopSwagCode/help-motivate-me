@@ -33,6 +33,10 @@ public class NotificationPreferencesConfiguration : IEntityTypeConfiguration<Not
         builder.Property(np => np.WeeklyReviewEnabled).HasDefaultValue(true);
         builder.Property(np => np.BuddyUpdatesEnabled).HasDefaultValue(true);
 
+        // Daily Identity Commitment
+        builder.Property(np => np.DailyCommitmentEnabled).HasDefaultValue(true);
+        builder.Property(np => np.CommitmentDefaultMode).HasMaxLength(20).HasDefaultValue("weakest");
+
         // Schedule - Days (store as integer for bit flags)
         // HasSentinel tells EF: when value equals None (CLR default), use the DB default instead
         builder.Property(np => np.SelectedDays)

@@ -1,3 +1,5 @@
+import type { DailyCommitment, YesterdayCommitment } from './dailyCommitment';
+
 export interface TodayView {
 	date: string;
 	habitStacks: TodayHabitStack[];
@@ -5,6 +7,8 @@ export interface TodayView {
 	completedTasks: TodayTask[];
 	identityFeedback: IdentityFeedback[];
 	identityProgress: IdentityProgress[];
+	dailyCommitment: DailyCommitment | null;
+	yesterdayCommitment: YesterdayCommitment;
 }
 
 export interface TodayTask {

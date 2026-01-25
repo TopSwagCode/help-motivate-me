@@ -883,6 +883,45 @@
 			"noDate": "Ingen dato"
 		}
 	},
+	"dailyCommitment": {
+		"title": "Start din dag",
+		"prompt": "Vælg én identitet at fokusere på og forpligt dig til en lille handling, der beviser, at du er ved at blive den person.",
+		"startButton": "Lav min forpligtelse",
+		"completeButton": "Marker fuldført",
+		"dismissButton": "Afvis",
+		"completedLabel": "Fuldført",
+		"dismissedLabel": "Afvist",
+		"reinforcement": "Sådan starter en {identity} sin dag.",
+		"recoveryTitle": "Ny start",
+		"recoveryMessage": "Gårsdagens forpligtelse skete ikke - og det er okay. I dag er en ny mulighed for at dukke op for {identity}.",
+		"modal": {
+			"titleIdentity": "Vælg dit fokus",
+			"titleAction": "Din forpligtelse",
+			"titleConfirm": "Klar til at forpligte dig?",
+			"identityPrompt": "Hvilken identitet vil du styrke i dag?",
+			"actionPrompt": "Hvilken lille handling vil bevise, at du er en {identity}?",
+			"suggestions": "Forslag",
+			"orCustom": "Eller skriv din egen",
+			"yourAction": "Din handling",
+			"customPlaceholder": "Jeg vil...",
+			"recommended": "Foreslået",
+			"continueButton": "Fortsæt",
+			"commitButton": "Jeg forpligter mig til dette",
+			"confirmPrompt": "I dag vil du:",
+			"asA": "som en {identity}",
+			"successTitle": "Du er forpligtet!"
+		},
+		"settings": {
+			"title": "Daglig identitetsforpligtelse",
+			"description": "Start hver dag med at forpligte dig til én lille handling for en identitet",
+			"enabled": "Aktivér daglig forpligtelse",
+			"defaultMode": "Smart standardidentitet",
+			"weakest": "Genopretningsnudge",
+			"weakestDescription": "Foreslå den identitet, der har brug for mest opmærksomhed",
+			"strongest": "Momentumnudge",
+			"strongestDescription": "Foreslå den identitet, hvor du har mest momentum"
+		}
+	},
 	"analytics": {
 		"title": "Analyse",
 		"pageTitle": "Analyse",

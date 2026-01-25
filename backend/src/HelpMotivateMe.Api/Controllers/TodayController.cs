@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using HelpMotivateMe.Core.DTOs.DailyCommitment;
 using HelpMotivateMe.Core.DTOs.HabitStacks;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
@@ -21,6 +22,7 @@ public class TodayController : ControllerBase
     private readonly IQueryInterface<TaskItem> _tasks;
     private readonly IQueryInterface<Identity> _identities;
     private readonly IdentityScoreService _identityScoreService;
+    private readonly DailyCommitmentService _commitmentService;
     private readonly IAnalyticsService _analyticsService;
 
     public TodayController(
@@ -28,12 +30,14 @@ public class TodayController : ControllerBase
         IQueryInterface<TaskItem> tasks,
         IQueryInterface<Identity> identities,
         IdentityScoreService identityScoreService,
+        DailyCommitmentService commitmentService,
         IAnalyticsService analyticsService)
     {
         _habitStacks = habitStacks;
         _tasks = tasks;
         _identities = identities;
         _identityScoreService = identityScoreService;
+        _commitmentService = commitmentService;
         _analyticsService = analyticsService;
     }
 
@@ -75,13 +79,21 @@ public class TodayController : ControllerBase
             s.ShowNumericScore
         )).ToList();
 
+        // Get daily commitment for today
+        var dailyCommitment = await _commitmentService.GetCommitmentAsync(userId, targetDate);
+
+        // Get yesterday's commitment info (for recovery message)
+        var yesterdayCommitment = await _commitmentService.GetYesterdayCommitmentAsync(userId);
+
         return Ok(new TodayViewResponse(
             targetDate,
             habitStacks,
             upcomingTasks,
             completedTasks,
             identityFeedback,
-            identityProgress
+            identityProgress,
+            dailyCommitment,
+            yesterdayCommitment
         ));
     }
 
@@ -256,7 +268,9 @@ public record TodayViewResponse(
     List<TodayTaskResponse> UpcomingTasks,
     List<TodayTaskResponse> CompletedTasks,
     List<TodayIdentityFeedbackResponse> IdentityFeedback,
-    List<IdentityProgressResponse> IdentityProgress
+    List<IdentityProgressResponse> IdentityProgress,
+    DailyCommitmentResponse? DailyCommitment,
+    YesterdayCommitmentResponse YesterdayCommitment
 );
 
 public record TodayTaskResponse(
