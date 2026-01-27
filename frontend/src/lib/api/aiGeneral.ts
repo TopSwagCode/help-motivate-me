@@ -142,6 +142,53 @@ export async function getAiContext(): Promise<AiContext> {
 }
 
 /**
+ * Normalize preview data from PascalCase to camelCase.
+ */
+function normalizePreviewData(raw: Record<string, unknown>, type: string): Record<string, unknown> {
+	const result: Record<string, unknown> = {};
+
+	// Common fields across types
+	result.title = raw.Title ?? raw.title;
+	result.name = raw.Name ?? raw.name;
+	result.description = raw.Description ?? raw.description;
+	result.identityId = raw.IdentityId ?? raw.identityId;
+	result.identityName = raw.IdentityName ?? raw.identityName;
+	result.reasoning = raw.Reasoning ?? raw.reasoning;
+
+	// Task-specific fields
+	if (type === 'task') {
+		result.dueDate = raw.DueDate ?? raw.dueDate;
+		result.goalId = raw.GoalId ?? raw.goalId;
+		result.goalTitle = raw.GoalTitle ?? raw.goalTitle;
+	}
+
+	// Goal-specific fields
+	if (type === 'goal') {
+		result.targetDate = raw.TargetDate ?? raw.targetDate;
+	}
+
+	// HabitStack-specific fields
+	if (type === 'habitStack') {
+		result.triggerCue = raw.TriggerCue ?? raw.triggerCue;
+		const rawHabits = (raw.Habits ?? raw.habits) as Array<Record<string, unknown>> | undefined;
+		if (rawHabits) {
+			result.habits = rawHabits.map(h => ({
+				cueDescription: h.CueDescription ?? h.cueDescription,
+				habitDescription: h.HabitDescription ?? h.habitDescription
+			}));
+		}
+	}
+
+	// Identity-specific fields
+	if (type === 'identity') {
+		result.icon = raw.Icon ?? raw.icon;
+		result.color = raw.Color ?? raw.color;
+	}
+
+	return result;
+}
+
+/**
  * Parse intent data from raw API response, handling both PascalCase and camelCase.
  */
 function parseIntentData(raw: Record<string, unknown> | null | undefined): AiIntentResponse | null {
@@ -158,7 +205,8 @@ function parseIntentData(raw: Record<string, unknown> | null | undefined): AiInt
 
 	if (rawPreview) {
 		const previewType = (rawPreview.Type ?? rawPreview.type) as 'task' | 'goal' | 'habitStack' | 'identity';
-		const previewData = (rawPreview.Data ?? rawPreview.data) as Record<string, unknown>;
+		const rawPreviewData = (rawPreview.Data ?? rawPreview.data) as Record<string, unknown>;
+		const previewData = normalizePreviewData(rawPreviewData, previewType);
 
 		preview = {
 			type: previewType,
