@@ -3,14 +3,16 @@
 	import OnboardingAssistant from './OnboardingAssistant.svelte';
 	import { createGoal } from '$lib/api/goals';
 	import type { ExtractedData } from '$lib/api/ai';
+	import type { CreatedIdentity } from './ChatIdentityStep.svelte';
 
 	interface Props {
 		oncomplete: () => void;
 		onskip: () => void;
 		onback: () => void;
+		identities?: CreatedIdentity[];
 	}
 
-	let { oncomplete, onskip, onback }: Props = $props();
+	let { oncomplete, onskip, onback, identities = [] }: Props = $props();
 
 	interface CreatedItem {
 		title: string;
@@ -21,20 +23,37 @@
 
 	const initialMessage = $derived($t('onboarding.goals.initialMessage'));
 
+	// Helper to resolve identity ID from name if AI provides name instead of ID
+	function resolveIdentityId(identityId?: string, identityName?: string): string | undefined {
+		if (identityId) return identityId;
+		if (identityName && identities.length > 0) {
+			const match = identities.find(i =>
+				i.name.toLowerCase() === identityName.toLowerCase()
+			);
+			return match?.id;
+		}
+		return undefined;
+	}
+
 	async function handleExtractedData(data: ExtractedData) {
 		if (data.action === 'create' && data.type === 'goal') {
 			const goalData = data.data as Record<string, unknown>;
-			
+
 			// Support both array format (items) and legacy single item format
 			const items = goalData.items as Array<Record<string, unknown>> | undefined;
-			
+
 			if (items && Array.isArray(items)) {
 				// New format: multiple items in array
 				for (const item of items) {
+					const identityId = resolveIdentityId(
+						item.identityId as string | undefined,
+						item.identityName as string | undefined
+					);
 					await createGoal({
 						title: String(item.title || ''),
 						description: String(item.description || ''),
-						targetDate: item.targetDate ? String(item.targetDate) : undefined
+						targetDate: item.targetDate ? String(item.targetDate) : undefined,
+						identityId
 					});
 					createdItems = [...createdItems, {
 						title: String(item.title || 'Goal'),
@@ -43,10 +62,15 @@
 				}
 			} else {
 				// Legacy format: single item at root level
+				const identityId = resolveIdentityId(
+					goalData.identityId as string | undefined,
+					goalData.identityName as string | undefined
+				);
 				await createGoal({
 					title: String(goalData.title || ''),
 					description: String(goalData.description || ''),
-					targetDate: goalData.targetDate ? String(goalData.targetDate) : undefined
+					targetDate: goalData.targetDate ? String(goalData.targetDate) : undefined,
+					identityId
 				});
 				createdItems = [...createdItems, {
 					title: String(goalData.title || 'Goal'),
@@ -101,6 +125,7 @@
 			onNext={oncomplete}
 			onBack={onback}
 			showBack={true}
+			{identities}
 		/>
 	</div>
 </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ChatIdentityStep from './ChatIdentityStep.svelte';
+	import ChatIdentityStep, { type CreatedIdentity } from './ChatIdentityStep.svelte';
 	import ChatHabitStackStep from './ChatHabitStackStep.svelte';
 	import ChatGoalsStep from './ChatGoalsStep.svelte';
 
@@ -13,11 +13,19 @@
 	let currentStep = $state(1);
 	const totalSteps = 3;
 
+	// Track created identities to pass to subsequent steps
+	let createdIdentities = $state<CreatedIdentity[]>([]);
+
 	const steps = [
 		{ number: 1, title: 'Identity', description: 'Define who you want to become' },
 		{ number: 2, title: 'Habit Stacks', description: 'Build powerful habit chains' },
 		{ number: 3, title: 'Goals', description: 'Set meaningful objectives' }
 	];
+
+	function handleIdentityNext(identities: CreatedIdentity[]) {
+		createdIdentities = identities;
+		nextStep();
+	}
 
 	function nextStep() {
 		if (currentStep < totalSteps) {
@@ -86,11 +94,11 @@
 	<div class="flex-1 max-w-2xl mx-auto w-full px-2 sm:px-4 pb-2 sm:pb-4 min-h-0">
 		<div class="card h-full flex flex-col overflow-hidden">
 			{#if currentStep === 1}
-				<ChatIdentityStep onnext={nextStep} onskip={nextStep} />
+				<ChatIdentityStep onnext={handleIdentityNext} onskip={nextStep} />
 			{:else if currentStep === 2}
-				<ChatHabitStackStep onnext={nextStep} onskip={nextStep} onback={prevStep} />
+				<ChatHabitStackStep onnext={nextStep} onskip={nextStep} onback={prevStep} identities={createdIdentities} />
 			{:else if currentStep === 3}
-				<ChatGoalsStep oncomplete={oncomplete} onskip={oncomplete} onback={prevStep} />
+				<ChatGoalsStep oncomplete={oncomplete} onskip={oncomplete} onback={prevStep} identities={createdIdentities} />
 			{/if}
 		</div>
 	</div>

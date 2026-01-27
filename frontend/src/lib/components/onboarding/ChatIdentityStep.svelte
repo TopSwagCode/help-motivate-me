@@ -4,40 +4,42 @@
 	import { createIdentity } from '$lib/api/identities';
 	import type { ExtractedData } from '$lib/api/ai';
 
-	interface Props {
-		onnext: () => void;
-		onskip: () => void;
-	}
-
-	let { onnext, onskip }: Props = $props();
-
-	interface CreatedItem {
+	export interface CreatedIdentity {
+		id: string;
 		name: string;
 		icon: string;
 		color: string;
 	}
 
-	let createdItems = $state<CreatedItem[]>([]);
+	interface Props {
+		onnext: (identities: CreatedIdentity[]) => void;
+		onskip: () => void;
+	}
+
+	let { onnext, onskip }: Props = $props();
+
+	let createdItems = $state<CreatedIdentity[]>([]);
 
 	const initialMessage = $derived($t('onboarding.identity.initialMessage'));
 
 	async function handleExtractedData(data: ExtractedData) {
 		if (data.action === 'create' && data.type === 'identity') {
 			const identityData = data.data as Record<string, unknown>;
-			
+
 			// Support both array format (items) and legacy single item format
 			const items = identityData.items as Array<Record<string, unknown>> | undefined;
-			
+
 			if (items && Array.isArray(items)) {
 				// New format: multiple items in array
 				for (const item of items) {
-					await createIdentity({
+					const created = await createIdentity({
 						name: String(item.name || ''),
 						description: String(item.description || ''),
 						icon: String(item.icon || ''),
 						color: String(item.color || '#6366f1')
 					});
 					createdItems = [...createdItems, {
+						id: created.id,
 						name: String(item.name || 'Identity'),
 						icon: String(item.icon || '🎯'),
 						color: String(item.color || '#6366f1')
@@ -45,19 +47,24 @@
 				}
 			} else {
 				// Legacy format: single item at root level
-				await createIdentity({
+				const created = await createIdentity({
 					name: String(identityData.name || ''),
 					description: String(identityData.description || ''),
 					icon: String(identityData.icon || ''),
 					color: String(identityData.color || '#6366f1')
 				});
 				createdItems = [...createdItems, {
+					id: created.id,
 					name: String(identityData.name || 'Identity'),
 					icon: String(identityData.icon || '🎯'),
 					color: String(identityData.color || '#6366f1')
 				}];
 			}
 		}
+	}
+
+	function handleNext() {
+		onnext(createdItems);
 	}
 </script>
 
@@ -100,7 +107,7 @@
 			{initialMessage}
 			onExtractedData={handleExtractedData}
 			onSkip={onskip}
-			onNext={onnext}
+			onNext={handleNext}
 		/>
 	</div>
 </div>

@@ -3,14 +3,16 @@
 	import OnboardingAssistant from './OnboardingAssistant.svelte';
 	import { createHabitStack } from '$lib/api/habitStacks';
 	import type { ExtractedData } from '$lib/api/ai';
+	import type { CreatedIdentity } from './ChatIdentityStep.svelte';
 
 	interface Props {
 		onnext: () => void;
 		onskip: () => void;
 		onback: () => void;
+		identities?: CreatedIdentity[];
 	}
 
-	let { onnext, onskip, onback }: Props = $props();
+	let { onnext, onskip, onback, identities = [] }: Props = $props();
 
 	interface CreatedItem {
 		name: string;
@@ -32,23 +34,39 @@
 		triggerCue: string;
 		habits?: HabitItem[];
 		items?: HabitItem[]; // Legacy format support
+		identityId?: string;
+		identityName?: string;
+	}
+
+	// Helper to resolve identity ID from name if AI provides name instead of ID
+	function resolveIdentityId(identityId?: string, identityName?: string): string | undefined {
+		if (identityId) return identityId;
+		if (identityName && identities.length > 0) {
+			const match = identities.find(i =>
+				i.name.toLowerCase() === identityName.toLowerCase()
+			);
+			return match?.id;
+		}
+		return undefined;
 	}
 
 	async function handleExtractedData(data: ExtractedData) {
 		if (data.action === 'create' && data.type === 'habitStack') {
 			const stackData = data.data as Record<string, unknown>;
-			
+
 			// New format: stacks array containing multiple habit stacks
 			const stacks = stackData.stacks as StackData[] | undefined;
-			
+
 			if (stacks && Array.isArray(stacks)) {
 				// New format: multiple stacks in one create action
 				for (const stack of stacks) {
 					const habits = stack.habits || stack.items || [];
+					const identityId = resolveIdentityId(stack.identityId, stack.identityName);
 					await createHabitStack({
 						name: String(stack.name || ''),
 						description: String(stack.description || ''),
 						triggerCue: String(stack.triggerCue || ''),
+						identityId,
 						items: habits.map((item) => ({
 							cueDescription: item.cueDescription,
 							habitDescription: item.habitDescription
@@ -62,11 +80,16 @@
 			} else {
 				// Legacy format: single stack at root level
 				const habits = (stackData.habits as HabitItem[]) || (stackData.items as HabitItem[]) || [];
+				const identityId = resolveIdentityId(
+					stackData.identityId as string | undefined,
+					stackData.identityName as string | undefined
+				);
 
 				await createHabitStack({
 					name: String(stackData.name || ''),
 					description: String(stackData.description || ''),
 					triggerCue: String(stackData.triggerCue || ''),
+					identityId,
 					items: habits.map((item) => ({
 						cueDescription: item.cueDescription,
 						habitDescription: item.habitDescription
@@ -123,6 +146,7 @@
 			onNext={onnext}
 			onBack={onback}
 			showBack={true}
+			{identities}
 		/>
 	</div>
 </div>
