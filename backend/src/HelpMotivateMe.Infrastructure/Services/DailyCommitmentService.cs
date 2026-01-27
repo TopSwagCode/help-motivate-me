@@ -138,7 +138,7 @@ public class DailyCommitmentService
     /// </summary>
     public async Task<DailyCommitmentResponse> CreateCommitmentAsync(Guid userId, CreateDailyCommitmentRequest request)
     {
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var today = await GetUserLocalDateAsync(userId);
 
         // Check if commitment already exists for today
         var existing = await _context.DailyIdentityCommitments
@@ -235,7 +235,8 @@ public class DailyCommitmentService
     /// </summary>
     public async Task<YesterdayCommitmentResponse> GetYesterdayCommitmentAsync(Guid userId)
     {
-        var yesterday = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
+        var today = await GetUserLocalDateAsync(userId);
+        var yesterday = today.AddDays(-1);
 
         var commitment = await _commitments
             .Include(c => c.Identity)
@@ -270,7 +271,7 @@ public class DailyCommitmentService
     /// </summary>
     public async Task<bool> CheckAndAutoCompleteForHabitAsync(Guid userId, Guid habitStackItemId)
     {
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var today = await GetUserLocalDateAsync(userId);
 
         var commitment = await _context.DailyIdentityCommitments
             .FirstOrDefaultAsync(c => c.UserId == userId &&
@@ -294,7 +295,7 @@ public class DailyCommitmentService
     /// </summary>
     public async Task<bool> CheckAndAutoCompleteForTaskAsync(Guid userId, Guid taskId)
     {
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var today = await GetUserLocalDateAsync(userId);
 
         var commitment = await _context.DailyIdentityCommitments
             .FirstOrDefaultAsync(c => c.UserId == userId &&
@@ -329,5 +330,46 @@ public class DailyCommitmentService
             commitment.CompletedAt,
             commitment.CreatedAt
         );
+    }
+
+    /// <summary>
+    /// Resolves the user's current local date based on their timezone settings.
+    /// </summary>
+    private async Task<DateOnly> GetUserLocalDateAsync(Guid userId)
+    {
+        var preferences = await _notificationPreferences
+            .FirstOrDefaultAsync(np => np.UserId == userId);
+
+        if (preferences == null)
+        {
+            // Fallback to UTC if no preferences set
+            return DateOnly.FromDateTime(DateTime.UtcNow);
+        }
+
+        var localDateTime = ResolveLocalTime(DateTime.UtcNow, preferences.TimezoneId, preferences.UtcOffsetMinutes);
+        return DateOnly.FromDateTime(localDateTime);
+    }
+
+    /// <summary>
+    /// Resolves the user's local time from UTC using their timezone settings.
+    /// </summary>
+    private static DateTime ResolveLocalTime(DateTime utcNow, string timezoneId, int utcOffsetMinutes)
+    {
+        // Try to use TimezoneId first (authoritative)
+        try
+        {
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById(timezoneId);
+            return TimeZoneInfo.ConvertTimeFromUtc(utcNow, timeZone);
+        }
+        catch (TimeZoneNotFoundException)
+        {
+            // Fall back to UTC offset
+            return utcNow.AddMinutes(utcOffsetMinutes);
+        }
+        catch (InvalidTimeZoneException)
+        {
+            // Fall back to UTC offset
+            return utcNow.AddMinutes(utcOffsetMinutes);
+        }
     }
 }

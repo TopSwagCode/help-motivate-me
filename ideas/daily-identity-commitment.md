@@ -67,13 +67,13 @@ OR
 > **“Today, I choose to show up as…”**
 
 User selects:
-- One identity (recommended)
-- Maximum two identities (optional, advanced users)
+- One identity
 
 **Smart defaults:**
 - Preselect weakest identity (recovery nudge)
 - OR strongest identity (momentum nudge)
 - User can always override
+- This should be a settings on user settings
 
 ---
 
@@ -146,24 +146,6 @@ Trust is preserved.
 
 ---
 
-## Identity Presence Tracking (Optional Layer)
-
-Track:
-> **Days the user consciously chose an identity**
-
-This is NOT a streak.
-It does not reset.
-
-Example labels:
-- 3 days → Identity Awareness
-- 7 days → Intentional
-- 21 days → Self-Aligned
-- 60 days → Identity-Driven
-
-This reinforces long-term identity awareness without pressure.
-
----
-
 ## Notification Copy Examples
 
 ### Morning
@@ -176,6 +158,7 @@ This reinforces long-term identity awareness without pressure.
 > “Did you show up as who you wanted to be today?”
 
 Notifications are cues — not commands.
+Use user locale to determen which time it is, not server.
 
 ---
 
@@ -198,6 +181,7 @@ If users skip it, the app remains welcoming.
 - Improves daily active usage
 - Replaces generic login rewards
 - Strengthens emotional attachment to the app
+- Should be top of "Today" page.
 
 ---
 
@@ -209,6 +193,7 @@ Track:
 - DAU increase after feature launch
 - Identity Score stability over time
 - Retention at Day 7 / Day 30
+- It should be possible to see daily commitments on admin analytics page events.
 
 ---
 
