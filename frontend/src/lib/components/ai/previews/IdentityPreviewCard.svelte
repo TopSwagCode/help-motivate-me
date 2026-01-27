@@ -1,12 +1,42 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
 	import type { IdentityPreviewData } from '$lib/api/aiGeneral';
+	import EmojiPicker from '$lib/components/shared/EmojiPicker.svelte';
+	import ColorPicker from '$lib/components/shared/ColorPicker.svelte';
 
 	interface Props {
 		data: IdentityPreviewData;
+		onchange?: (data: IdentityPreviewData) => void;
 	}
 
-	let { data }: Props = $props();
+	let { data, onchange }: Props = $props();
+
+	// Editing states
+	let editingName = $state(false);
+	let editingDescription = $state(false);
+	let showEmojiPicker = $state(false);
+	let showColorPicker = $state(false);
+
+	// Local copy of data for editing
+	let localData = $state({ ...data });
+
+	// Sync when parent data changes
+	$effect(() => {
+		localData = { ...data };
+	});
+
+	function updateField<K extends keyof IdentityPreviewData>(field: K, value: IdentityPreviewData[K]) {
+		localData = { ...localData, [field]: value };
+		onchange?.(localData);
+	}
+
+	function handleEmojiChange(emoji: string) {
+		updateField('icon', emoji || null);
+	}
+
+	function handleColorChange(color: string) {
+		updateField('color', color || null);
+	}
 </script>
 
 <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
@@ -24,30 +54,125 @@
 		</div>
 	</div>
 
-	<div class="flex items-center gap-3">
-		{#if data.icon}
-			<div class="text-3xl">{data.icon}</div>
-		{/if}
-		<div class="flex-1">
-			<h3 class="text-lg font-semibold text-gray-900">{data.name}</h3>
-			{#if data.description}
-				<p class="text-gray-600 mt-1 text-sm">{data.description}</p>
+	<!-- Editable Name -->
+	{#if editingName}
+		<input
+			type="text"
+			bind:value={localData.name}
+			onblur={() => { editingName = false; onchange?.(localData); }}
+			onkeydown={(e) => { if (e.key === 'Enter') { editingName = false; onchange?.(localData); } if (e.key === 'Escape') editingName = false; }}
+			class="w-full text-lg font-semibold text-gray-900 bg-white border border-purple-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-purple-400"
+			autofocus
+		/>
+	{:else}
+		<button
+			type="button"
+			onclick={() => editingName = true}
+			class="text-lg font-semibold text-gray-900 hover:bg-purple-100 rounded px-1 -mx-1 transition-colors text-left w-full"
+			title={$t('ai.preview.clickToEdit')}
+		>
+			{localData.name || $t('ai.preview.notSet')}
+		</button>
+	{/if}
+
+	<!-- Editable Description -->
+	{#if editingDescription}
+		<textarea
+			bind:value={localData.description}
+			onblur={() => { editingDescription = false; onchange?.(localData); }}
+			onkeydown={(e) => { if (e.key === 'Escape') editingDescription = false; }}
+			class="w-full text-gray-600 mt-1 text-sm bg-white border border-purple-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-purple-400 resize-none"
+			rows="2"
+			autofocus
+		></textarea>
+	{:else}
+		<button
+			type="button"
+			onclick={() => editingDescription = true}
+			class="text-gray-600 mt-1 text-sm hover:bg-purple-100 rounded px-1 -mx-1 transition-colors text-left w-full {!localData.description ? 'italic text-gray-400' : ''}"
+			title={$t('ai.preview.clickToEdit')}
+		>
+			{localData.description || $t('ai.preview.addDescription')}
+		</button>
+	{/if}
+
+	<!-- Icon and Color row -->
+	<div class="mt-4 flex flex-wrap gap-4">
+		<!-- Editable Icon (Emoji) -->
+		<div class="flex-1 min-w-0">
+			<div class="text-xs font-medium text-gray-500 mb-2">{$t('identities.form.emoji')}</div>
+			{#if showEmojiPicker}
+				<div class="relative">
+					<EmojiPicker value={localData.icon || ''} onchange={handleEmojiChange} />
+					<button
+						type="button"
+						onclick={() => showEmojiPicker = false}
+						class="mt-2 text-xs text-purple-600 hover:text-purple-800"
+					>
+						{$t('common.done')}
+					</button>
+				</div>
+			{:else}
+				<button
+					type="button"
+					onclick={() => showEmojiPicker = true}
+					class="flex items-center gap-2 px-3 py-2 bg-white border border-purple-200 rounded-lg hover:bg-purple-50 transition-colors"
+					title={$t('ai.preview.clickToEdit')}
+				>
+					{#if localData.icon}
+						<span class="text-2xl">{localData.icon}</span>
+					{:else}
+						<span class="text-gray-400 text-sm">{$t('ai.preview.notSet')}</span>
+					{/if}
+					<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+					</svg>
+				</button>
 			{/if}
 		</div>
-		{#if data.color}
-			<div
-				class="w-8 h-8 rounded-full border-2 border-white shadow-sm"
-				style="background-color: {data.color}"
-			></div>
-		{/if}
+
+		<!-- Editable Color -->
+		<div class="flex-1 min-w-0">
+			<div class="text-xs font-medium text-gray-500 mb-2">{$t('identities.form.color')}</div>
+			{#if showColorPicker}
+				<div class="relative">
+					<ColorPicker value={localData.color || '#6366f1'} onchange={handleColorChange} />
+					<button
+						type="button"
+						onclick={() => showColorPicker = false}
+						class="mt-2 text-xs text-purple-600 hover:text-purple-800"
+					>
+						{$t('common.done')}
+					</button>
+				</div>
+			{:else}
+				<button
+					type="button"
+					onclick={() => showColorPicker = true}
+					class="flex items-center gap-2 px-3 py-2 bg-white border border-purple-200 rounded-lg hover:bg-purple-50 transition-colors"
+					title={$t('ai.preview.clickToEdit')}
+				>
+					<span
+						class="w-6 h-6 rounded-full border border-gray-200"
+						style="background-color: {localData.color || '#6366f1'}"
+					></span>
+					<span class="text-sm text-gray-600">{localData.color || '#6366f1'}</span>
+					<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+					</svg>
+				</button>
+			{/if}
+		</div>
 	</div>
 
-	{#if data.reasoning}
-		<div class="mt-3 p-2 bg-purple-100 rounded-lg">
-			<p class="text-xs text-purple-800">
-				<span class="font-medium">Why this identity?</span>
-				{data.reasoning}
-			</p>
+	{#if localData.reasoning}
+		<div class="mt-4 p-3 bg-purple-100 rounded-lg">
+			<div class="flex items-start gap-2">
+				<svg class="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+				</svg>
+				<p class="text-sm text-purple-700">{localData.reasoning}</p>
+			</div>
 		</div>
 	{/if}
 </div>

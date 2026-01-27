@@ -801,7 +801,16 @@
 			"identity": "Identity",
 			"targetDate": "Target",
 			"trigger": "Trigger",
-			"identityRecommendation": "AI recommends"
+			"identityRecommendation": "AI recommends",
+			"notSet": "Not set",
+			"selectIdentity": "Select identity",
+			"selectGoal": "Select goal",
+			"none": "None",
+			"addDescription": "Add description",
+			"setDate": "Set date",
+			"clickToEdit": "Click to edit",
+			"dueDate": "Due date",
+			"parentGoal": "Parent goal"
 		},
 		"actions": {
 			"confirm": "Create",

@@ -21,6 +21,8 @@ export interface TaskPreviewData {
 	dueDate?: string | null;
 	identityId?: string | null;
 	identityName?: string | null;
+	goalId?: string | null;
+	goalTitle?: string | null;
 	reasoning?: string | null;
 }
 

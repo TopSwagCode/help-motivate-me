@@ -17,6 +17,10 @@
 		type HabitStackPreviewData,
 		type IdentityPreviewData
 	} from '$lib/api/aiGeneral';
+	import { getIdentities } from '$lib/api/identities';
+	import { getGoals } from '$lib/api/goals';
+	import type { Identity } from '$lib/types/identity';
+	import type { Goal } from '$lib/types/goal';
 
 	interface Props {
 		isOpen: boolean;
@@ -38,6 +42,27 @@
 	let inputRef: HTMLInputElement | undefined = $state();
 	let successMessage = $state<string | null>(null);
 
+	// Data for editable dropdowns
+	let identities = $state<Identity[]>([]);
+	let goals = $state<Goal[]>([]);
+
+	// Editable preview data - modified copy of currentIntent.preview.data
+	let editablePreviewData = $state<TaskPreviewData | GoalPreviewData | HabitStackPreviewData | IdentityPreviewData | null>(null);
+
+	// Load identities and goals when opening
+	async function loadEditingData() {
+		try {
+			const [identitiesResult, goalsResult] = await Promise.all([
+				getIdentities().catch(() => []),
+				getGoals().catch(() => [])
+			]);
+			identities = identitiesResult;
+			goals = goalsResult;
+		} catch {
+			// Silently fail - editing will work without dropdowns
+		}
+	}
+
 	// Focus input when opened
 	$effect(() => {
 		if (isOpen) {
@@ -47,9 +72,25 @@
 			displayContent = '';
 			currentIntent = null;
 			successMessage = null;
+			editablePreviewData = null;
+			loadEditingData();
 			tick().then(() => inputRef?.focus());
 		}
 	});
+
+	// Sync editable data when intent changes
+	$effect(() => {
+		if (currentIntent?.preview?.data) {
+			editablePreviewData = { ...currentIntent.preview.data };
+		} else {
+			editablePreviewData = null;
+		}
+	});
+
+	// Handler for preview data changes from child components
+	function handlePreviewDataChange(data: TaskPreviewData | GoalPreviewData | HabitStackPreviewData | IdentityPreviewData) {
+		editablePreviewData = data;
+	}
 
 	// Handle escape key
 	function handleKeydown(e: KeyboardEvent) {
@@ -126,17 +167,20 @@
 	async function createFromPreview(preview: AiPreview) {
 		isCreating = true;
 		try {
+			// Use editablePreviewData if available (user may have edited), otherwise fall back to original
+			const dataToCreate = editablePreviewData ?? preview.data;
+
 			if (preview.type === 'task' && onCreateTask) {
-				await onCreateTask(preview.data as TaskPreviewData);
+				await onCreateTask(dataToCreate as TaskPreviewData);
 				successMessage = $t('ai.successMessages.taskCreated');
 			} else if (preview.type === 'goal' && onCreateGoal) {
-				await onCreateGoal(preview.data as GoalPreviewData);
+				await onCreateGoal(dataToCreate as GoalPreviewData);
 				successMessage = $t('ai.successMessages.goalCreated');
 			} else if (preview.type === 'habitStack' && onCreateHabitStack) {
-				await onCreateHabitStack(preview.data as HabitStackPreviewData);
+				await onCreateHabitStack(dataToCreate as HabitStackPreviewData);
 				successMessage = $t('ai.successMessages.habitStackCreated');
 			} else if (preview.type === 'identity' && onCreateIdentity) {
-				await onCreateIdentity(preview.data as IdentityPreviewData);
+				await onCreateIdentity(dataToCreate as IdentityPreviewData);
 				successMessage = $t('ai.successMessages.identityCreated');
 			}
 
@@ -266,14 +310,30 @@
 									</div>
 								{/if}
 
-								{#if currentIntent.preview.type === 'task'}
-									<TaskPreviewCard data={currentIntent.preview.data as TaskPreviewData} />
-								{:else if currentIntent.preview.type === 'goal'}
-									<GoalPreviewCard data={currentIntent.preview.data as GoalPreviewData} />
-								{:else if currentIntent.preview.type === 'habitStack'}
-									<HabitStackPreviewCard data={currentIntent.preview.data as HabitStackPreviewData} />
-								{:else if currentIntent.preview.type === 'identity'}
-									<IdentityPreviewCard data={currentIntent.preview.data as IdentityPreviewData} />
+								{#if currentIntent.preview.type === 'task' && editablePreviewData}
+									<TaskPreviewCard
+										data={editablePreviewData as TaskPreviewData}
+										{identities}
+										{goals}
+										onchange={(d) => handlePreviewDataChange(d)}
+									/>
+								{:else if currentIntent.preview.type === 'goal' && editablePreviewData}
+									<GoalPreviewCard
+										data={editablePreviewData as GoalPreviewData}
+										{identities}
+										onchange={(d) => handlePreviewDataChange(d)}
+									/>
+								{:else if currentIntent.preview.type === 'habitStack' && editablePreviewData}
+									<HabitStackPreviewCard
+										data={editablePreviewData as HabitStackPreviewData}
+										{identities}
+										onchange={(d) => handlePreviewDataChange(d)}
+									/>
+								{:else if currentIntent.preview.type === 'identity' && editablePreviewData}
+									<IdentityPreviewCard
+										data={editablePreviewData as IdentityPreviewData}
+										onchange={(d) => handlePreviewDataChange(d)}
+									/>
 								{/if}
 							</div>
 						{/if}

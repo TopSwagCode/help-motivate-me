@@ -801,7 +801,16 @@
 			"identity": "Identitet",
 			"targetDate": "Målsdato",
 			"trigger": "Trigger",
-			"identityRecommendation": "AI anbefaler"
+			"identityRecommendation": "AI anbefaler",
+			"notSet": "Ikke angivet",
+			"selectIdentity": "Vælg identitet",
+			"selectGoal": "Vælg mål",
+			"none": "Ingen",
+			"addDescription": "Tilføj beskrivelse",
+			"setDate": "Angiv dato",
+			"clickToEdit": "Klik for at redigere",
+			"dueDate": "Forfaldsdato",
+			"parentGoal": "Overordnet mål"
 		},
 		"actions": {
 			"confirm": "Opret",

@@ -1,13 +1,52 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
 	import type { HabitStackPreviewData } from '$lib/api/aiGeneral';
+	import type { Identity } from '$lib/types/identity';
 	import IdentityRecommendationBadge from '../IdentityRecommendationBadge.svelte';
 
 	interface Props {
 		data: HabitStackPreviewData;
+		identities?: Identity[];
+		onchange?: (data: HabitStackPreviewData) => void;
 	}
 
-	let { data }: Props = $props();
+	let { data, identities = [], onchange }: Props = $props();
+
+	// Editing states
+	let editingName = $state(false);
+	let editingDescription = $state(false);
+	let editingTrigger = $state(false);
+	let editingHabitIndex = $state<number | null>(null);
+
+	// Local copy of data for editing
+	let localData = $state({ ...data, habits: [...(data.habits || [])] });
+
+	// Sync when parent data changes
+	$effect(() => {
+		localData = { ...data, habits: [...(data.habits || [])] };
+	});
+
+	function updateField<K extends keyof HabitStackPreviewData>(field: K, value: HabitStackPreviewData[K]) {
+		localData = { ...localData, [field]: value };
+		onchange?.(localData);
+	}
+
+	function handleIdentityChange(identityId: string) {
+		const identity = identities.find(i => i.id === identityId);
+		localData = {
+			...localData,
+			identityId: identityId || null,
+			identityName: identity?.name ?? null
+		};
+		onchange?.(localData);
+	}
+
+	function updateHabit(index: number, field: 'cueDescription' | 'habitDescription', value: string) {
+		const newHabits = [...localData.habits];
+		newHabits[index] = { ...newHabits[index], [field]: value };
+		localData = { ...localData, habits: newHabits };
+		onchange?.(localData);
+	}
 </script>
 
 <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
@@ -25,50 +64,149 @@
 		</div>
 	</div>
 
-	<h3 class="text-lg font-semibold text-gray-900">{data.name}</h3>
-
-	{#if data.description}
-		<p class="text-gray-600 mt-1 text-sm">{data.description}</p>
+	<!-- Editable Name -->
+	{#if editingName}
+		<input
+			type="text"
+			bind:value={localData.name}
+			onblur={() => { editingName = false; onchange?.(localData); }}
+			onkeydown={(e) => { if (e.key === 'Enter') { editingName = false; onchange?.(localData); } if (e.key === 'Escape') editingName = false; }}
+			class="w-full text-lg font-semibold text-gray-900 bg-white border border-amber-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-amber-400"
+			autofocus
+		/>
+	{:else}
+		<button
+			type="button"
+			onclick={() => editingName = true}
+			class="text-lg font-semibold text-gray-900 hover:bg-amber-100 rounded px-1 -mx-1 transition-colors text-left w-full"
+			title={$t('ai.preview.clickToEdit')}
+		>
+			{localData.name || $t('ai.preview.notSet')}
+		</button>
 	{/if}
 
-	<!-- Trigger cue -->
-	{#if data.triggerCue}
-		<div class="mt-3 flex items-center gap-2 text-sm text-amber-700">
-			<span class="font-medium">{$t('ai.preview.trigger')}:</span>
-			<span class="italic">{data.triggerCue}</span>
-		</div>
+	<!-- Editable Description -->
+	{#if editingDescription}
+		<textarea
+			bind:value={localData.description}
+			onblur={() => { editingDescription = false; onchange?.(localData); }}
+			onkeydown={(e) => { if (e.key === 'Escape') editingDescription = false; }}
+			class="w-full text-gray-600 mt-1 text-sm bg-white border border-amber-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-amber-400 resize-none"
+			rows="2"
+			autofocus
+		></textarea>
+	{:else}
+		<button
+			type="button"
+			onclick={() => editingDescription = true}
+			class="text-gray-600 mt-1 text-sm hover:bg-amber-100 rounded px-1 -mx-1 transition-colors text-left w-full {!localData.description ? 'italic text-gray-400' : ''}"
+			title={$t('ai.preview.clickToEdit')}
+		>
+			{localData.description || $t('ai.preview.addDescription')}
+		</button>
 	{/if}
 
-	<!-- Habits list -->
-	{#if data.habits && data.habits.length > 0}
+	<!-- Editable Trigger cue -->
+	<div class="mt-3 flex items-center gap-2 text-sm text-amber-700">
+		<span class="font-medium">{$t('ai.preview.trigger')}:</span>
+		{#if editingTrigger}
+			<input
+				type="text"
+				bind:value={localData.triggerCue}
+				onblur={() => { editingTrigger = false; onchange?.(localData); }}
+				onkeydown={(e) => { if (e.key === 'Enter') { editingTrigger = false; onchange?.(localData); } if (e.key === 'Escape') editingTrigger = false; }}
+				class="flex-1 italic bg-white border border-amber-300 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-amber-400 text-sm"
+				autofocus
+			/>
+		{:else}
+			<button
+				type="button"
+				onclick={() => editingTrigger = true}
+				class="italic hover:bg-amber-100 rounded px-1 transition-colors {!localData.triggerCue ? 'text-amber-500' : ''}"
+				title={$t('ai.preview.clickToEdit')}
+			>
+				{localData.triggerCue || $t('ai.preview.notSet')}
+			</button>
+		{/if}
+	</div>
+
+	<!-- Editable Habits list -->
+	{#if localData.habits && localData.habits.length > 0}
 		<div class="mt-3 space-y-2">
-			{#each data.habits as habit, index}
+			{#each localData.habits as habit, index}
 				<div class="flex items-start gap-2 text-sm">
 					<div
 						class="flex-shrink-0 w-5 h-5 rounded-full bg-amber-200 text-amber-700 flex items-center justify-center text-xs font-medium"
 					>
 						{index + 1}
 					</div>
-					<div>
-						<span class="text-gray-500">{habit.cueDescription}</span>
-						<span class="mx-1 text-gray-400">→</span>
-						<span class="font-medium text-gray-900">{habit.habitDescription}</span>
+					<div class="flex-1">
+						{#if editingHabitIndex === index}
+							<div class="space-y-1">
+								<input
+									type="text"
+									value={habit.cueDescription}
+									onchange={(e) => updateHabit(index, 'cueDescription', e.currentTarget.value)}
+									onblur={() => { editingHabitIndex = null; onchange?.(localData); }}
+									class="w-full text-gray-500 bg-white border border-amber-300 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-amber-400 text-sm"
+									placeholder="After I..."
+								/>
+								<div class="flex items-center gap-1">
+									<span class="text-gray-400">→</span>
+									<input
+										type="text"
+										value={habit.habitDescription}
+										onchange={(e) => updateHabit(index, 'habitDescription', e.currentTarget.value)}
+										onblur={() => { editingHabitIndex = null; onchange?.(localData); }}
+										class="flex-1 font-medium text-gray-900 bg-white border border-amber-300 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-amber-400 text-sm"
+										placeholder="I will..."
+									/>
+								</div>
+							</div>
+						{:else}
+							<button
+								type="button"
+								onclick={() => editingHabitIndex = index}
+								class="text-left hover:bg-amber-100 rounded px-1 -mx-1 transition-colors w-full"
+								title={$t('ai.preview.clickToEdit')}
+							>
+								<span class="text-gray-500">{habit.cueDescription}</span>
+								<span class="mx-1 text-gray-400">→</span>
+								<span class="font-medium text-gray-900">{habit.habitDescription}</span>
+							</button>
+						{/if}
 					</div>
 				</div>
 			{/each}
 		</div>
 	{/if}
 
-	<!-- Identity link -->
-	{#if data.identityName}
-		<div class="mt-3">
+	<!-- Editable Identity link -->
+	<div class="mt-3 flex flex-wrap gap-2">
+		{#if identities.length > 0}
+			<div class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-purple-700 bg-purple-100 rounded-full">
+				<select
+					value={localData.identityId || ''}
+					onchange={(e) => handleIdentityChange(e.currentTarget.value)}
+					class="bg-transparent border-none outline-none text-xs font-medium text-purple-700 cursor-pointer appearance-none pr-4"
+				>
+					<option value="">{$t('ai.preview.none')}</option>
+					{#each identities as identity}
+						<option value={identity.id}>{identity.icon ? `${identity.icon} ` : ''}{identity.name}</option>
+					{/each}
+				</select>
+				{#if !localData.identityId}
+					<span class="text-purple-500 -ml-3">{$t('ai.preview.selectIdentity')}</span>
+				{/if}
+			</div>
+		{:else if localData.identityName}
 			<span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-purple-700 bg-purple-100 rounded-full">
-				{data.identityName}
+				{localData.identityName}
 			</span>
-		</div>
-	{/if}
+		{/if}
+	</div>
 
-	{#if data.identityName && data.reasoning}
-		<IdentityRecommendationBadge identityName={data.identityName} reasoning={data.reasoning} />
+	{#if localData.identityName && localData.reasoning}
+		<IdentityRecommendationBadge identityName={localData.identityName} reasoning={localData.reasoning} />
 	{/if}
 </div>
