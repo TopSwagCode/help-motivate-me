@@ -119,6 +119,14 @@ public static class OnboardingPrompts
         - cueDescription should just be the action (e.g., "waking up", "making bed")
         - habitDescription should just be the action (e.g., "drink water", "stretch")
 
+        IDENTITY LINKING:
+        If user identities are provided in context, link habit stacks to relevant identities.
+        Include "identityName" in each stack when there's a clear match:
+        - Fitness routines -> link to fitness/athlete identity
+        - Morning productivity -> link to productive person identity
+        - Reading habits -> link to reader identity
+        Example: {"name":"Morning Workout","identityName":"Athlete",...}
+
         WHEN USER WANTS TO MOVE ON (done, next, continue, that's all, etc.):
         ```json
         {"action":"next_step","suggestedActions":[]}
@@ -181,6 +189,14 @@ public static class OnboardingPrompts
         ```json
         {"action":"none","suggestedActions":["Health goal","Career goal","Skip this step"]}
         ```
+
+        IDENTITY LINKING:
+        If user identities are provided in context, link goals to relevant identities.
+        Include "identityName" in each goal when there's a clear match:
+        - Fitness goals (marathon, lose weight) -> link to fitness/athlete identity
+        - Learning goals -> link to learner/reader identity
+        - Career goals -> link to professional identity
+        Example: {"title":"Run a Marathon","identityName":"Athlete",...}
 
         WHEN USER WANTS TO FINISH (done, next, continue, that's all, etc.):
         ```json
@@ -265,6 +281,38 @@ public static class OnboardingPrompts
 
         contextLines.Add("");
         contextLines.Add("When the user mentions relative dates like 'next week', 'next month', 'by end of year', etc., use the above context to calculate the correct date in YYYY-MM-DD format.");
+
+        // Add identity context if available (for habit stack and goal steps)
+        if (context.TryGetValue("userIdentities", out var identitiesObj) && identitiesObj is System.Text.Json.JsonElement jsonElement)
+        {
+            var identities = new List<(string id, string name)>();
+            if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.Array)
+            {
+                foreach (var item in jsonElement.EnumerateArray())
+                {
+                    var id = item.TryGetProperty("id", out var idProp) ? idProp.GetString() : null;
+                    var name = item.TryGetProperty("name", out var nameProp) ? nameProp.GetString() : null;
+                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(name))
+                    {
+                        identities.Add((id, name));
+                    }
+                }
+            }
+
+            if (identities.Count > 0)
+            {
+                contextLines.Add("");
+                contextLines.Add("USER'S IDENTITIES (created in previous step):");
+                foreach (var (id, name) in identities)
+                {
+                    contextLines.Add($"- \"{name}\" (id: {id})");
+                }
+                contextLines.Add("");
+                contextLines.Add("IMPORTANT: When creating habit stacks or goals, you can link them to an identity by including 'identityName' in the data.");
+                contextLines.Add("This helps the user connect their habits and goals to who they want to become.");
+                contextLines.Add("Example: If user mentions routines related to fitness, link to a fitness-related identity like \"Athlete\".");
+            }
+        }
 
         return basePrompt + string.Join("\n", contextLines);
     }

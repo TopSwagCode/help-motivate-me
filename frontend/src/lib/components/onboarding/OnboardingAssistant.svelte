@@ -7,6 +7,7 @@
 	import GoalPreviewCard from '$lib/components/ai/previews/GoalPreviewCard.svelte';
 	import { streamOnboardingChat, type ChatMessage, type ExtractedData, type OnboardingStep } from '$lib/api/ai';
 	import type { IdentityPreviewData, HabitStackPreviewData, GoalPreviewData } from '$lib/api/aiGeneral';
+	import type { CreatedIdentity } from './ChatIdentityStep.svelte';
 
 	interface Props {
 		step: OnboardingStep;
@@ -17,9 +18,10 @@
 		onBack?: () => void;
 		showBack?: boolean;
 		onItemCreated?: () => void;
+		identities?: CreatedIdentity[];
 	}
 
-	let { step, initialMessage, onExtractedData, onSkip, onNext, onBack, showBack = false, onItemCreated }: Props = $props();
+	let { step, initialMessage, onExtractedData, onSkip, onNext, onBack, showBack = false, onItemCreated, identities = [] }: Props = $props();
 
 	let inputValue = $state('');
 	let isLoading = $state(false);
@@ -211,7 +213,12 @@
 			let fullContent = '';
 			let lastExtractedData: ExtractedData | null = null;
 
-			for await (const chunk of streamOnboardingChat(conversationHistory, step)) {
+			// Build additional context with identities if available
+			const additionalContext = identities.length > 0 ? {
+				userIdentities: identities.map(i => ({ id: i.id, name: i.name }))
+			} : undefined;
+
+			for await (const chunk of streamOnboardingChat(conversationHistory, step, additionalContext)) {
 				fullContent += chunk.content;
 				if (chunk.extractedData) {
 					lastExtractedData = chunk.extractedData;

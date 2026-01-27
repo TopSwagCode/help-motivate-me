@@ -119,6 +119,14 @@ public class EnglishPromptProvider : IPromptProvider
         - cueDescription should just be the action (e.g., "waking up", "making bed")
         - habitDescription should just be the action (e.g., "drink water", "stretch")
 
+        IDENTITY LINKING:
+        If user identities are provided in context, link habit stacks to relevant identities.
+        Include "identityName" in each stack when there's a clear match:
+        - Fitness routines -> link to fitness/athlete identity
+        - Morning productivity -> link to productive person identity
+        - Reading habits -> link to reader identity
+        Example: {"name":"Morning Workout","identityName":"Athlete",...}
+
         WHEN USER WANTS TO MOVE ON (done, next, continue, that's all, etc.):
         ```json
         {"action":"next_step","suggestedActions":[]}
@@ -181,6 +189,14 @@ public class EnglishPromptProvider : IPromptProvider
         ```json
         {"action":"none","suggestedActions":["Health goal","Career goal","Skip this step"]}
         ```
+
+        IDENTITY LINKING:
+        If user identities are provided in context, link goals to relevant identities.
+        Include "identityName" in each goal when there's a clear match:
+        - Fitness goals (marathon, lose weight) -> link to fitness/athlete identity
+        - Learning goals -> link to learner/reader identity
+        - Career goals -> link to professional identity
+        Example: {"title":"Run a Marathon","identityName":"Athlete",...}
 
         WHEN USER WANTS TO FINISH (done, next, continue, that's all, etc.):
         ```json

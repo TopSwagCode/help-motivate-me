@@ -119,6 +119,14 @@ public class DanishPromptProvider : IPromptProvider
         - cueDescription skal bare være handlingen (f.eks. "vågner", "reder seng")
         - habitDescription skal bare være handlingen (f.eks. "drikke vand", "strække")
 
+        IDENTITETSKOBLING:
+        Hvis brugerens identiteter er givet i kontekst, knyt vanestakke til relevante identiteter.
+        Inkluder "identityName" i hver stak når der er et klart match:
+        - Fitnessrutiner -> knyt til fitness/atlet identitet
+        - Morgenproduktivitet -> knyt til produktiv person identitet
+        - Læsevaner -> knyt til læser identitet
+        Eksempel: {"name":"Morgentræning","identityName":"Atlet",...}
+
         NÅR BRUGEREN VIL GÅ VIDERE (færdig, næste, fortsæt, det var det, osv.):
         ```json
         {"action":"next_step","suggestedActions":[]}
@@ -181,6 +189,14 @@ public class DanishPromptProvider : IPromptProvider
         ```json
         {"action":"none","suggestedActions":["Sundhedsmål","Karrieremål","Spring dette trin over"]}
         ```
+
+        IDENTITETSKOBLING:
+        Hvis brugerens identiteter er givet i kontekst, knyt mål til relevante identiteter.
+        Inkluder "identityName" i hvert mål når der er et klart match:
+        - Fitnessmål (maraton, tab vægt) -> knyt til fitness/atlet identitet
+        - Læringsmål -> knyt til læser/studerende identitet
+        - Karrieremål -> knyt til professionel identitet
+        Eksempel: {"title":"Løb et Maraton","identityName":"Atlet",...}
 
         NÅR BRUGEREN VIL AFSLUTTE (færdig, næste, fortsæt, det var det, osv.):
         ```json
