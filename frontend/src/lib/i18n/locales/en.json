@@ -147,6 +147,14 @@
 			"errorSaving": "Sorry, there was an error saving. Please try again.",
 			"errorGeneric": "Sorry, something went wrong. Please try again."
 		},
+		"assistant": {
+			"accept": "Yes, create this",
+			"addMore": "Add More",
+			"done": "Done",
+			"hint": "Describe what you'd like to create...",
+			"created": "Created! Want to add more?",
+			"addMorePrompt": "Tell me about another one you'd like to create."
+		},
 		"complete": {
 			"title": "You're All Set!",
 			"subtitle": "Great job completing your setup. You're ready to start your journey!",

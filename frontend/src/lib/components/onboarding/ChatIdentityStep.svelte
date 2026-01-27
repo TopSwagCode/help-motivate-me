@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
-	import ChatOnboarding from './ChatOnboarding.svelte';
+	import OnboardingAssistant from './OnboardingAssistant.svelte';
 	import { createIdentity } from '$lib/api/identities';
 	import type { ExtractedData } from '$lib/api/ai';
 
@@ -95,7 +95,7 @@
 	</div>
 
 	<div class="flex-1 overflow-hidden">
-		<ChatOnboarding
+		<OnboardingAssistant
 			step="identity"
 			{initialMessage}
 			onExtractedData={handleExtractedData}
