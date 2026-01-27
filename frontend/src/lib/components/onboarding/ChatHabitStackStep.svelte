@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
-	import ChatOnboarding from './ChatOnboarding.svelte';
+	import OnboardingAssistant from './OnboardingAssistant.svelte';
 	import { createHabitStack } from '$lib/api/habitStacks';
 	import type { ExtractedData } from '$lib/api/ai';
 
@@ -115,7 +115,7 @@
 	</div>
 
 	<div class="flex-1 overflow-hidden">
-		<ChatOnboarding
+		<OnboardingAssistant
 			step="habitStack"
 			{initialMessage}
 			onExtractedData={handleExtractedData}

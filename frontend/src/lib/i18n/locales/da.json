@@ -147,6 +147,14 @@
 			"errorSaving": "Beklager, der opstod en fejl ved gemning. Prøv venligst igen.",
 			"errorGeneric": "Beklager, noget gik galt. Prøv venligst igen."
 		},
+		"assistant": {
+			"accept": "Ja, opret dette",
+			"addMore": "Tilføj flere",
+			"done": "Færdig",
+			"hint": "Beskriv hvad du gerne vil oprette...",
+			"created": "Oprettet! Vil du tilføje flere?",
+			"addMorePrompt": "Fortæl mig om en anden, du gerne vil oprette."
+		},
 		"complete": {
 			"title": "Du er klar!",
 			"subtitle": "Godt arbejde med at fuldføre din opsætning. Du er klar til at begynde din rejse!",
