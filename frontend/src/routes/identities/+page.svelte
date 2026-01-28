@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
+	import { commandBar } from '$lib/stores/commandBar';
 	import { t } from 'svelte-i18n';
 	import { get } from 'svelte/store';
 	import { getIdentities, createIdentity, updateIdentity, deleteIdentity } from '$lib/api/identities';
@@ -123,11 +124,18 @@
 						</div>
 						<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('identities.emptyTitle')}</h3>
 						<p class="text-gray-500 mb-4">{$t('identities.emptyDescription')}</p>
-						<p class="text-gray-500 text-sm mb-6 flex items-center justify-center gap-1">
+						<p class="text-gray-500 text-sm mb-6 flex items-center justify-center gap-1 flex-wrap">
 							{$t('identities.emptyHowTo')}
-							<svg class="w-4 h-4 text-amber-500 inline-block" fill="currentColor" viewBox="0 0 24 24">
-								<path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"/>
-							</svg>
+							<button
+								type="button"
+								onclick={() => commandBar.open()}
+								class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:scale-110 hover:shadow-md transition-all cursor-pointer"
+								title="Open AI Assistant"
+							>
+								<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+								</svg>
+							</button>
 						</p>
 						<button onclick={openCreateModal} class="btn-primary">{$t('identities.createFirst')}</button>
 					</div>

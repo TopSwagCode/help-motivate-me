@@ -2,6 +2,7 @@
 	import '../app.css';
 	import { page } from '$app/stores';
 	import { auth } from '$lib/stores/auth';
+	import { commandBar } from '$lib/stores/commandBar';
 	import TopNav from '$lib/components/layout/TopNav.svelte';
 	import BetaBanner from '$lib/components/layout/BetaBanner.svelte';
 	import CommandBar from '$lib/components/ai/CommandBar.svelte';
@@ -42,9 +43,6 @@
 
 	let { children } = $props();
 
-	// Command bar state
-	let commandBarOpen = $state(false);
-
 	// Sync locale with user's preferred language when auth state changes
 	$effect(() => {
 		if ($auth.user?.preferredLanguage && i18nReady) {
@@ -66,7 +64,7 @@
 		if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
 			e.preventDefault();
 			if (shouldShowNav()) {
-				commandBarOpen = !commandBarOpen;
+				commandBar.toggle();
 			}
 		}
 	}
@@ -168,8 +166,8 @@
 	<!-- Command Bar (Cmd+K / Ctrl+K) -->
 	{#if shouldShowNav()}
 		<CommandBar
-			isOpen={commandBarOpen}
-			onClose={() => (commandBarOpen = false)}
+			isOpen={$commandBar}
+			onClose={() => commandBar.close()}
 			onCreateTask={handleCreateTask}
 			onCreateGoal={handleCreateGoal}
 			onCreateHabitStack={handleCreateHabitStack}
@@ -179,7 +177,7 @@
 		<!-- Floating AI Assistant Button -->
 		<button
 			type="button"
-			onclick={() => (commandBarOpen = true)}
+			onclick={() => commandBar.open()}
 			class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 
 			       bg-gradient-to-r from-primary-600 to-primary-700 
 			       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 

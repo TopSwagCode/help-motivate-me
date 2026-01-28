@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { t, locale } from 'svelte-i18n';
 	import { get } from 'svelte/store';
+	import { commandBar } from '$lib/stores/commandBar';
 	import type { TodayView, TodayTask, TodayHabitStack, IdentityFeedback, IdentityProgress } from '$lib/types';
 	import type { BuddyTodayViewResponse, BuddyTodayTask, BuddyTodayHabitStack } from '$lib/types/buddy';
 
@@ -451,9 +452,16 @@
 							<span class="text-gray-400 hidden sm:inline">•</span>
 							<span class="text-gray-500 flex items-center gap-1">
 								{$t('today.orUseAssistant')}
-								<svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
-									<path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"/>
-								</svg>
+								<button
+									type="button"
+									onclick={() => commandBar.open()}
+									class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:scale-110 hover:shadow-md transition-all cursor-pointer"
+									title="Open AI Assistant"
+								>
+									<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+									</svg>
+								</button>
 							</span>
 						</div>
 					{/if}
@@ -613,9 +621,16 @@
 							<span class="text-gray-400 hidden sm:inline">•</span>
 							<span class="text-gray-500 flex items-center gap-1">
 								{$t('today.orUseAssistant')}
-								<svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
-									<path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"/>
-								</svg>
+								<button
+									type="button"
+									onclick={() => commandBar.open()}
+									class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:scale-110 hover:shadow-md transition-all cursor-pointer"
+									title="Open AI Assistant"
+								>
+									<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+									</svg>
+								</button>
 							</span>
 						</div>
 					{/if}

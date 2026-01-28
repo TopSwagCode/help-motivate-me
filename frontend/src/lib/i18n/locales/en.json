@@ -867,7 +867,7 @@
 		"pending": "Pending",
 		"completed": "Completed",
 		"noPendingTasks": "No pending tasks. Only tasks due within the next 7 days appear here.",
-		"noHabitStacks": "No habit stacks yet. Create some to build your daily routine.",
+		"noHabitStacks": "No habit stacks yet.",
 		"noCompletedTasks": "No completed tasks yet",
 		"goToGoals": "Create tasks in Goals",
 		"orUseAssistant": "or use the assistant",
