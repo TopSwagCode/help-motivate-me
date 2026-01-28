@@ -863,6 +863,7 @@
 		"pending": "Afventer",
 		"completed": "Fuldført",
 		"noPendingTasks": "Ingen ventende opgaver for denne dag",
+		"noHabitStacks": "Ingen vanestakke endnu. Opret nogle for at opbygge din daglige rutine.",
 		"noCompletedTasks": "Ingen fuldførte opgaver endnu",
 		"allClear": "Alt klart!",
 		"allClearDescription": "Ingen vanestakke eller opgaver for denne dag. Opret nogle vanestakke for at opbygge din rutine.",

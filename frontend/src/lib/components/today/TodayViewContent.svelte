@@ -247,24 +247,24 @@
 	{/if}
 
 	<!-- Habit Stacks -->
-	{#if todayData.habitStacks.length > 0}
-		<section data-tour="habit-stacks">
-			<button 
-				onclick={() => toggleSection('habitStacks')}
-				class="w-full flex items-center justify-between text-left mb-3 group"
+	<section data-tour="habit-stacks">
+		<button 
+			onclick={() => toggleSection('habitStacks')}
+			class="w-full flex items-center justify-between text-left mb-3 group"
+		>
+			<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+				<span>🔗</span> {$t('today.habitStacks')}
+				<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.habitStacks.length}</span>
+			</h2>
+			<svg 
+				class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.habitStacks ? 'rotate-180' : ''}"
+				fill="none" stroke="currentColor" viewBox="0 0 24 24"
 			>
-				<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
-					<span>🔗</span> {$t('today.habitStacks')}
-					<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.habitStacks.length}</span>
-				</h2>
-				<svg 
-					class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.habitStacks ? 'rotate-180' : ''}"
-					fill="none" stroke="currentColor" viewBox="0 0 24 24"
-				>
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-				</svg>
-			</button>
-			{#if sectionsExpanded.habitStacks}
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+			</svg>
+		</button>
+		{#if sectionsExpanded.habitStacks}
+			{#if todayData.habitStacks.length > 0}
 				<div class="columns-1 sm:columns-2 lg:columns-3 gap-2 space-y-2">
 					{#each todayData.habitStacks as stack (stack.id)}
 						<div 
@@ -440,9 +440,18 @@
 						</div>
 					{/each}
 				</div>
+			{:else}
+				<div class="text-center py-6 px-4 rounded-lg bg-gray-50 border border-gray-100">
+					<p class="text-gray-500 text-sm mb-3">{$t('today.noHabitStacks')}</p>
+					{#if !readonly}
+						<a href="/habit-stacks" class="text-sm text-primary-600 hover:text-primary-700 font-medium">
+							{$t('today.createHabitStack')} →
+						</a>
+					{/if}
+				</div>
 			{/if}
-		</section>
-	{/if}
+		{/if}
+	</section>
 
 	<!-- Upcoming Tasks -->
 	<section data-tour="tasks-section">
@@ -664,18 +673,4 @@
 			{/if}
 		{/if}
 	</section>
-
-	<!-- Empty State -->
-	{#if todayData.habitStacks.length === 0 && todayData.upcomingTasks.length === 0 && todayData.completedTasks.length === 0}
-		<div class="card p-12 text-center">
-			<div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-				<span class="text-3xl">🌟</span>
-			</div>
-			<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('today.allClear')}</h3>
-			<p class="text-gray-500 mb-6">{$t('today.allClearDescription')}</p>
-			{#if !readonly}
-				<a href="/habit-stacks" class="btn-primary">{$t('today.createHabitStack')}</a>
-			{/if}
-		</div>
-	{/if}
 </div>

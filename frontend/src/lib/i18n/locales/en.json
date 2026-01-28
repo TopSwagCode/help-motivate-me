@@ -863,6 +863,7 @@
 		"pending": "Pending",
 		"completed": "Completed",
 		"noPendingTasks": "No pending tasks for this day",
+		"noHabitStacks": "No habit stacks yet. Create some to build your daily routine.",
 		"noCompletedTasks": "No completed tasks yet",
 		"allClear": "All clear!",
 		"allClearDescription": "No habit stacks or tasks for this day. Create some habit stacks to build your routine.",
