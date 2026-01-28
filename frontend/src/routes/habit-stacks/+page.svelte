@@ -498,15 +498,21 @@
 					{/each}
 				</div>
 			{:else}
-				<div class="card p-12 text-center">
-					<div
-						class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center"
-					>
-						<span class="text-3xl">🔗</span>
+				<div class="card p-8 sm:p-12">
+					<div class="max-w-md mx-auto text-center">
+						<div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+							<span class="text-3xl">🔗</span>
+						</div>
+						<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('habitStacks.emptyTitle')}</h3>
+						<p class="text-gray-500 mb-4">{$t('habitStacks.emptyDescription')}</p>
+						<p class="text-gray-500 text-sm mb-6 flex items-center justify-center gap-1">
+							{$t('habitStacks.emptyHowTo')}
+							<svg class="w-4 h-4 text-amber-500 inline-block" fill="currentColor" viewBox="0 0 24 24">
+								<path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"/>
+							</svg>
+						</p>
+						<button onclick={openCreatePopup} class="btn-primary">{$t('habitStacks.createFirst')}</button>
 					</div>
-					<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('habitStacks.emptyTitle')}</h3>
-					<p class="text-gray-500 mb-6">{$t('habitStacks.emptyDescription')}</p>
-					<button onclick={openCreatePopup} class="btn-primary">{$t('habitStacks.createFirst')}</button>
 				</div>
 			{/if}
 		{/if}

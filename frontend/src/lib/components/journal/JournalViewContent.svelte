@@ -228,9 +228,17 @@
 			<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('journal.emptyFriendsTitle')}</h3>
 			<p class="text-gray-500">{$t('journal.emptyFriendsDescription')}</p>
 		{:else}
-			<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('journal.emptyTitle')}</h3>
-			<p class="text-gray-500 mb-6">{$t('journal.emptyDescription')}</p>
-			<button onclick={onCreateEntry} class="btn-primary">{$t('journal.createFirst')}</button>
+			<div class="max-w-md mx-auto">
+				<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('journal.emptyTitle')}</h3>
+				<p class="text-gray-500 mb-4">{$t('journal.emptyDescription')}</p>
+				<p class="text-gray-500 text-sm mb-6 flex items-center justify-center gap-1">
+					{$t('journal.emptyHowTo')}
+					<svg class="w-4 h-4 text-amber-500 inline-block" fill="currentColor" viewBox="0 0 24 24">
+						<path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"/>
+					</svg>
+				</p>
+				<button onclick={onCreateEntry} class="btn-primary">{$t('journal.createFirst')}</button>
+			</div>
 		{/if}
 	</div>
 {:else}
