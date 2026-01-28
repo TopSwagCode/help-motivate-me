@@ -441,12 +441,21 @@
 					{/each}
 				</div>
 			{:else}
-				<div class="text-center py-6 px-4 rounded-lg bg-gray-50 border border-gray-100">
+				<div class="py-6 px-4 rounded-lg bg-gray-50 border border-gray-100">
 					<p class="text-gray-500 text-sm mb-3">{$t('today.noHabitStacks')}</p>
 					{#if !readonly}
-						<a href="/habit-stacks" class="text-sm text-primary-600 hover:text-primary-700 font-medium">
-							{$t('today.createHabitStack')} →
-						</a>
+						<div class="flex flex-col sm:flex-row items-center justify-center gap-2 text-sm">
+							<a href="/habit-stacks" class="text-primary-600 hover:text-primary-700 font-medium">
+								{$t('today.createHabitStack')} →
+							</a>
+							<span class="text-gray-400 hidden sm:inline">•</span>
+							<span class="text-gray-500 flex items-center gap-1">
+								{$t('today.orUseAssistant')}
+								<svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
+									<path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"/>
+								</svg>
+							</span>
+						</div>
 					{/if}
 				</div>
 			{/if}
@@ -594,8 +603,22 @@
 					{/each}
 				</div>
 			{:else}
-				<div class="text-center text-gray-400 py-8">
-					{$t('today.noPendingTasks')}
+				<div class="py-6 px-4 rounded-lg bg-gray-50 border border-gray-100">
+					<p class="text-gray-500 text-sm mb-3">{$t('today.noPendingTasks')}</p>
+					{#if !readonly}
+						<div class="flex flex-col sm:flex-row items-center justify-center gap-2 text-sm">
+							<a href="/goals" class="text-primary-600 hover:text-primary-700 font-medium">
+								{$t('today.goToGoals')} →
+							</a>
+							<span class="text-gray-400 hidden sm:inline">•</span>
+							<span class="text-gray-500 flex items-center gap-1">
+								{$t('today.orUseAssistant')}
+								<svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
+									<path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"/>
+								</svg>
+							</span>
+						</div>
+					{/if}
 				</div>
 			{/if}
 		{/if}
