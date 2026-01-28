@@ -442,7 +442,7 @@
 				</div>
 			{:else}
 				<div class="py-6 px-4 rounded-lg bg-gray-50 border border-gray-100">
-					<p class="text-gray-500 text-sm mb-3">{$t('today.noHabitStacks')}</p>
+					<p class="text-gray-500 flex flex-col sm:flex-row items-center justify-center gap-2 text-sm mb-3">{$t('today.noHabitStacks')}</p>
 					{#if !readonly}
 						<div class="flex flex-col sm:flex-row items-center justify-center gap-2 text-sm">
 							<a href="/habit-stacks" class="text-primary-600 hover:text-primary-700 font-medium">
@@ -604,7 +604,7 @@
 				</div>
 			{:else}
 				<div class="py-6 px-4 rounded-lg bg-gray-50 border border-gray-100">
-					<p class="text-gray-500 text-sm mb-3">{$t('today.noPendingTasks')}</p>
+					<p class="text-gray-500 flex flex-col sm:flex-row items-center justify-center gap-2 text-sm mb-3">{$t('today.noPendingTasks')}</p>
 					{#if !readonly}
 						<div class="flex flex-col sm:flex-row items-center justify-center gap-2 text-sm">
 							<a href="/goals" class="text-primary-600 hover:text-primary-700 font-medium">
