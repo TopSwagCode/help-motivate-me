@@ -396,6 +396,7 @@
 				>
 			</div>
 		{:else}
+			<div data-tour="journal-feed">
 			<JournalViewContent
 				{entries}
 				mode="feed"
@@ -408,6 +409,7 @@
 				onAddReaction={handleAddReaction}
 				onRemoveReaction={handleRemoveReaction}
 			/>
+			</div>
 		{/if}
 	</main>
 

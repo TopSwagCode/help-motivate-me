@@ -89,6 +89,7 @@
 				<button onclick={openModal} class="btn-primary">{$t('goals.createFirst')}</button>
 			</div>
 		{:else}
+			<div data-tour="goals-list">
 			<!-- Active Goals -->
 			{#if activeGoals.length > 0}
 				<section class="mb-8">
@@ -156,6 +157,7 @@
 					</div>
 				</section>
 			{/if}
+			</div>
 		{/if}
 	</main>
 

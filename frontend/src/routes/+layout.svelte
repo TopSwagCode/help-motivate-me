@@ -8,6 +8,7 @@
 	import PWAReloadPrompt from '$lib/components/PWAReloadPrompt.svelte';
 	import PushPermissionPrompt from '$lib/components/PushPermissionPrompt.svelte';
 	import OfflineBanner from '$lib/components/OfflineBanner.svelte';
+	import GuidedTour from '$lib/components/tour/GuidedTour.svelte';
 	import { initI18n, setLocale, getLocaleFromLanguage } from '$lib/i18n';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
@@ -158,6 +159,11 @@
 	{/if}
 
 	{@render children()}
+
+	<!-- Guided Tour (renders when tour is active) -->
+	{#if shouldShowNav()}
+		<GuidedTour />
+	{/if}
 
 	<!-- Command Bar (Cmd+K / Ctrl+K) -->
 	{#if shouldShowNav()}

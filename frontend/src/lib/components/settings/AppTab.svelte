@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
+	import { goto } from '$app/navigation';
 	import { pwaStore } from '$lib/stores/pwa';
+	import { tour } from '$lib/stores/tour';
 	import { browser } from '$app/environment';
 
 	let installing = $state(false);
@@ -22,6 +24,11 @@
 		} finally {
 			installing = false;
 		}
+	}
+
+	function restartGuidedTour() {
+		tour.resetTour();
+		goto('/today');
 	}
 </script>
 
@@ -187,6 +194,29 @@
 			</div>
 		</div>
 	{/if}
+
+	<!-- Guided Tour Section -->
+	<div class="border border-gray-200 rounded-lg overflow-hidden">
+		<div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+			<h3 class="font-medium text-gray-900">{$t('tour.settings.title')}</h3>
+		</div>
+		<div class="p-4">
+			<div class="flex items-center justify-between gap-4">
+				<div>
+					<p class="text-sm text-gray-600">{$t('tour.settings.description')}</p>
+					<p class="text-xs text-gray-400 mt-1">
+						{$tour.hasCompletedTour ? $t('tour.settings.completed') : $t('tour.settings.notCompleted')}
+					</p>
+				</div>
+				<button
+					onclick={restartGuidedTour}
+					class="btn-secondary flex-shrink-0 text-sm"
+				>
+					{$t('tour.settings.restart')}
+				</button>
+			</div>
+		</div>
+	</div>
 
 	<!-- Benefits Section -->
 	<div class="border border-gray-200 rounded-lg overflow-hidden">

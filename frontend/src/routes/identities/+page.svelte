@@ -104,7 +104,7 @@
 			</div>
 		{:else}
 			{#if identities.length > 0}
-				<div class="grid gap-4 sm:grid-cols-2">
+				<div class="grid gap-4 sm:grid-cols-2" data-tour="identities-list">
 					{#each identities as identity (identity.id)}
 						<button
 							type="button"

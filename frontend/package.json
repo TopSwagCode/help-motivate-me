@@ -35,6 +35,7 @@
   "type": "module",
   "dependencies": {
     "canvas-confetti": "^1.9.4",
+    "driver.js": "^1.4.0",
     "svelte-i18n": "^4.0.1"
   }
 }

@@ -12,6 +12,7 @@
 	import { completeDailyCommitment, dismissDailyCommitment } from '$lib/api/dailyCommitment';
 	import WelcomePopup from '$lib/components/onboarding/WelcomePopup.svelte';
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
+	import { tour } from '$lib/stores/tour';
 	import TodayViewContent from '$lib/components/today/TodayViewContent.svelte';
 	import DailyCommitmentCard from '$lib/components/today/DailyCommitmentCard.svelte';
 	import CommitmentFlowModal from '$lib/components/today/CommitmentFlowModal.svelte';
@@ -90,6 +91,11 @@
 
 	function closeWelcomePopup() {
 		showWelcomePopup = false;
+	}
+
+	function startGuidedTour() {
+		showWelcomePopup = false;
+		tour.startTour();
 	}
 
 	async function loadToday() {
@@ -614,7 +620,7 @@
 		{:else if todayData}
 			<!-- Daily Commitment Card (only show if viewing today) -->
 			{#if isToday()}
-				<div class="mb-6">
+				<div class="mb-6" data-tour="daily-commitment">
 					<DailyCommitmentCard
 						commitment={todayData.dailyCommitment}
 						yesterdayCommitment={todayData.yesterdayCommitment}
@@ -763,7 +769,7 @@
 
 	<!-- Welcome Popup (shown after onboarding completion) -->
 	{#if showWelcomePopup}
-		<WelcomePopup onclose={closeWelcomePopup} />
+		<WelcomePopup onclose={closeWelcomePopup} ontour={startGuidedTour} />
 	{/if}
 
 	<!-- Daily Commitment Flow Modal -->

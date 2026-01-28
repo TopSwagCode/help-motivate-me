@@ -5,9 +5,10 @@
 
 	interface Props {
 		onclose: () => void;
+		ontour?: () => void;
 	}
 
-	let { onclose }: Props = $props();
+	let { onclose, ontour }: Props = $props();
 
 	onMount(() => {
 		// Fire confetti explosion
@@ -99,13 +100,27 @@
 			</ul>
 		</div>
 
-		<!-- CTA button -->
-		<button onclick={onclose} class="btn-primary w-full text-lg py-3">
-			{$t('onboarding.welcome.letsGo')}
-			<svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-			</svg>
-		</button>
+		<!-- CTA buttons -->
+		<div class="space-y-3">
+			{#if ontour}
+				<button onclick={ontour} class="btn-primary w-full text-lg py-3">
+					{$t('tour.welcome.takeTour')}
+					<svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+					</svg>
+				</button>
+				<button onclick={onclose} class="w-full text-gray-500 hover:text-gray-700 text-sm py-2">
+					{$t('tour.welcome.skipTour')}
+				</button>
+			{:else}
+				<button onclick={onclose} class="btn-primary w-full text-lg py-3">
+					{$t('onboarding.welcome.letsGo')}
+					<svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+					</svg>
+				</button>
+			{/if}
+		</div>
 	</div>
 </div>
 

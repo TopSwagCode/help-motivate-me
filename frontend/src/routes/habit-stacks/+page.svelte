@@ -413,7 +413,7 @@
 			</div>
 		{:else}
 			{#if stacks.length > 0}
-				<div class="space-y-4">
+				<div class="space-y-4" data-tour="stacks-list">
 					{#each stacks as stack (stack.id)}
 						<button
 							type="button"

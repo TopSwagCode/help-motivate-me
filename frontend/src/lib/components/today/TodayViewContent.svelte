@@ -248,7 +248,7 @@
 
 	<!-- Habit Stacks -->
 	{#if todayData.habitStacks.length > 0}
-		<section>
+		<section data-tour="habit-stacks">
 			<button 
 				onclick={() => toggleSection('habitStacks')}
 				class="w-full flex items-center justify-between text-left mb-3 group"
@@ -445,7 +445,7 @@
 	{/if}
 
 	<!-- Upcoming Tasks -->
-	<section>
+	<section data-tour="tasks-section">
 		<div class="flex items-center justify-between mb-3">
 			<button 
 				onclick={() => toggleSection('tasks')}

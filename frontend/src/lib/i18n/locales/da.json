@@ -1300,5 +1300,74 @@
 		"benefit3": "Motiverende beskeder",
 		"enable": "Aktivér",
 		"notNow": "Ikke nu"
+	},
+	"tour": {
+		"welcome": {
+			"takeTour": "Tag en guidet rundvisning",
+			"skipTour": "Spring over for nu"
+		},
+		"controls": {
+			"next": "Næste",
+			"previous": "Forrige",
+			"skip": "Spring rundvisning over",
+			"finish": "Afslut",
+			"step": "Trin {current} af {total}"
+		},
+		"today": {
+			"commitment": {
+				"title": "Daglig forpligtelse",
+				"description": "Start hver dag med at vælge en identitet at fokusere på og forpligt dig til en lille handling. Dette forstærker hvem du er ved at blive."
+			},
+			"habits": {
+				"title": "Vanestakke",
+				"description": "Dine vanestakke for i dag. Afkryds hver vane, når du fuldfører den, for at opbygge rækker og forstærke din identitet."
+			},
+			"tasks": {
+				"title": "Opgaver",
+				"description": "Opgaver der forfalder i dag eller inden for de næste 7 dage. Du kan udsætte opgaver med 7 dage, udskyde til en bestemt dato eller redigere dem. Opgaver er knyttet til dine mål."
+			}
+		},
+		"goals": {
+			"overview": {
+				"title": "Dine mål",
+				"description": "Mål giver retning til din indsats. Opret mål med måldatoer og opdel dem i mindre opgaver. Forbind mål med identiteter for ekstra motivation."
+			}
+		},
+		"habitStacks": {
+			"overview": {
+				"title": "Vanestabling",
+				"description": "Kæd vaner sammen ved hjælp af formlen: 'Efter jeg [trigger], vil jeg [vane]'. Dette gør nye vaner nemmere at huske og opbygger kraftfulde rutiner."
+			}
+		},
+		"journal": {
+			"overview": {
+				"title": "Dagbog",
+				"description": "Reflekter over din rejse ved at skrive dagbogsindlæg. Forbind indlæg med vanestakke eller opgaver, og tilføj billeder for at fastholde øjeblikke."
+			}
+		},
+		"identities": {
+			"overview": {
+				"title": "Dine identiteter",
+				"description": "Identiteter definerer hvem du vil blive. Hver fuldendt vane og opgave er en stemme for disse identiteter. Dette er fundamentet for varig adfærdsændring."
+			}
+		},
+		"buddies": {
+			"overview": {
+				"title": "Ansvarlighedsvenner",
+				"description": "Inviter venner eller familie til at være dine ansvarlighedsvenner. De kan se dine fremskridt og efterlade opmuntrende noter i din dagbog."
+			}
+		},
+		"completion": {
+			"title": "Rundvisning færdig!",
+			"description": "Du har set de vigtigste funktioner. Husk, du kan altid genstarte denne rundvisning fra Indstillinger.",
+			"getStarted": "Kom i gang"
+		},
+		"settings": {
+			"title": "Guidet rundvisning",
+			"description": "Genstart den guidede rundvisning for at lære om alle appens funktioner.",
+			"restart": "Genstart guidet rundvisning",
+			"completed": "Rundvisning afsluttet",
+			"notCompleted": "Rundvisning ikke afsluttet"
+		}
 	}
 }

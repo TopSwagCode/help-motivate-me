@@ -1300,5 +1300,74 @@
 		"benefit3": "Motivational messages",
 		"enable": "Enable",
 		"notNow": "Not Now"
+	},
+	"tour": {
+		"welcome": {
+			"takeTour": "Take Guided Tour",
+			"skipTour": "Skip for now"
+		},
+		"controls": {
+			"next": "Next",
+			"previous": "Previous",
+			"skip": "Skip Tour",
+			"finish": "Finish",
+			"step": "Step {current} of {total}"
+		},
+		"today": {
+			"commitment": {
+				"title": "Daily Commitment",
+				"description": "Start each day by choosing one identity to focus on and committing to a small action. This reinforces who you're becoming."
+			},
+			"habits": {
+				"title": "Habit Stacks",
+				"description": "Your habit stacks for today. Check off each habit as you complete it to build streaks and reinforce your identity."
+			},
+			"tasks": {
+				"title": "Tasks",
+				"description": "Tasks due today or within the next 7 days. You can snooze tasks by 7 days, postpone to a specific date, or edit them. Tasks are linked to your goals."
+			}
+		},
+		"goals": {
+			"overview": {
+				"title": "Your Goals",
+				"description": "Goals give direction to your efforts. Create goals with target dates and break them into smaller tasks. Link goals to identities for extra motivation."
+			}
+		},
+		"habitStacks": {
+			"overview": {
+				"title": "Habit Stacking",
+				"description": "Chain habits together using the formula: 'After I [trigger], I will [habit]'. This makes new habits easier to remember and builds powerful routines."
+			}
+		},
+		"journal": {
+			"overview": {
+				"title": "Journal",
+				"description": "Reflect on your journey by writing journal entries. Link entries to habit stacks or tasks, and add images to capture moments."
+			}
+		},
+		"identities": {
+			"overview": {
+				"title": "Your Identities",
+				"description": "Identities define who you want to become. Every completed habit and task is a vote for these identities. This is the foundation of lasting behavior change."
+			}
+		},
+		"buddies": {
+			"overview": {
+				"title": "Accountability Buddies",
+				"description": "Invite friends or family to be your accountability buddies. They can view your progress and leave encouraging notes in your journal."
+			}
+		},
+		"completion": {
+			"title": "Tour Complete!",
+			"description": "You've seen the main features. Remember, you can restart this tour anytime from Settings.",
+			"getStarted": "Get Started"
+		},
+		"settings": {
+			"title": "Guided Tour",
+			"description": "Restart the guided tour to learn about all the app features.",
+			"restart": "Restart Guided Tour",
+			"completed": "Tour completed",
+			"notCompleted": "Tour not completed"
+		}
 	}
 }

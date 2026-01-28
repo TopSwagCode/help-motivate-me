@@ -134,6 +134,7 @@
 				>
 			</div>
 		{:else if relationships}
+			<div data-tour="buddies-section">
 			<!-- Invite New Buddy Section -->
 			<div class="card p-6 mb-8">
 				<h2 class="text-lg font-semibold text-gray-900 mb-4">{$t('buddies.invite.title')}</h2>
@@ -237,6 +238,7 @@
 						{/each}
 					</div>
 				{/if}
+			</div>
 			</div>
 		{/if}
 	</main>
