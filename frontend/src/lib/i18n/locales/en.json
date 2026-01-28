@@ -1319,6 +1319,10 @@
 				"title": "Daily Commitment",
 				"description": "Start each day by choosing one identity to focus on and committing to a small action. This reinforces who you're becoming."
 			},
+			"identityProgress": {
+				"title": "Identity Progress",
+				"description": "Track your progress towards each identity. Every completed habit, task, and daily commitment casts a vote for who you're becoming. Watch your scores grow as you take action!"
+			},
 			"habits": {
 				"title": "Habit Stacks",
 				"description": "Your habit stacks for today. Check off each habit as you complete it to build streaks and reinforce your identity."

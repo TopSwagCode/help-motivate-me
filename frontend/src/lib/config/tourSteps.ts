@@ -10,7 +10,16 @@ export const tourSteps: TourStep[] = [
 		descriptionKey: 'tour.today.commitment.description',
 		position: 'bottom'
 	},
-	// TODAY PAGE - Step 2: Habit Stacks
+	// TODAY PAGE - Step 2: Identity Progress
+	{
+		id: 'today-identity-progress',
+		page: '/today',
+		element: '[data-tour="identity-progress"]',
+		titleKey: 'tour.today.identityProgress.title',
+		descriptionKey: 'tour.today.identityProgress.description',
+		position: 'bottom'
+	},
+	// TODAY PAGE - Step 3: Habit Stacks
 	{
 		id: 'today-habits',
 		page: '/today',
@@ -19,7 +28,7 @@ export const tourSteps: TourStep[] = [
 		descriptionKey: 'tour.today.habits.description',
 		position: 'bottom'
 	},
-	// TODAY PAGE - Step 3: Tasks
+	// TODAY PAGE - Step 4: Tasks
 	{
 		id: 'today-tasks',
 		page: '/today',

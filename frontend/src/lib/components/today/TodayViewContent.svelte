@@ -194,7 +194,7 @@
 
 	<!-- Identity Progress -->
 	{#if hasIdentityProgress(todayData) && todayData.identityProgress && todayData.identityProgress.length > 0}
-		<section>
+		<section data-tour="identity-progress">
 			<button 
 				onclick={() => toggleSection('identityProgress')}
 				class="w-full flex items-center justify-between text-left mb-2 group"

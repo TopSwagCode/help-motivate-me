@@ -1319,6 +1319,10 @@
 				"title": "Daglig forpligtelse",
 				"description": "Start hver dag med at vælge en identitet at fokusere på og forpligt dig til en lille handling. Dette forstærker hvem du er ved at blive."
 			},
+			"identityProgress": {
+				"title": "Identitetsfremskridt",
+				"description": "Følg dine fremskridt mod hver identitet. Hver fuldført vane, opgave og daglig forpligtelse er en stemme for hvem du er ved at blive. Se dine scorer vokse, når du handler!"
+			},
 			"habits": {
 				"title": "Vanestakke",
 				"description": "Dine vanestakke for i dag. Afkryds hver vane, når du fuldfører den, for at opbygge rækker og forstærke din identitet."
