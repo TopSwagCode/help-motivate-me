@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { get } from 'svelte/store';
 	import { auth } from '$lib/stores/auth';
 
 	let error = $state('');
@@ -18,7 +19,14 @@
 
 		// Refresh auth state and redirect
 		await auth.init();
-		goto('/today');
+		
+		// Check if user needs onboarding
+		const authState = get(auth);
+		if (authState.user && !authState.user.hasCompletedOnboarding) {
+			goto('/onboarding');
+		} else {
+			goto('/today');
+		}
 	});
 </script>
 

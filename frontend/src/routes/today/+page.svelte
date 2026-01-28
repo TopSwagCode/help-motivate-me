@@ -72,6 +72,12 @@
 			return;
 		}
 
+		// Check if user needs onboarding
+		if (!$auth.user.hasCompletedOnboarding) {
+			goto('/onboarding');
+			return;
+		}
+
 		// Check if we should show welcome popup (from onboarding completion)
 		if ($page.url.searchParams.get('welcome') === 'true') {
 			showWelcomePopup = true;

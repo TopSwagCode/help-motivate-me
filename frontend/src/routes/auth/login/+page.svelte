@@ -23,7 +23,12 @@
 			try {
 				const user = await loginWithToken(token);
 				auth.setUser(user);
-				goto('/today');
+				// Check if user needs onboarding
+				if (!user.hasCompletedOnboarding) {
+					goto('/onboarding');
+				} else {
+					goto('/today');
+				}
 			} catch (err: unknown) {
 				if (err instanceof ApiError && err.code === 'not_whitelisted') {
 					const userEmail = err.data?.email as string;
