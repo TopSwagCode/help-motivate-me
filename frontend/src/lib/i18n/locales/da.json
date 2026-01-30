@@ -1048,6 +1048,37 @@
 		"notFound": "Den anmodede ressource blev ikke fundet.",
 		"validation": "Tjek venligst dit input og prøv igen."
 	},
+	"errorPages": {
+		"notFound": {
+			"title": "Side ikke fundet",
+			"code": "404",
+			"message": "Siden du leder efter findes ikke eller er blevet flyttet.",
+			"suggestion": "Tjek URL'en eller gå tilbage for at fortsætte din rejse."
+		},
+		"serverError": {
+			"title": "Noget gik galt",
+			"code": "500",
+			"message": "Vi oplever tekniske problemer.",
+			"suggestion": "Prøv venligst igen om et øjeblik."
+		},
+		"offline": {
+			"title": "Du er offline",
+			"code": "Offline",
+			"message": "Det ser ud til, at du har mistet din internetforbindelse.",
+			"suggestion": "Tjek din forbindelse og prøv igen."
+		},
+		"serverUnavailable": {
+			"title": "Server utilgængelig",
+			"code": "Utilgængelig",
+			"message": "Vi har problemer med at oprette forbindelse til vores servere.",
+			"suggestion": "Dette kan være midlertidigt. Prøv venligst igen om lidt."
+		},
+		"actions": {
+			"goHome": "Gå til forsiden",
+			"goBack": "Gå tilbage",
+			"tryAgain": "Prøv igen"
+		}
+	},
 	"admin": {
 		"title": "Admin Dashboard",
 		"subtitle": "Systemoversigt og brugeradministration",

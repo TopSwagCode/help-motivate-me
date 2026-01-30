@@ -1048,6 +1048,37 @@
 		"notFound": "The requested resource was not found.",
 		"validation": "Please check your input and try again."
 	},
+	"errorPages": {
+		"notFound": {
+			"title": "Page Not Found",
+			"code": "404",
+			"message": "The page you're looking for doesn't exist or has been moved.",
+			"suggestion": "Check the URL or head back to continue your journey."
+		},
+		"serverError": {
+			"title": "Something Went Wrong",
+			"code": "500",
+			"message": "We're experiencing technical difficulties.",
+			"suggestion": "Please try again in a few moments."
+		},
+		"offline": {
+			"title": "You're Offline",
+			"code": "Offline",
+			"message": "It looks like you've lost your internet connection.",
+			"suggestion": "Check your connection and try again."
+		},
+		"serverUnavailable": {
+			"title": "Server Unavailable",
+			"code": "Unavailable",
+			"message": "We're having trouble connecting to our servers.",
+			"suggestion": "This might be temporary. Please try again shortly."
+		},
+		"actions": {
+			"goHome": "Go to Home",
+			"goBack": "Go Back",
+			"tryAgain": "Try Again"
+		}
+	},
 	"admin": {
 		"title": "Admin Dashboard",
 		"subtitle": "System overview and user management",
