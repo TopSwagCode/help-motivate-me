@@ -112,7 +112,7 @@
 </script>
 
 <div class="min-h-screen bg-gray-50">
-	<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+	<main class="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-8">
 		<div class="mb-6">
 			<InfoOverlay 
 				title={$t('buddies.pageTitle')} 

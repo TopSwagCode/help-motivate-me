@@ -16,6 +16,7 @@ public record TaskResponse(
     Guid? IdentityId,
     string? IdentityName,
     string? IdentityIcon,
+    string? IdentityColor,
     DateTime CreatedAt,
     DateTime UpdatedAt
 );

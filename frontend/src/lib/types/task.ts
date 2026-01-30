@@ -17,6 +17,7 @@ export interface Task {
 	identityId: string | null;
 	identityName: string | null;
 	identityIcon: string | null;
+	identityColor: string | null;
 	createdAt: string;
 	updatedAt: string;
 }

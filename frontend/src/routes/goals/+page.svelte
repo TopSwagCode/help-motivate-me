@@ -56,7 +56,7 @@
 </script>
 
 <div class="min-h-screen bg-gray-50">
-	<main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+	<main class="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
 		<div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6 sm:mb-8">
 			<InfoOverlay 
 				title={$t('goals.pageTitle')} 
@@ -112,43 +112,58 @@
 					<h2 class="text-lg font-semibold text-gray-900 mb-4">{$t('goals.activeGoals')} ({activeGoals.length})</h2>
 					<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						{#each activeGoals as goal (goal.id)}
-							<a href="/goals/{goal.id}" class="card-hover p-6 block">
-								<div class="flex items-start justify-between gap-2 mb-3">
-									<h3 class="font-medium text-gray-900 line-clamp-2">{goal.title}</h3>
-									{#if goal.identityIcon || goal.identityColor}
-										<span 
-											class="flex-shrink-0 text-lg"
-											style="color: {goal.identityColor || 'inherit'}"
-											title={goal.identityName || ''}
+							<a
+								href="/goals/{goal.id}"
+								class="block rounded-lg overflow-hidden transition-all hover:shadow-md"
+								style="background-color: {goal.identityColor || '#6366f1'}08; border: 1px solid {goal.identityColor || '#6366f1'}20"
+							>
+								<!-- Header with identity badge -->
+								<div
+									class="px-4 py-2 flex items-center justify-between"
+									style="background-color: {goal.identityColor || '#6366f1'}15"
+								>
+									{#if goal.identityIcon || goal.identityName}
+										<span
+											class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium"
+											style="background-color: {goal.identityColor || '#6366f1'}20; color: {goal.identityColor || '#6366f1'}"
 										>
-											{goal.identityIcon || '●'}
+											{#if goal.identityIcon}
+												<span>{goal.identityIcon}</span>
+											{/if}
+											{goal.identityName || ''}
 										</span>
+									{:else}
+										<span></span>
 									{/if}
-								</div>
-
-								{#if goal.description}
-									<p class="text-sm text-gray-500 line-clamp-2 mb-4">{goal.description}</p>
-								{/if}
-
-								<div class="flex items-center justify-between text-sm">
-									<span class="text-gray-500">
-										{goal.completedTaskCount}/{goal.taskCount} {$t('goals.tasks')}
-									</span>
 									{#if goal.targetDate}
-										<span class="text-gray-400">
+										<span class="text-xs text-gray-500">
 											{new Date(goal.targetDate + 'T12:00:00').toLocaleDateString(get(locale) === 'da' ? 'da-DK' : 'en-US')}
 										</span>
 									{/if}
 								</div>
 
-								{#if goal.taskCount > 0}
-									<div class="mt-3 bg-gray-200 rounded-full h-1.5">
-										<div
-											class="bg-primary-600 h-1.5 rounded-full transition-all duration-300"
-											style="width: {(goal.completedTaskCount / goal.taskCount) * 100}%"
-										></div>
+								<div class="p-4">
+									<h3 class="font-medium text-gray-900 line-clamp-2 mb-2">{goal.title}</h3>
+
+									{#if goal.description}
+										<p class="text-sm text-gray-500 line-clamp-2 mb-3">{goal.description}</p>
+									{/if}
+
+									<div class="flex items-center justify-between text-sm">
+										<span class="text-gray-500">
+											{goal.completedTaskCount}/{goal.taskCount} {$t('goals.tasks')}
+										</span>
 									</div>
-								{/if}
+
+									{#if goal.taskCount > 0}
+										<div class="mt-3 bg-gray-200 rounded-full h-1.5">
+											<div
+												class="h-1.5 rounded-full transition-all duration-300"
+												style="width: {(goal.completedTaskCount / goal.taskCount) * 100}%; background-color: {goal.identityColor || '#6366f1'}"
+											></div>
+										</div>
+									{/if}
+								</div>
 							</a>
 						{/each}
 					</div>
@@ -161,12 +176,21 @@
 					<h2 class="text-lg font-semibold text-gray-900 mb-4">{$t('goals.completedGoals')} ({completedGoals.length})</h2>
 					<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						{#each completedGoals as goal (goal.id)}
-							<a href="/goals/{goal.id}" class="card-hover p-6 block opacity-60">
-								<div class="flex items-center gap-3">
+							<a
+								href="/goals/{goal.id}"
+								class="block rounded-lg overflow-hidden transition-all hover:shadow-md opacity-70"
+								style="background-color: {goal.identityColor || '#6366f1'}06; border: 1px solid {goal.identityColor || '#6366f1'}15"
+							>
+								<div class="p-4 flex items-center gap-3">
 									<svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
 										<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
 									</svg>
 									<h3 class="font-medium text-gray-900 line-clamp-1">{goal.title}</h3>
+									{#if goal.identityIcon}
+										<span class="flex-shrink-0 text-lg ml-auto" style="color: {goal.identityColor || '#6366f1'}">
+											{goal.identityIcon}
+										</span>
+									{/if}
 								</div>
 							</a>
 						{/each}

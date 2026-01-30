@@ -592,10 +592,11 @@
 						{#each pendingTasks as task (task.id)}
 							<div
 								class="relative p-4 flex items-center gap-3 transition-all duration-300
-									{goal.isCompleted ? '' : 'hover:bg-gray-50'}
-									{transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95 bg-green-50' : ''}
+									{goal.isCompleted ? '' : 'hover:brightness-95'}
+									{transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95' : ''}
 									{newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight' : ''}
 									{snoozingTaskIds.includes(task.id) ? 'bg-amber-50' : ''}"
+								style={!transitioningTaskIds.includes(task.id) && !snoozingTaskIds.includes(task.id) ? `background-color: ${task.identityColor || '#6366f1'}08` : transitioningTaskIds.includes(task.id) ? 'background-color: rgb(240 253 244)' : ''}
 							>
 								<!-- Snooze animation overlay -->
 								{#if snoozingTaskIds.includes(task.id)}
@@ -691,9 +692,10 @@
 					{#if completedTasks.length > 0}
 						{#each completedTasks as task (task.id)}
 							<div
-								class="p-4 flex items-center gap-3 bg-green-50 transition-all duration-300
-									{transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95 bg-gray-50' : ''}
+								class="p-4 flex items-center gap-3 transition-all duration-300
+									{transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95' : ''}
 									{newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight-green' : ''}"
+								style="background: linear-gradient(135deg, {task.identityColor || '#6366f1'}10, rgb(240 253 244))"
 							>
 								{#if goal.isCompleted}
 									<div class="flex-shrink-0 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">

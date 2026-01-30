@@ -426,6 +426,7 @@ public class TasksController : ControllerBase
             task.IdentityId,
             task.Identity?.Name,
             task.Identity?.Icon,
+            task.Identity?.Color,
             task.CreatedAt,
             task.UpdatedAt
         );
