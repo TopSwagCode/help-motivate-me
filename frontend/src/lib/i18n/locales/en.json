@@ -975,14 +975,18 @@
 	},
 	"identityProof": {
 		"title": "Log Identity Proof",
+		"subtitle": "Capture spontaneous wins that reinforce your identity",
 		"whichIdentity": "Which identity did you reinforce?",
 		"howChallenging": "How challenging was it?",
 		"whatDidYouDo": "What did you do?",
 		"logProof": "Log Proof",
+		"logProofButton": "Log Proof",
 		"success": "Proof Logged!",
 		"easy": "Easy",
 		"moderate": "Moderate",
-		"hard": "Hard"
+		"hard": "Hard",
+		"aiHint": "You can also log proofs using the AI assistant:",
+		"openAiAssistant": "Open AI"
 	},
 	"analytics": {
 		"title": "Analytics",

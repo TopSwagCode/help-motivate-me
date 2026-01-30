@@ -2,6 +2,7 @@
 	import { t } from 'svelte-i18n';
 	import { getCommitmentOptions } from '$lib/api/dailyCommitment';
 	import { createIdentityProof } from '$lib/api/identityProofs';
+	import { commandBar } from '$lib/stores/commandBar';
 	import type { IdentityOption } from '$lib/types/dailyCommitment';
 	import type { ProofIntensity, CreateIdentityProofRequest } from '$lib/types/identityProof';
 
@@ -168,6 +169,24 @@
 
 				<!-- Content -->
 				<div class="flex-1 overflow-y-auto p-5">
+					<!-- AI Assistant hint -->
+					<div class="mb-4 p-3 bg-gradient-to-r from-primary-50 to-purple-50 border border-primary-100 rounded-lg">
+						<p class="text-xs text-gray-600 flex items-center gap-2 flex-wrap">
+							<span>💡</span>
+							<span>{$t('identityProof.aiHint')}</span>
+							<button
+								type="button"
+								onclick={() => { onClose(); commandBar.open(); }}
+								class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium text-primary-700 bg-white border border-primary-200 rounded-full hover:bg-primary-50 transition-colors"
+							>
+								<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+								</svg>
+								{$t('identityProof.openAiAssistant')}
+							</button>
+						</p>
+					</div>
+
 					{#if error}
 						<div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
 							{error}

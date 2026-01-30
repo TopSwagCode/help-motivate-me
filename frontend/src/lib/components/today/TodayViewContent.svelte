@@ -21,6 +21,7 @@
 		onSnoozeTask?: (task: TaskData) => Promise<void>;
 		onPostponeTask?: (task: TaskData) => void;
 		onEditTask?: (task: TaskData) => void;
+		onLogIdentityProof?: () => void;
 		// Animation state (only needed for interactive mode)
 		transitioningTaskIds?: string[];
 		newlyArrivedTaskIds?: string[];
@@ -28,7 +29,7 @@
 		removingAfterSnoozeIds?: string[];
 	}
 
-	let { 
+	let {
 		todayData,
 		readonly = false,
 		onToggleHabitItem,
@@ -38,6 +39,7 @@
 		onSnoozeTask,
 		onPostponeTask,
 		onEditTask,
+		onLogIdentityProof,
 		transitioningTaskIds = [],
 		newlyArrivedTaskIds = [],
 		snoozingTaskIds = [],
@@ -196,20 +198,32 @@
 	<!-- Identity Progress -->
 	{#if hasIdentityProgress(todayData) && todayData.identityProgress && todayData.identityProgress.length > 0}
 		<section data-tour="identity-progress">
-			<button 
-				onclick={() => toggleSection('identityProgress')}
-				class="w-full flex items-center justify-between text-left mb-2 group"
-			>
-				<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
-					<span>📊</span> {$t('today.identityProgress')}
-				</h2>
-				<svg 
-					class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.identityProgress ? 'rotate-180' : ''}"
-					fill="none" stroke="currentColor" viewBox="0 0 24 24"
+			<div class="flex items-center justify-between mb-2">
+				<button
+					onclick={() => toggleSection('identityProgress')}
+					class="flex items-center gap-2 text-left group"
 				>
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-				</svg>
-			</button>
+					<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+						<span>📊</span> {$t('today.identityProgress')}
+					</h2>
+					<svg
+						class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.identityProgress ? 'rotate-180' : ''}"
+						fill="none" stroke="currentColor" viewBox="0 0 24 24"
+					>
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+					</svg>
+				</button>
+				{#if !readonly && onLogIdentityProof && sectionsExpanded.identityProgress}
+					<button
+						onclick={onLogIdentityProof}
+						class="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-amber-700 bg-amber-100 hover:bg-amber-200 rounded-lg transition-colors"
+						title={$t('identityProof.title')}
+					>
+						<span>⚡</span>
+						{$t('identityProof.logProofButton')}
+					</button>
+				{/if}
+			</div>
 			{#if sectionsExpanded.identityProgress}
 				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					{#each todayData.identityProgress as progress (progress.id)}

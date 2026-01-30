@@ -653,6 +653,7 @@
 				onSnoozeTask={handleSnooze}
 				onPostponeTask={openPostponePopup}
 				onEditTask={openEditPopup}
+				onLogIdentityProof={handleOpenProofModal}
 				{transitioningTaskIds}
 				{newlyArrivedTaskIds}
 				{snoozingTaskIds}
@@ -802,10 +803,17 @@
 	{#if isToday() && !loading && todayData}
 		<button
 			onclick={handleOpenProofModal}
-			class="fixed bottom-6 right-6 w-14 h-14 bg-amber-500 hover:bg-amber-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center text-2xl z-40"
-			title={$t('identityProof.title')}
+			class="fixed bottom-6 right-6 group flex items-center gap-2 z-40"
+			title={$t('identityProof.subtitle')}
 		>
-			<span>⚡</span>
+			<!-- Expandable label on hover -->
+			<span class="hidden sm:block max-w-0 group-hover:max-w-xs overflow-hidden whitespace-nowrap transition-all duration-300 ease-out bg-gray-900 text-white text-sm font-medium px-0 group-hover:px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100">
+				{$t('identityProof.logProofButton')}
+			</span>
+			<!-- FAB button -->
+			<span class="w-14 h-14 bg-amber-500 hover:bg-amber-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center text-2xl">
+				⚡
+			</span>
 		</button>
 	{/if}
 </div>

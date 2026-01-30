@@ -975,14 +975,18 @@
 	},
 	"identityProof": {
 		"title": "Log identitetsbevis",
+		"subtitle": "Fang spontane gevinster der forstærker din identitet",
 		"whichIdentity": "Hvilken identitet forstærkede du?",
 		"howChallenging": "Hvor udfordrende var det?",
 		"whatDidYouDo": "Hvad gjorde du?",
 		"logProof": "Log bevis",
+		"logProofButton": "Log bevis",
 		"success": "Bevis logget!",
 		"easy": "Nemt",
 		"moderate": "Moderat",
-		"hard": "Svært"
+		"hard": "Svært",
+		"aiHint": "Du kan også logge beviser med AI-assistenten:",
+		"openAiAssistant": "Åbn AI"
 	},
 	"analytics": {
 		"title": "Analyse",
