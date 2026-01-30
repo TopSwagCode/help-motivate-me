@@ -271,8 +271,11 @@
 
 				{:else if step === 'action'}
 					<!-- Step 2: Action Input -->
-					<p class="text-sm text-gray-600 mb-4">
+					<p class="text-sm text-gray-600 mb-2">
 						{$t('dailyCommitment.modal.actionPrompt', { values: { identity: selectedIdentity?.name } })}
+					</p>
+					<p class="text-xs text-gray-500 mb-4 italic">
+						💡 {$t('dailyCommitment.modal.actionHint')}
 					</p>
 
 					{#if isLoading}

@@ -115,17 +115,17 @@
 			"skipStep": "Spring dette trin over"
 		},
 		"goals": {
-			"title": "Sæt dine mål",
-			"subtitle": "Hvad vil du opnå? Sæt meningsfulde mål for at guide din rejse.",
-			"status": "Hvad vil du opnå?",
+			"title": "Identitetsdrevne mål",
+			"subtitle": "Mål der tjener din identitet - ikke bare resultater at jagte.",
+			"status": "Hvilken identitet tjener dette mål?",
 			"statusCreated": "{count} {count, plural, one {mål} other {mål}} oprettet",
-			"concept": "Gode mål er specifikke, meningsfulde og handlingsorienterede. De kan have måldatoer og opdeles i mindre opgaver.",
-			"initialMessage": "Fremragende! Lad os til sidst sætte nogle meningsfulde mål.\n\nMål giver retning til din indsats og hjælper dig med at spore fremskridt over tid. Gode mål er:\n• Specifikke - klare og veldefinerede\n• Meningsfulde - forbundet med din identitet\n• Handlingsorienterede - kan opdeles i mindre opgaver\n\nFor eksempel:\n• \"Løb et maraton inden december 2025\"\n• \"Skriv og udgiv min første bog\"\n• \"Lær konversationelt spansk\"\n\nDu kan valgfrit sætte måldatoer og senere opdele mål i mindre opgaver.\n\nHvilke mål vil du gerne arbejde hen imod? Hvad vil du opnå?",
+			"concept": "Gode mål besvarer: 'Hvilken identitet tjener dette?' De er bæredygtige, fordi de er knyttet til hvem du er ved at blive.",
+			"initialMessage": "Endelig, lad os sætte nogle identitetsdrevne mål.\n\n**Mål bør ikke være motivationsplakater** - de bør tjene din identitet. Hvert mål bør besvare: 'Hvilken identitet tjener dette?'\n\n**I stedet for:**\n• \"Tab 10 kg\" (resultatfokuseret, nemt at opgive)\n\n**Prøv:**\n• **Identitet:** \"Jeg behandler min krop med respekt\"\n• **Mål:** \"Byg en bæredygtig fitness-rutine\"\n• **Opgaver:** Planlæg træning, følg daglige skridt, madlavning om søndagen\n\nDette forhindrer at du opgiver målet, når motivationen falder - fordi du ikke jagter et resultat, du er ved at blive nogen.\n\nHvilke identitetstjenende mål vil du gerne sætte? Start med identiteten, derefter målet.",
 			"form": {
 				"title": "Måltitel",
-				"titlePlaceholder": "Hvad vil du opnå?",
+				"titlePlaceholder": "Hvilket bæredygtigt resultat tjener din identitet?",
 				"description": "Beskrivelse",
-				"descriptionPlaceholder": "Beskriv dit mål...",
+				"descriptionPlaceholder": "Beskriv dit mål og hvilken identitet det tjener...",
 				"targetDate": "Måldato",
 				"targetDatePlaceholder": "Hvornår vil du opnå dette?"
 			},
@@ -179,7 +179,7 @@
 				},
 				"goals": {
 					"title": "Mål",
-					"description": "Sæt meningsfulde mål"
+					"description": "Identitetsdrevne mål"
 				}
 			}
 		},
@@ -220,13 +220,13 @@
 				"skipContinue": "Spring over & fortsæt"
 			},
 			"goals": {
-				"title": "Sæt dine mål",
-				"intro": "<strong>Mål giver retning til din indsats.</strong> De hjælper dig med at fokusere på det, der virkelig betyder noget, og spore dine fremskridt over tid.",
-				"greatGoals": "Gode mål er:",
-				"specific": "<strong>Specifikke</strong> - Klare og veldefinerede",
-				"meaningful": "<strong>Meningsfulde</strong> - Forbundet med din identitet",
-				"actionable": "<strong>Handlingsorienterede</strong> - Kan opdeles i opgaver",
-				"addTasks": "Du kan tilføje opgaver til hvert mål senere for at opdele dem i håndterbare trin.",
+				"title": "Identitetsdrevne mål",
+				"intro": "<strong>Mål bør tjene din identitet</strong> - ikke bare være resultater at jagte. Hvert mål bør besvare: 'Hvilken identitet tjener dette?'",
+				"greatGoals": "Omformulér dine mål:",
+				"specific": "<strong>I stedet for</strong> 'Tab 10 kg' → <strong>Prøv</strong> 'Byg en bæredygtig fitness-rutine'",
+				"meaningful": "<strong>Tilknyt til identitet</strong> - 'Jeg behandler min krop med respekt'",
+				"actionable": "<strong>Tilføj opgaver</strong> - træning, skridt, madlavning (de små stemmer for din identitet)",
+				"addTasks": "Dette forhindrer at du opgiver målet, når motivationen falder - fordi du er ved at blive nogen, ikke bare jagter et resultat.",
 				"created": "Mål \"{name}\" oprettet!",
 				"createFirst": "Opret mit første mål",
 				"createAnother": "Opret endnu et mål",
@@ -528,13 +528,13 @@
 		"title": "Mål",
 		"pageTitle": "Mine mål",
 		"info": {
-			"description": "<p><strong>Mål</strong> giver retning til dine bestræbelser og hjælper dig med at fokusere på det, der betyder mest.</p><p>Brug SMART-metoden til at skabe mål, der er <em>Specifikke, Målbare, Opnåelige, Relevante og Tidsbegrænsede.</em></p><ul><li><strong>Link til identiteter:</strong> Forbind hvert mål med en identitet for at gøre det mere meningsfuldt</li><li><strong>Opdel i opgaver:</strong> Opdel store mål i mindre, håndterbare opgaver</li><li><strong>Spor fremskridt:</strong> Se hvor mange opgaver du har fuldført mod dit mål</li><li><strong>Fejr sejre:</strong> Marker mål som fuldført og reflekter over din rejse</li></ul><p>Husk: Mål giver dig en destination, men vaner er den transportform, der bringer dig derhen.</p>"
+			"description": "<p><strong>Mål bør tjene din identitet</strong> - ikke bare være resultater at jagte.</p><p><strong>Før du sætter et mål, spørg:</strong> 'Hvilken identitet tjener dette?'</p><p><strong>I stedet for:</strong><br/>• \"Tab 10 kg\" (resultatfokuseret, nemt at opgive)</p><p><strong>Prøv:</strong><br/>• <strong>Identitet:</strong> \"Jeg behandler min krop med respekt\"<br/>• <strong>Mål:</strong> \"Byg en bæredygtig fitness-rutine\"<br/>• <strong>Opgaver:</strong> Planlæg træning, følg skridt, madlavning</p><p>Dette forhindrer at du opgiver målet, når motivationen falder - fordi du er ved at blive nogen, ikke bare jagter et resultat.</p>"
 		},
 		"newGoal": "Nyt mål",
 		"empty": "Ingen mål endnu. Opret dit første mål for at komme i gang!",
 		"emptyTitle": "Ingen mål endnu",
-		"emptyDescription": "Mål hjælper dig med at fokusere på det, der betyder mest. Opdel store ambitioner i mindre, handlingsrettede opgaver, som du kan fuldføre dag for dag.",
-		"emptyHowTo": "Klik på knappen nedenfor for at oprette dit første mål, eller brug assistenten til at hjælpe dig i gang.",
+		"emptyDescription": "Mål bør tjene din identitet - ikke bare være resultater at jagte. Spørg dig selv: 'Hvilken identitet tjener dette mål?' Opdel det derefter i små opgaver, der stemmer for hvem du er ved at blive.",
+		"emptyHowTo": "Klik på knappen nedenfor for at oprette dit første identitetsdrevne mål.",
 		"createFirst": "Opret dit første mål",
 		"create": "Opret mål",
 		"edit": "Rediger mål",
@@ -573,9 +573,9 @@
 		"dueDate": "Forfaldsdato",
 		"form": {
 			"title": "Måltitel",
-			"titlePlaceholder": "Hvad vil du opnå?",
+			"titlePlaceholder": "Hvilket bæredygtigt resultat tjener din identitet?",
 			"description": "Beskrivelse",
-			"descriptionPlaceholder": "Beskriv dit mål...",
+			"descriptionPlaceholder": "Beskriv dit mål og hvilken identitet det tjener...",
 			"targetDate": "Måldato",
 			"submit": "Gem mål",
 			"taskTitle": "Titel",
@@ -920,23 +920,38 @@
 		}
 	},
 	"dailyCommitment": {
-		"title": "Start din dag",
-		"prompt": "Vælg én identitet at fokusere på og forpligt dig til en lille handling, der beviser, at du er ved at blive den person.",
+		"title": "I dag forpligter jeg mig til...",
+		"prompt": "Lav én lille, uforhandlelig forpligtelse. Den skal være så nem, at du ikke kan sige nej.",
 		"startButton": "Lav min forpligtelse",
-		"completeButton": "Marker fuldført",
-		"dismissButton": "Afvis",
-		"completedLabel": "Fuldført",
-		"dismissedLabel": "Afvist",
-		"reinforcement": "Sådan starter en {identity} sin dag.",
+		"completeButton": "Færdig",
+		"dismissButton": "Spring over i dag",
+		"completedLabel": "Færdig",
+		"dismissedLabel": "Sprunget over",
+		"reinforcement": "Hver lille handling er en stemme for, hvem du er ved at blive.",
 		"recoveryTitle": "Ny start",
-		"recoveryMessage": "Gårsdagens forpligtelse skete ikke - og det er okay. I dag er en ny mulighed for at dukke op for {identity}.",
+		"recoveryMessage": "Gårsdagens forpligtelse skete ikke - og det er okay. I dag er en ny chance for at stemme for at være en {identity}.",
+		"rules": {
+			"title": "Ultra-lille & uforhandlelig",
+			"easy": "Pinligt nemt (2 minutter eller mindre)",
+			"aligned": "I tråd med din identitet",
+			"binary": "Simpelt: gjort eller ikke gjort"
+		},
+		"examples": {
+			"title": "Eksempler",
+			"writer": "Åbn min skriveapp",
+			"athlete": "Tag mine træningssko på",
+			"reader": "Læs 1 afsnit",
+			"meditator": "Tag 3 dybe åndedrag",
+			"healthy": "Drik et glas vand"
+		},
 		"modal": {
-			"titleIdentity": "Vælg dit fokus",
-			"titleAction": "Din forpligtelse",
+			"titleIdentity": "Hvem vil du være i dag?",
+			"titleAction": "I dag forpligter jeg mig til...",
 			"titleConfirm": "Klar til at forpligte dig?",
-			"identityPrompt": "Hvilken identitet vil du styrke i dag?",
-			"actionPrompt": "Hvilken lille handling vil bevise, at du er en {identity}?",
-			"suggestions": "Forslag",
+			"identityPrompt": "Vælg den identitet, du vil styrke i dag",
+			"actionPrompt": "Hvilken ultra-lille handling vil stemme for at være en {identity}?",
+			"actionHint": "Gør det pinligt nemt - noget du ikke kan sige nej til",
+			"suggestions": "Hurtige gevinster",
 			"orCustom": "Eller skriv din egen",
 			"yourAction": "Din handling",
 			"customPlaceholder": "Jeg vil...",
@@ -948,8 +963,8 @@
 			"successTitle": "Du er forpligtet!"
 		},
 		"settings": {
-			"title": "Daglig identitetsforpligtelse",
-			"description": "Start hver dag med at forpligte dig til én lille handling for en identitet",
+			"title": "Daglig forpligtelse",
+			"description": "Start hver dag med én ultra-lille, uforhandlelig handling der forstærker hvem du er ved at blive",
 			"enabled": "Aktivér daglig forpligtelse",
 			"defaultMode": "Smart standardidentitet",
 			"weakest": "Genopretningsnudge",
@@ -1366,8 +1381,8 @@
 		},
 		"today": {
 			"commitment": {
-				"title": "Daglig forpligtelse",
-				"description": "Start hver dag med at vælge en identitet at fokusere på og forpligt dig til en lille handling. Dette forstærker hvem du er ved at blive."
+				"title": "I dag forpligter jeg mig til...",
+				"description": "Hver dag laver du én ultra-lille, uforhandlelig forpligtelse. Den skal være pinligt nem (som 'åbn min skriveapp' eller 'tag træningssko på'). Hver lille handling er en stemme for hvem du er ved at blive."
 			},
 			"identityProgress": {
 				"title": "Identitetsfremskridt",
@@ -1388,8 +1403,8 @@
 		},
 		"goals": {
 			"overview": {
-				"title": "Dine mål",
-				"description": "Mål giver retning til din indsats. Opret mål med måldatoer og opdel dem i mindre opgaver. Forbind mål med identiteter for ekstra motivation."
+				"title": "Identitetsdrevne mål",
+				"description": "Hvert mål bør besvare: 'Hvilken identitet tjener dette?' I stedet for 'Tab 10 kg', prøv 'Byg en bæredygtig fitness-rutine' forbundet med 'Jeg behandler min krop med respekt'. Opdel mål i opgaver - hver opgave er en lille stemme for din identitet."
 			}
 		},
 		"habitStacks": {

@@ -115,17 +115,17 @@
 			"skipStep": "Skip this step"
 		},
 		"goals": {
-			"title": "Set Your Goals",
-			"subtitle": "What do you want to achieve? Set meaningful goals to guide your journey.",
-			"status": "What do you want to achieve?",
+			"title": "Identity-Driven Goals",
+			"subtitle": "Goals that serve your identity - not just outcomes to chase.",
+			"status": "What identity does this goal serve?",
 			"statusCreated": "{count} {count, plural, one {goal} other {goals}} created",
-			"concept": "Great goals are specific, meaningful, and actionable. They can have target dates and be broken into smaller tasks.",
-			"initialMessage": "Excellent! Finally, let's set some meaningful goals.\n\nGoals give direction to your efforts and help you track progress over time. Great goals are:\n• Specific - clear and well-defined\n• Meaningful - connected to your identity\n• Actionable - can be broken into smaller tasks\n\nFor example:\n• \"Run a marathon by December 2025\"\n• \"Write and publish my first book\"\n• \"Learn conversational Spanish\"\n\nYou can optionally set target dates and later break goals into smaller tasks.\n\nWhat goals would you like to work towards? What do you want to achieve?",
+			"concept": "Great goals answer: 'What identity does this serve?' They're sustainable because they're tied to who you're becoming.",
+			"initialMessage": "Finally, let's set some identity-driven goals.\n\n**Goals shouldn't be motivational posters** - they should serve your identity. Every goal should answer: 'What identity does this serve?'\n\n**Instead of:**\n• \"Lose 20 lbs\" (outcome-focused, easy to abandon)\n\n**Try:**\n• **Identity:** \"I treat my body with respect\"\n• **Goal:** \"Build a sustainable fitness routine\"\n• **Tasks:** Schedule gym time, track daily steps, meal prep on Sundays\n\nThis prevents goal abandonment when motivation dips - because you're not chasing an outcome, you're becoming someone.\n\nWhat identity-serving goals would you like to set? Start with the identity, then the goal.",
 			"form": {
 				"title": "Goal Title",
-				"titlePlaceholder": "What do you want to achieve?",
+				"titlePlaceholder": "What sustainable outcome serves your identity?",
 				"description": "Description",
-				"descriptionPlaceholder": "Describe your goal...",
+				"descriptionPlaceholder": "Describe your goal and which identity it serves...",
 				"targetDate": "Target Date",
 				"targetDatePlaceholder": "When do you want to achieve this?"
 			},
@@ -179,7 +179,7 @@
 				},
 				"goals": {
 					"title": "Goals",
-					"description": "Set meaningful objectives"
+					"description": "Identity-driven objectives"
 				}
 			}
 		},
@@ -220,13 +220,13 @@
 				"skipContinue": "Skip & Continue"
 			},
 			"goals": {
-				"title": "Set Your Goals",
-				"intro": "<strong>Goals give direction to your efforts.</strong> They help you focus on what truly matters and track your progress over time.",
-				"greatGoals": "Great goals are:",
-				"specific": "<strong>Specific</strong> - Clear and well-defined",
-				"meaningful": "<strong>Meaningful</strong> - Connected to your identity",
-				"actionable": "<strong>Actionable</strong> - Can be broken into tasks",
-				"addTasks": "You can add tasks to each goal later to break them down into manageable steps.",
+				"title": "Identity-Driven Goals",
+				"intro": "<strong>Goals should serve your identity</strong> - not just be outcomes to chase. Every goal should answer: 'What identity does this serve?'",
+				"greatGoals": "Reframe your goals:",
+				"specific": "<strong>Instead of</strong> 'Lose 20 lbs' → <strong>Try</strong> 'Build a sustainable fitness routine'",
+				"meaningful": "<strong>Link to identity</strong> - 'I treat my body with respect'",
+				"actionable": "<strong>Add tasks</strong> - gym, steps, meal prep (the small votes for your identity)",
+				"addTasks": "This prevents goal abandonment when motivation dips - because you're becoming someone, not just chasing an outcome.",
 				"created": "Goal \"{name}\" created!",
 				"createFirst": "Create My First Goal",
 				"createAnother": "Create Another Goal",
@@ -530,8 +530,8 @@
 		"newGoal": "New Goal",
 		"empty": "No goals yet. Create your first goal to get started!",
 		"emptyTitle": "No goals yet",
-		"emptyDescription": "Goals help you focus on what matters most. Break down big ambitions into smaller, actionable tasks that you can complete day by day.",
-		"emptyHowTo": "Click the button below to create your first goal, or use the assistant to help you get started.",
+		"emptyDescription": "Goals should serve your identity - not just be outcomes to chase. Ask yourself: 'What identity does this goal serve?' Then break it into small tasks that cast votes for who you're becoming.",
+		"emptyHowTo": "Click the button below to create your first identity-driven goal.",
 		"createFirst": "Create your first goal",
 		"create": "Create Goal",
 		"edit": "Edit Goal",
@@ -569,13 +569,13 @@
 		"changeDueDate": "Change Due Date",
 		"dueDate": "Due date",
 		"info": {
-			"description": "<p><strong>Goals</strong> give direction to your efforts and help you track progress over time.</p><p>Great goals are:</p><ul><li><strong>Specific</strong> - Clear and well-defined</li><li><strong>Meaningful</strong> - Connected to your identity</li><li><strong>Actionable</strong> - Can be broken into smaller tasks</li></ul><p>Examples: 'Run a marathon by December 2025', 'Write and publish my first book', 'Learn conversational Spanish'</p><p>You can set target dates and break goals into smaller, manageable tasks to track your progress.</p>"
+			"description": "<p><strong>Goals should serve your identity</strong> - not just be outcomes to chase.</p><p><strong>Before setting a goal, ask:</strong> 'What identity does this serve?'</p><p><strong>Instead of:</strong><br/>• \"Lose 20 lbs\" (outcome-focused, easy to abandon)</p><p><strong>Try:</strong><br/>• <strong>Identity:</strong> \"I treat my body with respect\"<br/>• <strong>Goal:</strong> \"Build a sustainable fitness routine\"<br/>• <strong>Tasks:</strong> Schedule gym, track steps, meal prep</p><p>This prevents goal abandonment when motivation dips - because you're becoming someone, not just chasing an outcome.</p>"
 		},
 		"form": {
 			"title": "Goal Title",
-			"titlePlaceholder": "What do you want to achieve?",
+			"titlePlaceholder": "What sustainable outcome serves your identity?",
 			"description": "Description",
-			"descriptionPlaceholder": "Describe your goal...",
+			"descriptionPlaceholder": "Describe your goal and which identity it serves...",
 			"targetDate": "Target Date",
 			"submit": "Save Goal",
 			"taskTitle": "Title",
@@ -920,23 +920,38 @@
 		}
 	},
 	"dailyCommitment": {
-		"title": "Start Your Day",
-		"prompt": "Choose one identity to focus on and commit to a small action that proves you're becoming that person.",
+		"title": "Today, I Commit To...",
+		"prompt": "Make one tiny, non-negotiable commitment. It should be so easy you can't say no.",
 		"startButton": "Make My Commitment",
-		"completeButton": "Mark Complete",
-		"dismissButton": "Dismiss",
-		"completedLabel": "Completed",
-		"dismissedLabel": "Dismissed",
-		"reinforcement": "This is how a {identity} starts their day.",
+		"completeButton": "Done",
+		"dismissButton": "Skip Today",
+		"completedLabel": "Done",
+		"dismissedLabel": "Skipped",
+		"reinforcement": "Every small action is a vote for who you're becoming.",
 		"recoveryTitle": "Fresh Start",
-		"recoveryMessage": "Yesterday's commitment didn't happen - and that's okay. Today is a new opportunity to show up for {identity}.",
+		"recoveryMessage": "Yesterday's commitment didn't happen - and that's okay. Today is a new chance to cast a vote for being a {identity}.",
+		"rules": {
+			"title": "Ultra-Small & Non-Negotiable",
+			"easy": "Embarrassingly easy (2 minutes or less)",
+			"aligned": "Aligned with your identity",
+			"binary": "Simple: done or not done"
+		},
+		"examples": {
+			"title": "Examples",
+			"writer": "Open my writing app",
+			"athlete": "Put on my gym shoes",
+			"reader": "Read 1 paragraph",
+			"meditator": "Take 3 deep breaths",
+			"healthy": "Drink a glass of water"
+		},
 		"modal": {
-			"titleIdentity": "Choose Your Focus",
-			"titleAction": "Your Commitment",
+			"titleIdentity": "Who Do You Want To Be Today?",
+			"titleAction": "Today, I Commit To...",
 			"titleConfirm": "Ready to Commit?",
-			"identityPrompt": "Which identity do you want to strengthen today?",
-			"actionPrompt": "What small action will prove you're a {identity}?",
-			"suggestions": "Suggestions",
+			"identityPrompt": "Choose the identity you want to strengthen today",
+			"actionPrompt": "What ultra-small action will cast a vote for being a {identity}?",
+			"actionHint": "Make it embarrassingly easy - something you can't say no to",
+			"suggestions": "Quick wins",
 			"orCustom": "Or write your own",
 			"yourAction": "Your action",
 			"customPlaceholder": "I will...",
@@ -948,8 +963,8 @@
 			"successTitle": "You're Committed!"
 		},
 		"settings": {
-			"title": "Daily Identity Commitment",
-			"description": "Start each day by committing to one small action for an identity",
+			"title": "Daily Commitment",
+			"description": "Start each day with one ultra-small, non-negotiable action that reinforces who you're becoming",
 			"enabled": "Enable daily commitment",
 			"defaultMode": "Smart default identity",
 			"weakest": "Recovery nudge",
@@ -1366,8 +1381,8 @@
 		},
 		"today": {
 			"commitment": {
-				"title": "Daily Commitment",
-				"description": "Start each day by choosing one identity to focus on and committing to a small action. This reinforces who you're becoming."
+				"title": "Today, I Commit To...",
+				"description": "Each day, make one ultra-small, non-negotiable commitment. It should be embarrassingly easy (like 'open my writing app' or 'put on gym shoes'). Every tiny action is a vote for who you're becoming."
 			},
 			"identityProgress": {
 				"title": "Identity Progress",
@@ -1388,8 +1403,8 @@
 		},
 		"goals": {
 			"overview": {
-				"title": "Your Goals",
-				"description": "Goals give direction to your efforts. Create goals with target dates and break them into smaller tasks. Link goals to identities for extra motivation."
+				"title": "Identity-Driven Goals",
+				"description": "Every goal should answer: 'What identity does this serve?' Instead of 'Lose 20 lbs', try 'Build a sustainable fitness routine' linked to 'I treat my body with respect'. Break goals into tasks - each task is a small vote for your identity."
 			}
 		},
 		"habitStacks": {
