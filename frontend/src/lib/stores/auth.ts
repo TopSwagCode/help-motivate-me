@@ -1,18 +1,21 @@
 import { writable } from 'svelte/store';
 import type { User, LoginRequest, RegisterRequest } from '$lib/types';
-import { apiGet, apiPost, getOAuthUrl, ApiError } from '$lib/api/client';
+import { apiGet, apiPost, getOAuthUrl, ApiError, NetworkError } from '$lib/api/client';
+import { connectionStore } from '$lib/stores/connection';
 
 interface AuthState {
 	user: User | null;
 	loading: boolean;
 	initialized: boolean;
+	networkError: boolean; // True if init failed due to network
 }
 
 function createAuthStore() {
 	const { subscribe, set, update } = writable<AuthState>({
 		user: null,
 		loading: false,
-		initialized: false
+		initialized: false,
+		networkError: false
 	});
 
 	return {
@@ -23,9 +26,23 @@ function createAuthStore() {
 			try {
 				// Skip auth redirect when checking auth status to avoid redirect loops
 				const user = await apiGet<User>('/auth/me', { skipAuthRedirect: true });
-				set({ user, loading: false, initialized: true });
-			} catch {
-				set({ user: null, loading: false, initialized: true });
+				set({ user, loading: false, initialized: true, networkError: false });
+			} catch (error) {
+				// Check if it's a network error
+				const isNetworkError = error instanceof NetworkError ||
+					(error instanceof Error && (
+						error.message.includes('fetch') ||
+						error.message.includes('NetworkError')
+					));
+
+				if (isNetworkError) {
+					// Network error - start recovery mode
+					set({ user: null, loading: false, initialized: true, networkError: true });
+					connectionStore.startRecovery();
+				} else {
+					// Other error (e.g., 401 not logged in) - normal flow
+					set({ user: null, loading: false, initialized: true, networkError: false });
+				}
 			}
 		},
 
@@ -33,7 +50,7 @@ function createAuthStore() {
 			update((state) => ({ ...state, loading: true }));
 			try {
 				const user = await apiPost<User>('/auth/login', credentials);
-				set({ user, loading: false, initialized: true });
+				set({ user, loading: false, initialized: true, networkError: false });
 				return { success: true };
 			} catch (error) {
 				update((state) => ({ ...state, loading: false }));
@@ -69,7 +86,7 @@ function createAuthStore() {
 			} catch {
 				// Ignore errors, just clear local state
 			}
-			set({ user: null, loading: false, initialized: true });
+			set({ user: null, loading: false, initialized: true, networkError: false });
 			window.location.href = '/';
 		},
 
@@ -90,7 +107,7 @@ function createAuthStore() {
 		},
 
 		setUser(user: User) {
-			set({ user, loading: false, initialized: true });
+			set({ user, loading: false, initialized: true, networkError: false });
 		},
 
 		updateUser(updatedUser: User) {

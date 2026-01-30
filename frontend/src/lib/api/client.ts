@@ -1,4 +1,5 @@
 import { browser } from '$app/environment';
+import { connectionStore } from '$lib/stores/connection';
 
 const API_BASE = import.meta.env.VITE_API_URL !== undefined ? import.meta.env.VITE_API_URL : '';
 
@@ -21,8 +22,35 @@ export class OfflineError extends Error {
 	}
 }
 
+export class NetworkError extends Error {
+	constructor(message: string = 'Unable to connect to server') {
+		super(message);
+		this.name = 'NetworkError';
+	}
+}
+
 function isOnline(): boolean {
 	return !browser || navigator.onLine;
+}
+
+// Wrapper to handle fetch with network error detection
+async function safeFetch(url: string, options: RequestInit): Promise<Response> {
+	try {
+		const response = await fetch(url, options);
+		// Successful fetch - mark API as reachable
+		if (browser) {
+			connectionStore.markReachable();
+		}
+		return response;
+	} catch (error) {
+		// Network error - report to connection store
+		if (browser && error instanceof Error) {
+			connectionStore.reportError(error);
+		}
+		throw new NetworkError(
+			error instanceof Error ? error.message : 'Unable to connect to server'
+		);
+	}
 }
 
 async function handleResponse<T>(response: Response, skipAuthRedirect = false): Promise<T> {
@@ -55,7 +83,7 @@ async function handleResponse<T>(response: Response, skipAuthRedirect = false): 
 }
 
 export async function apiGet<T>(endpoint: string, options?: { skipAuthRedirect?: boolean }): Promise<T> {
-	const response = await fetch(`${API_BASE}/api${endpoint}`, {
+	const response = await safeFetch(`${API_BASE}/api${endpoint}`, {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
@@ -71,7 +99,7 @@ export async function apiPost<T>(endpoint: string, data?: unknown): Promise<T> {
 		throw new OfflineError();
 	}
 
-	const response = await fetch(`${API_BASE}/api${endpoint}`, {
+	const response = await safeFetch(`${API_BASE}/api${endpoint}`, {
 		method: 'POST',
 		credentials: 'include',
 		headers: {
@@ -88,7 +116,7 @@ export async function apiPut<T>(endpoint: string, data: unknown): Promise<T> {
 		throw new OfflineError();
 	}
 
-	const response = await fetch(`${API_BASE}/api${endpoint}`, {
+	const response = await safeFetch(`${API_BASE}/api${endpoint}`, {
 		method: 'PUT',
 		credentials: 'include',
 		headers: {
@@ -105,7 +133,7 @@ export async function apiPatch<T>(endpoint: string, data?: unknown): Promise<T> 
 		throw new OfflineError();
 	}
 
-	const response = await fetch(`${API_BASE}/api${endpoint}`, {
+	const response = await safeFetch(`${API_BASE}/api${endpoint}`, {
 		method: 'PATCH',
 		credentials: 'include',
 		headers: {
@@ -122,7 +150,7 @@ export async function apiDelete<T>(endpoint: string, data?: unknown): Promise<T>
 		throw new OfflineError();
 	}
 
-	const response = await fetch(`${API_BASE}/api${endpoint}`, {
+	const response = await safeFetch(`${API_BASE}/api${endpoint}`, {
 		method: 'DELETE',
 		credentials: 'include',
 		headers: {
@@ -142,7 +170,7 @@ export async function apiUpload<T>(endpoint: string, file: File): Promise<T> {
 	const formData = new FormData();
 	formData.append('file', file);
 
-	const response = await fetch(`${API_BASE}/api${endpoint}`, {
+	const response = await safeFetch(`${API_BASE}/api${endpoint}`, {
 		method: 'POST',
 		credentials: 'include',
 		headers: {

@@ -9,6 +9,7 @@
 	import PWAReloadPrompt from '$lib/components/PWAReloadPrompt.svelte';
 	import PushPermissionPrompt from '$lib/components/PushPermissionPrompt.svelte';
 	import OfflineBanner from '$lib/components/OfflineBanner.svelte';
+	import ConnectionErrorOverlay from '$lib/components/ConnectionErrorOverlay.svelte';
 	import GuidedTour from '$lib/components/tour/GuidedTour.svelte';
 	import { initI18n, setLocale, getLocaleFromLanguage } from '$lib/i18n';
 	import { onMount } from 'svelte';
@@ -140,13 +141,16 @@
 </svelte:head>
 
 {#if i18nReady}
+	<!-- Connection Error Overlay (shows when API is unreachable) -->
+	<ConnectionErrorOverlay />
+
 	<!-- PWA Update Prompt -->
 	<PWAReloadPrompt />
-	
+
 	<!-- Push Notification Permission Prompt -->
 	<PushPermissionPrompt />
-	
-	<!-- Offline Banner -->
+
+	<!-- Offline Banner (for minor offline state, not full overlay) -->
 	<OfflineBanner />
 
 	<!-- Beta Banner (shown on all pages) -->
