@@ -502,12 +502,12 @@
 				<div class="columns-1 sm:columns-2 gap-2 space-y-2">
 					{#each sortedUpcomingTasks as task (task.id)}
 						<div
-							class="relative break-inside-avoid rounded-lg p-3 transition-all duration-300
+							class="relative break-inside-avoid rounded-lg overflow-hidden transition-all duration-300
 								{!readonly && transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95' : ''}
 								{!readonly && newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight' : ''}
 								{!readonly && snoozingTaskIds.includes(task.id) ? 'bg-amber-50' : ''}
 								{!readonly && removingAfterSnoozeIds.includes(task.id) ? 'animate-snooze-remove' : ''}"
-							style="background-color: {task.identityColor ? task.identityColor + '08' : 'white'}; border: 1px solid {task.identityColor ? task.identityColor + '30' : '#e5e7eb'}"
+							style="background-color: {task.identityColor || '#6366f1'}08; border: 1px solid {task.identityColor || '#6366f1'}20"
 						>
 							<!-- Snooze animation overlay -->
 							{#if !readonly && snoozingTaskIds.includes(task.id)}
@@ -525,88 +525,106 @@
 									</span>
 								</div>
 							{/if}
-							
-							<!-- Task Header: Checkbox + Title -->
-							<div class="flex items-start gap-2">
-								{#if readonly}
-									<div class="flex-shrink-0 mt-0.5">
-										<div class="w-5 h-5 rounded-full border-2 border-gray-300"></div>
-									</div>
-								{:else}
-									<button
-										onclick={() => handleToggleTask(task.id)}
-										class="flex-shrink-0 mt-0.5 group"
-										title="Mark as completed"
-									>
-										<div
-											class="w-5 h-5 rounded-full border-2 transition-all duration-200 flex items-center justify-center
-												{transitioningTaskIds.includes(task.id) 
-													? 'bg-green-500 border-green-500' 
-													: 'border-gray-300 group-hover:border-green-400 group-hover:bg-green-50'}"
+
+							<!-- Task Header with identity color -->
+							<div
+								class="px-3 py-1.5 flex items-center justify-between"
+								style="background-color: {task.identityColor || '#6366f1'}15"
+							>
+								<div class="flex items-center gap-1.5">
+									{#if task.identityIcon || task.identityName}
+										<span
+											class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-medium"
+											style="background-color: {task.identityColor || '#6366f1'}25; color: {task.identityColor || '#6366f1'}"
+											title={task.identityName}
 										>
-											{#if transitioningTaskIds.includes(task.id)}
-												<svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
-													<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-												</svg>
+											{#if task.identityIcon}
+												<span class="text-xs">{task.identityIcon}</span>
 											{/if}
-										</div>
-									</button>
-								{/if}
-								<div class="flex-1 min-w-0">
-									<p class="text-sm font-medium text-gray-900 leading-tight {!readonly && transitioningTaskIds.includes(task.id) ? 'line-through text-gray-400' : ''}">
-										{task.title}
-									</p>
+											{task.identityName || ''}
+										</span>
+									{:else}
+										<span class="text-xs text-gray-400">{$t('today.noIdentity') || 'No identity'}</span>
+									{/if}
 								</div>
-								{#if task.identityIcon}
-									<span 
-										class="text-sm flex-shrink-0 px-1.5 py-0.5 rounded-full"
-										style="background-color: {task.identityColor || '#6366f1'}20; color: {task.identityColor || '#6366f1'}"
-										title={task.identityName}
-									>
-										{task.identityIcon}
-									</span>
-								{/if}
-							</div>
-							
-							<!-- Task Meta Row -->
-							<div class="flex items-center gap-2 mt-2 pl-7">
-								<span class="text-xs text-gray-400 truncate flex-1">{task.goalTitle}</span>
 								<span class="text-xs font-medium {getDueDateColor(task.dueDate)} flex-shrink-0">
 									{formatRelativeDate(task.dueDate)}
 								</span>
 							</div>
-							
-							<!-- Action Buttons (only in interactive mode) -->
-							{#if !readonly}
-								<div class="flex items-center justify-end gap-1 mt-2 pt-2 border-t border-gray-100">
-									<button
-										onclick={() => handleSnoozeTask(task)}
-										class="p-1.5 text-gray-400 hover:text-amber-500 hover:bg-amber-50 rounded transition-colors"
-										title="Snooze 1 week"
-										disabled={snoozingTaskIds.includes(task.id)}
-									>
-										<span class="text-sm">💤</span>
-									</button>
-									<button
-										onclick={() => handlePostponeTask(task)}
-										class="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded transition-colors"
-										title="Postpone task"
-									>
-										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-										</svg>
-									</button>
-									<button
-										onclick={() => handleEditTask(task)}
-										class="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded transition-colors"
-										title="Edit task"
-									>
-										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-										</svg>
-									</button>
+
+							<!-- Task Content -->
+							<div class="p-3">
+								<!-- Task Title Row: Checkbox + Title -->
+								<div class="flex items-start gap-2">
+									{#if readonly}
+										<div class="flex-shrink-0 mt-0.5">
+											<div class="w-5 h-5 rounded-full border-2 border-gray-300"></div>
+										</div>
+									{:else}
+										<button
+											onclick={() => handleToggleTask(task.id)}
+											class="flex-shrink-0 mt-0.5 group"
+											title="Mark as completed"
+										>
+											<div
+												class="w-5 h-5 rounded-full border-2 transition-all duration-200 flex items-center justify-center
+													{transitioningTaskIds.includes(task.id)
+														? 'bg-green-500 border-green-500'
+														: 'group-hover:bg-green-50'}"
+												style={!transitioningTaskIds.includes(task.id) ? `border-color: ${task.identityColor || '#6366f1'}60` : ''}
+											>
+												{#if transitioningTaskIds.includes(task.id)}
+													<svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+														<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+													</svg>
+												{/if}
+											</div>
+										</button>
+									{/if}
+									<div class="flex-1 min-w-0">
+										<p class="text-sm font-medium text-gray-900 leading-tight {!readonly && transitioningTaskIds.includes(task.id) ? 'line-through text-gray-400' : ''}">
+											{task.title}
+										</p>
+									</div>
 								</div>
-							{/if}
+
+								<!-- Task Meta Row -->
+								<div class="flex items-center gap-2 mt-1.5 pl-7">
+									<span class="text-xs text-gray-400 truncate">{task.goalTitle}</span>
+								</div>
+
+								<!-- Action Buttons (only in interactive mode) -->
+								{#if !readonly}
+									<div class="flex items-center justify-end gap-1 mt-2 pt-2 border-t" style="border-color: {task.identityColor || '#6366f1'}15">
+										<button
+											onclick={() => handleSnoozeTask(task)}
+											class="p-1.5 text-gray-400 hover:text-amber-500 hover:bg-amber-50 rounded transition-colors"
+											title="Snooze 1 week"
+											disabled={snoozingTaskIds.includes(task.id)}
+										>
+											<span class="text-sm">💤</span>
+										</button>
+										<button
+											onclick={() => handlePostponeTask(task)}
+											class="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded transition-colors"
+											title="Postpone task"
+										>
+											<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+											</svg>
+										</button>
+										<button
+											onclick={() => handleEditTask(task)}
+											class="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded transition-colors"
+											title="Edit task"
+										>
+											<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+											</svg>
+										</button>
+									</div>
+								{/if}
+							</div>
 						</div>
 					{/each}
 				</div>
@@ -661,12 +679,39 @@
 				<div class="columns-1 sm:columns-2 lg:columns-3 gap-2 space-y-2">
 					{#each todayData.completedTasks as task (task.id)}
 						<div
-							class="relative break-inside-avoid rounded-lg p-2.5 transition-all duration-300
+							class="relative break-inside-avoid rounded-lg overflow-hidden transition-all duration-300
 								{!readonly && transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95' : ''}
 								{!readonly && newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight-green' : ''}"
-							style="background-color: {task.identityColor ? task.identityColor + '10' : '#f0fdf4'}; border: 1px solid {task.identityColor ? task.identityColor + '30' : '#bbf7d0'}"
+							style="background: linear-gradient(135deg, {task.identityColor || '#6366f1'}10, #f0fdf4); border: 1px solid {task.identityColor || '#22c55e'}30"
 						>
-							<div class="flex items-center gap-2">
+							<!-- Completed Task Header -->
+							<div
+								class="px-2.5 py-1 flex items-center justify-between"
+								style="background: linear-gradient(90deg, {task.identityColor || '#6366f1'}20, #dcfce7)"
+							>
+								{#if task.identityIcon || task.identityName}
+									<span
+										class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-medium opacity-80"
+										style="background-color: {task.identityColor || '#6366f1'}25; color: {task.identityColor || '#6366f1'}"
+										title={task.identityName}
+									>
+										{#if task.identityIcon}
+											<span class="text-xs">{task.identityIcon}</span>
+										{/if}
+										{task.identityName || ''}
+									</span>
+								{:else}
+									<span></span>
+								{/if}
+								<span class="text-xs text-green-600 font-medium flex items-center gap-0.5">
+									<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+									</svg>
+								</span>
+							</div>
+
+							<!-- Task Content -->
+							<div class="px-2.5 py-2 flex items-center gap-2">
 								{#if readonly}
 									<div class="flex-shrink-0">
 										<div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
@@ -691,15 +736,6 @@
 								<p class="flex-1 text-sm text-gray-500 line-through truncate">
 									{task.title}
 								</p>
-								{#if task.identityIcon}
-									<span 
-										class="text-xs flex-shrink-0 px-1.5 py-0.5 rounded-full opacity-70"
-										style="background-color: {task.identityColor || '#6366f1'}20; color: {task.identityColor || '#6366f1'}"
-										title={task.identityName}
-									>
-										{task.identityIcon}
-									</span>
-								{/if}
 							</div>
 						</div>
 					{/each}
