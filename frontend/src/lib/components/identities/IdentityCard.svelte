@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from 'svelte-i18n';
 	import type { Identity } from '$lib/types';
 
 	interface Props {
@@ -31,10 +32,11 @@
 			{#if identity.description}
 				<p class="text-sm text-gray-500 line-clamp-2 mt-1">{identity.description}</p>
 			{/if}
-			<div class="flex items-center gap-4 mt-2 text-xs text-gray-500">
-				<span>{identity.completedTasks}/{identity.totalTasks} tasks</span>
-				<span>{identity.tasksCompletedLast7Days} this week</span>
-				<span>{identity.completionRate}%</span>
+			<div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-xs text-gray-500">
+				<span title={$t('identities.stats.goals')}>🎯 {identity.completedGoals}/{identity.totalGoals}</span>
+				<span title={$t('identities.stats.tasks')}>✅ {identity.completedTasks}/{identity.totalTasks}</span>
+				<span title={$t('identities.stats.proofs')}>🏆 {identity.totalProofs}</span>
+				<span title={$t('identities.stats.commitments')}>📋 {identity.completedDailyCommitments}/{identity.totalDailyCommitments}</span>
 			</div>
 		</div>
 	</div>

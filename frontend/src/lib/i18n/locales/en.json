@@ -605,6 +605,12 @@
 		"edit": "Edit Identity",
 		"delete": "Delete Identity",
 		"deleteConfirm": "Are you sure you want to delete this identity?",
+		"stats": {
+			"goals": "Goals (completed/total)",
+			"tasks": "Tasks (completed/total)",
+			"proofs": "Identity Proofs",
+			"commitments": "Daily Commitments (completed/total)"
+		},
 		"infoCard": {
 			"title": "Identity-Based Habits",
 			"description": "Identity-based habits focus on who you are becoming, not just what you're doing. Each small action is a vote for the type of person you want to be, and consistency slowly reshapes how you see yourself. When your habits align with your identity, progress feels natural instead of forced.",

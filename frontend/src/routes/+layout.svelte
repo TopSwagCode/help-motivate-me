@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import { auth } from '$lib/stores/auth';
 	import { commandBar } from '$lib/stores/commandBar';
+	import { t } from 'svelte-i18n';
 	import TopNav from '$lib/components/layout/TopNav.svelte';
 	import BetaBanner from '$lib/components/layout/BetaBanner.svelte';
 	import CommandBar from '$lib/components/ai/CommandBar.svelte';
@@ -11,6 +12,7 @@
 	import OfflineBanner from '$lib/components/OfflineBanner.svelte';
 	import ConnectionErrorOverlay from '$lib/components/ConnectionErrorOverlay.svelte';
 	import GuidedTour from '$lib/components/tour/GuidedTour.svelte';
+	import IdentityProofModal from '$lib/components/today/IdentityProofModal.svelte';
 	import { initI18n, setLocale, getLocaleFromLanguage } from '$lib/i18n';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';

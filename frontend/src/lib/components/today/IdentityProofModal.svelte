@@ -2,7 +2,6 @@
 	import { t } from 'svelte-i18n';
 	import { getCommitmentOptions } from '$lib/api/dailyCommitment';
 	import { createIdentityProof } from '$lib/api/identityProofs';
-	import { commandBar } from '$lib/stores/commandBar';
 	import type { IdentityOption } from '$lib/types/dailyCommitment';
 	import type { ProofIntensity, CreateIdentityProofRequest } from '$lib/types/identityProof';
 
@@ -98,7 +97,7 @@
 			setTimeout(() => {
 				onProofCreated();
 				onClose();
-			}, 2000);
+			}, 1500);
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Failed to log proof';
 		} finally {
@@ -112,10 +111,10 @@
 		}
 	}
 
-	const intensityOptions: { value: ProofIntensity; emoji: string; votes: number }[] = [
-		{ value: 'Easy', emoji: '🔹', votes: 1 },
-		{ value: 'Moderate', emoji: '🔸', votes: 2 },
-		{ value: 'Hard', emoji: '🔥', votes: 3 }
+	const intensityOptions: { value: ProofIntensity; votes: number }[] = [
+		{ value: 'Easy', votes: 1 },
+		{ value: 'Moderate', votes: 2 },
+		{ value: 'Hard', votes: 3 }
 	];
 </script>
 
@@ -132,29 +131,28 @@
 	>
 		<!-- Modal (bottom sheet on mobile, centered on desktop) -->
 		<div
-			class="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[85vh] overflow-hidden flex flex-col"
+			class="bg-white rounded-t-2xl sm:rounded-xl shadow-xl w-full sm:max-w-sm overflow-hidden"
 			onclick={(e) => e.stopPropagation()}
 		>
 			{#if showSuccess}
 				<!-- Success State -->
 				<div class="p-6 text-center">
-					<div class="w-20 h-20 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
-						<span class="text-4xl animate-bounce">⚡</span>
+					<div class="w-16 h-16 mx-auto mb-3 rounded-full bg-green-100 flex items-center justify-center">
+						<svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+						</svg>
 					</div>
-					<h3 class="text-xl font-semibold text-gray-900 mb-2">
-						{$t('identityProof.success')}
-					</h3>
-					<p class="text-2xl font-bold text-green-600 mb-2">
-						+{successVoteValue} {successVoteValue === 1 ? 'vote' : 'votes'}
+					<p class="text-xl font-bold text-green-600">
+						+{successVoteValue}
 					</p>
-					<p class="text-gray-600">
-						{$t('dailyCommitment.reinforcement', { values: { identity: selectedIdentity?.name } })}
+					<p class="text-sm text-gray-500 mt-1">
+						{selectedIdentity?.name}
 					</p>
 				</div>
 			{:else}
 				<!-- Header -->
-				<div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-					<h2 class="text-lg font-semibold text-gray-900">
+				<div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+					<h2 class="text-base font-semibold text-gray-900">
 						{$t('identityProof.title')}
 					</h2>
 					<button
@@ -168,79 +166,66 @@
 				</div>
 
 				<!-- Content -->
-				<div class="flex-1 overflow-y-auto p-5">
-					<!-- AI Assistant hint -->
-					<div class="mb-4 p-3 bg-gradient-to-r from-primary-50 to-purple-50 border border-primary-100 rounded-lg">
-						<p class="text-xs text-gray-600 flex items-center gap-2 flex-wrap">
-							<span>💡</span>
-							<span>{$t('identityProof.aiHint')}</span>
-							<button
-								type="button"
-								onclick={() => { onClose(); commandBar.open(); }}
-								class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium text-primary-700 bg-white border border-primary-200 rounded-full hover:bg-primary-50 transition-colors"
-							>
-								<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-								</svg>
-								{$t('identityProof.openAiAssistant')}
-							</button>
-						</p>
-					</div>
-
+				<div class="p-4">
 					{#if error}
-						<div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+						<div class="mb-3 p-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
 							{error}
 						</div>
 					{/if}
 
 					{#if isLoading}
 						<div class="flex items-center justify-center py-8">
-							<svg class="animate-spin h-8 w-8 text-primary-500" fill="none" viewBox="0 0 24 24">
+							<svg class="animate-spin h-6 w-6 text-primary-500" fill="none" viewBox="0 0 24 24">
 								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
 								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
 							</svg>
 						</div>
 					{:else}
 						<!-- Identity Selection -->
-						<div class="mb-5">
-							<p class="text-sm font-medium text-gray-700 mb-3">
+						<div class="mb-4">
+							<p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
 								{$t('identityProof.whichIdentity')}
 							</p>
-							<div class="flex flex-wrap gap-2">
+							<div class="flex flex-wrap gap-1.5">
 								{#each identities as identity (identity.id)}
 									<button
 										onclick={() => selectIdentity(identity)}
-										class="px-3 py-2 rounded-xl border-2 text-sm font-medium transition-all
+										class="px-2.5 py-1.5 rounded-lg border text-sm transition-all
 											{selectedIdentity?.id === identity.id
-												? 'border-primary-500 bg-primary-50 text-primary-700'
+												? 'border-primary-500 bg-primary-50 text-primary-700 font-medium'
 												: 'border-gray-200 hover:border-gray-300 bg-white text-gray-700'}"
 									>
-										<span class="mr-1">{identity.icon || '🎯'}</span>
-										{identity.name}
+										{#if identity.icon}<span class="mr-1">{identity.icon}</span>{/if}{identity.name}
 									</button>
 								{/each}
 							</div>
 						</div>
 
 						<!-- Intensity Selection -->
-						<div class="mb-5">
-							<p class="text-sm font-medium text-gray-700 mb-3">
+						<div class="mb-4">
+							<p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
 								{$t('identityProof.howChallenging')}
 							</p>
-							<div class="grid grid-cols-3 gap-2">
+							<div class="flex gap-2">
 								{#each intensityOptions as option (option.value)}
 									<button
 										onclick={() => selectIntensity(option.value)}
-										class="p-3 rounded-xl border-2 text-center transition-all
+										class="flex-1 py-2 px-3 rounded-lg border text-center transition-all
 											{selectedIntensity === option.value
 												? 'border-primary-500 bg-primary-50'
 												: 'border-gray-200 hover:border-gray-300 bg-white'}"
 									>
-										<span class="text-xl mb-1 block">{option.emoji}</span>
-										<span class="text-xs font-medium text-gray-900 block">
+										<!-- Intensity dots indicator -->
+										<div class="flex justify-center gap-1 mb-1">
+											{#each Array(option.votes) as _, i}
+												<div
+													class="w-2 h-2 rounded-full {selectedIntensity === option.value ? 'bg-primary-500' : 'bg-gray-300'}"
+												></div>
+											{/each}
+										</div>
+										<span class="text-xs font-medium {selectedIntensity === option.value ? 'text-primary-700' : 'text-gray-600'}">
 											{$t(`identityProof.${option.value.toLowerCase()}`)}
 										</span>
-										<span class="text-xs text-gray-500 block">+{option.votes}</span>
 									</button>
 								{/each}
 							</div>
@@ -248,37 +233,34 @@
 
 						<!-- Description (Optional) -->
 						<div>
-							<p class="text-sm font-medium text-gray-700 mb-2">
-								{$t('identityProof.whatDidYouDo')} <span class="text-gray-400 font-normal">({$t('common.optional')})</span>
+							<p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+								{$t('identityProof.whatDidYouDo')} <span class="font-normal normal-case">({$t('common.optional')})</span>
 							</p>
-							<textarea
+							<input
+								type="text"
 								bind:value={description}
 								placeholder="..."
-								rows="2"
 								maxlength="200"
-								class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none text-sm"
-							></textarea>
-							<p class="text-xs text-gray-400 mt-1 text-right">{description.length}/200</p>
+								class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+							/>
 						</div>
 					{/if}
 				</div>
 
 				<!-- Footer -->
-				<div class="px-5 py-4 border-t border-gray-100 bg-gray-50">
+				<div class="px-4 pb-4">
 					<button
 						onclick={handleSubmit}
 						disabled={!selectedIdentity || isSubmitting}
-						class="w-full py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+						class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
 					>
 						{#if isSubmitting}
 							<svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
 								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
 								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
 							</svg>
-						{:else}
-							<span>⚡</span>
 						{/if}
-						{$t('identityProof.logProof')} (+{getVoteValue(selectedIntensity)})
+						{$t('identityProof.logProof')} <span class="opacity-75">+{getVoteValue(selectedIntensity)}</span>
 					</button>
 				</div>
 			{/if}

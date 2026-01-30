@@ -8,6 +8,11 @@ export interface Identity {
 	completedTasks: number;
 	tasksCompletedLast7Days: number;
 	completionRate: number;
+	totalGoals: number;
+	completedGoals: number;
+	totalProofs: number;
+	totalDailyCommitments: number;
+	completedDailyCommitments: number;
 	createdAt: string;
 }
 

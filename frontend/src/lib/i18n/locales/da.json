@@ -605,6 +605,12 @@
 		"edit": "Rediger identitet",
 		"delete": "Slet identitet",
 		"deleteConfirm": "Er du sikker på, at du vil slette denne identitet?",
+		"stats": {
+			"goals": "Mål (fuldført/total)",
+			"tasks": "Opgaver (fuldført/total)",
+			"proofs": "Identitetsbeviser",
+			"commitments": "Daglige forpligtelser (fuldført/total)"
+		},
 		"infoCard": {
 			"title": "Identitetsbaserede vaner",
 			"description": "Identitetsbaserede vaner fokuserer på hvem du bliver, ikke bare hvad du gør. Hver lille handling er en stemme for den type person, du vil være, og konsistens omformer langsomt, hvordan du ser dig selv. Når dine vaner stemmer overens med din identitet, føles fremskridt naturligt i stedet for tvunget.",

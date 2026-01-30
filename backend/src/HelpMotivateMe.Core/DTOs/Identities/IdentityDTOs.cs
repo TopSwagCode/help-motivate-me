@@ -24,6 +24,11 @@ public record IdentityResponse(
     int CompletedTasks,
     int TasksCompletedLast7Days,
     double CompletionRate,
+    int TotalGoals,
+    int CompletedGoals,
+    int TotalProofs,
+    int TotalDailyCommitments,
+    int CompletedDailyCommitments,
     DateTime CreatedAt
 );
 

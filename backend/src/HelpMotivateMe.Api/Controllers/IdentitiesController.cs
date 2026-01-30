@@ -43,6 +43,9 @@ public class IdentitiesController : ControllerBase
         var identities = await _db.Identities
             .Where(i => i.UserId == userId)
             .Include(i => i.Tasks)
+            .Include(i => i.Goals)
+            .Include(i => i.Proofs)
+            .Include(i => i.DailyCommitments)
             .OrderBy(i => i.Name)
             .ToListAsync();
 
@@ -56,6 +59,9 @@ public class IdentitiesController : ControllerBase
 
         var identity = await _db.Identities
             .Include(i => i.Tasks)
+            .Include(i => i.Goals)
+            .Include(i => i.Proofs)
+            .Include(i => i.DailyCommitments)
             .FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
 
         if (identity == null)
@@ -93,6 +99,9 @@ public class IdentitiesController : ControllerBase
 
         var identity = await _db.Identities
             .Include(i => i.Tasks)
+            .Include(i => i.Goals)
+            .Include(i => i.Proofs)
+            .Include(i => i.DailyCommitments)
             .FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
 
         if (identity == null)
@@ -187,6 +196,17 @@ public class IdentitiesController : ControllerBase
             t.CompletedAt.HasValue &&
             t.CompletedAt.Value >= sevenDaysAgo);
 
+        // Goals stats
+        var totalGoals = identity.Goals.Count;
+        var completedGoals = identity.Goals.Count(g => g.IsCompleted);
+
+        // Identity proofs count
+        var totalProofs = identity.Proofs.Count;
+
+        // Daily commitments stats
+        var totalDailyCommitments = identity.DailyCommitments.Count;
+        var completedDailyCommitments = identity.DailyCommitments.Count(dc => dc.Status == DailyCommitmentStatus.Completed);
+
         return new IdentityResponse(
             identity.Id,
             identity.Name,
@@ -197,6 +217,11 @@ public class IdentitiesController : ControllerBase
             completedTasks,
             tasksCompletedLast7Days,
             totalTasks > 0 ? Math.Round((double)completedTasks / totalTasks * 100, 1) : 0,
+            totalGoals,
+            completedGoals,
+            totalProofs,
+            totalDailyCommitments,
+            completedDailyCommitments,
             identity.CreatedAt
         );
     }

@@ -16,4 +16,5 @@ public class Identity
     public ICollection<HabitStack> HabitStacks { get; set; } = [];
     public ICollection<Goal> Goals { get; set; } = [];
     public ICollection<IdentityProof> Proofs { get; set; } = [];
+    public ICollection<DailyIdentityCommitment> DailyCommitments { get; set; } = [];
 }
