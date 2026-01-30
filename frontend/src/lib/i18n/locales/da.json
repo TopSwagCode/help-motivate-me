@@ -997,7 +997,12 @@
 		"moderate": "Moderat",
 		"hard": "Svært",
 		"aiHint": "Du kan også logge beviser med AI-assistenten:",
-		"openAiAssistant": "Åbn AI"
+		"openAiAssistant": "Åbn AI",
+		"intensity": {
+			"easy": "Nemt",
+			"moderate": "Moderat",
+			"hard": "Svært"
+		}
 	},
 	"analytics": {
 		"title": "Analyse",

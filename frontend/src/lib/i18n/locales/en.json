@@ -997,7 +997,12 @@
 		"moderate": "Moderate",
 		"hard": "Hard",
 		"aiHint": "You can also log proofs using the AI assistant:",
-		"openAiAssistant": "Open AI"
+		"openAiAssistant": "Open AI",
+		"intensity": {
+			"easy": "Easy",
+			"moderate": "Moderate",
+			"hard": "Hard"
+		}
 	},
 	"analytics": {
 		"title": "Analytics",
