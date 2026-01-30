@@ -31,22 +31,22 @@ public class DailyIdentityCommitmentConfiguration : IEntityTypeConfiguration<Dai
 
         // Relationships
         builder.HasOne(c => c.User)
-            .WithMany()
+            .WithMany(i => i.DailyCommitments)
             .HasForeignKey(c => c.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(c => c.Identity)
-            .WithMany()
+            .WithMany(i => i.DailyCommitments)
             .HasForeignKey(c => c.IdentityId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(c => c.LinkedHabitStackItem)
-            .WithMany()
+            .WithMany(i => i.DailyCommitments)
             .HasForeignKey(c => c.LinkedHabitStackItemId)
             .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(c => c.LinkedTask)
-            .WithMany()
+            .WithMany(i => i.DailyCommitments)
             .HasForeignKey(c => c.LinkedTaskId)
             .OnDelete(DeleteBehavior.SetNull);
     }
