@@ -28,6 +28,10 @@
 	let editingTargetDate = $state(false);
 	let newTargetDate = $state('');
 
+	// Edit goal identity
+	let editingGoalIdentity = $state(false);
+	let newGoalIdentityId = $state('');
+
 	// Edit task popup
 	let showEditPopup = $state(false);
 	let editingTask = $state<Task | null>(null);
@@ -201,6 +205,35 @@
 		newTargetDate = '';
 	}
 
+	function startEditGoalIdentity() {
+		if (!goal) return;
+		newGoalIdentityId = goal.identityId || '';
+		editingGoalIdentity = true;
+	}
+
+	async function saveGoalIdentity() {
+		if (!goal) return;
+
+		try {
+			goal = await updateGoal(goal.id, {
+				title: goal.title,
+				description: goal.description || undefined,
+				targetDate: goal.targetDate || undefined,
+				identityId: newGoalIdentityId || undefined
+			});
+			editingGoalIdentity = false;
+			// Update new task default identity to match new goal identity
+			newTaskIdentityId = goal.identityId ?? '';
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to update identity';
+		}
+	}
+
+	function cancelEditGoalIdentity() {
+		editingGoalIdentity = false;
+		newGoalIdentityId = '';
+	}
+
 	function getLocalDateString(date: Date = new Date()): string {
 		const year = date.getFullYear();
 		const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -362,17 +395,62 @@
 					<p class="text-gray-600 mb-4">{goal.description}</p>
 				{/if}
 
-				{#if goal.identityIcon || goal.identityName}
-					<div class="flex items-center gap-2 mb-4 text-sm">
-						<span class="text-gray-500">{$t('goals.identity')}:</span>
+				<!-- Identity display/edit -->
+				<div class="flex items-center gap-2 mb-4 text-sm">
+					<span class="text-gray-500">{$t('goals.identity')}:</span>
+					{#if editingGoalIdentity && !goal.isCompleted}
+						<select
+							bind:value={newGoalIdentityId}
+							class="px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+						>
+							<option value="">{$t('goals.noIdentity')}</option>
+							{#each identities as identity (identity.id)}
+								<option value={identity.id}>
+									{identity.icon ? `${identity.icon} ` : ''}{identity.name}
+								</option>
+							{/each}
+						</select>
+						<button
+							onclick={saveGoalIdentity}
+							class="text-primary-600 hover:text-primary-700 font-medium"
+						>
+							{$t('common.save')}
+						</button>
+						<button
+							onclick={cancelEditGoalIdentity}
+							class="text-gray-500 hover:text-gray-700"
+						>
+							{$t('common.cancel')}
+						</button>
+					{:else if !goal.isCompleted}
+						<button
+							onclick={startEditGoalIdentity}
+							class="flex items-center gap-1 hover:text-primary-600 transition-colors"
+							title="Click to edit identity"
+						>
+							{#if goal.identityIcon}
+								<span class="text-lg">{goal.identityIcon}</span>
+							{/if}
+							{#if goal.identityName}
+								<span class="font-medium text-gray-700">{goal.identityName}</span>
+							{:else}
+								<span class="text-gray-400">{$t('goals.noIdentity')}</span>
+							{/if}
+							<svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+							</svg>
+						</button>
+					{:else}
 						{#if goal.identityIcon}
 							<span class="text-lg">{goal.identityIcon}</span>
 						{/if}
 						{#if goal.identityName}
 							<span class="font-medium text-gray-700">{goal.identityName}</span>
+						{:else}
+							<span class="text-gray-400">{$t('goals.noIdentity')}</span>
 						{/if}
-					</div>
-				{/if}
+					{/if}
+				</div>
 
 				<div class="flex items-center gap-4 text-sm text-gray-500">
 					{#if editingTargetDate && !goal.isCompleted}
