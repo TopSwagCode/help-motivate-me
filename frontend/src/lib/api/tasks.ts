@@ -1,5 +1,6 @@
 import { apiGet, apiPost, apiPut, apiPatch, apiDelete } from './client';
 import type { Task, CreateTaskRequest, UpdateTaskRequest } from '$lib/types';
+import { getLocalDateString } from '$lib/utils/date';
 
 export async function getTasks(goalId: string): Promise<Task[]> {
 	return apiGet<Task[]>(`/goals/${goalId}/tasks`);
@@ -26,7 +27,7 @@ export async function deleteTask(id: string): Promise<void> {
 }
 
 export async function completeTask(id: string, date?: string): Promise<Task> {
-	const clientDate = date ?? new Date().toISOString().split('T')[0];
+	const clientDate = date ?? getLocalDateString();
 	return apiPatch<Task>(`/tasks/${id}/complete?date=${clientDate}`);
 }
 
@@ -44,6 +45,6 @@ export interface CompleteMultipleTasksResponse {
 }
 
 export async function completeMultipleTasks(taskIds: string[], date?: string): Promise<CompleteMultipleTasksResponse> {
-	const clientDate = date ?? new Date().toISOString().split('T')[0];
+	const clientDate = date ?? getLocalDateString();
 	return apiPost<CompleteMultipleTasksResponse>('/tasks/complete-multiple', { taskIds, date: clientDate });
 }

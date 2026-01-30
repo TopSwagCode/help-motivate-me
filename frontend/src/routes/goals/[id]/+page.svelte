@@ -8,6 +8,7 @@
 	import { getTasks, createTask, completeTask, deleteTask, postponeTask, updateTask } from '$lib/api/tasks';
 	import { getIdentities } from '$lib/api/identities';
 	import type { Goal, Task, Identity } from '$lib/types';
+	import { getLocalDateString } from '$lib/utils/date';
 
 	const goalId = $derived($page.params.id!);
 
@@ -232,13 +233,6 @@
 	function cancelEditGoalIdentity() {
 		editingGoalIdentity = false;
 		newGoalIdentityId = '';
-	}
-
-	function getLocalDateString(date: Date = new Date()): string {
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, '0');
-		const day = String(date.getDate()).padStart(2, '0');
-		return `${year}-${month}-${day}`;
 	}
 
 	function openPostponePopup(task: Task) {

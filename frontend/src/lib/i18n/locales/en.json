@@ -752,7 +752,7 @@
 			"processing": "Processing...",
 			"uploading": "Uploading...",
 			"new": "New",
-			"hint": "Images are automatically compressed to WebP. Max 5 images, 5MB each. GIFs kept as-is.",
+			"hint": "Max 5 images / GIF's.",
 			"canOnlyAdd": "Can only add {count} more image(s)"
 		},
 		"modal": {

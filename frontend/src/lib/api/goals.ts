@@ -1,5 +1,6 @@
 import { apiGet, apiPost, apiPut, apiPatch, apiDelete } from './client';
 import type { Goal, CreateGoalRequest, UpdateGoalRequest } from '$lib/types';
+import { getLocalDateString } from '$lib/utils/date';
 
 export async function getGoals(categoryId?: string): Promise<Goal[]> {
 	const params = categoryId ? `?categoryId=${categoryId}` : '';
@@ -23,7 +24,7 @@ export async function deleteGoal(id: string): Promise<void> {
 }
 
 export async function completeGoal(id: string, date?: string): Promise<Goal> {
-	const clientDate = date ?? new Date().toISOString().split('T')[0];
+	const clientDate = date ?? getLocalDateString();
 	return apiPatch<Goal>(`/goals/${id}/complete?date=${clientDate}`);
 }
 

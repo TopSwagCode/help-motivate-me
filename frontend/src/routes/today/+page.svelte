@@ -17,6 +17,7 @@
 	import DailyCommitmentCard from '$lib/components/today/DailyCommitmentCard.svelte';
 	import CommitmentFlowModal from '$lib/components/today/CommitmentFlowModal.svelte';
 	import type { TodayView, TodayTask, Identity } from '$lib/types';
+	import { getLocalDateString } from '$lib/utils/date';
 
 	let todayData = $state<TodayView | null>(null);
 	let identities = $state<Identity[]>([]);
@@ -25,13 +26,6 @@
 	let showWelcomePopup = $state(false);
 
 	// Current date being viewed (use local date, not UTC)
-	function getLocalDateString(date: Date = new Date()): string {
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, '0');
-		const day = String(date.getDate()).padStart(2, '0');
-		return `${year}-${month}-${day}`;
-	}
-
 	let currentDate = $state(getLocalDateString());
 
 	// Postpone popup state

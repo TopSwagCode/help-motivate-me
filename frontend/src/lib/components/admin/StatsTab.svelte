@@ -3,12 +3,13 @@
 	import { get } from 'svelte/store';
 	import type { AdminStats, DailyStats } from '$lib/types';
 	import { getAdminStats, getDailyStats } from '$lib/api/admin';
+	import { getLocalDateString } from '$lib/utils/date';
 
 	let stats = $state<AdminStats | null>(null);
 	let dailyStats = $state<DailyStats | null>(null);
 	let loading = $state(true);
 	let error = $state('');
-	let selectedDate = $state(new Date().toISOString().split('T')[0]);
+	let selectedDate = $state(getLocalDateString());
 
 	$effect(() => {
 		loadData();
@@ -42,7 +43,7 @@
 	function navigateDate(direction: 'prev' | 'next') {
 		const date = new Date(selectedDate);
 		date.setDate(date.getDate() + (direction === 'next' ? 1 : -1));
-		selectedDate = date.toISOString().split('T')[0];
+		selectedDate = getLocalDateString(date);
 		loadDailyStats();
 	}
 
@@ -58,7 +59,7 @@
 	}
 
 	function isToday(dateStr: string): boolean {
-		return dateStr === new Date().toISOString().split('T')[0];
+		return dateStr === getLocalDateString();
 	}
 </script>
 

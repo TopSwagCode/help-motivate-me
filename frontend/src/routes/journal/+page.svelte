@@ -18,6 +18,7 @@
 		type JournalFilter
 	} from '$lib/api/journal';
 	import { processMultipleImages, formatFileSize } from '$lib/utils/imageProcessing';
+	import { getLocalDateString } from '$lib/utils/date';
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
 	import JournalViewContent from '$lib/components/journal/JournalViewContent.svelte';
 	import type {
@@ -144,7 +145,7 @@
 		editingEntry = null;
 		modalTitle = '';
 		modalDescription = '';
-		modalEntryDate = new Date().toISOString().split('T')[0];
+		modalEntryDate = getLocalDateString();
 		modalLinkType = 'none';
 		modalHabitStackId = '';
 		modalTaskId = '';
@@ -465,10 +466,12 @@
 							/>
 						</div>
 
+						{#if isEditing}
 						<div>
 							<label for="entryDate" class="block text-sm font-medium text-gray-700 mb-1">{$t('journal.form.date')}</label>
 							<input type="date" id="entryDate" bind:value={modalEntryDate} class="input" />
 						</div>
+						{/if}
 
 						<div>
 							<label for="description" class="block text-sm font-medium text-gray-700 mb-1"

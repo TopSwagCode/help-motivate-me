@@ -12,6 +12,7 @@
 		removeBuddyJournalReaction
 	} from '$lib/api/buddies';
 	import { processMultipleImages, formatFileSize } from '$lib/utils/imageProcessing';
+	import { getLocalDateString } from '$lib/utils/date';
 	import TodayViewContent from '$lib/components/today/TodayViewContent.svelte';
 	import JournalViewContent from '$lib/components/journal/JournalViewContent.svelte';
 	import type { BuddyTodayViewResponse, BuddyJournalEntry, BuddyJournalImage } from '$lib/types/buddy';
@@ -49,11 +50,6 @@
 	let lightboxImages = $state<BuddyJournalImage[]>([]);
 	let lightboxIndex = $state(0);
 	let showLightbox = $state(false);
-
-	function getLocalDateString(): string {
-		const now = new Date();
-		return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-	}
 
 	onMount(async () => {
 		if (!$auth.initialized) {
@@ -246,7 +242,7 @@
 			let newEntry = await createBuddyJournalEntry($page.params.userId!, {
 				title: modalTitle.trim(),
 				description: modalDescription.trim() || undefined,
-				entryDate: new Date().toISOString().split('T')[0]
+				entryDate: getLocalDateString()
 			});
 
 			// Upload pending images

@@ -752,7 +752,7 @@
 			"processing": "Behandler...",
 			"uploading": "Uploader...",
 			"new": "Ny",
-			"hint": "Billeder komprimeres automatisk til WebP. Maks 5 billeder, 5MB hver. GIF'er bevares.",
+			"hint": "Maks 5 billeder / GIF'er.",
 			"canOnlyAdd": "Kan kun tilføje {count} flere billede(r)"
 		},
 		"modal": {
