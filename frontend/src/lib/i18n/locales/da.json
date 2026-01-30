@@ -1050,34 +1050,35 @@
 	},
 	"errorPages": {
 		"notFound": {
-			"title": "Side ikke fundet",
-			"code": "404",
-			"message": "Siden du leder efter findes ikke eller er blevet flyttet.",
-			"suggestion": "Tjek URL'en eller gå tilbage for at fortsætte din rejse."
+			"title": "Ups! Vi kan ikke finde den side",
+			"message": "Det ser ud til, at denne side er flyttet eller ikke længere findes.",
+			"suggestion": "Ingen grund til bekymring - lad os få dig tilbage på sporet! Gå til din daglige oversigt for at fortsætte med at opbygge gode vaner."
 		},
 		"serverError": {
-			"title": "Noget gik galt",
-			"code": "500",
-			"message": "Vi oplever tekniske problemer.",
-			"suggestion": "Prøv venligst igen om et øjeblik."
+			"title": "Vi holder en kort pause",
+			"message": "Der skete noget uventet på vores side.",
+			"suggestion": "Bare rolig, dine data er sikre! Vi arbejder på det og er snart tilbage. Siden opdateres automatisk, når vi er klar."
 		},
 		"offline": {
-			"title": "Du er offline",
-			"code": "Offline",
-			"message": "Det ser ud til, at du har mistet din internetforbindelse.",
-			"suggestion": "Tjek din forbindelse og prøv igen."
+			"title": "Ingen internetforbindelse",
+			"message": "Det ser ud til, at du ikke er forbundet til internettet lige nu.",
+			"suggestion": "Tjek din Wi-Fi eller mobildataforbindelse. Vi forbinder automatisk igen, når du er online!"
 		},
 		"serverUnavailable": {
-			"title": "Server utilgængelig",
-			"code": "Utilgængelig",
-			"message": "Vi har problemer med at oprette forbindelse til vores servere.",
-			"suggestion": "Dette kan være midlertidigt. Prøv venligst igen om lidt."
+			"title": "Vi er straks tilbage",
+			"message": "Vi har lidt problemer med at oprette forbindelse til vores servere.",
+			"suggestion": "Dette er normalt midlertidigt. Bliv her - vi tjekker hvert par sekunder og opdaterer automatisk, når alt fungerer igen."
+		},
+		"autoRecovery": {
+			"checking": "Tjekker forbindelse...",
+			"willRetry": "Prøver automatisk igen om {seconds} sekunder..."
 		},
 		"actions": {
-			"goHome": "Gå til forsiden",
+			"goToToday": "Gå til I dag",
 			"goBack": "Gå tilbage",
-			"tryAgain": "Prøv igen"
-		}
+			"tryAgain": "Prøv igen nu"
+		},
+		"helpText": "Har du stadig problemer?"
 	},
 	"admin": {
 		"title": "Admin Dashboard",

@@ -1050,34 +1050,35 @@
 	},
 	"errorPages": {
 		"notFound": {
-			"title": "Page Not Found",
-			"code": "404",
-			"message": "The page you're looking for doesn't exist or has been moved.",
-			"suggestion": "Check the URL or head back to continue your journey."
+			"title": "Oops! We can't find that page",
+			"message": "It looks like this page has moved or doesn't exist anymore.",
+			"suggestion": "No worries - let's get you back on track! Head to your daily view to continue building great habits."
 		},
 		"serverError": {
-			"title": "Something Went Wrong",
-			"code": "500",
-			"message": "We're experiencing technical difficulties.",
-			"suggestion": "Please try again in a few moments."
+			"title": "We're taking a quick break",
+			"message": "Something unexpected happened on our end.",
+			"suggestion": "Don't worry, your data is safe! We're working on it and will be back shortly. The page will refresh automatically when we're ready."
 		},
 		"offline": {
-			"title": "You're Offline",
-			"code": "Offline",
-			"message": "It looks like you've lost your internet connection.",
-			"suggestion": "Check your connection and try again."
+			"title": "No internet connection",
+			"message": "It looks like you're not connected to the internet right now.",
+			"suggestion": "Check your Wi-Fi or mobile data connection. We'll automatically reconnect when you're back online!"
 		},
 		"serverUnavailable": {
-			"title": "Server Unavailable",
-			"code": "Unavailable",
-			"message": "We're having trouble connecting to our servers.",
-			"suggestion": "This might be temporary. Please try again shortly."
+			"title": "We'll be right back",
+			"message": "We're having a little trouble connecting to our servers.",
+			"suggestion": "This is usually temporary. Sit tight - we're checking every few seconds and will refresh automatically when everything is working again."
+		},
+		"autoRecovery": {
+			"checking": "Checking connection...",
+			"willRetry": "Automatically retrying in {seconds} seconds..."
 		},
 		"actions": {
-			"goHome": "Go to Home",
+			"goToToday": "Go to Today",
 			"goBack": "Go Back",
-			"tryAgain": "Try Again"
-		}
+			"tryAgain": "Try Again Now"
+		},
+		"helpText": "Still having trouble?"
 	},
 	"admin": {
 		"title": "Admin Dashboard",

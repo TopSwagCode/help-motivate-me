@@ -3,6 +3,8 @@
 	import { goto } from '$app/navigation';
 	import { t } from 'svelte-i18n';
 	import { pwaStore } from '$lib/stores/pwa';
+	import { onMount, onDestroy } from 'svelte';
+	import { browser } from '$app/environment';
 
 	type ErrorType = 'notFound' | 'serverError' | 'offline' | 'serverUnavailable';
 
@@ -14,17 +16,104 @@
 	}
 
 	let errorType = $derived(getErrorType($page.status, $page.error, $pwaStore.isOnline));
+	let isRecoverable = $derived(errorType !== 'notFound');
+
+	// Auto-recovery state
+	let isChecking = $state(false);
+	let checkInterval: ReturnType<typeof setInterval> | null = null;
+	let secondsUntilRetry = $state(10);
+	let retryCountdown: ReturnType<typeof setInterval> | null = null;
+
+	// API health check endpoint - adjust to your API's health endpoint
+	const API_URL = browser ? (import.meta.env.VITE_API_URL || 'http://localhost:5001') : '';
+	const HEALTH_ENDPOINT = `${API_URL}/health`;
+
+	async function checkServerHealth(): Promise<boolean> {
+		try {
+			const response = await fetch(HEALTH_ENDPOINT, {
+				method: 'GET',
+				cache: 'no-store',
+				signal: AbortSignal.timeout(5000)
+			});
+			return response.ok;
+		} catch {
+			return false;
+		}
+	}
+
+	async function attemptRecovery() {
+		if (isChecking) return;
+
+		isChecking = true;
+		const isHealthy = await checkServerHealth();
+		isChecking = false;
+
+		if (isHealthy) {
+			// Server is back! Reload the page
+			location.reload();
+		}
+	}
+
+	function startAutoRecovery() {
+		if (!browser || !isRecoverable) return;
+
+		// Start countdown
+		secondsUntilRetry = 10;
+		retryCountdown = setInterval(() => {
+			secondsUntilRetry--;
+			if (secondsUntilRetry <= 0) {
+				secondsUntilRetry = 10;
+			}
+		}, 1000);
+
+		// Check every 10 seconds
+		checkInterval = setInterval(() => {
+			attemptRecovery();
+		}, 10000);
+
+		// Also do an immediate check after 3 seconds
+		setTimeout(() => attemptRecovery(), 3000);
+	}
+
+	function stopAutoRecovery() {
+		if (checkInterval) {
+			clearInterval(checkInterval);
+			checkInterval = null;
+		}
+		if (retryCountdown) {
+			clearInterval(retryCountdown);
+			retryCountdown = null;
+		}
+	}
+
+	onMount(() => {
+		if (isRecoverable) {
+			startAutoRecovery();
+		}
+	});
+
+	onDestroy(() => {
+		stopAutoRecovery();
+	});
+
+	// Watch for online status changes
+	$effect(() => {
+		if ($pwaStore.isOnline && isRecoverable) {
+			// We're back online, try to recover immediately
+			attemptRecovery();
+		}
+	});
+
+	function goToToday() {
+		goto('/today');
+	}
 
 	function goBack() {
 		history.back();
 	}
 
-	function goHome() {
-		goto('/');
-	}
-
-	function tryAgain() {
-		location.reload();
+	function manualRetry() {
+		attemptRecovery();
 	}
 </script>
 
@@ -33,80 +122,133 @@
 </svelte:head>
 
 <div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-gray-50 flex items-center justify-center px-4">
-	<div class="max-w-md w-full">
+	<div class="max-w-lg w-full">
 		<div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 text-center">
-			<!-- Status Code / Icon -->
+			<!-- Friendly Icon -->
 			<div class="mb-6">
 				{#if errorType === 'offline'}
-					<div class="w-20 h-20 mx-auto bg-yellow-100 rounded-full flex items-center justify-center">
-						<svg class="w-10 h-10 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414" />
+					<!-- Cloud with X - friendly "no connection" icon -->
+					<div class="w-24 h-24 mx-auto bg-amber-50 rounded-full flex items-center justify-center">
+						<svg class="w-14 h-14 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.5 12.5l5 5m0-5l-5 5" />
 						</svg>
 					</div>
-				{:else if errorType === 'serverUnavailable'}
-					<div class="w-20 h-20 mx-auto bg-orange-100 rounded-full flex items-center justify-center">
-						<svg class="w-10 h-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+				{:else if errorType === 'serverUnavailable' || errorType === 'serverError'}
+					<!-- Sleeping/resting icon - friendly "taking a break" -->
+					<div class="w-24 h-24 mx-auto bg-indigo-50 rounded-full flex items-center justify-center">
+						<svg class="w-14 h-14 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9h.01M9 9h.01" />
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13c.5.5 1.5 1 3 1s2.5-.5 3-1" />
 						</svg>
-					</div>
-				{:else if errorType === 'notFound'}
-					<div class="text-7xl font-bold text-indigo-200">
-						{$t('errorPages.notFound.code')}
 					</div>
 				{:else}
-					<div class="w-20 h-20 mx-auto bg-red-100 rounded-full flex items-center justify-center">
-						<svg class="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+					<!-- Compass/lost icon - friendly "can't find it" -->
+					<div class="w-24 h-24 mx-auto bg-purple-50 rounded-full flex items-center justify-center">
+						<svg class="w-14 h-14 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+							<circle cx="12" cy="11" r="1" fill="currentColor" />
 						</svg>
 					</div>
 				{/if}
 			</div>
 
-			<!-- Title -->
-			<h1 class="text-2xl font-bold text-gray-900 mb-2">
+			<!-- Friendly Title -->
+			<h1 class="text-2xl font-bold text-gray-900 mb-3">
 				{$t(`errorPages.${errorType}.title`)}
 			</h1>
 
-			<!-- Message -->
-			<p class="text-gray-600 mb-2">
+			<!-- Friendly Message -->
+			<p class="text-gray-600 mb-2 text-lg">
 				{$t(`errorPages.${errorType}.message`)}
 			</p>
 
-			<!-- Suggestion -->
-			<p class="text-gray-500 text-sm mb-8">
+			<!-- Helpful Suggestion -->
+			<p class="text-gray-500 mb-6">
 				{$t(`errorPages.${errorType}.suggestion`)}
 			</p>
 
-			<!-- Action Buttons -->
-			<div class="flex flex-col sm:flex-row gap-3 justify-center">
-				<button
-					onclick={goHome}
-					class="inline-flex items-center justify-center px-5 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
-				>
-					{$t('errorPages.actions.goHome')}
-				</button>
+			<!-- Auto-recovery indicator for recoverable errors -->
+			{#if isRecoverable}
+				<div class="mb-6 py-3 px-4 bg-gray-50 rounded-lg">
+					{#if isChecking}
+						<div class="flex items-center justify-center gap-2 text-sm text-gray-600">
+							<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+							</svg>
+							<span>{$t('errorPages.autoRecovery.checking')}</span>
+						</div>
+					{:else}
+						<p class="text-sm text-gray-500">
+							{$t('errorPages.autoRecovery.willRetry', { values: { seconds: secondsUntilRetry } })}
+						</p>
+					{/if}
+				</div>
+			{/if}
 
-				{#if errorType === 'offline' || errorType === 'serverUnavailable' || errorType === 'serverError'}
+			<!-- Action Buttons -->
+			<div class="flex flex-col gap-3">
+				{#if errorType === 'notFound'}
+					<!-- 404: Go to Today as primary, Go Back as secondary -->
 					<button
-						onclick={tryAgain}
-						class="inline-flex items-center justify-center px-5 py-2.5 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+						onclick={goToToday}
+						class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
 					>
-						{$t('errorPages.actions.tryAgain')}
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+						</svg>
+						{$t('errorPages.actions.goToToday')}
 					</button>
-				{:else}
 					<button
 						onclick={goBack}
-						class="inline-flex items-center justify-center px-5 py-2.5 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+						class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 border border-gray-300 text-base font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 transition-colors"
 					>
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+						</svg>
 						{$t('errorPages.actions.goBack')}
+					</button>
+				{:else}
+					<!-- Recoverable errors: Manual retry as primary, Go to Today as secondary -->
+					<button
+						onclick={manualRetry}
+						disabled={isChecking}
+						class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+					>
+						{#if isChecking}
+							<svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+							</svg>
+							{$t('errorPages.autoRecovery.checking')}
+						{:else}
+							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+							</svg>
+							{$t('errorPages.actions.tryAgain')}
+						{/if}
+					</button>
+					<button
+						onclick={goToToday}
+						class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 border border-gray-300 text-base font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+					>
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+						</svg>
+						{$t('errorPages.actions.goToToday')}
 					</button>
 				{/if}
 			</div>
 		</div>
 
 		<!-- Help Link -->
-		<div class="mt-6 text-center text-sm text-gray-500">
-			<a href="/faq" class="text-indigo-600 hover:text-indigo-700">
+		<div class="mt-6 text-center">
+			<p class="text-sm text-gray-500 mb-2">
+				{$t('errorPages.helpText')}
+			</p>
+			<a href="/faq" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
 				{$t('common.info.visitFaq')}
 			</a>
 		</div>
