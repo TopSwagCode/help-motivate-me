@@ -988,6 +988,7 @@
 		"title": "Log identitetsbevis",
 		"subtitle": "Fang spontane gevinster der forstærker din identitet",
 		"whichIdentity": "Hvilken identitet forstærkede du?",
+		"selectIdentity": "Vælg en identitet...",
 		"howChallenging": "Hvor udfordrende var det?",
 		"whatDidYouDo": "Hvad gjorde du?",
 		"logProof": "Log bevis",

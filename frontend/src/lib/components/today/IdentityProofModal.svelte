@@ -183,22 +183,27 @@
 					{:else}
 						<!-- Identity Selection -->
 						<div class="mb-4">
-							<p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+							<label for="identity-select" class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 block">
 								{$t('identityProof.whichIdentity')}
-							</p>
-							<div class="flex flex-wrap gap-1.5">
+							</label>
+							<select
+								id="identity-select"
+								onchange={(e) => {
+									const id = (e.target as HTMLSelectElement).value;
+									const identity = identities.find(i => i.id === id);
+									if (identity) selectIdentity(identity);
+								}}
+								class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm bg-white"
+							>
+								<option value="" disabled selected={!selectedIdentity}>
+									{$t('identityProof.selectIdentity')}
+								</option>
 								{#each identities as identity (identity.id)}
-									<button
-										onclick={() => selectIdentity(identity)}
-										class="px-2.5 py-1.5 rounded-lg border text-sm transition-all
-											{selectedIdentity?.id === identity.id
-												? 'border-primary-500 bg-primary-50 text-primary-700 font-medium'
-												: 'border-gray-200 hover:border-gray-300 bg-white text-gray-700'}"
-									>
-										{#if identity.icon}<span class="mr-1">{identity.icon}</span>{/if}{identity.name}
-									</button>
+									<option value={identity.id} selected={selectedIdentity?.id === identity.id}>
+										{identity.icon ? `${identity.icon} ` : ''}{identity.name}
+									</option>
 								{/each}
-							</div>
+							</select>
 						</div>
 
 						<!-- Intensity Selection -->

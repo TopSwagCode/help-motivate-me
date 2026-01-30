@@ -988,6 +988,7 @@
 		"title": "Log Identity Proof",
 		"subtitle": "Capture spontaneous wins that reinforce your identity",
 		"whichIdentity": "Which identity did you reinforce?",
+		"selectIdentity": "Select an identity...",
 		"howChallenging": "How challenging was it?",
 		"whatDidYouDo": "What did you do?",
 		"logProof": "Log Proof",
