@@ -211,7 +211,7 @@
 				</svg>
 			</button>
 			{#if sectionsExpanded.identityProgress}
-				<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					{#each todayData.identityProgress as progress (progress.id)}
 						<div 
 							class="rounded-lg p-3 transition-all hover:scale-[1.02] cursor-default"
@@ -266,10 +266,10 @@
 		</button>
 		{#if sectionsExpanded.habitStacks}
 			{#if todayData.habitStacks.length > 0}
-				<div class="columns-1 sm:columns-2 lg:columns-3 gap-2 space-y-2">
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					{#each todayData.habitStacks as stack (stack.id)}
 						<div 
-							class="rounded-lg overflow-hidden transition-all break-inside-avoid group/stack"
+							class="rounded-lg overflow-hidden transition-all group/stack"
 							style="background-color: {stack.identityColor || '#6366f1'}08; border: 1px solid {stack.identityColor || '#6366f1'}20"
 						>
 							<!-- Stack Header -->
@@ -499,10 +499,10 @@
 		</div>
 		{#if sectionsExpanded.tasks}
 			{#if sortedUpcomingTasks.length > 0}
-				<div class="columns-1 sm:columns-2 gap-2 space-y-2">
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					{#each sortedUpcomingTasks as task (task.id)}
 						<div
-							class="relative break-inside-avoid rounded-lg overflow-hidden transition-all duration-300
+							class="relative rounded-lg overflow-hidden transition-all duration-300
 								{!readonly && transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95' : ''}
 								{!readonly && newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight' : ''}
 								{!readonly && snoozingTaskIds.includes(task.id) ? 'bg-amber-50' : ''}
@@ -676,10 +676,10 @@
 		</button>
 		{#if sectionsExpanded.completedTasks}
 			{#if todayData.completedTasks.length > 0}
-				<div class="columns-1 sm:columns-2 lg:columns-3 gap-2 space-y-2">
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					{#each todayData.completedTasks as task (task.id)}
 						<div
-							class="relative break-inside-avoid rounded-lg overflow-hidden transition-all duration-300
+							class="relative rounded-lg overflow-hidden transition-all duration-300
 								{!readonly && transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95' : ''}
 								{!readonly && newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight-green' : ''}"
 							style="background: linear-gradient(135deg, {task.identityColor || '#6366f1'}10, #f0fdf4); border: 1px solid {task.identityColor || '#22c55e'}30"
