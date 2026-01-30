@@ -973,6 +973,17 @@
 			"strongestDescription": "Suggest the identity where you have the most momentum"
 		}
 	},
+	"identityProof": {
+		"title": "Log Identity Proof",
+		"whichIdentity": "Which identity did you reinforce?",
+		"howChallenging": "How challenging was it?",
+		"whatDidYouDo": "What did you do?",
+		"logProof": "Log Proof",
+		"success": "Proof Logged!",
+		"easy": "Easy",
+		"moderate": "Moderate",
+		"hard": "Hard"
+	},
 	"analytics": {
 		"title": "Analytics",
 		"pageTitle": "Analytics",

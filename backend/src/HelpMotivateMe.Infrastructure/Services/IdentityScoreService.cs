@@ -16,6 +16,7 @@ public class IdentityScoreService
     private readonly IQueryInterface<Identity> _identities;
     private readonly IQueryInterface<HabitStackItemCompletion> _completions;
     private readonly IQueryInterface<TaskItem> _tasks;
+    private readonly IQueryInterface<IdentityProof> _proofs;
 
     // Maximum votes counted per identity per day to prevent gaming
     private const int MaxDailyVotes = 10;
@@ -29,11 +30,13 @@ public class IdentityScoreService
     public IdentityScoreService(
         IQueryInterface<Identity> identities,
         IQueryInterface<HabitStackItemCompletion> completions,
-        IQueryInterface<TaskItem> tasks)
+        IQueryInterface<TaskItem> tasks,
+        IQueryInterface<IdentityProof> proofs)
     {
         _identities = identities;
         _completions = completions;
         _tasks = tasks;
+        _proofs = proofs;
     }
 
     /// <summary>
@@ -50,6 +53,7 @@ public class IdentityScoreService
                 .ThenInclude(hs => hs.Items)
                     .ThenInclude(hsi => hsi.Completions.Where(c => c.CompletedDate >= startDate && c.CompletedDate <= targetDate))
             .Include(i => i.Tasks.Where(t => t.CompletedAt >= startDate && t.CompletedAt <= targetDate))
+            .Include(i => i.Proofs.Where(p => p.ProofDate >= startDate && p.ProofDate <= targetDate))
             .Where(i => i.UserId == userId)
             .ToListAsync();
 
@@ -88,17 +92,24 @@ public class IdentityScoreService
             .Select(g => new { IdentityId = g.Key, FirstDate = g.Min(t => t.CompletedAt!.Value) })
             .ToDictionaryAsync(x => x.IdentityId, x => (DateOnly?)x.FirstDate);
 
+        // Get earliest identity proof date per identity
+        var proofFirstDates = await _proofs
+            .Where(p => p.UserId == userId && identityIds.Contains(p.IdentityId))
+            .GroupBy(p => p.IdentityId)
+            .Select(g => new { IdentityId = g.Key, FirstDate = g.Min(p => p.ProofDate) })
+            .ToDictionaryAsync(x => x.IdentityId, x => (DateOnly?)x.FirstDate);
+
         // Merge and get earliest date for each identity
         var result = new Dictionary<Guid, DateOnly?>();
         foreach (var identityId in identityIds)
         {
             var habitDate = habitFirstDates.GetValueOrDefault(identityId);
             var taskDate = taskFirstDates.GetValueOrDefault(identityId);
+            var proofDate = proofFirstDates.GetValueOrDefault(identityId);
 
-            if (habitDate.HasValue && taskDate.HasValue)
-                result[identityId] = habitDate.Value < taskDate.Value ? habitDate : taskDate;
-            else
-                result[identityId] = habitDate ?? taskDate;
+            // Find the earliest of all three dates
+            var dates = new[] { habitDate, taskDate, proofDate }.Where(d => d.HasValue).ToList();
+            result[identityId] = dates.Count > 0 ? dates.Min() : null;
         }
 
         return result;
@@ -247,10 +258,16 @@ public class IdentityScoreService
 
         // Task completions (+2 per regular task)
         var taskCompletions = identity.Tasks
-            .Count(t => t.Status == TaskItemStatus.Completed && 
-                       t.CompletedAt.HasValue && 
+            .Count(t => t.Status == TaskItemStatus.Completed &&
+                       t.CompletedAt.HasValue &&
                        t.CompletedAt.Value == date);
         votes += taskCompletions * 2;
+
+        // Identity proofs (+1 Easy, +2 Moderate, +3 Hard based on intensity)
+        var proofVotes = identity.Proofs?
+            .Where(p => p.ProofDate == date)
+            .Sum(p => (int)p.Intensity) ?? 0;
+        votes += proofVotes;
 
         return votes;
     }
@@ -269,11 +286,17 @@ public class IdentityScoreService
 
         // Check task completions
         var hasTaskActivity = identity.Tasks
-            .Any(t => t.CompletedAt.HasValue && 
-                     t.CompletedAt.Value >= twoDaysAgo && 
+            .Any(t => t.CompletedAt.HasValue &&
+                     t.CompletedAt.Value >= twoDaysAgo &&
                      t.CompletedAt.Value <= targetDate);
 
-        return hasTaskActivity;
+        if (hasTaskActivity) return true;
+
+        // Check identity proofs
+        var hasProofActivity = identity.Proofs?
+            .Any(p => p.ProofDate >= twoDaysAgo && p.ProofDate <= targetDate) ?? false;
+
+        return hasProofActivity;
     }
 
     private TrendDirection CalculateTrend(Identity identity, DateOnly targetDate)

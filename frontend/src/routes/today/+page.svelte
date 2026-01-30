@@ -16,6 +16,7 @@
 	import TodayViewContent from '$lib/components/today/TodayViewContent.svelte';
 	import DailyCommitmentCard from '$lib/components/today/DailyCommitmentCard.svelte';
 	import CommitmentFlowModal from '$lib/components/today/CommitmentFlowModal.svelte';
+	import IdentityProofModal from '$lib/components/today/IdentityProofModal.svelte';
 	import type { TodayView, TodayTask, Identity } from '$lib/types';
 	import { getLocalDateString } from '$lib/utils/date';
 
@@ -56,6 +57,9 @@
 
 	// Daily commitment modal state
 	let showCommitmentModal = $state(false);
+
+	// Identity proof modal state
+	let showProofModal = $state(false);
 
 	onMount(async () => {
 		if (!$auth.initialized) {
@@ -532,6 +536,20 @@
 			error = e instanceof Error ? e.message : 'Failed to dismiss commitment';
 		}
 	}
+
+	// Identity proof handlers
+	function handleOpenProofModal() {
+		showProofModal = true;
+	}
+
+	function handleCloseProofModal() {
+		showProofModal = false;
+	}
+
+	async function handleProofCreated() {
+		// Reload today data to get updated scores
+		await loadToday();
+	}
 </script>
 
 <div class="min-h-screen bg-gray-50">
@@ -772,4 +790,22 @@
 		onClose={handleCloseCommitmentModal}
 		onCommitmentCreated={handleCommitmentCreated}
 	/>
+
+	<!-- Identity Proof Modal -->
+	<IdentityProofModal
+		isOpen={showProofModal}
+		onClose={handleCloseProofModal}
+		onProofCreated={handleProofCreated}
+	/>
+
+	<!-- Identity Proof FAB (only show when viewing today) -->
+	{#if isToday() && !loading && todayData}
+		<button
+			onclick={handleOpenProofModal}
+			class="fixed bottom-6 right-6 w-14 h-14 bg-amber-500 hover:bg-amber-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center text-2xl z-40"
+			title={$t('identityProof.title')}
+		>
+			<span>⚡</span>
+		</button>
+	{/if}
 </div>

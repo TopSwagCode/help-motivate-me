@@ -62,6 +62,9 @@ builder.Services.AddScoped<IdentityScoreService>();
 // Daily Commitment Service
 builder.Services.AddScoped<DailyCommitmentService>();
 
+// Identity Proof Service
+builder.Services.AddScoped<IdentityProofService>();
+
 // Daily Commitment Notification Service
 builder.Services.AddScoped<IDailyCommitmentNotificationService, DailyCommitmentNotificationService>();
 

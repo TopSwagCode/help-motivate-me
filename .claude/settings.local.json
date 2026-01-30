@@ -14,7 +14,9 @@
       "Bash(dotnet ef migrations add:*)",
       "Bash(npx svelte-kit sync)",
       "Bash(npm install:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(dotnet tool restore:*)",
+      "Bash(dotnet restore:*)"
     ]
   }
 }

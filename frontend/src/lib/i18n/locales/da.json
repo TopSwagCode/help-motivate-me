@@ -973,6 +973,17 @@
 			"strongestDescription": "Foreslå den identitet, hvor du har mest momentum"
 		}
 	},
+	"identityProof": {
+		"title": "Log identitetsbevis",
+		"whichIdentity": "Hvilken identitet forstærkede du?",
+		"howChallenging": "Hvor udfordrende var det?",
+		"whatDidYouDo": "Hvad gjorde du?",
+		"logProof": "Log bevis",
+		"success": "Bevis logget!",
+		"easy": "Nemt",
+		"moderate": "Moderat",
+		"hard": "Svært"
+	},
 	"analytics": {
 		"title": "Analyse",
 		"pageTitle": "Analyse",
