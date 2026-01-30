@@ -200,33 +200,6 @@
 			onProofCreated={() => showProofModal = false}
 		/>
 
-		<!-- Floating Identity Proof Button -->
-		<button
-			type="button"
-			onclick={() => showProofModal = true}
-			class="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 w-12 h-12 sm:w-14 sm:h-14
-			       bg-gradient-to-r from-amber-500 to-amber-600
-			       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110
-			       transition-all duration-200 flex items-center justify-center z-40
-			       group touch-manipulation"
-			title={$t('identityProof.subtitle')}
-			aria-label={$t('identityProof.logProofButton')}
-		>
-			<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-				/>
-			</svg>
-			<!-- Label hint on hover (hidden on mobile) -->
-			<span class="hidden sm:block absolute -top-10 right-0 bg-gray-900 text-white text-xs px-2 py-1
-			             rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-				{$t('identityProof.logProofButton')}
-			</span>
-		</button>
-
 		<!-- Floating AI Assistant Button -->
 		<button
 			type="button"
@@ -248,10 +221,37 @@
 					d="M13 10V3L4 14h7v7l9-11h-7z"
 				/>
 			</svg>
-			<!-- Keyboard shortcut hint on hover (hidden on mobile) -->
-			<span class="hidden sm:block absolute -top-10 right-0 bg-gray-900 text-white text-xs px-2 py-1 
-			             rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+			<!-- Keyboard shortcut hint on hover - positioned to the left to avoid overlap -->
+			<span class="hidden sm:block absolute top-1/2 -translate-y-1/2 right-full mr-3 bg-gray-900 text-white text-xs px-2 py-1 
+			             rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
 				Press ⌘K
+			</span>
+		</button>
+
+		<!-- Floating Identity Proof Button -->
+		<button
+			type="button"
+			onclick={() => showProofModal = true}
+			class="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 w-12 h-12 sm:w-14 sm:h-14
+			       bg-gradient-to-r from-amber-500 to-amber-600
+			       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110
+			       transition-all duration-200 flex items-center justify-center z-40
+			       group touch-manipulation"
+			title={$t('identityProof.subtitle')}
+			aria-label={$t('identityProof.logProofButton')}
+		>
+			<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+				/>
+			</svg>
+			<!-- Label hint on hover - positioned to the left to avoid overlap -->
+			<span class="hidden sm:block absolute top-1/2 -translate-y-1/2 right-full mr-3 bg-gray-900 text-white text-xs px-2 py-1
+			             rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+				{$t('identityProof.logProofButton')}
 			</span>
 		</button>
 	{/if}
