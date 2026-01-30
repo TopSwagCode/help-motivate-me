@@ -614,11 +614,15 @@
 		"form": {
 			"name": "Identitetsnavn",
 			"namePlaceholder": "f.eks., En sund person",
+			"nameHint": "Hvem vil du blive?",
 			"description": "Beskrivelse",
 			"descriptionPlaceholder": "Beskriv hvem du vil blive...",
 			"emoji": "Emoji",
 			"color": "Farve",
-			"submit": "Gem identitet"
+			"submit": "Gem identitet",
+			"errors": {
+				"saveFailed": "Kunne ikke gemme identitet"
+			}
 		}
 	},
 	"habitStacks": {
@@ -661,7 +665,12 @@
 			"submit": "Gem vanestak",
 			"identity": "Knyt til identitet (Valgfrit)",
 			"noIdentity": "Ingen identitet",
-			"identityHint": "At knytte til en identitet hjælper med at forstærke hvem du er ved at blive"
+			"identityHint": "At knytte til en identitet hjælper med at forstærke hvem du er ved at blive",
+			"errors": {
+				"nameRequired": "Staknavn er påkrævet",
+				"habitRequired": "Mindst ét komplet vaneelement er påkrævet",
+				"createFailed": "Kunne ikke oprette vanestak"
+			}
 		},
 		"chain": {
 			"after": "Efter jeg",

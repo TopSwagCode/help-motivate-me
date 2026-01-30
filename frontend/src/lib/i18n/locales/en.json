@@ -614,11 +614,15 @@
 		"form": {
 			"name": "Identity Name",
 			"namePlaceholder": "e.g., A Healthy Person",
+			"nameHint": "Who do you want to become?",
 			"description": "Description",
 			"descriptionPlaceholder": "Describe who you want to become...",
 			"emoji": "Emoji",
 			"color": "Color",
-			"submit": "Save Identity"
+			"submit": "Save Identity",
+			"errors": {
+				"saveFailed": "Failed to save identity"
+			}
 		}
 	},
 	"habitStacks": {
@@ -661,7 +665,12 @@
 			"submit": "Save Habit Stack",
 			"identity": "Link to Identity (Optional)",
 			"noIdentity": "No identity",
-			"identityHint": "Linking to an identity helps reinforce who you're becoming"
+			"identityHint": "Linking to an identity helps reinforce who you're becoming",
+			"errors": {
+				"nameRequired": "Stack name is required",
+				"habitRequired": "At least one complete habit item is required",
+				"createFailed": "Failed to create habit stack"
+			}
 		},
 		"chain": {
 			"after": "After I",

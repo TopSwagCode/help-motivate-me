@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { tick, onMount } from 'svelte';
+	import { t } from 'svelte-i18n';
 	import type { CreateHabitStackRequest, HabitStackItemRequest, Identity } from '$lib/types';
 	import { getIdentities } from '$lib/api/identities';
 
@@ -84,13 +85,13 @@
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
 		if (!name.trim()) {
-			error = 'Stack name is required';
+			error = $t('habitStacks.form.errors.nameRequired');
 			return;
 		}
 
 		const validItems = items.filter((item) => item.cueDescription.trim() && item.habitDescription.trim());
 		if (validItems.length === 0) {
-			error = 'At least one complete habit item is required';
+			error = $t('habitStacks.form.errors.habitRequired');
 			return;
 		}
 
@@ -104,7 +105,7 @@
 				identityId: identityId || undefined
 			});
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to create habit stack';
+			error = e instanceof Error ? e.message : $t('habitStacks.form.errors.createFailed');
 		} finally {
 			loading = false;
 		}
@@ -119,12 +120,12 @@
 	{/if}
 
 	<div>
-		<label for="name" class="block text-sm font-medium text-gray-700 mb-1">Stack Name</label>
+		<label for="name" class="block text-sm font-medium text-gray-700 mb-1">{$t('habitStacks.form.name')}</label>
 		<input
 			type="text"
 			id="name"
 			bind:value={name}
-			placeholder="Morning Routine"
+			placeholder={$t('habitStacks.form.namePlaceholder')}
 			class="input"
 			required
 		/>
@@ -133,7 +134,7 @@
 	{#if identities.length > 0}
 		<div>
 			<label for="identityId" class="block text-sm font-medium text-gray-700 mb-1">
-				Identity <span class="text-gray-500 text-sm">(Optional)</span>
+				{$t('habitStacks.form.identity')}
 			</label>
 			<select
 				id="identityId"
@@ -141,19 +142,19 @@
 				class="input"
 				disabled={loading}
 			>
-				<option value="">No identity</option>
+				<option value="">{$t('habitStacks.form.noIdentity')}</option>
 				{#each identities as identity (identity.id)}
 					<option value={identity.id}>
 						{identity.icon ? `${identity.icon} ` : ''}{identity.name}
 					</option>
 				{/each}
 			</select>
-			<p class="text-xs text-gray-500 mt-1">Link this habit stack to an identity</p>
+			<p class="text-xs text-gray-500 mt-1">{$t('habitStacks.form.identityHint')}</p>
 		</div>
 	{/if}
 
 	<div>
-		<span class="block text-sm font-medium text-gray-700 mb-3">Habit Chain</span>
+		<span class="block text-sm font-medium text-gray-700 mb-3">{$t('habitStacks.createPopup.habitChain')}</span>
 		<div class="space-y-4">
 			{#each items as item, i (i)}
 				<div class="relative pl-6 pb-4 {i < items.length - 1 ? 'border-l-2 border-gray-200 ml-3' : 'ml-3'}">
@@ -163,25 +164,25 @@
 					<div class="bg-gray-50 rounded-lg p-4">
 						<div class="space-y-3">
 							<div>
-								<label for="cue-input-{i}" class="block text-xs font-medium text-gray-500 mb-1">After I...</label>
+								<label for="cue-input-{i}" class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.afterI')}</label>
 								<input
 									id="cue-input-{i}"
 									type="text"
 									value={item.cueDescription}
 									oninput={(e) => updateItem(i, 'cueDescription', (e.target as HTMLInputElement).value)}
-									placeholder={i === 0 ? 'wake up' : 'previous habit'}
+									placeholder={i === 0 ? $t('habitStacks.createPopup.placeholderCue') : $t('habitStacks.createPopup.placeholderPreviousHabit')}
 									class="input text-sm"
 								/>
 							</div>
 							<div>
-								<label for="habit-input-{i}" class="block text-xs font-medium text-gray-500 mb-1">I will...</label>
+								<label for="habit-input-{i}" class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.iWillDo')}</label>
 								<input
 									id="habit-input-{i}"
 									type="text"
 									value={item.habitDescription}
 									oninput={(e) => updateItem(i, 'habitDescription', (e.target as HTMLInputElement).value)}
 									onkeydown={(e) => handleItemKeyPress(e, i)}
-									placeholder="drink a glass of water"
+									placeholder={$t('habitStacks.createPopup.placeholderHabit')}
 									class="input text-sm"
 								/>
 							</div>
@@ -192,7 +193,7 @@
 								onclick={() => removeItem(i)}
 								class="mt-2 text-xs text-red-500 hover:text-red-700"
 							>
-								Remove
+								{$t('habitStacks.createPopup.remove')}
 							</button>
 						{/if}
 					</div>
@@ -208,16 +209,16 @@
 			<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
 			</svg>
-			Add another habit
+			{$t('habitStacks.createPopup.addAnother')}
 		</button>
 	</div>
 
 	<div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
 		<button type="button" onclick={oncancel} class="btn-secondary" disabled={loading}>
-			Cancel
+			{$t('common.cancel')}
 		</button>
 		<button type="submit" class="btn-primary" disabled={loading}>
-			{loading ? 'Creating...' : 'Create Stack'}
+			{loading ? $t('habitStacks.createPopup.creating') : $t('habitStacks.createPopup.createStack')}
 		</button>
 	</div>
 </form>

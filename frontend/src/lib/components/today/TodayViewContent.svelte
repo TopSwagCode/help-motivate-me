@@ -595,7 +595,7 @@
 
 								<!-- Action Buttons (only in interactive mode) -->
 								{#if !readonly}
-									<div class="flex items-center justify-end gap-1 mt-2 pt-2 border-t" style="border-color: {task.identityColor || '#6366f1'}15">
+									<div class="flex items-center justify-end gap-1 mt-2 pt-2">
 										<button
 											onclick={() => handleSnoozeTask(task)}
 											class="p-1.5 text-gray-400 hover:text-amber-500 hover:bg-amber-50 rounded transition-colors"

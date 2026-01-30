@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from 'svelte-i18n';
 	import type { Identity, CreateIdentityRequest, UpdateIdentityRequest } from '$lib/types';
 	import EmojiPicker from '$lib/components/shared/EmojiPicker.svelte';
 	import ColorPicker from '$lib/components/shared/ColorPicker.svelte';
@@ -41,7 +42,7 @@
 				icon: icon || undefined
 			});
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to save identity';
+			error = e instanceof Error ? e.message : $t('identities.form.errors.saveFailed');
 		} finally {
 			loading = false;
 		}
@@ -56,26 +57,26 @@
 	{/if}
 
 	<div>
-		<label for="name" class="label">Identity Name *</label>
+		<label for="name" class="label">{$t('identities.form.name')} *</label>
 		<input
 			id="name"
 			type="text"
 			bind:value={name}
 			required
 			maxlength="100"
-			placeholder="e.g., Healthy Person"
+			placeholder={$t('identities.form.namePlaceholder')}
 			class="input"
 		/>
-		<p class="text-xs text-gray-500 mt-1">Who do you want to become?</p>
+		<p class="text-xs text-gray-500 mt-1">{$t('identities.form.nameHint')}</p>
 	</div>
 
 	<div>
-		<label for="description" class="label">Description</label>
+		<label for="description" class="label">{$t('identities.form.description')}</label>
 		<textarea
 			id="description"
 			bind:value={description}
 			rows="2"
-			placeholder="What does this identity mean to you?"
+			placeholder={$t('identities.form.descriptionPlaceholder')}
 			class="input"
 		></textarea>
 	</div>
@@ -86,8 +87,8 @@
 
 	<div class="flex gap-3 pt-4">
 		<button type="submit" disabled={loading || !name.trim()} class="btn-primary flex-1">
-			{loading ? 'Saving...' : identity ? 'Update Identity' : 'Create Identity'}
+			{loading ? $t('common.saving') : identity ? $t('identities.edit') : $t('identities.create')}
 		</button>
-		<button type="button" onclick={oncancel} class="btn-secondary">Cancel</button>
+		<button type="button" onclick={oncancel} class="btn-secondary">{$t('common.cancel')}</button>
 	</div>
 </form>
