@@ -48,6 +48,11 @@ public record AddStackItemRequest(
     string HabitDescription
 );
 
+public record UpdateStackItemRequest(
+    string CueDescription,
+    string HabitDescription
+);
+
 public record ReorderStackItemsRequest(
     List<Guid> ItemIds
 );

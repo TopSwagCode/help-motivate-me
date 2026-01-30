@@ -238,6 +238,27 @@ public class HabitStacksController : ControllerBase
         return Ok(MapToResponse(stack));
     }
 
+    [HttpPut("items/{itemId:guid}")]
+    public async Task<IActionResult> UpdateStackItem(Guid itemId, [FromBody] UpdateStackItemRequest request)
+    {
+        var userId = GetUserId();
+
+        var item = await _db.HabitStackItems
+            .Include(i => i.HabitStack)
+            .FirstOrDefaultAsync(i => i.Id == itemId && i.HabitStack.UserId == userId);
+
+        if (item == null)
+        {
+            return NotFound();
+        }
+
+        item.CueDescription = request.CueDescription;
+        item.HabitDescription = request.HabitDescription;
+        await _db.SaveChangesAsync();
+
+        return NoContent();
+    }
+
     [HttpDelete("items/{itemId:guid}")]
     public async Task<IActionResult> DeleteStackItem(Guid itemId)
     {

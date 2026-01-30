@@ -49,6 +49,13 @@ export async function deleteStackItem(itemId: string): Promise<void> {
 	return apiDelete<void>(`/habit-stacks/items/${itemId}`);
 }
 
+export async function updateStackItem(
+	itemId: string,
+	data: { cueDescription: string; habitDescription: string }
+): Promise<void> {
+	return apiPut<void>(`/habit-stacks/items/${itemId}`, data);
+}
+
 export async function completeStackItem(
 	itemId: string,
 	date?: string

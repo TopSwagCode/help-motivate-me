@@ -12,6 +12,7 @@
 		deleteHabitStack,
 		addStackItem,
 		deleteStackItem,
+		updateStackItem,
 		reorderHabitStacks
 	} from '$lib/api/habitStacks';
 	import { getIdentities } from '$lib/api/identities';
@@ -50,6 +51,12 @@
 	let newItemHabit = $state('');
 	let newItemHabitInputRef = $state<HTMLInputElement | null>(null);
 	let addingItem = $state(false);
+
+	// Edit item state
+	let editingItemId = $state<string | null>(null);
+	let editItemCue = $state('');
+	let editItemHabit = $state('');
+	let savingItem = $state(false);
 
 	// Reorder popup state
 	let showReorderPopup = $state(false);
@@ -285,6 +292,45 @@
 			editingStack = updated;
 		} catch (e) {
 			editError = e instanceof Error ? e.message : 'Failed to delete item';
+		}
+	}
+
+	function startEditItem(item: { id: string; cueDescription: string; habitDescription: string }) {
+		editingItemId = item.id;
+		editItemCue = item.cueDescription;
+		editItemHabit = item.habitDescription;
+	}
+
+	function cancelEditItem() {
+		editingItemId = null;
+		editItemCue = '';
+		editItemHabit = '';
+	}
+
+	async function saveEditItem() {
+		if (!editingStack || !editingItemId) return;
+		if (!editItemCue.trim() || !editItemHabit.trim()) return;
+
+		savingItem = true;
+		try {
+			await updateStackItem(editingItemId, {
+				cueDescription: editItemCue.trim(),
+				habitDescription: editItemHabit.trim()
+			});
+			// Update local state
+			const updatedItems = editingStack.items.map((item) =>
+				item.id === editingItemId
+					? { ...item, cueDescription: editItemCue.trim(), habitDescription: editItemHabit.trim() }
+					: item
+			);
+			const updated = { ...editingStack, items: updatedItems };
+			stacks = stacks.map((s) => (s.id === updated.id ? updated : s));
+			editingStack = updated;
+			cancelEditItem();
+		} catch (e) {
+			editError = e instanceof Error ? e.message : 'Failed to update item';
+		} finally {
+			savingItem = false;
 		}
 	}
 
@@ -807,41 +853,87 @@
 											>
 												<span class="text-[10px] font-medium text-primary-700">{i + 1}</span>
 											</div>
-											<div class="bg-gray-50 rounded-lg p-3 group relative">
-												<p class="text-sm text-gray-600">
-													<span class="font-medium text-gray-800">{$t('habitStacks.chain.after')}</span>
-													{item.cueDescription}
-												</p>
-												<p class="text-gray-900 mt-1">
-													<span class="font-medium text-primary-600">{$t('habitStacks.chain.iWill')}</span>
-													{item.habitDescription}
-												</p>
-												{#if item.currentStreak > 0}
-													<p class="text-xs text-orange-600 mt-2 flex items-center gap-1">
-														{getStreakEmoji(item.currentStreak)} {item.currentStreak} {$t('habitStacks.dayStreak')}
-													</p>
-												{/if}
-												<button
-													type="button"
-													onclick={() => handleDeleteItem(item.id)}
-													class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 text-gray-400 hover:text-red-500"
-													title={$t('common.delete')}
-												>
-													<svg
-														class="w-4 h-4"
-														fill="none"
-														stroke="currentColor"
-														viewBox="0 0 24 24"
-													>
-														<path
-															stroke-linecap="round"
-															stroke-linejoin="round"
-															stroke-width="2"
-															d="M6 18L18 6M6 6l12 12"
+											{#if editingItemId === item.id}
+												<!-- Edit mode -->
+												<div class="bg-gray-50 rounded-lg p-3 space-y-2">
+													<div>
+														<label class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.afterI')}</label>
+														<input
+															type="text"
+															bind:value={editItemCue}
+															class="input text-sm"
+															placeholder={$t('habitStacks.createPopup.placeholderPreviousHabit')}
 														/>
-													</svg>
-												</button>
-											</div>
+													</div>
+													<div>
+														<label class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.iWillDo')}</label>
+														<input
+															type="text"
+															bind:value={editItemHabit}
+															class="input text-sm"
+															placeholder={$t('habitStacks.createPopup.placeholderHabit')}
+														/>
+													</div>
+													<div class="flex gap-2 pt-1">
+														<button
+															type="button"
+															onclick={saveEditItem}
+															disabled={savingItem || !editItemCue.trim() || !editItemHabit.trim()}
+															class="btn-primary text-xs py-1 px-3"
+														>
+															{savingItem ? $t('common.saving') : $t('common.save')}
+														</button>
+														<button
+															type="button"
+															onclick={cancelEditItem}
+															class="btn-secondary text-xs py-1 px-3"
+														>
+															{$t('common.cancel')}
+														</button>
+													</div>
+												</div>
+											{:else}
+												<!-- View mode -->
+												<div class="bg-gray-50 rounded-lg p-3 group relative cursor-pointer" onclick={() => startEditItem(item)}>
+													<p class="text-sm text-gray-600">
+														<span class="font-medium text-gray-800">{$t('habitStacks.chain.after')}</span>
+														{item.cueDescription}
+													</p>
+													<p class="text-gray-900 mt-1">
+														<span class="font-medium text-primary-600">{$t('habitStacks.chain.iWill')}</span>
+														{item.habitDescription}
+													</p>
+													{#if item.currentStreak > 0}
+														<p class="text-xs text-orange-600 mt-2 flex items-center gap-1">
+															{getStreakEmoji(item.currentStreak)} {item.currentStreak} {$t('habitStacks.dayStreak')}
+														</p>
+													{/if}
+													<!-- Edit hint on hover -->
+													<span class="absolute bottom-2 right-10 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-gray-400">
+														{$t('common.clickToEdit')}
+													</span>
+													<button
+														type="button"
+														onclick={(e) => { e.stopPropagation(); handleDeleteItem(item.id); }}
+														class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 text-gray-400 hover:text-red-500"
+														title={$t('common.delete')}
+													>
+														<svg
+															class="w-4 h-4"
+															fill="none"
+															stroke="currentColor"
+															viewBox="0 0 24 24"
+														>
+															<path
+																stroke-linecap="round"
+																stroke-linejoin="round"
+																stroke-width="2"
+																d="M6 18L18 6M6 6l12 12"
+															/>
+														</svg>
+													</button>
+												</div>
+											{/if}
 										</div>
 									{/each}
 								</div>
