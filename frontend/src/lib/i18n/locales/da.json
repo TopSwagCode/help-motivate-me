@@ -1380,6 +1380,10 @@
 			"tasks": {
 				"title": "Opgaver",
 				"description": "Opgaver der forfalder i dag eller inden for de næste 7 dage. Du kan udsætte opgaver med 7 dage, udskyde til en bestemt dato eller redigere dem. Opgaver er knyttet til dine mål."
+			},
+			"aiAssistant": {
+				"title": "AI-assistent",
+				"description": "Din personlige AI-hjælper! Brug naturligt sprog til hurtigt at oprette opgaver, mål og vanestakke. Fortæl den bare hvad du vil—som 'Løb hver morgen' eller 'Færdiggør min bog inden juni'—og den vil foreslå den rigtige type og forbinde den med dine identiteter. Åbn den når som helst med ⌘K (Mac) eller Ctrl+K (Windows)."
 			}
 		},
 		"goals": {

@@ -37,6 +37,15 @@ export const tourSteps: TourStep[] = [
 		descriptionKey: 'tour.today.tasks.description',
 		position: 'top'
 	},
+	// TODAY PAGE - Step 5: AI Assistant
+	{
+		id: 'today-ai-assistant',
+		page: '/today',
+		element: '[data-tour="ai-assistant"]',
+		titleKey: 'tour.today.aiAssistant.title',
+		descriptionKey: 'tour.today.aiAssistant.description',
+		position: 'top'
+	},
 	// GOALS PAGE
 	{
 		id: 'goals-overview',

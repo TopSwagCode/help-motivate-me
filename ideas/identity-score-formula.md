@@ -1,3 +1,8 @@
+TODO 
+- Update to also include Daily commitment
+- Also be easier to gain. Doing nothing should slowly decrease, just 1 thing slowly increase.
+- Identity progress seems broken day 1. 1 is 33, 3 others is 0. Progress should not be on day 1? but first day 2?
+
 # Identity Score Formula (Production-Ready)
 
 This document describes the **Identity Score** system used in *Help Motivate Me*.

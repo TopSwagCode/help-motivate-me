@@ -182,6 +182,7 @@
 		<button
 			type="button"
 			onclick={() => commandBar.open()}
+			data-tour="ai-assistant"
 			class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 
 			       bg-gradient-to-r from-primary-600 to-primary-700 
 			       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 
