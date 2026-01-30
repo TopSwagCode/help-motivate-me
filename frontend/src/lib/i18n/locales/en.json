@@ -819,6 +819,7 @@
 			"goal": "Goal",
 			"habitStack": "Habit Stack",
 			"identity": "Identity",
+			"identityProof": "Identity Proof",
 			"targetDate": "Target",
 			"trigger": "Trigger",
 			"identityRecommendation": "AI recommends",
@@ -832,7 +833,10 @@
 			"dueDate": "Due date",
 			"parentGoal": "Parent goal",
 			"addStep": "Add step",
-			"removeStep": "Remove step"
+			"removeStep": "Remove step",
+			"forIdentity": "For identity",
+			"whatYouDid": "What you did",
+			"effortLevel": "Effort level"
 		},
 		"actions": {
 			"confirm": "Create",
@@ -854,7 +858,8 @@
 			"taskCreated": "Task created successfully!",
 			"goalCreated": "Goal created successfully!",
 			"habitStackCreated": "Habit stack created successfully!",
-			"identityCreated": "Identity created successfully!"
+			"identityCreated": "Identity created successfully!",
+			"identityProofCreated": "Identity proof logged! 🎉"
 		},
 		"errors": {
 			"requestFailed": "Failed to process request. Please try again.",

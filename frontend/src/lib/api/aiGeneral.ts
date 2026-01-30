@@ -2,7 +2,7 @@ const API_BASE = import.meta.env.VITE_API_URL !== undefined ? import.meta.env.VI
 
 // Types for AI Intent Response
 export interface AiIntentResponse {
-	intent: string; // "create_task", "create_goal", "create_habit_stack", "create_identity", "clarify", "confirmed"
+	intent: string; // "create_task", "create_goal", "create_habit_stack", "create_identity", "create_identity_proof", "clarify", "confirmed"
 	confidence: number; // 0.0 - 1.0
 	preview: AiPreview | null;
 	clarifyingQuestion: string | null;
@@ -11,8 +11,8 @@ export interface AiIntentResponse {
 }
 
 export interface AiPreview {
-	type: 'task' | 'goal' | 'habitStack' | 'identity';
-	data: TaskPreviewData | GoalPreviewData | HabitStackPreviewData | IdentityPreviewData;
+	type: 'task' | 'goal' | 'habitStack' | 'identity' | 'identityProof';
+	data: TaskPreviewData | GoalPreviewData | HabitStackPreviewData | IdentityPreviewData | IdentityProofPreviewData;
 }
 
 export interface TaskPreviewData {
@@ -50,6 +50,14 @@ export interface IdentityPreviewData {
 	description?: string | null;
 	icon?: string | null;
 	color?: string | null;
+	reasoning?: string | null;
+}
+
+export interface IdentityProofPreviewData {
+	identityId: string;
+	identityName: string;
+	description?: string | null;
+	intensity: 'Easy' | 'Moderate' | 'Hard';
 	reasoning?: string | null;
 }
 
@@ -185,6 +193,11 @@ function normalizePreviewData(raw: Record<string, unknown>, type: string): Recor
 		result.color = raw.Color ?? raw.color;
 	}
 
+	// IdentityProof-specific fields
+	if (type === 'identityProof') {
+		result.intensity = raw.Intensity ?? raw.intensity;
+	}
+
 	return result;
 }
 
@@ -204,13 +217,13 @@ function parseIntentData(raw: Record<string, unknown> | null | undefined): AiInt
 	let preview: AiPreview | null = null;
 
 	if (rawPreview) {
-		const previewType = (rawPreview.Type ?? rawPreview.type) as 'task' | 'goal' | 'habitStack' | 'identity';
+		const previewType = (rawPreview.Type ?? rawPreview.type) as 'task' | 'goal' | 'habitStack' | 'identity' | 'identityProof';
 		const rawPreviewData = (rawPreview.Data ?? rawPreview.data) as Record<string, unknown>;
 		const previewData = normalizePreviewData(rawPreviewData, previewType);
 
 		preview = {
 			type: previewType,
-			data: previewData as unknown as TaskPreviewData | GoalPreviewData | HabitStackPreviewData | IdentityPreviewData
+			data: previewData as unknown as TaskPreviewData | GoalPreviewData | HabitStackPreviewData | IdentityPreviewData | IdentityProofPreviewData
 		};
 	}
 

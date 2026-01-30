@@ -21,4 +21,5 @@ public class HabitStackItem
     // Navigation properties
     public HabitStack HabitStack { get; set; } = null!;
     public ICollection<HabitStackItemCompletion> Completions { get; set; } = [];
+    public ICollection<DailyIdentityCommitment> DailyCommitments { get; set; } = [];
 }

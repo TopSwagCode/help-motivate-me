@@ -6,6 +6,7 @@
 	import GoalPreviewCard from './previews/GoalPreviewCard.svelte';
 	import HabitStackPreviewCard from './previews/HabitStackPreviewCard.svelte';
 	import IdentityPreviewCard from './previews/IdentityPreviewCard.svelte';
+	import IdentityProofPreviewCard from './previews/IdentityProofPreviewCard.svelte';
 	import {
 		streamGeneralChat,
 		stripJsonBlocks,
@@ -15,7 +16,8 @@
 		type TaskPreviewData,
 		type GoalPreviewData,
 		type HabitStackPreviewData,
-		type IdentityPreviewData
+		type IdentityPreviewData,
+		type IdentityProofPreviewData
 	} from '$lib/api/aiGeneral';
 	import { getIdentities } from '$lib/api/identities';
 	import { getGoals } from '$lib/api/goals';
@@ -29,9 +31,10 @@
 		onCreateGoal?: (data: GoalPreviewData) => Promise<void>;
 		onCreateHabitStack?: (data: HabitStackPreviewData) => Promise<void>;
 		onCreateIdentity?: (data: IdentityPreviewData) => Promise<void>;
+		onCreateIdentityProof?: (data: IdentityProofPreviewData) => Promise<void>;
 	}
 
-	let { isOpen, onClose, onCreateTask, onCreateGoal, onCreateHabitStack, onCreateIdentity }: Props = $props();
+	let { isOpen, onClose, onCreateTask, onCreateGoal, onCreateHabitStack, onCreateIdentity, onCreateIdentityProof }: Props = $props();
 
 	let inputValue = $state('');
 	let isLoading = $state(false);
@@ -47,7 +50,7 @@
 	let goals = $state<Goal[]>([]);
 
 	// Editable preview data - modified copy of currentIntent.preview.data
-	let editablePreviewData = $state<TaskPreviewData | GoalPreviewData | HabitStackPreviewData | IdentityPreviewData | null>(null);
+	let editablePreviewData = $state<TaskPreviewData | GoalPreviewData | HabitStackPreviewData | IdentityPreviewData | IdentityProofPreviewData | null>(null);
 
 	// Load identities and goals when opening
 	async function loadEditingData() {
@@ -88,7 +91,7 @@
 	});
 
 	// Handler for preview data changes from child components
-	function handlePreviewDataChange(data: TaskPreviewData | GoalPreviewData | HabitStackPreviewData | IdentityPreviewData) {
+	function handlePreviewDataChange(data: TaskPreviewData | GoalPreviewData | HabitStackPreviewData | IdentityPreviewData | IdentityProofPreviewData) {
 		editablePreviewData = data;
 	}
 
@@ -182,6 +185,9 @@
 			} else if (preview.type === 'identity' && onCreateIdentity) {
 				await onCreateIdentity(dataToCreate as IdentityPreviewData);
 				successMessage = $t('ai.successMessages.identityCreated');
+			} else if (preview.type === 'identityProof' && onCreateIdentityProof) {
+				await onCreateIdentityProof(dataToCreate as IdentityProofPreviewData);
+				successMessage = $t('ai.successMessages.identityProofCreated');
 			}
 
 			// Show success briefly then close
@@ -332,6 +338,12 @@
 								{:else if currentIntent.preview.type === 'identity' && editablePreviewData}
 									<IdentityPreviewCard
 										data={editablePreviewData as IdentityPreviewData}
+										onchange={(d) => handlePreviewDataChange(d)}
+									/>
+								{:else if currentIntent.preview.type === 'identityProof' && editablePreviewData}
+									<IdentityProofPreviewCard
+										data={editablePreviewData as IdentityProofPreviewData}
+										{identities}
 										onchange={(d) => handlePreviewDataChange(d)}
 									/>
 								{/if}

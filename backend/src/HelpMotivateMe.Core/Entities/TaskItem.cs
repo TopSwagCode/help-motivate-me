@@ -32,4 +32,5 @@ public class TaskItem
     public Identity? Identity { get; set; }
     public TaskItem? FullVersionTask { get; set; }
     public ICollection<TaskItem> TinyVersions { get; set; } = [];
+    public ICollection<DailyIdentityCommitment> DailyCommitments { get; set; } = [];
 }

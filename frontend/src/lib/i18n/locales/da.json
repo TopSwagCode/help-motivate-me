@@ -819,6 +819,7 @@
 			"goal": "Mål",
 			"habitStack": "Vanestak",
 			"identity": "Identitet",
+			"identityProof": "Identitetsbevis",
 			"targetDate": "Målsdato",
 			"trigger": "Trigger",
 			"identityRecommendation": "AI anbefaler",
@@ -832,7 +833,10 @@
 			"dueDate": "Forfaldsdato",
 			"parentGoal": "Overordnet mål",
 			"addStep": "Tilføj trin",
-			"removeStep": "Fjern trin"
+			"removeStep": "Fjern trin",
+			"forIdentity": "For identitet",
+			"whatYouDid": "Hvad du gjorde",
+			"effortLevel": "Indsatsniveau"
 		},
 		"actions": {
 			"confirm": "Opret",
@@ -854,7 +858,8 @@
 			"taskCreated": "Opgave oprettet!",
 			"goalCreated": "Mål oprettet!",
 			"habitStackCreated": "Vanestak oprettet!",
-			"identityCreated": "Identitet oprettet!"
+			"identityCreated": "Identitet oprettet!",
+			"identityProofCreated": "Identitetsbevis logget! 🎉"
 		},
 		"errors": {
 			"requestFailed": "Kunne ikke behandle anmodning. Prøv venligst igen.",

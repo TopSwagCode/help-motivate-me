@@ -24,5 +24,6 @@ public class User
     public ICollection<Identity> Identities { get; set; } = [];
     public ICollection<HabitStack> HabitStacks { get; set; } = [];
     public ICollection<PushSubscription> PushSubscriptions { get; set; } = [];
+    public ICollection<DailyIdentityCommitment> DailyCommitments { get; set; } = [];
     public NotificationPreferences? NotificationPreferences { get; set; }
 }

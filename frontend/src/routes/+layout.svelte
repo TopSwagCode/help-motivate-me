@@ -21,11 +21,13 @@
 	import { createTask } from '$lib/api/tasks';
 	import { createHabitStack } from '$lib/api/habitStacks';
 	import { createIdentityFromAi } from '$lib/api/aiGeneral';
+	import { createIdentityProof } from '$lib/api/identityProofs';
 	import type {
 		TaskPreviewData,
 		GoalPreviewData,
 		HabitStackPreviewData,
-		IdentityPreviewData
+		IdentityPreviewData,
+		IdentityProofPreviewData
 	} from '$lib/api/aiGeneral';
 
 	let i18nReady = $state(false);
@@ -133,6 +135,15 @@
 	async function handleCreateIdentity(data: IdentityPreviewData) {
 		await createIdentityFromAi(data);
 	}
+
+	// Handle identity proof creation from AI
+	async function handleCreateIdentityProof(data: IdentityProofPreviewData) {
+		await createIdentityProof({
+			identityId: data.identityId,
+			description: data.description ?? undefined,
+			intensity: data.intensity
+		});
+	}
 </script>
 
 <svelte:window onkeydown={handleGlobalKeydown} />
@@ -178,6 +189,7 @@
 			onCreateGoal={handleCreateGoal}
 			onCreateHabitStack={handleCreateHabitStack}
 			onCreateIdentity={handleCreateIdentity}
+			onCreateIdentityProof={handleCreateIdentityProof}
 		/>
 		
 		<!-- Floating AI Assistant Button -->
