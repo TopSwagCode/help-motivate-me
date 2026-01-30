@@ -1,11 +1,17 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
 	import type { GoalPreviewData } from '$lib/api/aiGeneral';
-	import type { Identity } from '$lib/types/identity';
+
+	// Generic identity type that works with both full Identity and CreatedIdentity
+	interface SimpleIdentity {
+		id: string;
+		name: string;
+		icon?: string | null;
+	}
 
 	interface Props {
 		data: GoalPreviewData;
-		identities?: Identity[];
+		identities?: SimpleIdentity[];
 		onchange?: (data: GoalPreviewData) => void;
 	}
 

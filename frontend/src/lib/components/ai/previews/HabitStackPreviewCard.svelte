@@ -1,12 +1,18 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
 	import type { HabitStackPreviewData } from '$lib/api/aiGeneral';
-	import type { Identity } from '$lib/types/identity';
 	import IdentityRecommendationBadge from '../IdentityRecommendationBadge.svelte';
+
+	// Generic identity type that works with both full Identity and CreatedIdentity
+	interface SimpleIdentity {
+		id: string;
+		name: string;
+		icon?: string | null;
+	}
 
 	interface Props {
 		data: HabitStackPreviewData;
-		identities?: Identity[];
+		identities?: SimpleIdentity[];
 		onchange?: (data: HabitStackPreviewData) => void;
 	}
 
@@ -46,6 +52,24 @@
 		newHabits[index] = { ...newHabits[index], [field]: value };
 		localData = { ...localData, habits: newHabits };
 		onchange?.(localData);
+	}
+
+	function addHabit() {
+		const lastHabit = localData.habits[localData.habits.length - 1];
+		const newCue = lastHabit ? lastHabit.habitDescription : '';
+		const newHabits = [...localData.habits, { cueDescription: newCue, habitDescription: '' }];
+		localData = { ...localData, habits: newHabits };
+		onchange?.(localData);
+		// Auto-focus the new habit
+		editingHabitIndex = newHabits.length - 1;
+	}
+
+	function removeHabit(index: number) {
+		if (localData.habits.length <= 1) return; // Keep at least one habit
+		const newHabits = localData.habits.filter((_, i) => i !== index);
+		localData = { ...localData, habits: newHabits };
+		onchange?.(localData);
+		editingHabitIndex = null;
 	}
 </script>
 
@@ -134,7 +158,7 @@
 	{#if localData.habits && localData.habits.length > 0}
 		<div class="mt-3 space-y-2">
 			{#each localData.habits as habit, index}
-				<div class="flex items-start gap-2 text-sm">
+				<div class="flex items-start gap-2 text-sm group">
 					<div
 						class="flex-shrink-0 w-5 h-5 rounded-full bg-amber-200 text-amber-700 flex items-center justify-center text-xs font-medium"
 					>
@@ -176,8 +200,32 @@
 							</button>
 						{/if}
 					</div>
+					<!-- Remove button -->
+					{#if localData.habits.length > 1}
+						<button
+							type="button"
+							onclick={() => removeHabit(index)}
+							class="flex-shrink-0 w-5 h-5 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+							title={$t('ai.preview.removeStep')}
+						>
+							<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+							</svg>
+						</button>
+					{/if}
 				</div>
 			{/each}
+			<!-- Add habit button -->
+			<button
+				type="button"
+				onclick={addHabit}
+				class="flex items-center gap-2 text-sm text-amber-600 hover:text-amber-700 hover:bg-amber-100 rounded px-2 py-1 transition-colors w-full"
+			>
+				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+				</svg>
+				<span>{$t('ai.preview.addStep')}</span>
+			</button>
 		</div>
 	{/if}
 

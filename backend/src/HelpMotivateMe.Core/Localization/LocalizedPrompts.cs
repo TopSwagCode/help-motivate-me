@@ -106,6 +106,23 @@ public static class LocalizedPrompts
             ? "Når brugeren nævner relative datoer som 'næste uge', 'næste måned', 'inden årets udgang', osv., brug ovenstående kontekst til at beregne den korrekte dato i ÅÅÅÅ-MM-DD format."
             : "When the user mentions relative dates like 'next week', 'next month', 'by end of year', etc., use the above context to calculate the correct date in YYYY-MM-DD format.");
 
+        // Add user identities context for habit stack and goal steps
+        if (context.TryGetValue("userIdentities", out var userIdentities))
+        {
+            contextLines.Add("");
+            contextLines.Add(language == Language.Danish
+                ? "BRUGERENS IDENTITETER (link vaner og mål til disse når relevant):"
+                : "USER'S IDENTITIES (link habits and goals to these when relevant):");
+            
+            var identitiesJson = System.Text.Json.JsonSerializer.Serialize(userIdentities);
+            contextLines.Add(identitiesJson);
+            
+            contextLines.Add("");
+            contextLines.Add(language == Language.Danish
+                ? "VIGTIGT: Når du opretter vane-stakke eller mål, prøv at matche dem med en af brugerens identiteter baseret på indholdet. Inkluder 'identityName' i JSON når der er et klart match. For eksempel: fitness vaner -> link til fitness/atlet identitet, læse vaner -> link til læser identitet."
+                : "IMPORTANT: When creating habit stacks or goals, try to match them with one of the user's identities based on the content. Include 'identityName' in the JSON when there's a clear match. For example: fitness habits -> link to fitness/athlete identity, reading habits -> link to reader identity.");
+        }
+
         return basePrompt + string.Join("\n", contextLines);
     }
 

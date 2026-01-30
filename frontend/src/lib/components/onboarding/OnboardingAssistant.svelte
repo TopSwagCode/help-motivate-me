@@ -118,6 +118,15 @@
 		return false;
 	}
 
+	// Helper to resolve identity ID from name if AI provides name instead of ID
+	function resolveIdentityId(identityName?: string): string | undefined {
+		if (!identityName || identities.length === 0) return undefined;
+		const match = identities.find(i =>
+			i.name.toLowerCase() === identityName.toLowerCase()
+		);
+		return match?.id;
+	}
+
 	// Map ExtractedData to preview card format
 	function mapToPreviewData(data: ExtractedData): { type: string; items: unknown[] } | null {
 		if (!isValidExtractedData(data)) return null;
@@ -149,44 +158,98 @@
 		} else if (type === 'habitStack') {
 			if (Array.isArray(dataObj.stacks)) {
 				for (const stack of dataObj.stacks as Record<string, unknown>[]) {
+					// Try to resolve identity from name if ID not provided
+					const identityId = (stack.identityId as string) || resolveIdentityId(stack.identityName as string);
+					const identityName = stack.identityName as string || (identityId ? identities.find(i => i.id === identityId)?.name : undefined);
 					items.push({
 						name: stack.name,
 						description: stack.description,
 						triggerCue: stack.triggerCue,
 						habits: stack.habits || stack.items,
+						identityId: identityId || null,
+						identityName: identityName || null,
 						reasoning: stack.reasoning
 					} as HabitStackPreviewData);
 				}
 			} else {
+				// Try to resolve identity from name if ID not provided
+				const identityId = (dataObj.identityId as string) || resolveIdentityId(dataObj.identityName as string);
+				const identityName = dataObj.identityName as string || (identityId ? identities.find(i => i.id === identityId)?.name : undefined);
 				items.push({
 					name: dataObj.name,
 					description: dataObj.description,
 					triggerCue: dataObj.triggerCue,
 					habits: dataObj.habits || dataObj.items,
+					identityId: identityId || null,
+					identityName: identityName || null,
 					reasoning: dataObj.reasoning
 				} as HabitStackPreviewData);
 			}
 		} else if (type === 'goal') {
 			if (Array.isArray(dataObj.items)) {
 				for (const item of dataObj.items as Record<string, unknown>[]) {
+					// Try to resolve identity from name if ID not provided
+					const identityId = (item.identityId as string) || resolveIdentityId(item.identityName as string);
+					const identityName = item.identityName as string || (identityId ? identities.find(i => i.id === identityId)?.name : undefined);
 					items.push({
 						title: item.title,
 						description: item.description,
 						targetDate: item.targetDate,
+						identityId: identityId || null,
+						identityName: identityName || null,
 						reasoning: item.reasoning
 					} as GoalPreviewData);
 				}
 			} else {
+				// Try to resolve identity from name if ID not provided
+				const identityId = (dataObj.identityId as string) || resolveIdentityId(dataObj.identityName as string);
+				const identityName = dataObj.identityName as string || (identityId ? identities.find(i => i.id === identityId)?.name : undefined);
 				items.push({
 					title: dataObj.title,
 					description: dataObj.description,
 					targetDate: dataObj.targetDate,
+					identityId: identityId || null,
+					identityName: identityName || null,
 					reasoning: dataObj.reasoning
 				} as GoalPreviewData);
 			}
 		}
 
 		return items.length > 0 ? { type, items } : null;
+	}
+
+	// Handle preview card changes (edits by user)
+	function handlePreviewChange(index: number, updatedData: unknown) {
+		if (!currentPreview) return;
+
+		const dataObj = currentPreview.data as Record<string, unknown>;
+		const type = currentPreview.type;
+
+		if (type === 'identity') {
+			if (Array.isArray(dataObj.items)) {
+				const items = [...dataObj.items as unknown[]];
+				items[index] = updatedData;
+				currentPreview = { ...currentPreview, data: { ...dataObj, items } };
+			} else {
+				currentPreview = { ...currentPreview, data: updatedData as Record<string, unknown> };
+			}
+		} else if (type === 'habitStack') {
+			if (Array.isArray(dataObj.stacks)) {
+				const stacks = [...dataObj.stacks as unknown[]];
+				stacks[index] = updatedData;
+				currentPreview = { ...currentPreview, data: { ...dataObj, stacks } };
+			} else {
+				currentPreview = { ...currentPreview, data: updatedData as Record<string, unknown> };
+			}
+		} else if (type === 'goal') {
+			if (Array.isArray(dataObj.items)) {
+				const items = [...dataObj.items as unknown[]];
+				items[index] = updatedData;
+				currentPreview = { ...currentPreview, data: { ...dataObj, items } };
+			} else {
+				currentPreview = { ...currentPreview, data: updatedData as Record<string, unknown> };
+			}
+		}
 	}
 
 	// Initialize with greeting
@@ -324,13 +387,13 @@
 		<!-- Preview cards -->
 		{#if previewData && !isLoading}
 			<div class="space-y-3">
-				{#each previewData.items as item}
+				{#each previewData.items as item, index}
 					{#if previewData.type === 'identity'}
-						<IdentityPreviewCard data={item as IdentityPreviewData} />
+						<IdentityPreviewCard data={item as IdentityPreviewData} onchange={(updated) => handlePreviewChange(index, updated)} />
 					{:else if previewData.type === 'habitStack'}
-						<HabitStackPreviewCard data={item as HabitStackPreviewData} />
+						<HabitStackPreviewCard data={item as HabitStackPreviewData} {identities} onchange={(updated) => handlePreviewChange(index, updated)} />
 					{:else if previewData.type === 'goal'}
-						<GoalPreviewCard data={item as GoalPreviewData} />
+						<GoalPreviewCard data={item as GoalPreviewData} {identities} onchange={(updated) => handlePreviewChange(index, updated)} />
 					{/if}
 				{/each}
 			</div>

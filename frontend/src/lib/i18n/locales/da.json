@@ -814,7 +814,9 @@
 			"setDate": "Angiv dato",
 			"clickToEdit": "Klik for at redigere",
 			"dueDate": "Forfaldsdato",
-			"parentGoal": "Overordnet mål"
+			"parentGoal": "Overordnet mål",
+			"addStep": "Tilføj trin",
+			"removeStep": "Fjern trin"
 		},
 		"actions": {
 			"confirm": "Opret",

@@ -11,7 +11,10 @@
       "Bash(npx svelte-check:*)",
       "Bash(git stash:*)",
       "Bash(docker compose:*)",
-      "Bash(dotnet ef migrations add:*)"
+      "Bash(dotnet ef migrations add:*)",
+      "Bash(npx svelte-kit sync)",
+      "Bash(npm install:*)",
+      "Bash(ls:*)"
     ]
   }
 }

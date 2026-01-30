@@ -814,7 +814,9 @@
 			"setDate": "Set date",
 			"clickToEdit": "Click to edit",
 			"dueDate": "Due date",
-			"parentGoal": "Parent goal"
+			"parentGoal": "Parent goal",
+			"addStep": "Add step",
+			"removeStep": "Remove step"
 		},
 		"actions": {
 			"confirm": "Create",
