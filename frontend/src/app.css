@@ -210,7 +210,7 @@
 
 /* Floating button animations */
 .animate-wiggle {
-	animation: wiggle 5s ease-in-out infinite;
+	animation: wiggle 3s ease-in-out infinite;
 	animation-delay: 3s;
 }
 
