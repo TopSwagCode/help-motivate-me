@@ -184,6 +184,7 @@
 						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
 						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
 						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
 						<th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Estimated</th>
 						<th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actual</th>
 					</tr>
@@ -213,6 +214,17 @@
 									</span>
 								{/if}
 							</td>
+							<td class="px-6 py-4 whitespace-nowrap">
+								{#if log.rejected}
+									<span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">
+										Rejected
+									</span>
+								{:else}
+									<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">
+										Success
+									</span>
+								{/if}
+							</td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right font-mono">
 								{formatCurrency(log.estimatedCostUsd)}
 							</td>
@@ -222,7 +234,7 @@
 						</tr>
 					{:else}
 						<tr>
-							<td colspan="5" class="px-6 py-8 text-center text-gray-500">
+							<td colspan="6" class="px-6 py-8 text-center text-gray-500">
 								No AI usage logs found
 							</td>
 						</tr>

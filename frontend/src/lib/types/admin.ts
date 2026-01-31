@@ -84,6 +84,7 @@ export interface AiUsageLog {
 	estimatedCostUsd: number;
 	actualCostUsd: number;
 	requestType: string;
+	rejected: boolean;
 	createdAt: string;
 }
 

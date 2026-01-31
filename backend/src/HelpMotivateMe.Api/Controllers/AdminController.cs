@@ -709,6 +709,7 @@ public class AdminController : ControllerBase
                 l.EstimatedCostUsd,
                 l.ActualCostUsd,
                 l.RequestType,
+                l.Rejected,
                 l.CreatedAt
             ))
             .ToListAsync();

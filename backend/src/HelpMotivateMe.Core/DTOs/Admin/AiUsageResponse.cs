@@ -20,6 +20,7 @@ public record AiUsageLogResponse(
     decimal EstimatedCostUsd,
     decimal ActualCostUsd,
     string RequestType,
+    bool Rejected,
     DateTime CreatedAt
 );
 
