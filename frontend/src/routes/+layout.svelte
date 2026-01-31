@@ -201,57 +201,60 @@
 		/>
 
 		<!-- Floating AI Assistant Button -->
-		<button
-			type="button"
-			onclick={() => commandBar.open()}
-			data-tour="ai-assistant"
-			class="group fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-12 h-12 sm:w-14 sm:h-14
-			       bg-gradient-to-r from-primary-600 to-primary-700 
-			       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 
-			       transition-all duration-200 flex items-center justify-center z-40
-			       touch-manipulation animate-wiggle"
-			title="AI Assistant (⌘K / Ctrl+K)"
-			aria-label="Open AI Assistant"
-		>
-			<span class="absolute right-full mr-3 px-3 py-1.5 bg-gray-900 text-white text-sm font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-				Commands
-			</span>
-			<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M13 10V3L4 14h7v7l9-11h-7z"
-				/>
-			</svg>
-		</button>
+		<div class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 animate-wiggle">
+			<button
+				type="button"
+				onclick={() => commandBar.open()}
+				data-tour="ai-assistant"
+				class="group relative w-12 h-12 sm:w-14 sm:h-14
+				       bg-gradient-to-r from-primary-600 to-primary-700 
+				       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 
+				       transition-all duration-200 flex items-center justify-center
+				       touch-manipulation"
+				title="AI Assistant (⌘K / Ctrl+K)"
+				aria-label="Open AI Assistant"
+			>
+				<span class="absolute right-full mr-3 px-3 py-1.5 bg-gray-900 text-white text-sm font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+					Commands
+				</span>
+				<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M13 10V3L4 14h7v7l9-11h-7z"
+					/>
+				</svg>
+			</button>
+		</div>
 
 		<!-- Floating Identity Proof Button -->
-		<button
-			type="button"
-			onclick={() => showProofModal = true}
-			class="group fixed bottom-20 right-4 sm:bottom-24 sm:right-6 w-12 h-12 sm:w-14 sm:h-14
-			       bg-gradient-to-r from-amber-500 to-amber-600
-			       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110
-			       transition-all duration-200 flex items-center justify-center z-40
-			       touch-manipulation animate-wiggle"
-			style="animation-delay: 4.5s;"
-			title={$t('identityProof.subtitle')}
-			aria-label={$t('identityProof.logProofButton')}
-		>
-			<span class="absolute right-full mr-3 px-3 py-1.5 bg-gray-900 text-white text-sm font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-				Log Win
-			</span>
-			<!-- Checkmark icon -->
-			<svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2.5"
-					d="M5 13l4 4L19 7"
-				/>
-			</svg>
-		</button>
+		<div class="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-40 animate-wiggle" style="animation-delay: 2.5s;">
+			<button
+				type="button"
+				onclick={() => showProofModal = true}
+				class="group relative w-12 h-12 sm:w-14 sm:h-14
+				       bg-gradient-to-r from-amber-500 to-amber-600
+				       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110
+				       transition-all duration-200 flex items-center justify-center
+				       touch-manipulation"
+				title={$t('identityProof.subtitle')}
+				aria-label={$t('identityProof.logProofButton')}
+			>
+				<span class="absolute right-full mr-3 px-3 py-1.5 bg-gray-900 text-white text-sm font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+					Log Win
+				</span>
+				<!-- Checkmark icon -->
+				<svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2.5"
+						d="M5 13l4 4L19 7"
+					/>
+				</svg>
+			</button>
+		</div>
 	{/if}
 {:else}
 	<!-- Loading state while i18n initializes -->
