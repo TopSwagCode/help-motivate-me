@@ -201,52 +201,61 @@
 		/>
 
 		<!-- Floating AI Assistant Button -->
-		<button
-			type="button"
-			onclick={() => commandBar.open()}
-			data-tour="ai-assistant"
-			class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 h-12 sm:h-14 px-4 sm:px-5
-			       bg-gradient-to-r from-primary-600 to-primary-700 
-			       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105 
-			       transition-all duration-200 flex items-center justify-center gap-2 z-40
-			       touch-manipulation animate-lightning"
-			title="AI Assistant (⌘K / Ctrl+K)"
-			aria-label="Open AI Assistant"
-		>
-			<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M13 10V3L4 14h7v7l9-11h-7z"
-				/>
-			</svg>
-			<span class="text-sm font-medium hidden sm:inline">Commands</span>
-		</button>
+		<div class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 group">
+			<span class="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 text-white text-sm font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+				Commands
+			</span>
+			<button
+				type="button"
+				onclick={() => commandBar.open()}
+				data-tour="ai-assistant"
+				class="w-12 h-12 sm:w-14 sm:h-14
+				       bg-gradient-to-r from-primary-600 to-primary-700 
+				       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 
+				       transition-all duration-200 flex items-center justify-center
+				       touch-manipulation animate-wiggle"
+				title="AI Assistant (⌘K / Ctrl+K)"
+				aria-label="Open AI Assistant"
+			>
+				<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M13 10V3L4 14h7v7l9-11h-7z"
+					/>
+				</svg>
+			</button>
+		</div>
 
 		<!-- Floating Identity Proof Button -->
-		<button
-			type="button"
-			onclick={() => showProofModal = true}
-			class="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 h-12 sm:h-14 px-4 sm:px-5
-			       bg-gradient-to-r from-amber-500 to-amber-600
-			       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105
-			       transition-all duration-200 flex items-center justify-center gap-2 z-40
-			       touch-manipulation animate-wiggle"
-			title={$t('identityProof.subtitle')}
-			aria-label={$t('identityProof.logProofButton')}
-		>
-			<!-- Trophy icon for wins -->
-			<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M5 3h14a1 1 0 011 1v3a7 7 0 01-7 7 7 7 0 01-7-7V4a1 1 0 011-1zm3 0v1m8-1v1m-4 10v4m-4 0h8m-8 0a1 1 0 00-1 1v1h10v-1a1 1 0 00-1-1"
-				/>
-			</svg>
-			<span class="text-sm font-medium hidden sm:inline">Log Win</span>
-		</button>
+		<div class="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-40 group">
+			<span class="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 text-white text-sm font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+				Log Win
+			</span>
+			<button
+				type="button"
+				onclick={() => showProofModal = true}
+				class="w-12 h-12 sm:w-14 sm:h-14
+				       bg-gradient-to-r from-amber-500 to-amber-600
+				       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110
+				       transition-all duration-200 flex items-center justify-center
+				       touch-manipulation animate-wiggle"
+				style="animation-delay: 4.5s;"
+				title={$t('identityProof.subtitle')}
+				aria-label={$t('identityProof.logProofButton')}
+			>
+				<!-- Checkmark icon -->
+				<svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2.5"
+						d="M5 13l4 4L19 7"
+					/>
+				</svg>
+			</button>
+		</div>
 	{/if}
 {:else}
 	<!-- Loading state while i18n initializes -->

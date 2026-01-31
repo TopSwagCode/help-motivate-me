@@ -210,56 +210,26 @@
 
 /* Floating button animations */
 .animate-wiggle {
-	animation: wiggle 3s ease-in-out infinite;
-	animation-delay: 2s;
+	animation: wiggle 6s ease-in-out infinite;
+	animation-delay: 3s;
 }
 
 @keyframes wiggle {
-	0%, 85%, 100% {
+	0%, 92%, 100% {
 		transform: rotate(0deg);
 	}
-	88% {
-		transform: rotate(-8deg);
-	}
-	91% {
-		transform: rotate(8deg);
-	}
 	94% {
-		transform: rotate(-6deg);
-	}
-	97% {
-		transform: rotate(4deg);
-	}
-}
-
-.animate-lightning {
-	animation: lightning 4s ease-in-out infinite, wiggle 3s ease-in-out infinite;
-	animation-delay: 0s, 2.5s;
-}
-
-@keyframes lightning {
-	0%, 90%, 100% {
-		box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-		            0 4px 6px -2px rgba(0, 0, 0, 0.05);
-	}
-	92% {
-		box-shadow: 0 0 20px 4px rgba(124, 58, 237, 0.6),
-		            0 0 40px 8px rgba(124, 58, 237, 0.3),
-		            0 0 60px 12px rgba(124, 58, 237, 0.1);
-	}
-	94% {
-		box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-		            0 4px 6px -2px rgba(0, 0, 0, 0.05);
+		transform: rotate(-3deg);
 	}
 	96% {
-		box-shadow: 0 0 25px 6px rgba(124, 58, 237, 0.7),
-		            0 0 50px 10px rgba(124, 58, 237, 0.4),
-		            0 0 70px 14px rgba(124, 58, 237, 0.15);
+		transform: rotate(3deg);
+	}
+	98% {
+		transform: rotate(-2deg);
 	}
 }
 
 /* Pause animations on hover for better UX */
-.animate-wiggle:hover,
-.animate-lightning:hover {
+.animate-wiggle:hover {
 	animation-play-state: paused;
 }
