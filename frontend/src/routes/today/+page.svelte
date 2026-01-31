@@ -570,7 +570,7 @@
 	}
 </script>
 
-<div class="min-h-screen bg-gray-50">
+<div class="bg-gray-50">
 	<!-- Date Navigation Sub-header -->
 	<div class="bg-white border-b border-gray-100">
 		<div class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">

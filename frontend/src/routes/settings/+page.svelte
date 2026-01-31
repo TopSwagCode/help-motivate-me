@@ -54,7 +54,7 @@
 	<title>Settings - HelpMotivateMe</title>
 </svelte:head>
 
-<div class="min-h-screen bg-gray-50">
+<div class="bg-gray-50">
 	<main class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
 		<h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">{$t('settings.title')}</h1>
 

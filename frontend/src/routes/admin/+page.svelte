@@ -62,7 +62,7 @@
 	<title>{$t('admin.title')} - {$t('common.appName')}</title>
 </svelte:head>
 
-<div class="min-h-screen bg-gray-50">
+<div class="bg-gray-50">
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
 		<h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">{$t('admin.title')}</h1>
 

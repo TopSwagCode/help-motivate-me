@@ -155,26 +155,30 @@
 </svelte:head>
 
 {#if i18nReady}
-	<!-- Connection Error Overlay (shows when API is unreachable) -->
-	<ConnectionErrorOverlay />
+	<div class="flex flex-col min-h-screen">
+		<!-- Connection Error Overlay (shows when API is unreachable) -->
+		<ConnectionErrorOverlay />
 
-	<!-- PWA Update Prompt -->
-	<PWAReloadPrompt />
+		<!-- PWA Update Prompt -->
+		<PWAReloadPrompt />
 
-	<!-- Push Notification Permission Prompt -->
-	<PushPermissionPrompt />
+		<!-- Push Notification Permission Prompt -->
+		<PushPermissionPrompt />
 
-	<!-- Offline Banner (for minor offline state, not full overlay) -->
-	<OfflineBanner />
+		<!-- Offline Banner (for minor offline state, not full overlay) -->
+		<OfflineBanner />
 
-	<!-- Beta Banner (shown on all pages) -->
-	<BetaBanner />
+		<!-- Beta Banner (shown on all pages) -->
+		<BetaBanner />
 
-	{#if shouldShowNav()}
-		<TopNav />
-	{/if}
+		{#if shouldShowNav()}
+			<TopNav />
+		{/if}
 
-	{@render children()}
+		<div class="flex-1">
+			{@render children()}
+		</div>
+	</div>
 
 	<!-- Guided Tour (renders when tour is active) -->
 	{#if shouldShowNav()}

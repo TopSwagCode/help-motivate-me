@@ -345,7 +345,7 @@
 	const userDisplayName = $derived(todayData?.userDisplayName ?? 'User');
 </script>
 
-<div class="min-h-screen bg-gray-50">
+<div class="bg-gray-50">
 	<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 		{#if todayLoading && !todayData}
 			<div class="flex justify-center py-12">

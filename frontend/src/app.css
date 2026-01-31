@@ -5,10 +5,12 @@
 @layer base {
 	html {
 		@apply antialiased;
+		height: 100%;
 	}
 
 	body {
-		@apply bg-gray-50 text-gray-900 min-h-screen;
+		@apply bg-gray-50 text-gray-900;
+		min-height: 100%;
 	}
 }
 
@@ -67,6 +69,11 @@
 
 	.card-hover {
 		@apply card hover:shadow-md transition-shadow duration-200;
+	}
+
+	/* Page container that fills remaining viewport height */
+	.page-container {
+		min-height: calc(100vh - var(--header-height, 0px));
 	}
 
 	/* Hide scrollbar for mobile navigation */
