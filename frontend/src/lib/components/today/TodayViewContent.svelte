@@ -505,11 +505,11 @@
 	</section>
 
 	<!-- Wins Section -->
-	{#if wins.length > 0}
-		<section>
+	<section data-tour="wins-section">
+		<div class="flex items-center justify-between mb-3">
 			<button
 				onclick={() => toggleSection('wins')}
-				class="w-full flex items-center justify-between text-left mb-3 group"
+				class="flex items-center gap-2 text-left group"
 			>
 				<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
 					<span>⚡</span> {$t('today.wins')}
@@ -522,7 +522,20 @@
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
 				</svg>
 			</button>
-			{#if sectionsExpanded.wins}
+			{#if !readonly && onLogIdentityProof && sectionsExpanded.wins}
+				<button
+					onclick={onLogIdentityProof}
+					class="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-amber-700 bg-amber-100 hover:bg-amber-200 rounded-lg transition-colors"
+					title={$t('identityProof.title')}
+					data-tour="log-win-button"
+				>
+					<span>⚡</span>
+					{$t('identityProof.logProofButton')}
+				</button>
+			{/if}
+		</div>
+		{#if sectionsExpanded.wins}
+			{#if wins.length > 0}
 				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					{#each wins as win (win.id)}
 						<div
@@ -588,9 +601,37 @@
 						</div>
 					{/each}
 				</div>
+			{:else}
+				<div class="py-6 px-4 rounded-lg bg-gray-50 border border-gray-100">
+					<p class="text-gray-500 flex flex-col sm:flex-row items-center justify-center gap-2 text-sm mb-3">{$t('today.noWins')}</p>
+					{#if !readonly && onLogIdentityProof}
+						<div class="flex flex-col sm:flex-row items-center justify-center gap-2 text-sm">
+							<button
+								onclick={onLogIdentityProof}
+								class="text-amber-600 hover:text-amber-700 font-medium flex items-center gap-1"
+							>
+								<span>⚡</span> {$t('today.logFirstWin')} →
+							</button>
+							<span class="text-gray-400 hidden sm:inline">•</span>
+							<span class="text-gray-500 flex items-center gap-1">
+								{$t('today.orUseAssistant')}
+								<button
+									type="button"
+									onclick={() => commandBar.open()}
+									class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:scale-110 hover:shadow-md transition-all cursor-pointer"
+									title="Open AI Assistant"
+								>
+									<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+									</svg>
+								</button>
+							</span>
+						</div>
+					{/if}
+				</div>
 			{/if}
-		</section>
-	{/if}
+		{/if}
+	</section>
 
 	<!-- Upcoming Tasks -->
 	<section data-tour="tasks-section">

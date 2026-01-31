@@ -28,7 +28,16 @@ export const tourSteps: TourStep[] = [
 		descriptionKey: 'tour.today.habits.description',
 		position: 'bottom'
 	},
-	// TODAY PAGE - Step 4: Tasks
+	// TODAY PAGE - Step 4: Wins
+	{
+		id: 'today-wins',
+		page: '/today',
+		element: '[data-tour="wins-section"]',
+		titleKey: 'tour.today.wins.title',
+		descriptionKey: 'tour.today.wins.description',
+		position: 'bottom'
+	},
+	// TODAY PAGE - Step 5: Tasks
 	{
 		id: 'today-tasks',
 		page: '/today',
@@ -37,7 +46,16 @@ export const tourSteps: TourStep[] = [
 		descriptionKey: 'tour.today.tasks.description',
 		position: 'top'
 	},
-	// TODAY PAGE - Step 5: AI Assistant
+	// TODAY PAGE - Step 6: Log Win Button
+	{
+		id: 'today-log-win',
+		page: '/today',
+		element: '[data-tour="log-win-button"]',
+		titleKey: 'tour.today.logWin.title',
+		descriptionKey: 'tour.today.logWin.description',
+		position: 'left'
+	},
+	// TODAY PAGE - Step 7: AI Assistant
 	{
 		id: 'today-ai-assistant',
 		page: '/today',

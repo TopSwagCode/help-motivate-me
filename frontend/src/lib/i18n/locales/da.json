@@ -879,6 +879,8 @@
 		"noTasks": "Ingen opgaver i dag. Nyd din dag!",
 		"habitStacks": "Vanestakke",
 		"wins": "Sejre",
+		"noWins": "Ingen sejre logget endnu i dag.",
+		"logFirstWin": "Log din første sejr",
 		"tasks": "Opgaver",
 		"journal": "Dagbog",
 		"jumpToToday": "Gå til i dag",
@@ -1425,9 +1427,17 @@
 				"title": "Vanestakke",
 				"description": "Dine vanestakke for i dag. Afkryds hver vane, når du fuldfører den, for at opbygge rækker og forstærke din identitet."
 			},
+			"wins": {
+				"title": "Sejre",
+				"description": "Log bevis på din identitet i handling! Sejre er øjeblikke hvor du handlede i overensstemmelse med din identitet—uanset om det er at gennemføre en træning, afslutte et kapitel eller træffe et sundt valg. Hver sejr forstærker hvem du er ved at blive."
+			},
 			"tasks": {
 				"title": "Opgaver",
 				"description": "Opgaver der forfalder i dag eller inden for de næste 7 dage. Du kan udsætte opgaver med 7 dage, udskyde til en bestemt dato eller redigere dem. Opgaver er knyttet til dine mål."
+			},
+			"logWin": {
+				"title": "Log en sejr",
+				"description": "Brug denne knap til hurtigt at logge identitetsbevis. Registrer øjeblikke hvor du handlede i overensstemmelse med dine identiteter—hver sejr styrker din identitetsscore og opbygger momentum."
 			},
 			"aiAssistant": {
 				"title": "AI-assistent",
