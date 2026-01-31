@@ -1437,7 +1437,7 @@
 			},
 			"logWin": {
 				"title": "Log en sejr",
-				"description": "Brug denne knap til hurtigt at logge identitetsbevis. Registrer øjeblikke hvor du handlede i overensstemmelse med dine identiteter—hver sejr styrker din identitetsscore og opbygger momentum."
+				"description": "Brug denne knap til hurtigt at logge sejr. Registrer øjeblikke hvor du handlede i overensstemmelse med dine identiteter—hver sejr styrker din identitetsscore og opbygger momentum."
 			},
 			"aiAssistant": {
 				"title": "AI-assistent",

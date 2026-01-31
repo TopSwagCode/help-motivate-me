@@ -1437,7 +1437,7 @@
 			},
 			"logWin": {
 				"title": "Log a Win",
-				"description": "Use this button to quickly log identity proof. Record moments where you acted according to your identities—every win strengthens your identity score and builds momentum."
+				"description": "Use this button to quickly log a win. Record moments where you acted according to your identities—every win strengthens your identity score and builds momentum."
 			},
 			"aiAssistant": {
 				"title": "AI Assistant",
