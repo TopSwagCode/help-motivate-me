@@ -25,6 +25,14 @@
 	let newTaskIdentityId = $state('');
 	let addingTask = $state(false);
 
+	// Edit goal title
+	let editingTitle = $state(false);
+	let newTitle = $state('');
+
+	// Edit goal description
+	let editingDescription = $state(false);
+	let newDescription = $state('');
+
 	// Edit target date
 	let editingTargetDate = $state(false);
 	let newTargetDate = $state('');
@@ -180,6 +188,60 @@
 		}
 	}
 
+	function startEditTitle() {
+		if (!goal) return;
+		newTitle = goal.title;
+		editingTitle = true;
+	}
+
+	async function saveTitle() {
+		if (!goal || !newTitle.trim()) return;
+
+		try {
+			goal = await updateGoal(goal.id, {
+				title: newTitle.trim(),
+				description: goal.description || undefined,
+				targetDate: goal.targetDate || undefined,
+				identityId: goal.identityId || undefined
+			});
+			editingTitle = false;
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to update title';
+		}
+	}
+
+	function cancelEditTitle() {
+		editingTitle = false;
+		newTitle = '';
+	}
+
+	function startEditDescription() {
+		if (!goal) return;
+		newDescription = goal.description || '';
+		editingDescription = true;
+	}
+
+	async function saveDescription() {
+		if (!goal) return;
+
+		try {
+			goal = await updateGoal(goal.id, {
+				title: goal.title,
+				description: newDescription.trim() || undefined,
+				targetDate: goal.targetDate || undefined,
+				identityId: goal.identityId || undefined
+			});
+			editingDescription = false;
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to update description';
+		}
+	}
+
+	function cancelEditDescription() {
+		editingDescription = false;
+		newDescription = '';
+	}
+
 	function startEditTargetDate() {
 		if (!goal) return;
 		newTargetDate = goal.targetDate || '';
@@ -193,7 +255,8 @@
 			goal = await updateGoal(goal.id, {
 				title: goal.title,
 				description: goal.description || undefined,
-				targetDate: newTargetDate || undefined
+				targetDate: newTargetDate || undefined,
+				identityId: goal.identityId || undefined
 			});
 			editingTargetDate = false;
 		} catch (e) {
@@ -369,9 +432,49 @@
 			<!-- Goal Info -->
 			<div class="card p-6 mb-6">
 				<div class="flex items-start justify-between mb-4">
-					<h1 class="text-2xl font-bold text-gray-900 {goal.isCompleted ? 'line-through opacity-60' : ''}">
-						{goal.title}
-					</h1>
+					<!-- Title display/edit -->
+					{#if editingTitle && !goal.isCompleted}
+						<div class="flex-1 mr-4">
+							<input
+								type="text"
+								bind:value={newTitle}
+								class="w-full text-2xl font-bold text-gray-900 px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+								onkeydown={(e) => {
+									if (e.key === 'Enter') saveTitle();
+									if (e.key === 'Escape') cancelEditTitle();
+								}}
+							/>
+							<div class="flex gap-2 mt-2">
+								<button
+									onclick={saveTitle}
+									class="text-primary-600 hover:text-primary-700 font-medium text-sm"
+								>
+									{$t('common.save')}
+								</button>
+								<button
+									onclick={cancelEditTitle}
+									class="text-gray-500 hover:text-gray-700 text-sm"
+								>
+									{$t('common.cancel')}
+								</button>
+							</div>
+						</div>
+					{:else if !goal.isCompleted}
+						<button
+							onclick={startEditTitle}
+							class="text-2xl font-bold text-gray-900 hover:text-primary-600 transition-colors text-left flex items-center gap-2 group"
+							title="Click to edit title"
+						>
+							{goal.title}
+							<svg class="w-4 h-4 opacity-0 group-hover:opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+							</svg>
+						</button>
+					{:else}
+						<h1 class="text-2xl font-bold text-gray-900 line-through opacity-60">
+							{goal.title}
+						</h1>
+					{/if}
 					<div class="flex items-center gap-2">
 						{#if goal.isCompleted}
 							<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
@@ -385,7 +488,56 @@
 					</div>
 				</div>
 
-				{#if goal.description}
+				<!-- Description display/edit -->
+				{#if editingDescription && !goal.isCompleted}
+					<div class="mb-4">
+						<textarea
+							bind:value={newDescription}
+							rows="3"
+							class="w-full text-gray-600 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+							placeholder={$t('goals.form.descriptionPlaceholder')}
+							onkeydown={(e) => {
+								if (e.key === 'Escape') cancelEditDescription();
+							}}
+						></textarea>
+						<div class="flex gap-2 mt-2">
+							<button
+								onclick={saveDescription}
+								class="text-primary-600 hover:text-primary-700 font-medium text-sm"
+							>
+								{$t('common.save')}
+							</button>
+							<button
+								onclick={cancelEditDescription}
+								class="text-gray-500 hover:text-gray-700 text-sm"
+							>
+								{$t('common.cancel')}
+							</button>
+						</div>
+					</div>
+				{:else if !goal.isCompleted}
+					<button
+						onclick={startEditDescription}
+						class="text-left w-full mb-4 group"
+						title="Click to edit description"
+					>
+						{#if goal.description}
+							<p class="text-gray-600 hover:text-primary-600 transition-colors flex items-start gap-2">
+								{goal.description}
+								<svg class="w-3 h-3 opacity-0 group-hover:opacity-50 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+								</svg>
+							</p>
+						{:else}
+							<p class="text-gray-400 hover:text-primary-600 transition-colors flex items-center gap-2">
+								{$t('goals.addDescription')}
+								<svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+								</svg>
+							</p>
+						{/if}
+					</button>
+				{:else if goal.description}
 					<p class="text-gray-600 mb-4">{goal.description}</p>
 				{/if}
 

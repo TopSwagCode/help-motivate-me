@@ -571,6 +571,7 @@
 		"markIncomplete": "Marker som ufuldført",
 		"changeDueDate": "Skift forfaldsdato",
 		"dueDate": "Forfaldsdato",
+		"addDescription": "Tilføj en beskrivelse...",
 		"form": {
 			"title": "Måltitel",
 			"titlePlaceholder": "Hvilket bæredygtigt resultat tjener din identitet?",

@@ -568,6 +568,7 @@
 		"markIncomplete": "Mark as incomplete",
 		"changeDueDate": "Change Due Date",
 		"dueDate": "Due date",
+		"addDescription": "Add a description...",
 		"info": {
 			"description": "<p><strong>Goals should serve your identity</strong> - not just be outcomes to chase.</p><p><strong>Before setting a goal, ask:</strong> 'What identity does this serve?'</p><p><strong>Instead of:</strong><br/>• \"Lose 20 lbs\" (outcome-focused, easy to abandon)</p><p><strong>Try:</strong><br/>• <strong>Identity:</strong> \"I treat my body with respect\"<br/>• <strong>Goal:</strong> \"Build a sustainable fitness routine\"<br/>• <strong>Tasks:</strong> Schedule gym, track steps, meal prep</p><p>This prevents goal abandonment when motivation dips - because you're becoming someone, not just chasing an outcome.</p>"
 		},
