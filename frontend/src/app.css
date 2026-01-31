@@ -210,22 +210,22 @@
 
 /* Floating button animations */
 .animate-wiggle {
-	animation: wiggle 6s ease-in-out infinite;
-	animation-delay: 3s;
+	animation: wiggle 12s ease-in-out infinite;
+	animation-delay: 5s;
 }
 
 @keyframes wiggle {
-	0%, 92%, 100% {
+	0%, 96%, 100% {
 		transform: rotate(0deg);
 	}
-	94% {
-		transform: rotate(-3deg);
-	}
-	96% {
-		transform: rotate(3deg);
+	97% {
+		transform: rotate(-2deg);
 	}
 	98% {
-		transform: rotate(-2deg);
+		transform: rotate(2deg);
+	}
+	99% {
+		transform: rotate(-1deg);
 	}
 }
 
