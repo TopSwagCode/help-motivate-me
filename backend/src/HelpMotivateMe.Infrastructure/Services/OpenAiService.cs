@@ -79,6 +79,7 @@ public class OpenAiService : IOpenAiService
         var budgetCheck = await _budgetService.CheckBudgetAsync(userId, estimatedCost, cancellationToken);
         if (!budgetCheck.IsAllowed)
         {
+            await LogRejectedCallAsync(userId, ChatModel, "chat", estimatedCost, cancellationToken);
             throw new AiBudgetExceededException(budgetCheck.DenialReason ?? "Budget limit exceeded");
         }
 
@@ -256,6 +257,7 @@ public class OpenAiService : IOpenAiService
             var budgetCheck = await _budgetService.CheckBudgetAsync(userId, estimatedCost, cancellationToken);
             if (!budgetCheck.IsAllowed)
             {
+                await LogRejectedCallAsync(userId, WhisperModel, "transcription", estimatedCost, cancellationToken);
                 throw new AiBudgetExceededException(budgetCheck.DenialReason ?? "Budget limit exceeded");
             }
 
@@ -385,6 +387,34 @@ public class OpenAiService : IOpenAiService
         _logger.LogInformation(
             "AI usage logged: User={UserId}, Model={Model}, Tokens={Input}/{Output}, EstimatedCost=${EstimatedCost:F6}, ActualCost=${ActualCost:F6}",
             userId, model, inputTokens, outputTokens, estimatedCost, actualCost);
+    }
+
+    private async Task LogRejectedCallAsync(
+        Guid userId,
+        string model,
+        string requestType,
+        decimal estimatedCost,
+        CancellationToken cancellationToken)
+    {
+        var usageLog = new AiUsageLog
+        {
+            UserId = userId,
+            Model = model,
+            InputTokens = 0,
+            OutputTokens = 0,
+            AudioDurationSeconds = null,
+            EstimatedCostUsd = estimatedCost,
+            ActualCostUsd = 0,
+            RequestType = requestType,
+            Rejected = true
+        };
+
+        _db.AiUsageLogs.Add(usageLog);
+        await _db.SaveChangesAsync(cancellationToken);
+
+        _logger.LogWarning(
+            "AI call rejected: User={UserId}, Model={Model}, EstimatedCost=${EstimatedCost:F6}",
+            userId, model, estimatedCost);
     }
 
     private class UsageInfo

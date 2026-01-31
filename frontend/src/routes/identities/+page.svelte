@@ -9,6 +9,7 @@
 	import IdentityCard from '$lib/components/identities/IdentityCard.svelte';
 	import IdentityForm from '$lib/components/identities/IdentityForm.svelte';
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
+	import ErrorState from '$lib/components/shared/ErrorState.svelte';
 	import type { Identity, CreateIdentityRequest, UpdateIdentityRequest } from '$lib/types';
 
 	let identities = $state<Identity[]>([]);
@@ -33,10 +34,12 @@
 	});
 
 	async function loadIdentities() {
+		loading = true;
+		error = '';
 		try {
 			identities = await getIdentities();
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to load identities';
+			error = e instanceof Error ? e.message : get(t)('errors.generic');
 		} finally {
 			loading = false;
 		}
@@ -100,8 +103,8 @@
 				<div class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full"></div>
 			</div>
 		{:else if error}
-			<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-				{error}
+			<div class="card">
+				<ErrorState message={error} onRetry={loadIdentities} size="md" />
 			</div>
 		{:else}
 			{#if identities.length > 0}

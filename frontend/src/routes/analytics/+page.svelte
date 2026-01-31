@@ -6,6 +6,7 @@
 	import { get } from 'svelte/store';
 	import { getStreakSummary, getCompletionRates, getHeatmapData } from '$lib/api/analytics';
 	import StreakBadge from '$lib/components/analytics/StreakBadge.svelte';
+	import ErrorState from '$lib/components/shared/ErrorState.svelte';
 	import type { StreakSummary, CompletionRate, HeatmapData } from '$lib/types';
 
 	let streakSummary = $state<StreakSummary | null>(null);
@@ -28,6 +29,8 @@
 	});
 
 	async function loadAnalytics() {
+		loading = true;
+		error = '';
 		try {
 			const [streaks, rates, heatmap] = await Promise.all([
 				getStreakSummary(),
@@ -74,8 +77,8 @@
 				<div class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full"></div>
 			</div>
 		{:else if error}
-			<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-				{error}
+			<div class="card">
+				<ErrorState message={error} onRetry={loadAnalytics} size="md" />
 			</div>
 		{:else}
 			<!-- Summary Cards -->

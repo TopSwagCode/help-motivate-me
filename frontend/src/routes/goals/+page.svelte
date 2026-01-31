@@ -9,6 +9,7 @@
 	import type { Goal, CreateGoalRequest } from '$lib/types';
 	import GoalForm from '$lib/components/goals/GoalForm.svelte';
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
+	import ErrorState from '$lib/components/shared/ErrorState.svelte';
 
 	let goals = $state<Goal[]>([]);
 	let loading = $state(true);
@@ -27,14 +28,20 @@
 			return;
 		}
 
+		await loadGoals();
+	});
+
+	async function loadGoals() {
+		loading = true;
+		error = '';
 		try {
 			goals = await getGoals();
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to load goals';
+			error = e instanceof Error ? e.message : get(t)('errors.generic');
 		} finally {
 			loading = false;
 		}
-	});
+	}
 
 	const completedGoals = $derived(goals.filter((g) => g.isCompleted));
 	const activeGoals = $derived(goals.filter((g) => !g.isCompleted));
@@ -75,8 +82,8 @@
 				<div class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full"></div>
 			</div>
 		{:else if error}
-			<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-				{error}
+			<div class="card">
+				<ErrorState message={error} onRetry={loadGoals} size="md" />
 			</div>
 		{:else if goals.length === 0}
 			<div class="card p-8 sm:p-12">

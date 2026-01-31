@@ -6,6 +6,7 @@
 	import { get } from 'svelte/store';
 	import { getBuddyRelationships, inviteBuddy, removeBuddy, leaveBuddy } from '$lib/api/buddies';
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
+	import ErrorState from '$lib/components/shared/ErrorState.svelte';
 	import type { BuddyRelationshipsResponse } from '$lib/types';
 
 	let relationships = $state<BuddyRelationshipsResponse | null>(null);
@@ -32,6 +33,8 @@
 	});
 
 	async function loadRelationships() {
+		loading = true;
+		error = '';
 		try {
 			relationships = await getBuddyRelationships();
 		} catch (e) {
@@ -127,11 +130,8 @@
 				></div>
 			</div>
 		{:else if error}
-			<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-				{error}
-				<button onclick={() => (error = '')} class="float-right text-red-500 hover:text-red-700"
-					>&times;</button
-				>
+			<div class="card">
+				<ErrorState message={error} onRetry={loadRelationships} size="md" />
 			</div>
 		{:else if relationships}
 			<div data-tour="buddies-section">

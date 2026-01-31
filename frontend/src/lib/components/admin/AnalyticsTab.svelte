@@ -6,6 +6,7 @@
 		type AnalyticsOverviewResponse,
 		type SessionSummary
 	} from '$lib/api/admin';
+	import ErrorState from '$lib/components/shared/ErrorState.svelte';
 
 	let analytics = $state<AnalyticsOverviewResponse | null>(null);
 	let loading = $state(true);
@@ -66,9 +67,8 @@
 		<div class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full"></div>
 	</div>
 {:else if error}
-	<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-		{error}
-		<button onclick={() => (error = '')} class="float-right text-red-500 hover:text-red-700">&times;</button>
+	<div class="card">
+		<ErrorState message={error} onRetry={loadData} size="md" />
 	</div>
 {:else if analytics}
 	<!-- Time Period Selector -->

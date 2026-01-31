@@ -1103,6 +1103,12 @@
 			"leaveFailed": "Failed to leave buddy relationship"
 		}
 	},
+	"errorState": {
+		"title": "Oops! Something went wrong",
+		"message": "We're having a little trouble loading this content.",
+		"suggestion": "Don't worry, your data is safe. Our team has been notified and is working on it. Please try again in a moment.",
+		"tryAgain": "Try Again"
+	},
 	"errors": {
 		"generic": "Something went wrong. Please try again.",
 		"network": "Network error. Please check your connection.",

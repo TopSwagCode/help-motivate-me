@@ -13,6 +13,7 @@
 	import { completeDailyCommitment, dismissDailyCommitment } from '$lib/api/dailyCommitment';
 	import WelcomePopup from '$lib/components/onboarding/WelcomePopup.svelte';
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
+	import ErrorState from '$lib/components/shared/ErrorState.svelte';
 	import { tour } from '$lib/stores/tour';
 	import TodayViewContent from '$lib/components/today/TodayViewContent.svelte';
 	import DailyCommitmentCard from '$lib/components/today/DailyCommitmentCard.svelte';
@@ -101,6 +102,7 @@
 
 	async function loadToday() {
 		loading = true;
+		error = '';
 		try {
 			const [todayResult, identitiesResult, winsResult] = await Promise.all([
 				getTodayView(currentDate),
@@ -111,7 +113,7 @@
 			identities = identitiesResult;
 			wins = winsResult;
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to load today view';
+			error = e instanceof Error ? e.message : get(t)('errors.generic');
 		} finally {
 			loading = false;
 		}
@@ -641,9 +643,8 @@
 				<div class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full"></div>
 			</div>
 		{:else if error}
-			<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-				{error}
-				<button onclick={() => (error = '')} class="float-right text-red-500 hover:text-red-700">&times;</button>
+			<div class="card">
+				<ErrorState message={error} onRetry={loadToday} size="md" />
 			</div>
 		{:else if todayData}
 			<!-- Daily Commitment Card (only show if viewing today) -->

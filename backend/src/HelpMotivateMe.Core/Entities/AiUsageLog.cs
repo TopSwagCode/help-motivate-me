@@ -12,5 +12,6 @@ public class AiUsageLog
     public decimal EstimatedCostUsd { get; set; }  // Pre-call estimate
     public decimal ActualCostUsd { get; set; }     // Post-call actual
     public string RequestType { get; set; } = string.Empty;
+    public bool Rejected { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

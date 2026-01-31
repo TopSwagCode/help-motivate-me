@@ -43,10 +43,10 @@ public class AiBudgetService : IAiBudgetService
             return new BudgetCheckResult(false, "Global AI budget limit has been reached. Please try again later.");
         }
 
-        // Check per-user budget (use max of estimated and actual for better accuracy)
+        // Check per-user budget (sum actual cost of non-rejected calls)
         var userCostLast30Days = await _db.AiUsageLogs
-            .Where(l => l.UserId == userId && l.CreatedAt >= thirtyDaysAgo)
-            .SumAsync(l => l.EstimatedCostUsd > l.ActualCostUsd ? l.EstimatedCostUsd : l.ActualCostUsd, cancellationToken);
+            .Where(l => l.UserId == userId && l.CreatedAt >= thirtyDaysAgo && !l.Rejected)
+            .SumAsync(l => l.ActualCostUsd, cancellationToken);
 
         var projectedUserCost = userCostLast30Days + estimatedCost;
         if (projectedUserCost > _options.PerUserLimitLast30DaysUsd)

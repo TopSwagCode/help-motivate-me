@@ -1103,6 +1103,12 @@
 			"leaveFailed": "Kunne ikke forlade venskabsrelation"
 		}
 	},
+	"errorState": {
+		"title": "Ups! Noget gik galt",
+		"message": "Vi har lidt problemer med at indlæse dette indhold.",
+		"suggestion": "Bare rolig, dine data er sikre. Vores team er blevet informeret og arbejder på det. Prøv venligst igen om et øjeblik.",
+		"tryAgain": "Prøv igen"
+	},
 	"errors": {
 		"generic": "Noget gik galt. Prøv venligst igen.",
 		"network": "Netværksfejl. Tjek venligst din forbindelse.",

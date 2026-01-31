@@ -17,6 +17,7 @@
 	} from '$lib/api/habitStacks';
 	import { getIdentities } from '$lib/api/identities';
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
+	import ErrorState from '$lib/components/shared/ErrorState.svelte';
 	import type {
 		HabitStack,
 		HabitStackItemRequest,
@@ -78,6 +79,8 @@
 	});
 
 	async function loadData() {
+		loading = true;
+		error = '';
 		try {
 			const [stacksData, identitiesData] = await Promise.all([
 				getHabitStacks(),
@@ -86,7 +89,7 @@
 			stacks = stacksData;
 			identities = identitiesData;
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to load data';
+			error = e instanceof Error ? e.message : get(t)('errors.generic');
 		} finally {
 			loading = false;
 		}
@@ -452,11 +455,8 @@
 				></div>
 			</div>
 		{:else if error}
-			<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-				{error}
-				<button onclick={() => (error = '')} class="float-right text-red-500 hover:text-red-700"
-					>&times;</button
-				>
+			<div class="card">
+				<ErrorState message={error} onRetry={loadData} size="md" />
 			</div>
 		{:else}
 			{#if stacks.length > 0}

@@ -49,6 +49,10 @@ public class AiUsageLogConfiguration : IEntityTypeConfiguration<AiUsageLog>
         builder.Property(x => x.CreatedAt)
             .HasColumnName("created_at");
 
+        builder.Property(x => x.Rejected)
+            .HasColumnName("rejected")
+            .HasDefaultValue(false);
+
         builder.HasOne(x => x.User)
             .WithMany()
             .HasForeignKey(x => x.UserId)
