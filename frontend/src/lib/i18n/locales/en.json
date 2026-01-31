@@ -608,7 +608,7 @@
 		"stats": {
 			"goals": "Goals (completed/total)",
 			"tasks": "Tasks (completed/total)",
-			"proofs": "Identity Proofs",
+			"proofs": "Wins",
 			"commitments": "Daily Commitments (completed/total)"
 		},
 		"infoCard": {
@@ -819,7 +819,7 @@
 			"goal": "Goal",
 			"habitStack": "Habit Stack",
 			"identity": "Identity",
-			"identityProof": "Identity Proof",
+			"identityProof": "Win",
 			"targetDate": "Target",
 			"trigger": "Trigger",
 			"identityRecommendation": "AI recommends",
@@ -859,7 +859,7 @@
 			"goalCreated": "Goal created successfully!",
 			"habitStackCreated": "Habit stack created successfully!",
 			"identityCreated": "Identity created successfully!",
-			"identityProofCreated": "Identity proof logged! 🎉"
+			"identityProofCreated": "Win logged! 🎉"
 		},
 		"errors": {
 			"requestFailed": "Failed to process request. Please try again.",
@@ -985,19 +985,19 @@
 		}
 	},
 	"identityProof": {
-		"title": "Log Identity Proof",
-		"subtitle": "Capture spontaneous wins that reinforce your identity",
+		"title": "Log a Win",
+		"subtitle": "Capture wins that reinforce your identity",
 		"whichIdentity": "Which identity did you reinforce?",
 		"selectIdentity": "Select an identity...",
 		"howChallenging": "How challenging was it?",
 		"whatDidYouDo": "What did you do?",
-		"logProof": "Log Proof",
-		"logProofButton": "Log Proof",
-		"success": "Proof Logged!",
+		"logProof": "Log Win",
+		"logProofButton": "Log Win",
+		"success": "Win Logged!",
 		"easy": "Easy",
 		"moderate": "Moderate",
 		"hard": "Hard",
-		"aiHint": "You can also log proofs using the AI assistant:",
+		"aiHint": "You can also log wins using the AI assistant:",
 		"openAiAssistant": "Open AI",
 		"intensity": {
 			"easy": "Easy",

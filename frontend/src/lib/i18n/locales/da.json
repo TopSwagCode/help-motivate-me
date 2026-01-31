@@ -608,7 +608,7 @@
 		"stats": {
 			"goals": "Mål (fuldført/total)",
 			"tasks": "Opgaver (fuldført/total)",
-			"proofs": "Identitetsbeviser",
+			"proofs": "Sejre",
 			"commitments": "Daglige forpligtelser (fuldført/total)"
 		},
 		"infoCard": {
@@ -819,7 +819,7 @@
 			"goal": "Mål",
 			"habitStack": "Vanestak",
 			"identity": "Identitet",
-			"identityProof": "Identitetsbevis",
+			"identityProof": "Sejr",
 			"targetDate": "Målsdato",
 			"trigger": "Trigger",
 			"identityRecommendation": "AI anbefaler",
@@ -859,7 +859,7 @@
 			"goalCreated": "Mål oprettet!",
 			"habitStackCreated": "Vanestak oprettet!",
 			"identityCreated": "Identitet oprettet!",
-			"identityProofCreated": "Identitetsbevis logget! 🎉"
+			"identityProofCreated": "Sejr logget! 🎉"
 		},
 		"errors": {
 			"requestFailed": "Kunne ikke behandle anmodning. Prøv venligst igen.",
@@ -985,15 +985,15 @@
 		}
 	},
 	"identityProof": {
-		"title": "Log identitetsbevis",
-		"subtitle": "Fang spontane gevinster der forstærker din identitet",
+		"title": "Log en sejr",
+		"subtitle": "Fang sejre der forstærker din identitet",
 		"whichIdentity": "Hvilken identitet forstærkede du?",
 		"selectIdentity": "Vælg en identitet...",
 		"howChallenging": "Hvor udfordrende var det?",
 		"whatDidYouDo": "Hvad gjorde du?",
-		"logProof": "Log bevis",
-		"logProofButton": "Log bevis",
-		"success": "Bevis logget!",
+		"logProof": "Log sejr",
+		"logProofButton": "Log sejr",
+		"success": "Sejr logget!",
 		"easy": "Nemt",
 		"moderate": "Moderat",
 		"hard": "Svært",

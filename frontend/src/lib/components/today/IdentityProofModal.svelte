@@ -99,7 +99,7 @@
 				onClose();
 			}, 1500);
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to log proof';
+			error = e instanceof Error ? e.message : 'Failed to log win';
 		} finally {
 			isSubmitting = false;
 		}
