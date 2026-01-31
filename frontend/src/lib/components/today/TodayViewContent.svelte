@@ -502,7 +502,10 @@
 				class="flex items-center gap-2 text-left group"
 			>
 				<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
-					<span>⚡</span> {$t('today.wins')}
+					<svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+					</svg>
+					{$t('today.wins')}
 					<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{wins.length}</span>
 				</h2>
 				<svg
@@ -589,7 +592,10 @@
 								onclick={onLogIdentityProof}
 								class="text-amber-600 hover:text-amber-700 font-medium flex items-center gap-1"
 							>
-								<span>⚡</span> {$t('today.logFirstWin')} →
+								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+								</svg>
+								{$t('today.logFirstWin')} →
 							</button>
 							<span class="text-gray-400 hidden sm:inline">•</span>
 							<span class="text-gray-500 flex items-center gap-1">
