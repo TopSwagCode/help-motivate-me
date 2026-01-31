@@ -236,7 +236,7 @@
 					{#each todayData.identityProgress as progress (progress.id)}
 						{@const feedback = feedbackByIdentityId.get(progress.id)}
 						<div
-							class="relative rounded-lg p-3 transition-all hover:scale-[1.02] {feedback ? 'cursor-pointer' : 'cursor-default'}"
+							class="relative rounded-lg p-3 transition-all hover:scale-[1.02] {feedback ? 'cursor-pointer' : 'cursor-default'} {activeFeedbackId === progress.id ? 'z-50' : 'z-0'}"
 							style="background-color: {progress.color}15; border: 1px solid {progress.color}30"
 							data-feedback-badge
 							role={feedback ? 'button' : undefined}
