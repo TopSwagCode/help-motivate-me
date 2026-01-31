@@ -205,11 +205,11 @@
 			type="button"
 			onclick={() => commandBar.open()}
 			data-tour="ai-assistant"
-			class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 
+			class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 h-12 sm:h-14 px-4 sm:px-5
 			       bg-gradient-to-r from-primary-600 to-primary-700 
-			       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 
-			       transition-all duration-200 flex items-center justify-center z-40
-			       touch-manipulation"
+			       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105 
+			       transition-all duration-200 flex items-center justify-center gap-2 z-40
+			       touch-manipulation animate-lightning"
 			title="AI Assistant (⌘K / Ctrl+K)"
 			aria-label="Open AI Assistant"
 		>
@@ -221,28 +221,31 @@
 					d="M13 10V3L4 14h7v7l9-11h-7z"
 				/>
 			</svg>
+			<span class="text-sm font-medium hidden sm:inline">Commands</span>
 		</button>
 
 		<!-- Floating Identity Proof Button -->
 		<button
 			type="button"
 			onclick={() => showProofModal = true}
-			class="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 w-12 h-12 sm:w-14 sm:h-14
+			class="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 h-12 sm:h-14 px-4 sm:px-5
 			       bg-gradient-to-r from-amber-500 to-amber-600
-			       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110
-			       transition-all duration-200 flex items-center justify-center z-40
-			       touch-manipulation"
+			       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105
+			       transition-all duration-200 flex items-center justify-center gap-2 z-40
+			       touch-manipulation animate-wiggle"
 			title={$t('identityProof.subtitle')}
 			aria-label={$t('identityProof.logProofButton')}
 		>
+			<!-- Trophy icon for wins -->
 			<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path
 					stroke-linecap="round"
 					stroke-linejoin="round"
 					stroke-width="2"
-					d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+					d="M5 3h14a1 1 0 011 1v3a7 7 0 01-7 7 7 7 0 01-7-7V4a1 1 0 011-1zm3 0v1m8-1v1m-4 10v4m-4 0h8m-8 0a1 1 0 00-1 1v1h10v-1a1 1 0 00-1-1"
 				/>
 			</svg>
+			<span class="text-sm font-medium hidden sm:inline">Log Win</span>
 		</button>
 	{/if}
 {:else}
