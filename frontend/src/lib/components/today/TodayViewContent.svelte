@@ -59,7 +59,6 @@
 
 	// Collapsible section states
 	let sectionsExpanded = $state({
-		identityVotes: true,
 		identityProgress: true,
 		habitStacks: true,
 		wins: true,
@@ -179,8 +178,16 @@
 	// State for vote breakdown popover
 	let activeFeedbackId: string | null = $state(null);
 
+	// Create a lookup map for identity feedback by ID
+	const feedbackByIdentityId = $derived(
+		new Map(todayData.identityFeedback.map(f => [f.id, f]))
+	);
+
 	function handleFeedbackMouseEnter(feedbackId: string) {
-		activeFeedbackId = feedbackId;
+		// Only show popover if there are votes for this identity
+		if (feedbackByIdentityId.has(feedbackId)) {
+			activeFeedbackId = feedbackId;
+		}
 	}
 
 	function handleFeedbackMouseLeave() {
@@ -188,8 +195,10 @@
 	}
 
 	function handleFeedbackClick(feedbackId: string) {
-		// Toggle on click/tap for mobile
-		activeFeedbackId = activeFeedbackId === feedbackId ? null : feedbackId;
+		// Toggle on click/tap for mobile, only if there are votes
+		if (feedbackByIdentityId.has(feedbackId)) {
+			activeFeedbackId = activeFeedbackId === feedbackId ? null : feedbackId;
+		}
 	}
 
 	function handleClickOutside(event: MouseEvent) {
@@ -203,59 +212,7 @@
 <svelte:window onclick={handleClickOutside} />
 
 <div class="space-y-6">
-	<!-- Identity Feedback (Votes) -->
-	{#if todayData.identityFeedback.length > 0}
-		<section>
-			<button 
-				onclick={() => toggleSection('identityVotes')}
-				class="w-full flex items-center justify-between text-left mb-2 group"
-			>
-				<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
-					<span>🎯</span> {$t('today.identityVotes')}
-					<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.identityFeedback.length}</span>
-				</h2>
-				<svg 
-					class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.identityVotes ? 'rotate-180' : ''}"
-					fill="none" stroke="currentColor" viewBox="0 0 24 24"
-				>
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-				</svg>
-			</button>
-			{#if sectionsExpanded.identityVotes}
-				<div class="flex flex-wrap gap-1.5">
-					{#each todayData.identityFeedback as feedback (feedback.id)}
-						<div class="relative" data-feedback-badge>
-							<button
-								type="button"
-								class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-sm transition-all hover:scale-105 cursor-pointer"
-								style="background-color: {feedback.color || '#6366f1'}15; border: 1px solid {feedback.color || '#6366f1'}30"
-								title={feedback.reinforcementMessage}
-								onmouseenter={() => handleFeedbackMouseEnter(feedback.id)}
-								onmouseleave={handleFeedbackMouseLeave}
-								onclick={(e) => { e.stopPropagation(); handleFeedbackClick(feedback.id); }}
-							>
-								{#if feedback.icon}
-									<span class="text-sm">{feedback.icon}</span>
-								{/if}
-								<span class="font-medium text-gray-700">{feedback.name}</span>
-								<span
-									class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold rounded-full"
-									style="background-color: {feedback.color || '#6366f1'}; color: white"
-								>
-									{feedback.totalVotes}
-								</span>
-							</button>
-							{#if activeFeedbackId === feedback.id}
-								<VoteBreakdownPopover {feedback} />
-							{/if}
-						</div>
-					{/each}
-				</div>
-			{/if}
-		</section>
-	{/if}
-
-	<!-- Identity Progress -->
+	<!-- Identity Progress (merged with Identity Votes) -->
 	{#if hasIdentityProgress(todayData) && todayData.identityProgress && todayData.identityProgress.length > 0}
 		<section data-tour="identity-progress">
 			<div class="flex items-center justify-between mb-2">
@@ -277,22 +234,43 @@
 			{#if sectionsExpanded.identityProgress}
 				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					{#each todayData.identityProgress as progress (progress.id)}
-						<div 
-							class="rounded-lg p-3 transition-all hover:scale-[1.02] cursor-default"
+						{@const feedback = feedbackByIdentityId.get(progress.id)}
+						<div
+							class="relative rounded-lg p-3 transition-all hover:scale-[1.02] {feedback ? 'cursor-pointer' : 'cursor-default'}"
 							style="background-color: {progress.color}15; border: 1px solid {progress.color}30"
+							data-feedback-badge
+							role={feedback ? 'button' : undefined}
+							tabindex={feedback ? 0 : undefined}
+							onmouseenter={() => handleFeedbackMouseEnter(progress.id)}
+							onmouseleave={handleFeedbackMouseLeave}
+							onclick={(e) => { e.stopPropagation(); handleFeedbackClick(progress.id); }}
+							onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleFeedbackClick(progress.id); }}
 						>
-							<!-- Header: Icon + Score + Trend -->
+							<!-- Header: Icon + Score + Trend + Today's Votes -->
 							<div class="flex items-center justify-between mb-1.5">
 								<span class="text-xl">{progress.icon || '🎯'}</span>
-								<div class="flex items-center gap-0.5">
-									<span class="text-sm font-bold" style="color: {progress.color || '#374151'}">{progress.score}</span>
-									{#if progress.trend === 'Up'}
-										<span class="text-green-500 text-xs">↑</span>
-									{:else if progress.trend === 'Down'}
-										<span class="text-red-500 text-xs">↓</span>
-									{:else}
-										<span class="text-gray-400 text-xs">→</span>
+								<div class="flex items-center gap-2">
+									<!-- Today's votes badge (if any) -->
+									{#if feedback}
+										<span
+											class="inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-bold rounded-full"
+											style="background-color: {progress.color || '#6366f1'}; color: white"
+											title={feedback.reinforcementMessage}
+										>
+											+{feedback.totalVotes}
+										</span>
 									{/if}
+									<!-- Progress score + trend -->
+									<div class="flex items-center gap-0.5">
+										<span class="text-sm font-bold" style="color: {progress.color || '#374151'}">{progress.score}</span>
+										{#if progress.trend === 'Up'}
+											<span class="text-green-500 text-xs">↑</span>
+										{:else if progress.trend === 'Down'}
+											<span class="text-red-500 text-xs">↓</span>
+										{:else}
+											<span class="text-gray-400 text-xs">→</span>
+										{/if}
+									</div>
 								</div>
 							</div>
 							<!-- Name (truncated) -->
@@ -304,6 +282,10 @@
 									style="width: {progress.score}%; background-color: {progress.color || '#9CA3AF'}"
 								></div>
 							</div>
+							<!-- Vote breakdown popover -->
+							{#if activeFeedbackId === progress.id && feedback}
+								<VoteBreakdownPopover {feedback} />
+							{/if}
 						</div>
 					{/each}
 				</div>
