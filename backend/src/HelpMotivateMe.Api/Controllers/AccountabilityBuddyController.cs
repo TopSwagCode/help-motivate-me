@@ -638,34 +638,51 @@ public class AccountabilityBuddyController : ControllerBase
                 .ThenInclude(hs => hs.Items)
                     .ThenInclude(hsi => hsi.Completions)
             .Include(i => i.Tasks)
+            .Include(i => i.Proofs)
             .Where(i => i.UserId == userId)
             .ToListAsync();
 
         return identities.Select(i =>
         {
-            var habitCompletionsToday = i.HabitStacks
+            // Count habit stack item completions - 1 vote each
+            var habitVotes = i.HabitStacks
                 .SelectMany(hs => hs.Items)
                 .SelectMany(hsi => hsi.Completions.Where(c => c.CompletedDate == targetDate))
                 .Count();
 
-            var taskCompletionsToday = i.Tasks
+            // Count fully completed stacks - 2 bonus votes per completed stack
+            var stackBonusVotes = i.HabitStacks
+                .Where(hs => hs.Items.Count > 0 && hs.Items.All(item => item.Completions.Any(c => c.CompletedDate == targetDate)))
+                .Count() * 2;
+
+            // Count task completions - 2 votes each
+            var taskVotes = i.Tasks
                 .Count(t => t.Status == TaskItemStatus.Completed &&
                            t.CompletedAt.HasValue &&
-                           t.CompletedAt.Value == targetDate);
+                           t.CompletedAt.Value == targetDate) * 2;
 
-            var totalToday = habitCompletionsToday + taskCompletionsToday;
+            // Sum proof intensities (Easy=1, Moderate=2, Hard=3)
+            var proofVotes = i.Proofs
+                .Where(p => p.ProofDate == targetDate)
+                .Sum(p => (int)p.Intensity);
+
+            var totalVotes = habitVotes + stackBonusVotes + taskVotes + proofVotes;
 
             return new TodayIdentityFeedbackResponse(
                 i.Id,
                 i.Name,
                 i.Color,
                 i.Icon,
-                totalToday,
-                GenerateReinforcementMessage(i.Name, totalToday)
+                totalVotes,
+                habitVotes,
+                stackBonusVotes,
+                taskVotes,
+                proofVotes,
+                GenerateReinforcementMessage(i.Name, totalVotes)
             );
         })
-        .Where(i => i.CompletionsToday > 0)
-        .OrderByDescending(i => i.CompletionsToday)
+        .Where(i => i.TotalVotes > 0)
+        .OrderByDescending(i => i.TotalVotes)
         .ToList();
     }
 

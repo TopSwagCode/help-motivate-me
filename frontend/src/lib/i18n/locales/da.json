@@ -931,6 +931,13 @@
 			"yesterday": "I går",
 			"daysAgo": "{count} dage siden",
 			"noDate": "Ingen dato"
+		},
+		"voteBreakdown": {
+			"votes": "stemmer i dag",
+			"habits": "Vanefuldførelser",
+			"stackBonus": "Stakbonus",
+			"tasks": "Opgavefuldførelser",
+			"wins": "Identitetsgevinster"
 		}
 	},
 	"dailyCommitment": {

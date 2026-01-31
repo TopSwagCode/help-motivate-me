@@ -931,6 +931,13 @@
 			"yesterday": "Yesterday",
 			"daysAgo": "{count} days ago",
 			"noDate": "No date"
+		},
+		"voteBreakdown": {
+			"votes": "votes today",
+			"habits": "Habit completions",
+			"stackBonus": "Stack bonus",
+			"tasks": "Task completions",
+			"wins": "Identity wins"
 		}
 	},
 	"dailyCommitment": {

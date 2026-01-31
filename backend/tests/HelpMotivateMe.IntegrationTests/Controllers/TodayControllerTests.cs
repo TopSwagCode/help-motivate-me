@@ -316,7 +316,11 @@ public class TodayControllerTests : IntegrationTestBase
         // Assert
         response.Should().NotBeNull();
         var feedback = response!.IdentityFeedback.Should().ContainSingle().Which;
-        feedback.CompletionsToday.Should().Be(2);
+        // 1 habit completion = 1 vote, 1 task completion = 2 votes, 1 fully completed stack = 2 bonus
+        feedback.TotalVotes.Should().Be(5);
+        feedback.HabitVotes.Should().Be(1);
+        feedback.StackBonusVotes.Should().Be(2);
+        feedback.TaskVotes.Should().Be(2);
     }
 
     #endregion
@@ -415,6 +419,10 @@ public record TodayIdentityFeedbackResponse(
     string Name,
     string? Color,
     string? Icon,
-    int CompletionsToday,
+    int TotalVotes,
+    int HabitVotes,
+    int StackBonusVotes,
+    int TaskVotes,
+    int ProofVotes,
     string ReinforcementMessage
 );

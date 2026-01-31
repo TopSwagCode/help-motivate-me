@@ -68,7 +68,11 @@ export interface BuddyIdentityFeedback {
 	name: string;
 	color: string | null;
 	icon: string | null;
-	completionsToday: number;
+	totalVotes: number;
+	habitVotes: number;
+	stackBonusVotes: number;
+	taskVotes: number;
+	proofVotes: number;
 	reinforcementMessage: string;
 }
 

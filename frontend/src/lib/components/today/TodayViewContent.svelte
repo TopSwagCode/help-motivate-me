@@ -5,6 +5,7 @@
 	import type { TodayView, TodayTask, TodayHabitStack, IdentityFeedback, IdentityProgress } from '$lib/types';
 	import type { BuddyTodayViewResponse, BuddyTodayTask, BuddyTodayHabitStack } from '$lib/types/buddy';
 	import type { IdentityProof } from '$lib/types/identityProof';
+	import VoteBreakdownPopover from './VoteBreakdownPopover.svelte';
 
 	// Unified type to accept both TodayView and BuddyTodayViewResponse
 	type TodayViewData = TodayView | BuddyTodayViewResponse;
@@ -174,7 +175,32 @@
 			default: return 1;
 		}
 	}
+
+	// State for vote breakdown popover
+	let activeFeedbackId: string | null = $state(null);
+
+	function handleFeedbackMouseEnter(feedbackId: string) {
+		activeFeedbackId = feedbackId;
+	}
+
+	function handleFeedbackMouseLeave() {
+		activeFeedbackId = null;
+	}
+
+	function handleFeedbackClick(feedbackId: string) {
+		// Toggle on click/tap for mobile
+		activeFeedbackId = activeFeedbackId === feedbackId ? null : feedbackId;
+	}
+
+	function handleClickOutside(event: MouseEvent) {
+		const target = event.target as HTMLElement;
+		if (!target.closest('[data-feedback-badge]')) {
+			activeFeedbackId = null;
+		}
+	}
 </script>
+
+<svelte:window onclick={handleClickOutside} />
 
 <div class="space-y-6">
 	<!-- Identity Feedback (Votes) -->
@@ -198,16 +224,30 @@
 			{#if sectionsExpanded.identityVotes}
 				<div class="flex flex-wrap gap-1.5">
 					{#each todayData.identityFeedback as feedback (feedback.id)}
-						<div
-							class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-sm transition-all hover:scale-105 cursor-default"
-							style="background-color: {feedback.color || '#6366f1'}15; border: 1px solid {feedback.color || '#6366f1'}30"
-							title={feedback.reinforcementMessage}
-						>
-							{#if feedback.icon}
-								<span class="text-sm">{feedback.icon}</span>
+						<div class="relative" data-feedback-badge>
+							<button
+								type="button"
+								class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-sm transition-all hover:scale-105 cursor-pointer"
+								style="background-color: {feedback.color || '#6366f1'}15; border: 1px solid {feedback.color || '#6366f1'}30"
+								title={feedback.reinforcementMessage}
+								onmouseenter={() => handleFeedbackMouseEnter(feedback.id)}
+								onmouseleave={handleFeedbackMouseLeave}
+								onclick={(e) => { e.stopPropagation(); handleFeedbackClick(feedback.id); }}
+							>
+								{#if feedback.icon}
+									<span class="text-sm">{feedback.icon}</span>
+								{/if}
+								<span class="font-medium text-gray-700">{feedback.name}</span>
+								<span
+									class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold rounded-full"
+									style="background-color: {feedback.color || '#6366f1'}; color: white"
+								>
+									{feedback.totalVotes}
+								</span>
+							</button>
+							{#if activeFeedbackId === feedback.id}
+								<VoteBreakdownPopover {feedback} />
 							{/if}
-							<span class="font-medium text-gray-700">{feedback.name}</span>
-							<span class="text-green-500 text-xs">✓</span>
 						</div>
 					{/each}
 				</div>
