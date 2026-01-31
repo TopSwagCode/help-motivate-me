@@ -4,6 +4,7 @@
 	import { commandBar } from '$lib/stores/commandBar';
 	import type { TodayView, TodayTask, TodayHabitStack, IdentityFeedback, IdentityProgress } from '$lib/types';
 	import type { BuddyTodayViewResponse, BuddyTodayTask, BuddyTodayHabitStack } from '$lib/types/buddy';
+	import type { IdentityProof } from '$lib/types/identityProof';
 
 	// Unified type to accept both TodayView and BuddyTodayViewResponse
 	type TodayViewData = TodayView | BuddyTodayViewResponse;
@@ -12,6 +13,7 @@
 
 	interface Props {
 		todayData: TodayViewData;
+		wins?: IdentityProof[];
 		readonly?: boolean;
 		// Event handlers for interactive mode
 		onToggleHabitItem?: (itemId: string) => Promise<void>;
@@ -22,6 +24,7 @@
 		onPostponeTask?: (task: TaskData) => void;
 		onEditTask?: (task: TaskData) => void;
 		onLogIdentityProof?: () => void;
+		onDeleteWin?: (winId: string) => Promise<void>;
 		// Animation state (only needed for interactive mode)
 		transitioningTaskIds?: string[];
 		newlyArrivedTaskIds?: string[];
@@ -31,6 +34,7 @@
 
 	let {
 		todayData,
+		wins = [],
 		readonly = false,
 		onToggleHabitItem,
 		onCompleteAllHabits,
@@ -40,6 +44,7 @@
 		onPostponeTask,
 		onEditTask,
 		onLogIdentityProof,
+		onDeleteWin,
 		transitioningTaskIds = [],
 		newlyArrivedTaskIds = [],
 		snoozingTaskIds = [],
@@ -56,6 +61,7 @@
 		identityVotes: true,
 		identityProgress: true,
 		habitStacks: true,
+		wins: true,
 		tasks: true,
 		completedTasks: false
 	});
@@ -153,6 +159,20 @@
 	function handleEditTask(task: TaskData) {
 		if (readonly || !onEditTask) return;
 		onEditTask(task);
+	}
+
+	async function handleDeleteWin(winId: string) {
+		if (readonly || !onDeleteWin) return;
+		await onDeleteWin(winId);
+	}
+
+	function getIntensityDots(intensity: string): number {
+		switch (intensity) {
+			case 'Easy': return 1;
+			case 'Moderate': return 2;
+			case 'Hard': return 3;
+			default: return 1;
+		}
 	}
 </script>
 
@@ -483,6 +503,94 @@
 			{/if}
 		{/if}
 	</section>
+
+	<!-- Wins Section -->
+	{#if wins.length > 0}
+		<section>
+			<button
+				onclick={() => toggleSection('wins')}
+				class="w-full flex items-center justify-between text-left mb-3 group"
+			>
+				<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+					<span>⚡</span> {$t('today.wins')}
+					<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{wins.length}</span>
+				</h2>
+				<svg
+					class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.wins ? 'rotate-180' : ''}"
+					fill="none" stroke="currentColor" viewBox="0 0 24 24"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+				</svg>
+			</button>
+			{#if sectionsExpanded.wins}
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+					{#each wins as win (win.id)}
+						<div
+							class="rounded-lg overflow-hidden transition-all group/win"
+							style="background-color: {win.identityColor || '#f59e0b'}08; border: 1px solid {win.identityColor || '#f59e0b'}20"
+						>
+							<!-- Win Header -->
+							<div
+								class="px-3 py-2 flex items-center justify-between"
+								style="background-color: {win.identityColor || '#f59e0b'}15"
+							>
+								<div class="flex items-center gap-2">
+									{#if win.identityIcon}
+										<span
+											class="text-sm flex-shrink-0 px-1.5 py-0.5 rounded-full"
+											style="background-color: {win.identityColor || '#f59e0b'}25"
+											title={win.identityName}
+										>
+											{win.identityIcon}
+										</span>
+									{/if}
+									<span class="font-medium text-gray-800 text-sm truncate">{win.identityName}</span>
+								</div>
+								<!-- Intensity dots -->
+								<div class="flex items-center gap-1">
+									<div class="flex gap-0.5">
+										{#each Array(getIntensityDots(win.intensity)) as _, i}
+											<div
+												class="w-1.5 h-1.5 rounded-full"
+												style="background-color: {win.identityColor || '#f59e0b'}"
+											></div>
+										{/each}
+									</div>
+									<span class="text-xs font-medium ml-1" style="color: {win.identityColor || '#f59e0b'}">
+										+{win.voteValue}
+									</span>
+								</div>
+							</div>
+
+							<!-- Win Content -->
+							<div class="p-3">
+								{#if win.description}
+									<p class="text-sm text-gray-700">{win.description}</p>
+								{:else}
+									<p class="text-sm text-gray-400 italic">{$t('identityProof.intensity.' + win.intensity.toLowerCase())}</p>
+								{/if}
+
+								<!-- Delete button (only in interactive mode) -->
+								{#if !readonly}
+									<div class="flex justify-end mt-2 pt-2 opacity-0 group-hover/win:opacity-100 transition-opacity">
+										<button
+											onclick={() => handleDeleteWin(win.id)}
+											class="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+											title={$t('common.delete')}
+										>
+											<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+											</svg>
+										</button>
+									</div>
+								{/if}
+							</div>
+						</div>
+					{/each}
+				</div>
+			{/if}
+		</section>
+	{/if}
 
 	<!-- Upcoming Tasks -->
 	<section data-tour="tasks-section">

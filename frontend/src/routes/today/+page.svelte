@@ -9,6 +9,7 @@
 	import { completeStackItem, completeAllStackItems } from '$lib/api/habitStacks';
 	import { completeTask, postponeTask, updateTask, completeMultipleTasks } from '$lib/api/tasks';
 	import { getIdentities } from '$lib/api/identities';
+	import { getIdentityProofs, deleteIdentityProof } from '$lib/api/identityProofs';
 	import { completeDailyCommitment, dismissDailyCommitment } from '$lib/api/dailyCommitment';
 	import WelcomePopup from '$lib/components/onboarding/WelcomePopup.svelte';
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
@@ -18,10 +19,12 @@
 	import CommitmentFlowModal from '$lib/components/today/CommitmentFlowModal.svelte';
 	import IdentityProofModal from '$lib/components/today/IdentityProofModal.svelte';
 	import type { TodayView, TodayTask, Identity } from '$lib/types';
+	import type { IdentityProof } from '$lib/types/identityProof';
 	import { getLocalDateString } from '$lib/utils/date';
 
 	let todayData = $state<TodayView | null>(null);
 	let identities = $state<Identity[]>([]);
+	let wins = $state<IdentityProof[]>([]);
 	let loading = $state(true);
 	let error = $state('');
 	let showWelcomePopup = $state(false);
@@ -99,10 +102,14 @@
 	async function loadToday() {
 		loading = true;
 		try {
-			[todayData, identities] = await Promise.all([
+			const [todayResult, identitiesResult, winsResult] = await Promise.all([
 				getTodayView(currentDate),
-				identities.length === 0 ? getIdentities() : Promise.resolve(identities)
+				identities.length === 0 ? getIdentities() : Promise.resolve(identities),
+				getIdentityProofs(currentDate, currentDate)
 			]);
+			todayData = todayResult;
+			identities = identitiesResult;
+			wins = winsResult;
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Failed to load today view';
 		} finally {
@@ -550,6 +557,15 @@
 		// Reload today data to get updated scores
 		await loadToday();
 	}
+
+	async function handleDeleteWin(winId: string) {
+		try {
+			await deleteIdentityProof(winId);
+			wins = wins.filter(w => w.id !== winId);
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Failed to delete win';
+		}
+	}
 </script>
 
 <div class="min-h-screen bg-gray-50">
@@ -645,6 +661,7 @@
 
 			<TodayViewContent
 				{todayData}
+				{wins}
 				readonly={false}
 				onToggleHabitItem={toggleHabitItem}
 				onCompleteAllHabits={completeAllHabits}
@@ -654,6 +671,7 @@
 				onPostponeTask={openPostponePopup}
 				onEditTask={openEditPopup}
 				onLogIdentityProof={handleOpenProofModal}
+				onDeleteWin={handleDeleteWin}
 				{transitioningTaskIds}
 				{newlyArrivedTaskIds}
 				{snoozingTaskIds}
