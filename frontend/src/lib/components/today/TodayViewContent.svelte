@@ -233,16 +233,6 @@
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
 					</svg>
 				</button>
-				{#if !readonly && onLogIdentityProof && sectionsExpanded.identityProgress}
-					<button
-						onclick={onLogIdentityProof}
-						class="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-amber-700 bg-amber-100 hover:bg-amber-200 rounded-lg transition-colors"
-						title={$t('identityProof.title')}
-					>
-						<span>⚡</span>
-						{$t('identityProof.logProofButton')}
-					</button>
-				{/if}
 			</div>
 			{#if sectionsExpanded.identityProgress}
 				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -522,17 +512,6 @@
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
 				</svg>
 			</button>
-			{#if !readonly && onLogIdentityProof && sectionsExpanded.wins}
-				<button
-					onclick={onLogIdentityProof}
-					class="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-amber-700 bg-amber-100 hover:bg-amber-200 rounded-lg transition-colors"
-					title={$t('identityProof.title')}
-					data-tour="log-win-button"
-				>
-					<span>⚡</span>
-					{$t('identityProof.logProofButton')}
-				</button>
-			{/if}
 		</div>
 		{#if sectionsExpanded.wins}
 			{#if wins.length > 0}

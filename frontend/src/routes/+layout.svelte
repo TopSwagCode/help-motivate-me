@@ -232,6 +232,7 @@
 		<div class="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-40 animate-wiggle" style="animation-delay: 2.5s;">
 			<button
 				type="button"
+				data-tour="log-win-button"
 				onclick={() => showProofModal = true}
 				class="group relative w-12 h-12 sm:w-14 sm:h-14
 				       bg-gradient-to-r from-amber-500 to-amber-600
