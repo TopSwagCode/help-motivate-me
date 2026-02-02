@@ -176,7 +176,7 @@
 			<TopNav />
 		{/if}
 
-		<div class="flex-1 pb-24 md:pb-0">
+		<div class="flex-1 pb-28 md:pb-0">
 			{@render children()}
 		</div>
 	</div>

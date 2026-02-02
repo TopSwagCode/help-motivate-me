@@ -11,8 +11,8 @@
 
 <!-- Mobile Bottom Navigation Bar -->
 <nav
-	class="md:hidden fixed bottom-4 left-4 right-4 z-50 rounded-t-3xl rounded-b-2xl shadow-lg shadow-primary-500/20 px-2 py-2"
-	style="background: linear-gradient(135deg, #fdfcfa 0%, #faf7f2 50%, #f9e8d2 100%);"
+	class="md:hidden fixed left-4 right-4 z-40 rounded-2xl shadow-lg shadow-primary-500/20 px-2 py-2"
+	style="background: linear-gradient(135deg, #fdfcfa 0%, #faf7f2 50%, #f9e8d2 100%); bottom: max(1rem, env(safe-area-inset-bottom));"
 >
 	<div class="flex items-center justify-around">
 		<!-- Today -->
