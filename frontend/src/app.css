@@ -6,11 +6,15 @@
 	html {
 		@apply antialiased;
 		height: 100%;
+		scroll-behavior: smooth;
+		-webkit-overflow-scrolling: touch;
 	}
 
 	body {
 		@apply bg-warm-cream text-cocoa-800;
 		min-height: 100%;
+		/* Ensure body is scrollable and respects safe areas */
+		padding-bottom: env(safe-area-inset-bottom);
 	}
 }
 
