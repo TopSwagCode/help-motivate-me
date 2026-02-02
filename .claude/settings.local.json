@@ -16,7 +16,9 @@
       "Bash(npm install:*)",
       "Bash(ls:*)",
       "Bash(dotnet tool restore:*)",
-      "Bash(dotnet restore:*)"
+      "Bash(dotnet restore:*)",
+      "Bash(find:*)",
+      "Bash(npm run build:*)"
     ]
   }
 }

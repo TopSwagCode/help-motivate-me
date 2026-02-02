@@ -40,18 +40,18 @@
 </script>
 
 <div>
-	<h2 class="text-lg font-semibold text-gray-900 mb-4">{$t('settings.language.title')}</h2>
+	<h2 class="text-lg font-semibold text-cocoa-800 mb-4">{$t('settings.language.title')}</h2>
 
-	<p class="text-sm text-gray-600 mb-6">{$t('settings.language.description')}</p>
+	<p class="text-sm text-cocoa-600 mb-6">{$t('settings.language.description')}</p>
 
 	{#if error}
-		<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+		<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm mb-4">
 			{error}
 		</div>
 	{/if}
 
 	{#if success}
-		<div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm mb-4">
+		<div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-2xl text-sm mb-4">
 			{success}
 		</div>
 	{/if}
@@ -61,18 +61,18 @@
 		<button
 			onclick={() => handleLanguageChange('en')}
 			disabled={saving}
-			class="w-full card p-4 text-left transition-all duration-200 cursor-pointer {currentLocale ===
+			class="w-full card p-4 text-left transition-all duration-300 cursor-pointer {currentLocale ===
 			'en'
 				? 'border-primary-500 ring-2 ring-primary-200 bg-primary-50'
-				: 'hover:border-gray-300 hover:shadow-md'}"
+				: 'hover:border-primary-200 hover:shadow-md'}"
 		>
 			<div class="flex items-center gap-4">
 				<div class="w-10 h-10 rounded-full flex items-center justify-center text-lg bg-gray-100">
 					EN
 				</div>
 				<div class="flex-1">
-					<h3 class="font-medium text-gray-900">{$t('language.english')}</h3>
-					<p class="text-sm text-gray-500">English</p>
+					<h3 class="font-medium text-cocoa-800">{$t('language.english')}</h3>
+					<p class="text-sm text-cocoa-500">English</p>
 				</div>
 				{#if currentLocale === 'en'}
 					<svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,18 +86,18 @@
 		<button
 			onclick={() => handleLanguageChange('da')}
 			disabled={saving}
-			class="w-full card p-4 text-left transition-all duration-200 cursor-pointer {currentLocale ===
+			class="w-full card p-4 text-left transition-all duration-300 cursor-pointer {currentLocale ===
 			'da'
 				? 'border-primary-500 ring-2 ring-primary-200 bg-primary-50'
-				: 'hover:border-gray-300 hover:shadow-md'}"
+				: 'hover:border-primary-200 hover:shadow-md'}"
 		>
 			<div class="flex items-center gap-4">
 				<div class="w-10 h-10 rounded-full flex items-center justify-center text-lg bg-gray-100">
 					DK
 				</div>
 				<div class="flex-1">
-					<h3 class="font-medium text-gray-900">{$t('language.danish')}</h3>
-					<p class="text-sm text-gray-500">Dansk</p>
+					<h3 class="font-medium text-cocoa-800">{$t('language.danish')}</h3>
+					<p class="text-sm text-cocoa-500">Dansk</p>
 				</div>
 				{#if currentLocale === 'da'}
 					<svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,6 +109,6 @@
 	</div>
 
 	{#if saving}
-		<p class="text-sm text-gray-500 mt-4">{$t('common.saving')}</p>
+		<p class="text-sm text-cocoa-500 mt-4">{$t('common.saving')}</p>
 	{/if}
 </div>

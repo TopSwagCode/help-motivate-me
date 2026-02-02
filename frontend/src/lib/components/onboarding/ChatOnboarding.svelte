@@ -455,7 +455,7 @@
 	<!-- Success notification - fixed to top-right of viewport -->
 	{#if successNotification}
 		<div
-			class="fixed top-4 right-4 z-[100] flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl border-2 bg-white animate-slide-in"
+			class="fixed top-4 right-4 z-[100] flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl border-2 bg-warm-paper animate-slide-in"
 			style="border-color: {successNotification.color}; box-shadow: 0 4px 20px {successNotification.color}40;"
 		>
 			<div 
@@ -465,7 +465,7 @@
 				{successNotification.icon}
 			</div>
 			<div>
-				<p class="font-semibold text-gray-900">{successNotification.name}</p>
+				<p class="font-semibold text-cocoa-800">{successNotification.name}</p>
 				<p class="text-sm font-medium" style="color: {successNotification.color}">✓ {$t('onboarding.chat.createdSuccess')}</p>
 			</div>
 		</div>
@@ -484,7 +484,7 @@
 					<div
 						class="max-w-[85%] sm:max-w-[80%] rounded-2xl px-3 sm:px-4 py-2 text-sm sm:text-base {message.role === 'user'
 							? 'bg-primary-600 text-white'
-							: 'bg-gray-100 text-gray-900'}"
+							: 'bg-gray-100 text-cocoa-800'}"
 					>
 						{#if message.isStreaming && !message.content}
 							<div class="flex space-x-1">
@@ -502,7 +502,7 @@
 	</div>
 
 	<!-- Input area -->
-	<div class="border-t p-3 sm:p-4 bg-white flex-shrink-0">
+	<div class="border-t p-3 sm:p-4 bg-warm-paper flex-shrink-0">
 		<!-- Quick action buttons - always visible -->
 		<div class="flex flex-wrap gap-2 mb-3 min-h-[36px]">
 			{#each getDefaultSuggestedActions() as action}
@@ -511,7 +511,7 @@
 					onclick={() => handleQuickAction(action.key)}
 					disabled={isDisabled}
 					class="px-4 py-1.5 text-sm rounded-full border transition-all {isDisabled
-						? 'border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed'
+						? 'border-primary-100 text-gray-400 bg-warm-cream cursor-not-allowed'
 						: 'border-primary-300 text-primary-700 hover:bg-primary-50 hover:border-primary-400'}"
 				>
 					{action.label}
@@ -557,12 +557,12 @@
 		<div class="flex justify-between items-center mt-3 sm:mt-4 pt-3 sm:pt-4 border-t">
 			<div>
 				{#if showBack && onBack}
-					<button onclick={onBack} class="text-sm text-gray-600 hover:text-gray-900">
+					<button onclick={onBack} class="text-sm text-cocoa-600 hover:text-cocoa-800">
 						← {$t('onboarding.chat.back')}
 					</button>
 				{/if}
 			</div>
-			<button onclick={onSkip} class="text-sm text-gray-500 hover:text-gray-700">
+			<button onclick={onSkip} class="text-sm text-cocoa-500 hover:text-cocoa-700">
 				{$t('onboarding.chat.skipStep')}
 			</button>
 		</div>

@@ -423,7 +423,7 @@
 	}
 </script>
 
-<div class="bg-gray-50">
+<div class="bg-warm-cream">
 	<main class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
 		<!-- Page Header -->
 		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
@@ -435,7 +435,7 @@
 				{#if stacks.length > 1}
 					<button
 						onclick={openReorderPopup}
-						class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors touch-manipulation"
+						class="p-2 text-cocoa-500 hover:text-cocoa-700 hover:bg-primary-50 rounded-2xl transition-colors touch-manipulation"
 						title={$t('habitStacks.reorderPopup.title')}
 					>
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -465,13 +465,13 @@
 						<button
 							type="button"
 							onclick={() => openEditPopup(stack)}
-							class="rounded-lg overflow-hidden text-left w-full transition-all hover:shadow-md"
-							style="background-color: {stack.identityColor || '#6366f1'}08; border: 1px solid {stack.identityColor || '#6366f1'}20"
+							class="rounded-2xl overflow-hidden text-left w-full transition-all hover:shadow-md"
+							style="background-color: {stack.identityColor || '#d4944c'}08; border: 1px solid {stack.identityColor || '#d4944c'}20"
 						>
 							<!-- Header with identity color -->
 							<div 
 								class="flex items-center justify-between px-5 py-3"
-								style="background-color: {stack.identityColor || '#6366f1'}15"
+								style="background-color: {stack.identityColor || '#d4944c'}15"
 							>
 								<div class="flex items-center gap-2">
 									{#if stack.identityName}
@@ -479,23 +479,23 @@
 											{identities.find(i => i.id === stack.identityId)?.icon || '🎯'}
 										</span>
 									{/if}
-									<h3 class="font-semibold text-gray-900 text-lg">{stack.name}</h3>
+									<h3 class="font-semibold text-cocoa-800 text-lg">{stack.name}</h3>
 								</div>
 								<div class="flex items-center gap-2">
 									{#if stack.identityName}
 										<span 
 											class="text-xs px-2 py-0.5 rounded-full"
-											style="background-color: {stack.identityColor || '#6366f1'}20; color: {stack.identityColor || '#6366f1'}"
+											style="background-color: {stack.identityColor || '#d4944c'}20; color: {stack.identityColor || '#d4944c'}"
 										>
 											{stack.identityName}
 										</span>
 									{/if}
 									{#if !stack.isActive}
-										<span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600"
+										<span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-cocoa-600"
 											>{$t('habitStacks.inactive')}</span
 										>
 									{/if}
-									<span class="text-sm text-gray-500"
+									<span class="text-sm text-cocoa-500"
 										>{stack.items.length} {stack.items.length !== 1 ? $t('habitStacks.habits') : $t('habitStacks.habit')}</span
 									>
 								</div>
@@ -513,16 +513,16 @@
 											{/if}
 											<!-- Step circle -->
 											<div
-												class="absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 border-primary-500 bg-white flex items-center justify-center z-10"
+												class="absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 border-primary-500 bg-warm-paper flex items-center justify-center z-10"
 											>
 												<span class="text-[10px] font-medium text-primary-600">{i + 1}</span>
 											</div>
-											<div class="bg-gray-50 rounded-lg p-3">
-												<p class="text-sm text-gray-500">
-													<span class="font-medium text-gray-700">{$t('habitStacks.chain.after')}</span>
+											<div class="bg-warm-cream rounded-2xl p-3">
+												<p class="text-sm text-cocoa-500">
+													<span class="font-medium text-cocoa-700">{$t('habitStacks.chain.after')}</span>
 													{item.cueDescription}
 												</p>
-												<p class="text-gray-900 mt-0.5">
+												<p class="text-cocoa-800 mt-0.5">
 													<span class="font-medium text-primary-600">{$t('habitStacks.chain.iWill')}</span>
 													{item.habitDescription}
 												</p>
@@ -538,7 +538,7 @@
 									{/each}
 								</div>
 							{:else}
-								<p class="text-sm text-gray-500 italic">{$t('habitStacks.noHabitsYet')}</p>
+								<p class="text-sm text-cocoa-500 italic">{$t('habitStacks.noHabitsYet')}</p>
 							{/if}
 							</div>
 						</button>
@@ -550,9 +550,9 @@
 						<div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
 							<span class="text-3xl">🔗</span>
 						</div>
-						<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('habitStacks.emptyTitle')}</h3>
-						<p class="text-gray-500 mb-4">{$t('habitStacks.emptyDescription')}</p>
-						<p class="text-gray-500 text-sm mb-6 flex items-center justify-center gap-1 flex-wrap">
+						<h3 class="text-lg font-medium text-cocoa-800 mb-2">{$t('habitStacks.emptyTitle')}</h3>
+						<p class="text-cocoa-500 mb-4">{$t('habitStacks.emptyDescription')}</p>
+						<p class="text-cocoa-500 text-sm mb-6 flex items-center justify-center gap-1 flex-wrap">
 							{$t('habitStacks.emptyHowTo')}
 							<button
 								type="button"
@@ -577,12 +577,12 @@
 		<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
 			<div 
 				bind:this={createContainerRef}
-				class="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto"
+				class="bg-warm-paper rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto"
 			>
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-6">
-						<h2 class="text-xl font-semibold text-gray-900">{$t('habitStacks.createPopup.title')}</h2>
-						<button onclick={closeCreatePopup} class="text-gray-400 hover:text-gray-600" aria-label={$t('common.close')}>
+						<h2 class="text-xl font-semibold text-cocoa-800">{$t('habitStacks.createPopup.title')}</h2>
+						<button onclick={closeCreatePopup} class="text-gray-400 hover:text-cocoa-600" aria-label={$t('common.close')}>
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
 									stroke-linecap="round"
@@ -596,7 +596,7 @@
 
 					{#if createError}
 						<div
-							class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4"
+							class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm mb-4"
 						>
 							{createError}
 						</div>
@@ -604,7 +604,7 @@
 
 					<div class="space-y-6">
 						<div>
-							<label for="createName" class="block text-sm font-medium text-gray-700 mb-1"
+							<label for="createName" class="block text-sm font-medium text-cocoa-700 mb-1"
 								>{$t('habitStacks.form.name')}</label
 							>
 							<input
@@ -618,7 +618,7 @@
 
 						<!-- Identity selector -->
 						<div>
-							<label for="createIdentity" class="block text-sm font-medium text-gray-700 mb-1"
+							<label for="createIdentity" class="block text-sm font-medium text-cocoa-700 mb-1"
 								>{$t('habitStacks.form.identity')}</label
 							>
 							<select
@@ -633,16 +633,16 @@
 									</option>
 								{/each}
 							</select>
-							<p class="text-xs text-gray-500 mt-1">{$t('habitStacks.form.identityHint')}</p>
+							<p class="text-xs text-cocoa-500 mt-1">{$t('habitStacks.form.identityHint')}</p>
 						</div>
 
 						<div>
-							<span class="block text-sm font-medium text-gray-700 mb-3">{$t('habitStacks.createPopup.habitChain')}</span>
+							<span class="block text-sm font-medium text-cocoa-700 mb-3">{$t('habitStacks.createPopup.habitChain')}</span>
 							<div class="space-y-4">
 								{#each createItems as item, i (i)}
 									<div
 										class="relative pl-6 pb-4 {i < createItems.length - 1
-											? 'border-l-2 border-gray-200 ml-3'
+											? 'border-l-2 border-primary-100 ml-3'
 											: 'ml-3'}"
 									>
 										<div
@@ -650,10 +650,10 @@
 										>
 											<span class="text-xs font-medium text-primary-700">{i + 1}</span>
 										</div>
-										<div class="bg-gray-50 rounded-lg p-4">
+										<div class="bg-warm-cream rounded-2xl p-4">
 											<div class="space-y-3">
 												<div>
-													<label for="create-cue-input-{i}" class="block text-xs font-medium text-gray-500 mb-1"
+													<label for="create-cue-input-{i}" class="block text-xs font-medium text-cocoa-500 mb-1"
 														>{$t('habitStacks.createPopup.afterI')}</label
 													>
 													<input
@@ -671,7 +671,7 @@
 													/>
 												</div>
 												<div>
-													<label for="create-habit-input-{i}" class="block text-xs font-medium text-gray-500 mb-1"
+													<label for="create-habit-input-{i}" class="block text-xs font-medium text-cocoa-500 mb-1"
 														>{$t('habitStacks.createPopup.iWillDo')}</label
 													>
 													<input
@@ -722,7 +722,7 @@
 						</div>
 					</div>
 
-					<div class="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-200">
+					<div class="flex justify-end gap-3 mt-6 pt-4 border-t border-primary-100">
 						<button
 							type="button"
 							onclick={closeCreatePopup}
@@ -748,11 +748,11 @@
 	<!-- Edit Popup -->
 	{#if showEditPopup && editingStack}
 		<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-			<div class="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+			<div class="bg-warm-paper rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-6">
-						<h2 class="text-xl font-semibold text-gray-900">{$t('habitStacks.editPopup.title')}</h2>
-						<button onclick={closeEditPopup} class="text-gray-400 hover:text-gray-600" aria-label={$t('common.close')}>
+						<h2 class="text-xl font-semibold text-cocoa-800">{$t('habitStacks.editPopup.title')}</h2>
+						<button onclick={closeEditPopup} class="text-gray-400 hover:text-cocoa-600" aria-label={$t('common.close')}>
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
 									stroke-linecap="round"
@@ -766,7 +766,7 @@
 
 					{#if editError}
 						<div
-							class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4"
+							class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm mb-4"
 						>
 							{editError}
 						</div>
@@ -776,7 +776,7 @@
 						<!-- Stack Settings -->
 						<div class="space-y-4">
 							<div>
-								<label for="editName" class="block text-sm font-medium text-gray-700 mb-1"
+								<label for="editName" class="block text-sm font-medium text-cocoa-700 mb-1"
 									>{$t('habitStacks.form.name')}</label
 								>
 								<input type="text" id="editName" bind:value={editName} class="input" />
@@ -784,7 +784,7 @@
 
 							<!-- Identity selector -->
 							<div>
-								<label for="editIdentity" class="block text-sm font-medium text-gray-700 mb-1"
+								<label for="editIdentity" class="block text-sm font-medium text-cocoa-700 mb-1"
 									>{$t('habitStacks.form.identity')}</label
 								>
 								<select
@@ -802,7 +802,7 @@
 							</div>
 
 							<div class="flex items-center justify-between">
-								<label for="editActive" class="text-sm font-medium text-gray-700">{$t('habitStacks.editPopup.active')}</label>
+								<label for="editActive" class="text-sm font-medium text-cocoa-700">{$t('habitStacks.editPopup.active')}</label>
 								<button
 									type="button"
 									id="editActive"
@@ -810,12 +810,12 @@
 									role="switch"
 									aria-checked={editIsActive}
 									aria-label={$t('habitStacks.editPopup.active')}
-									class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 {editIsActive
+									class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 {editIsActive
 										? 'bg-primary-600'
 										: 'bg-gray-200'}"
 								>
 									<span
-										class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out {editIsActive
+										class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-warm-paper shadow ring-0 transition duration-300 ease-in-out {editIsActive
 											? 'translate-x-5'
 											: 'translate-x-0'}"
 									></span>
@@ -832,11 +832,11 @@
 							</button>
 						</div>
 
-						<hr class="border-gray-200" />
+						<hr class="border-primary-100" />
 
 						<!-- Existing Items -->
 						<div>
-							<h3 class="text-sm font-medium text-gray-700 mb-3">
+							<h3 class="text-sm font-medium text-cocoa-700 mb-3">
 								{$t('habitStacks.editPopup.habitsInStack')} ({editingStack.items.length})
 							</h3>
 							{#if editingStack.items.length > 0}
@@ -855,9 +855,9 @@
 											</div>
 											{#if editingItemId === item.id}
 												<!-- Edit mode -->
-												<div class="bg-gray-50 rounded-lg p-3 space-y-2">
+												<div class="bg-warm-cream rounded-2xl p-3 space-y-2">
 													<div>
-														<label class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.afterI')}</label>
+														<label class="block text-xs font-medium text-cocoa-500 mb-1">{$t('habitStacks.createPopup.afterI')}</label>
 														<input
 															type="text"
 															bind:value={editItemCue}
@@ -866,7 +866,7 @@
 														/>
 													</div>
 													<div>
-														<label class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.iWillDo')}</label>
+														<label class="block text-xs font-medium text-cocoa-500 mb-1">{$t('habitStacks.createPopup.iWillDo')}</label>
 														<input
 															type="text"
 															bind:value={editItemHabit}
@@ -894,12 +894,12 @@
 												</div>
 											{:else}
 												<!-- View mode -->
-												<div class="bg-gray-50 rounded-lg p-3 group relative cursor-pointer" onclick={() => startEditItem(item)}>
-													<p class="text-sm text-gray-600">
+												<div class="bg-warm-cream rounded-2xl p-3 group relative cursor-pointer" onclick={() => startEditItem(item)}>
+													<p class="text-sm text-cocoa-600">
 														<span class="font-medium text-gray-800">{$t('habitStacks.chain.after')}</span>
 														{item.cueDescription}
 													</p>
-													<p class="text-gray-900 mt-1">
+													<p class="text-cocoa-800 mt-1">
 														<span class="font-medium text-primary-600">{$t('habitStacks.chain.iWill')}</span>
 														{item.habitDescription}
 													</p>
@@ -938,18 +938,18 @@
 									{/each}
 								</div>
 							{:else}
-								<p class="text-sm text-gray-500 text-center py-4">{$t('habitStacks.noHabitsYet')}</p>
+								<p class="text-sm text-cocoa-500 text-center py-4">{$t('habitStacks.noHabitsYet')}</p>
 							{/if}
 						</div>
 
-						<hr class="border-gray-200" />
+						<hr class="border-primary-100" />
 
 						<!-- Add New Item -->
 						<div>
-							<h3 class="text-sm font-medium text-gray-700 mb-3">{$t('habitStacks.editPopup.addNewHabit')}</h3>
-							<div class="bg-gray-50 rounded-lg p-4 space-y-3">
+							<h3 class="text-sm font-medium text-cocoa-700 mb-3">{$t('habitStacks.editPopup.addNewHabit')}</h3>
+							<div class="bg-warm-cream rounded-2xl p-4 space-y-3">
 								<div>
-									<label for="newItemCue" class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.afterI')}</label>
+									<label for="newItemCue" class="block text-xs font-medium text-cocoa-500 mb-1">{$t('habitStacks.createPopup.afterI')}</label>
 									<input
 										id="newItemCue"
 										type="text"
@@ -962,7 +962,7 @@
 									/>
 								</div>
 								<div>
-									<label for="newItemHabit" class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.iWillDo')}</label>
+									<label for="newItemHabit" class="block text-xs font-medium text-cocoa-500 mb-1">{$t('habitStacks.createPopup.iWillDo')}</label>
 									<input
 										bind:this={newItemHabitInputRef}
 										id="newItemHabit"
@@ -984,7 +984,7 @@
 							</div>
 						</div>
 
-						<hr class="border-gray-200" />
+						<hr class="border-primary-100" />
 
 						<!-- Delete Stack -->
 						<div>
@@ -1005,13 +1005,13 @@
 	<!-- Reorder Popup -->
 	{#if showReorderPopup}
 		<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-			<div class="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+			<div class="bg-warm-paper rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-6">
-						<h2 class="text-xl font-semibold text-gray-900">{$t('habitStacks.reorderPopup.title')}</h2>
+						<h2 class="text-xl font-semibold text-cocoa-800">{$t('habitStacks.reorderPopup.title')}</h2>
 						<button
 							onclick={closeReorderPopup}
-							class="text-gray-400 hover:text-gray-600"
+							class="text-gray-400 hover:text-cocoa-600"
 							title={$t('common.close')}
 						>
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1025,7 +1025,7 @@
 						</button>
 					</div>
 
-					<p class="text-sm text-gray-500 mb-4">{$t('habitStacks.reorderPopup.description')}</p>
+					<p class="text-sm text-cocoa-500 mb-4">{$t('habitStacks.reorderPopup.description')}</p>
 
 					<div class="space-y-2">
 						{#each reorderList as item, index (item.id)}
@@ -1035,7 +1035,7 @@
 								ondragover={(e) => handleDragOver(e, index)}
 								ondragend={handleDragEnd}
 								role="listitem"
-								class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-move hover:bg-gray-100 transition-colors {draggedIndex === index ? 'opacity-50 border-primary-500' : ''}"
+								class="flex items-center gap-3 p-3 bg-warm-cream rounded-2xl border border-primary-100 cursor-move hover:bg-primary-50 transition-colors {draggedIndex === index ? 'opacity-50 border-primary-500' : ''}"
 							>
 								<!-- Drag handle -->
 								<div class="text-gray-400">
@@ -1045,10 +1045,10 @@
 								</div>
 
 								<!-- Position number -->
-								<span class="text-sm font-medium text-gray-500 w-6">{index + 1}.</span>
+								<span class="text-sm font-medium text-cocoa-500 w-6">{index + 1}.</span>
 
 								<!-- Stack name -->
-								<span class="flex-1 font-medium text-gray-900">{item.name}</span>
+								<span class="flex-1 font-medium text-cocoa-800">{item.name}</span>
 
 								<!-- Up/Down buttons -->
 								<div class="flex flex-col gap-0.5">
@@ -1059,7 +1059,7 @@
 										class="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
 										aria-label={$t('habitStacks.reorderPopup.moveUp')}
 									>
-										<svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg class="w-4 h-4 text-cocoa-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
 										</svg>
 									</button>
@@ -1070,7 +1070,7 @@
 										class="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
 										aria-label={$t('habitStacks.reorderPopup.moveDown')}
 									>
-										<svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg class="w-4 h-4 text-cocoa-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
 										</svg>
 									</button>
@@ -1079,7 +1079,7 @@
 						{/each}
 					</div>
 
-					<div class="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-200">
+					<div class="flex justify-end gap-3 mt-6 pt-4 border-t border-primary-100">
 						<button
 							type="button"
 							onclick={closeReorderPopup}

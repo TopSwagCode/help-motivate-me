@@ -98,11 +98,11 @@
 
 {#if showPrompt}
 	<div class="fixed inset-0 z-[200] flex items-end justify-center sm:items-center p-4 bg-black/30 backdrop-blur-sm animate-fade-in">
-		<div class="w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden animate-slide-up">
+		<div class="w-full max-w-sm bg-warm-paper rounded-2xl shadow-2xl overflow-hidden animate-slide-up">
 			<!-- Header with icon -->
 			<div class="bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-5 text-white">
 				<div class="flex items-center gap-3">
-					<div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+					<div class="w-12 h-12 bg-warm-paper/20 rounded-xl flex items-center justify-center">
 						<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
 								d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -117,24 +117,24 @@
 
 			<!-- Content -->
 			<div class="px-6 py-5">
-				<p class="text-gray-600 text-sm leading-relaxed">
+				<p class="text-cocoa-600 text-sm leading-relaxed">
 					{$t('pushPrompt.description')}
 				</p>
 				
 				<ul class="mt-4 space-y-2">
-					<li class="flex items-center gap-2 text-sm text-gray-700">
+					<li class="flex items-center gap-2 text-sm text-cocoa-700">
 						<svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 						</svg>
 						{$t('pushPrompt.benefit1')}
 					</li>
-					<li class="flex items-center gap-2 text-sm text-gray-700">
+					<li class="flex items-center gap-2 text-sm text-cocoa-700">
 						<svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 						</svg>
 						{$t('pushPrompt.benefit2')}
 					</li>
-					<li class="flex items-center gap-2 text-sm text-gray-700">
+					<li class="flex items-center gap-2 text-sm text-cocoa-700">
 						<svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 						</svg>
@@ -147,7 +147,7 @@
 			<div class="px-6 pb-6 flex gap-3">
 				<button
 					onclick={handleDismiss}
-					class="flex-1 px-4 py-3 text-gray-600 font-medium rounded-xl hover:bg-gray-100 transition-colors touch-manipulation"
+					class="flex-1 px-4 py-3 text-cocoa-600 font-medium rounded-xl hover:bg-primary-50 transition-colors touch-manipulation"
 				>
 					{$t('pushPrompt.notNow')}
 				</button>

@@ -86,7 +86,7 @@
 	}
 </script>
 
-<div class="bg-gray-50">
+<div class="bg-warm-cream">
 	<main class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
 		<!-- Page Header -->
 		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
@@ -125,9 +125,9 @@
 						<div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
 							<span class="text-3xl">🎯</span>
 						</div>
-						<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('identities.emptyTitle')}</h3>
-						<p class="text-gray-500 mb-4">{$t('identities.emptyDescription')}</p>
-						<p class="text-gray-500 text-sm mb-6 flex items-center justify-center gap-1 flex-wrap">
+						<h3 class="text-lg font-medium text-cocoa-800 mb-2">{$t('identities.emptyTitle')}</h3>
+						<p class="text-cocoa-500 mb-4">{$t('identities.emptyDescription')}</p>
+						<p class="text-cocoa-500 text-sm mb-6 flex items-center justify-center gap-1 flex-wrap">
 							{$t('identities.emptyHowTo')}
 							<button
 								type="button"
@@ -154,13 +154,13 @@
 			role="dialog"
 			aria-modal="true"
 		>
-			<div class="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+			<div class="bg-warm-paper rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-6">
-						<h2 class="text-xl font-semibold text-gray-900">
+						<h2 class="text-xl font-semibold text-cocoa-800">
 							{isEditing ? $t('identities.edit') : $t('identities.newIdentity')}
 						</h2>
-						<button onclick={closeModal} class="text-gray-400 hover:text-gray-600" aria-label={$t('common.close')}>
+						<button onclick={closeModal} class="text-gray-400 hover:text-cocoa-600" aria-label={$t('common.close')}>
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
 									stroke-linecap="round"
@@ -179,7 +179,7 @@
 					/>
 
 					{#if isEditing && editingIdentity}
-						<div class="mt-4 pt-4 border-t border-gray-200">
+						<div class="mt-4 pt-4 border-t border-primary-100">
 							<button
 								type="button"
 								onclick={() => handleDelete(editingIdentity!.id)}

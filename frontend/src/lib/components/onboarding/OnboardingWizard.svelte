@@ -39,8 +39,8 @@
 	<div class="max-w-2xl mx-auto px-4 py-8">
 		<!-- Header with skip button -->
 		<div class="flex justify-between items-center mb-8">
-			<h1 class="text-2xl font-bold text-gray-900">{$t('onboarding.wizard.title')}</h1>
-			<button onclick={onskip} class="text-sm text-gray-500 hover:text-gray-700">
+			<h1 class="text-2xl font-bold text-cocoa-800">{$t('onboarding.wizard.title')}</h1>
+			<button onclick={onskip} class="text-sm text-cocoa-500 hover:text-cocoa-700">
 				{$t('onboarding.wizard.skipForNow')}
 			</button>
 		</div>
@@ -55,7 +55,7 @@
 						<div
 							class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors {currentStep >= stepNumber
 								? 'bg-primary-600 text-white'
-								: 'bg-gray-200 text-gray-500'}"
+								: 'bg-gray-200 text-cocoa-500'}"
 						>
 							{#if currentStep > stepNumber}
 								<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -95,7 +95,7 @@
 		</div>
 
 		<!-- Step indicator text -->
-		<p class="text-center text-sm text-gray-500 mt-4">
+		<p class="text-center text-sm text-cocoa-500 mt-4">
 			{$t('onboarding.progress.step', { values: { current: currentStep, total: totalSteps } })}: {$t(`onboarding.wizard.steps.${stepKeys[currentStep - 1]}.description`)}
 		</p>
 	</div>

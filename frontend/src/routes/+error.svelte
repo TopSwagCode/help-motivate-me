@@ -123,7 +123,7 @@
 
 <div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-gray-50 flex items-center justify-center px-4">
 	<div class="max-w-lg w-full">
-		<div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 text-center">
+		<div class="bg-warm-paper rounded-2xl shadow-lg border border-primary-100 p-8 text-center">
 			<!-- Friendly Icon -->
 			<div class="mb-6">
 				{#if errorType === 'offline'}
@@ -155,25 +155,25 @@
 			</div>
 
 			<!-- Friendly Title -->
-			<h1 class="text-2xl font-bold text-gray-900 mb-3">
+			<h1 class="text-2xl font-bold text-cocoa-800 mb-3">
 				{$t(`errorPages.${errorType}.title`)}
 			</h1>
 
 			<!-- Friendly Message -->
-			<p class="text-gray-600 mb-2 text-lg">
+			<p class="text-cocoa-600 mb-2 text-lg">
 				{$t(`errorPages.${errorType}.message`)}
 			</p>
 
 			<!-- Helpful Suggestion -->
-			<p class="text-gray-500 mb-6">
+			<p class="text-cocoa-500 mb-6">
 				{$t(`errorPages.${errorType}.suggestion`)}
 			</p>
 
 			<!-- Auto-recovery indicator for recoverable errors -->
 			{#if isRecoverable}
-				<div class="mb-6 py-3 px-4 bg-gray-50 rounded-lg">
+				<div class="mb-6 py-3 px-4 bg-warm-cream rounded-2xl">
 					{#if isChecking}
-						<div class="flex items-center justify-center gap-2 text-sm text-gray-600">
+						<div class="flex items-center justify-center gap-2 text-sm text-cocoa-600">
 							<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
 								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
 								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -181,7 +181,7 @@
 							<span>{$t('errorPages.autoRecovery.checking')}</span>
 						</div>
 					{:else}
-						<p class="text-sm text-gray-500">
+						<p class="text-sm text-cocoa-500">
 							{$t('errorPages.autoRecovery.willRetry', { values: { seconds: secondsUntilRetry } })}
 						</p>
 					{/if}
@@ -203,7 +203,7 @@
 					</button>
 					<button
 						onclick={goBack}
-						class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 border border-gray-300 text-base font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+						class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 border border-primary-200 text-base font-medium rounded-xl text-cocoa-700 bg-warm-paper hover:bg-warm-cream transition-colors"
 					>
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -232,7 +232,7 @@
 					</button>
 					<button
 						onclick={goToToday}
-						class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 border border-gray-300 text-base font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+						class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 border border-primary-200 text-base font-medium rounded-xl text-cocoa-700 bg-warm-paper hover:bg-warm-cream transition-colors"
 					>
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -245,7 +245,7 @@
 
 		<!-- Help Link -->
 		<div class="mt-6 text-center">
-			<p class="text-sm text-gray-500 mb-2">
+			<p class="text-sm text-cocoa-500 mb-2">
 				{$t('errorPages.helpText')}
 			</p>
 			<a href="/faq" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">

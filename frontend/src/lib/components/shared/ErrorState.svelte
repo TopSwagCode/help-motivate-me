@@ -72,23 +72,23 @@
 	</div>
 
 	<!-- Title -->
-	<h3 class="font-semibold text-gray-900 mb-2 {classes.title}">
+	<h3 class="font-semibold text-cocoa-800 mb-2 {classes.title}">
 		{$t('errorState.title')}
 	</h3>
 
 	<!-- Message -->
-	<p class="text-gray-600 mb-1 {classes.message}">
+	<p class="text-cocoa-600 mb-1 {classes.message}">
 		{$t('errorState.message')}
 	</p>
 
 	<!-- Suggestion -->
-	<p class="text-gray-500 mb-5 max-w-md {classes.suggestion}">
+	<p class="text-cocoa-500 mb-5 max-w-md {classes.suggestion}">
 		{$t('errorState.suggestion')}
 	</p>
 
 	<!-- Technical error (smaller, for support) -->
 	{#if message}
-		<p class="text-xs text-gray-400 mb-4 font-mono bg-gray-50 px-3 py-1.5 rounded-md max-w-full overflow-x-auto">
+		<p class="text-xs text-gray-400 mb-4 font-mono bg-warm-cream px-3 py-1.5 rounded-md max-w-full overflow-x-auto">
 			{message}
 		</p>
 	{/if}

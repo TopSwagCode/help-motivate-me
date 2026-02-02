@@ -49,17 +49,17 @@
 <div class="min-h-screen bg-gradient-to-b from-primary-50 to-white">
 	<div class="max-w-2xl mx-auto px-4 py-12">
 		<div class="text-center mb-10">
-			<h1 class="text-3xl font-bold text-gray-900 mb-3">{$t('onboarding.language.title')}</h1>
-			<p class="text-gray-600">{$t('onboarding.language.subtitle')}</p>
+			<h1 class="text-3xl font-bold text-cocoa-800 mb-3">{$t('onboarding.language.title')}</h1>
+			<p class="text-cocoa-600">{$t('onboarding.language.subtitle')}</p>
 		</div>
 
 		<div class="grid gap-4 md:grid-cols-2 mb-8">
 			<!-- English Option -->
 			<button
 				onclick={() => selectLanguage('en')}
-				class="card p-6 text-left transition-all duration-200 cursor-pointer {selectedLocale === 'en'
+				class="card p-6 text-left transition-all duration-300 cursor-pointer {selectedLocale === 'en'
 					? 'border-primary-500 ring-2 ring-primary-200 bg-primary-50'
-					: 'hover:border-gray-300 hover:shadow-md'}"
+					: 'hover:border-primary-200 hover:shadow-md'}"
 			>
 				<div class="flex items-center gap-4">
 					<div
@@ -68,8 +68,8 @@
 						<span class="text-3xl">EN</span>
 					</div>
 					<div>
-						<h2 class="text-lg font-semibold text-gray-900">{$t('language.english')}</h2>
-						<p class="text-sm text-gray-500">English</p>
+						<h2 class="text-lg font-semibold text-cocoa-800">{$t('language.english')}</h2>
+						<p class="text-sm text-cocoa-500">English</p>
 					</div>
 					{#if selectedLocale === 'en'}
 						<div class="ml-auto">
@@ -94,9 +94,9 @@
 			<!-- Danish Option -->
 			<button
 				onclick={() => selectLanguage('da')}
-				class="card p-6 text-left transition-all duration-200 cursor-pointer {selectedLocale === 'da'
+				class="card p-6 text-left transition-all duration-300 cursor-pointer {selectedLocale === 'da'
 					? 'border-primary-500 ring-2 ring-primary-200 bg-primary-50'
-					: 'hover:border-gray-300 hover:shadow-md'}"
+					: 'hover:border-primary-200 hover:shadow-md'}"
 			>
 				<div class="flex items-center gap-4">
 					<div
@@ -105,8 +105,8 @@
 						<span class="text-3xl">DK</span>
 					</div>
 					<div>
-						<h2 class="text-lg font-semibold text-gray-900">{$t('language.danish')}</h2>
-						<p class="text-sm text-gray-500">Dansk</p>
+						<h2 class="text-lg font-semibold text-cocoa-800">{$t('language.danish')}</h2>
+						<p class="text-sm text-cocoa-500">Dansk</p>
 					</div>
 					{#if selectedLocale === 'da'}
 						<div class="ml-auto">

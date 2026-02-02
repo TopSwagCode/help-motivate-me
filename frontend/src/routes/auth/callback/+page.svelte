@@ -38,14 +38,14 @@
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
 				</svg>
 			</div>
-			<h2 class="text-xl font-semibold text-gray-900 mb-2">Authentication Error</h2>
-			<p class="text-gray-600 mb-6">{error}</p>
+			<h2 class="text-xl font-semibold text-cocoa-800 mb-2">Authentication Error</h2>
+			<p class="text-cocoa-600 mb-6">{error}</p>
 			<a href="/auth/login" class="btn-primary">Back to Login</a>
 		</div>
 	{:else}
 		<div class="text-center">
 			<div class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-			<p class="text-gray-600">Completing sign in...</p>
+			<p class="text-cocoa-600">Completing sign in...</p>
 		</div>
 	{/if}
 </div>

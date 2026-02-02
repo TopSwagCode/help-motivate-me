@@ -95,14 +95,14 @@
 			bind:value={localData.name}
 			onblur={() => { editingName = false; onchange?.(localData); }}
 			onkeydown={(e) => { if (e.key === 'Enter') { editingName = false; onchange?.(localData); } if (e.key === 'Escape') editingName = false; }}
-			class="w-full text-lg font-semibold text-gray-900 bg-white border border-amber-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-amber-400"
+			class="w-full text-lg font-semibold text-cocoa-800 bg-warm-paper border border-amber-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-amber-400"
 			autofocus
 		/>
 	{:else}
 		<button
 			type="button"
 			onclick={() => editingName = true}
-			class="text-lg font-semibold text-gray-900 hover:bg-amber-100 rounded px-1 -mx-1 transition-colors text-left w-full"
+			class="text-lg font-semibold text-cocoa-800 hover:bg-amber-100 rounded px-1 -mx-1 transition-colors text-left w-full"
 			title={$t('ai.preview.clickToEdit')}
 		>
 			{localData.name || $t('ai.preview.notSet')}
@@ -115,7 +115,7 @@
 			bind:value={localData.description}
 			onblur={() => { editingDescription = false; onchange?.(localData); }}
 			onkeydown={(e) => { if (e.key === 'Escape') editingDescription = false; }}
-			class="w-full text-gray-600 mt-1 text-sm bg-white border border-amber-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-amber-400 resize-none"
+			class="w-full text-cocoa-600 mt-1 text-sm bg-warm-paper border border-amber-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-amber-400 resize-none"
 			rows="2"
 			autofocus
 		></textarea>
@@ -123,7 +123,7 @@
 		<button
 			type="button"
 			onclick={() => editingDescription = true}
-			class="text-gray-600 mt-1 text-sm hover:bg-amber-100 rounded px-1 -mx-1 transition-colors text-left w-full {!localData.description ? 'italic text-gray-400' : ''}"
+			class="text-cocoa-600 mt-1 text-sm hover:bg-amber-100 rounded px-1 -mx-1 transition-colors text-left w-full {!localData.description ? 'italic text-gray-400' : ''}"
 			title={$t('ai.preview.clickToEdit')}
 		>
 			{localData.description || $t('ai.preview.addDescription')}
@@ -139,7 +139,7 @@
 				bind:value={localData.triggerCue}
 				onblur={() => { editingTrigger = false; onchange?.(localData); }}
 				onkeydown={(e) => { if (e.key === 'Enter') { editingTrigger = false; onchange?.(localData); } if (e.key === 'Escape') editingTrigger = false; }}
-				class="flex-1 italic bg-white border border-amber-300 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-amber-400 text-sm"
+				class="flex-1 italic bg-warm-paper border border-amber-300 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-amber-400 text-sm"
 				autofocus
 			/>
 		{:else}
@@ -172,7 +172,7 @@
 									value={habit.cueDescription}
 									onchange={(e) => updateHabit(index, 'cueDescription', e.currentTarget.value)}
 									onblur={() => { editingHabitIndex = null; onchange?.(localData); }}
-									class="w-full text-gray-500 bg-white border border-amber-300 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-amber-400 text-sm"
+									class="w-full text-cocoa-500 bg-warm-paper border border-amber-300 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-amber-400 text-sm"
 									placeholder="After I..."
 								/>
 								<div class="flex items-center gap-1">
@@ -182,7 +182,7 @@
 										value={habit.habitDescription}
 										onchange={(e) => updateHabit(index, 'habitDescription', e.currentTarget.value)}
 										onblur={() => { editingHabitIndex = null; onchange?.(localData); }}
-										class="flex-1 font-medium text-gray-900 bg-white border border-amber-300 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-amber-400 text-sm"
+										class="flex-1 font-medium text-cocoa-800 bg-warm-paper border border-amber-300 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-amber-400 text-sm"
 										placeholder="I will..."
 									/>
 								</div>
@@ -194,9 +194,9 @@
 								class="text-left hover:bg-amber-100 rounded px-1 -mx-1 transition-colors w-full"
 								title={$t('ai.preview.clickToEdit')}
 							>
-								<span class="text-gray-500">{habit.cueDescription}</span>
+								<span class="text-cocoa-500">{habit.cueDescription}</span>
 								<span class="mx-1 text-gray-400">→</span>
-								<span class="font-medium text-gray-900">{habit.habitDescription}</span>
+								<span class="font-medium text-cocoa-800">{habit.habitDescription}</span>
 							</button>
 						{/if}
 					</div>

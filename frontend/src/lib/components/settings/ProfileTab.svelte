@@ -92,17 +92,17 @@
 </script>
 
 <div>
-	<h2 class="text-lg font-semibold text-gray-900 mb-4">{$t('settings.profile.title')}</h2>
+	<h2 class="text-lg font-semibold text-cocoa-800 mb-4">{$t('settings.profile.title')}</h2>
 
 	<form onsubmit={handleSubmit} class="space-y-4 max-w-md">
 		{#if error}
-			<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+			<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm">
 				{error}
 			</div>
 		{/if}
 
 		{#if success}
-			<div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
+			<div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-2xl text-sm">
 				{success}
 			</div>
 		{/if}
@@ -115,7 +115,7 @@
 				type="text"
 				value={$auth.user?.username}
 				disabled
-				class="input bg-gray-50 text-gray-500 cursor-not-allowed"
+				class="input bg-warm-cream text-cocoa-500 cursor-not-allowed"
 			/>
 		</div>
 
@@ -126,7 +126,7 @@
 				type="email"
 				value={$auth.user?.email}
 				disabled
-				class="input bg-gray-50 text-gray-500 cursor-not-allowed"
+				class="input bg-warm-cream text-cocoa-500 cursor-not-allowed"
 			/>
 		</div>
 
@@ -149,12 +149,12 @@
 	</form>
 
 	<!-- Linked Accounts Section -->
-	<div class="mt-8 pt-6 border-t border-gray-200">
-		<h3 class="text-md font-medium text-gray-900 mb-3">{$t('settings.linkedAccounts.title')}</h3>
+	<div class="mt-8 pt-6 border-t border-primary-100">
+		<h3 class="text-md font-medium text-cocoa-800 mb-3">{$t('settings.linkedAccounts.title')}</h3>
 		{#if $auth.user?.linkedProviders.length}
 			<ul class="space-y-2">
 				{#each $auth.user.linkedProviders as provider}
-					<li class="flex items-center gap-2 text-sm text-gray-600">
+					<li class="flex items-center gap-2 text-sm text-cocoa-600">
 						{#if provider === 'GitHub'}
 							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
 								<path
@@ -167,14 +167,14 @@
 				{/each}
 			</ul>
 		{:else}
-			<p class="text-sm text-gray-500">{$t('settings.linkedAccounts.noAccounts')}</p>
+			<p class="text-sm text-cocoa-500">{$t('settings.linkedAccounts.noAccounts')}</p>
 		{/if}
 	</div>
 
 	<!-- Onboarding Section -->
-	<div class="mt-8 pt-6 border-t border-gray-200">
-		<h3 class="text-md font-medium text-gray-900 mb-2">{$t('settings.onboarding.title')}</h3>
-		<p class="text-sm text-gray-500 mb-3">
+	<div class="mt-8 pt-6 border-t border-primary-100">
+		<h3 class="text-md font-medium text-cocoa-800 mb-2">{$t('settings.onboarding.title')}</h3>
+		<p class="text-sm text-cocoa-500 mb-3">
 			{$t('settings.onboarding.description')}
 		</p>
 		<button
@@ -189,7 +189,7 @@
 	<!-- Danger Zone -->
 	<div class="mt-8 pt-6 border-t border-red-200">
 		<h3 class="text-md font-medium text-red-600 mb-2">{$t('settings.deleteAccount.title')}</h3>
-		<p class="text-sm text-gray-500 mb-3">
+		<p class="text-sm text-cocoa-500 mb-3">
 			{$t('settings.deleteAccount.description')}
 		</p>
 		<button
@@ -204,17 +204,17 @@
 <!-- Delete Account Modal -->
 {#if showDeleteModal}
 	<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-		<div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+		<div class="bg-warm-paper rounded-2xl shadow-xl max-w-md w-full p-6">
 			<h3 class="text-lg font-bold text-red-600 mb-4">{$t('settings.deleteAccount.modalTitle')}</h3>
 
-			<div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+			<div class="bg-red-50 border border-red-200 rounded-2xl p-4 mb-4">
 				<p class="text-sm text-red-700">
 					{$t('settings.deleteAccount.warning')}
 				</p>
 			</div>
 
 			{#if deleteError}
-				<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+				<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm mb-4">
 					{deleteError}
 				</div>
 			{/if}

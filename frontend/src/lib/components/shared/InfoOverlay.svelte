@@ -31,7 +31,7 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <div class="flex items-center gap-2 sm:gap-3">
-	<h1 class="text-xl sm:text-2xl font-bold text-gray-900">{title}</h1>
+	<h1 class="text-xl sm:text-2xl font-bold text-cocoa-800">{title}</h1>
 	<button
 		onclick={openOverlay}
 		class="flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700 font-medium transition-colors touch-manipulation"
@@ -61,11 +61,11 @@
 
 	<!-- Modal -->
 	<div class="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-6 md:p-8 overflow-y-auto pointer-events-none">
-		<div class="pointer-events-auto bg-white rounded-xl shadow-2xl max-w-2xl w-full my-8 animate-slide-up">
+		<div class="pointer-events-auto bg-warm-paper rounded-xl shadow-2xl max-w-2xl w-full my-8 animate-slide-up">
 			<!-- Header -->
-			<div class="flex items-start justify-between p-4 sm:p-6 border-b border-gray-200">
+			<div class="flex items-start justify-between p-4 sm:p-6 border-b border-primary-100">
 				<div class="flex items-center gap-3">
-					<div class="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center flex-shrink-0">
+					<div class="w-10 h-10 rounded-2xl bg-primary-100 flex items-center justify-center flex-shrink-0">
 						<svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path
 								stroke-linecap="round"
@@ -75,11 +75,11 @@
 							/>
 						</svg>
 					</div>
-					<h2 class="text-lg sm:text-xl font-semibold text-gray-900">{title}</h2>
+					<h2 class="text-lg sm:text-xl font-semibold text-cocoa-800">{title}</h2>
 				</div>
 				<button
 					onclick={closeOverlay}
-					class="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 transition-colors touch-manipulation"
+					class="text-gray-400 hover:text-cocoa-600 p-1 rounded-2xl hover:bg-primary-50 transition-colors touch-manipulation"
 					aria-label="Close"
 				>
 					<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,15 +95,15 @@
 
 			<!-- Content -->
 			<div class="p-4 sm:p-6">
-				<div class="prose prose-sm sm:prose max-w-none text-gray-700">
+				<div class="prose prose-sm sm:prose max-w-none text-cocoa-700">
 					<!-- Allow HTML in description for formatting -->
 					{@html description}
 				</div>
 
 				<!-- FAQ Link -->
 				{#if showFaqLink}
-					<div class="mt-6 pt-6 border-t border-gray-200">
-						<p class="text-sm text-gray-600 mb-3">
+					<div class="mt-6 pt-6 border-t border-primary-100">
+						<p class="text-sm text-cocoa-600 mb-3">
 							{$t('common.info.moreQuestions')}
 						</p>
 						<a

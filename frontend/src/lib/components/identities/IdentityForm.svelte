@@ -14,7 +14,7 @@
 
 	let name = $state('');
 	let description = $state('');
-	let color = $state('#6366f1');
+	let color = $state('#d4944c');
 	let icon = $state('');
 	let loading = $state(false);
 	let error = $state('');
@@ -23,7 +23,7 @@
 	$effect(() => {
 		name = identity?.name ?? '';
 		description = identity?.description ?? '';
-		color = identity?.color ?? '#6366f1';
+		color = identity?.color ?? '#d4944c';
 		icon = identity?.icon ?? '';
 	});
 
@@ -51,7 +51,7 @@
 
 <form onsubmit={handleSubmit} class="space-y-4">
 	{#if error}
-		<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+		<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm">
 			{error}
 		</div>
 	{/if}
@@ -67,7 +67,7 @@
 			placeholder={$t('identities.form.namePlaceholder')}
 			class="input"
 		/>
-		<p class="text-xs text-gray-500 mt-1">{$t('identities.form.nameHint')}</p>
+		<p class="text-xs text-cocoa-500 mt-1">{$t('identities.form.nameHint')}</p>
 	</div>
 
 	<div>

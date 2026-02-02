@@ -152,9 +152,9 @@
 		type="button"
 		onclick={toggleRecording}
 		disabled={disabled || isTranscribing}
-		class="relative p-3 rounded-full transition-all duration-200 {isRecording
+		class="relative p-3 rounded-full transition-all duration-300 {isRecording
 			? 'bg-red-500 text-white hover:bg-red-600'
-			: 'bg-gray-100 text-gray-600 hover:bg-gray-200'} disabled:opacity-50 disabled:cursor-not-allowed"
+			: 'bg-gray-100 text-cocoa-600 hover:bg-gray-200'} disabled:opacity-50 disabled:cursor-not-allowed"
 		title={isRecording ? 'Stop recording' : 'Start voice input'}
 	>
 		{#if isTranscribing}

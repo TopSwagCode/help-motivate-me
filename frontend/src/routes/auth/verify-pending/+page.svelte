@@ -38,9 +38,9 @@
 				</svg>
 			</div>
 
-			<h1 class="text-2xl font-bold text-gray-900 mb-2">{$t('auth.verifyPending.title')}</h1>
+			<h1 class="text-2xl font-bold text-cocoa-800 mb-2">{$t('auth.verifyPending.title')}</h1>
 
-			<p class="text-gray-600 mb-4">
+			<p class="text-cocoa-600 mb-4">
 				{$t('auth.verifyPending.description')}
 			</p>
 
@@ -51,13 +51,13 @@
 			{/if}
 
 			{#if error}
-				<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+				<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm mb-4">
 					{error}
 				</div>
 			{/if}
 
 			{#if resent}
-				<div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm mb-4">
+				<div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-2xl text-sm mb-4">
 					{$t('auth.verifyPending.resent')}
 				</div>
 			{/if}
@@ -77,7 +77,7 @@
 			</div>
 		</div>
 
-		<p class="mt-6 text-center text-sm text-gray-500">
+		<p class="mt-6 text-center text-sm text-cocoa-500">
 			{$t('auth.verifyPending.checkSpam')}
 		</p>
 	</div>

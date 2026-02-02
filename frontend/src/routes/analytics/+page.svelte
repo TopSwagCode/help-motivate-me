@@ -68,10 +68,10 @@
 	}
 </script>
 
-<div class="bg-gray-50">
+<div class="bg-warm-cream">
 	<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 		<!-- Page Header -->
-		<h1 class="text-2xl font-bold text-gray-900 mb-6">{$t('analytics.pageTitle')}</h1>
+		<h1 class="text-2xl font-bold text-cocoa-800 mb-6">{$t('analytics.pageTitle')}</h1>
 		{#if loading}
 			<div class="flex justify-center py-12">
 				<div class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full"></div>
@@ -84,15 +84,15 @@
 			<!-- Summary Cards -->
 			<div class="grid gap-4 sm:grid-cols-3 mb-8">
 				<div class="card p-4">
-					<p class="text-sm text-gray-500">{$t('analytics.summary.totalHabits')}</p>
-					<p class="text-2xl font-bold text-gray-900">{streakSummary?.totalHabits || 0}</p>
+					<p class="text-sm text-cocoa-500">{$t('analytics.summary.totalHabits')}</p>
+					<p class="text-2xl font-bold text-cocoa-800">{streakSummary?.totalHabits || 0}</p>
 				</div>
 				<div class="card p-4">
-					<p class="text-sm text-gray-500">{$t('analytics.summary.activeStreaks')}</p>
+					<p class="text-sm text-cocoa-500">{$t('analytics.summary.activeStreaks')}</p>
 					<p class="text-2xl font-bold text-green-600">{streakSummary?.activeStreaks || 0}</p>
 				</div>
 				<div class="card p-4">
-					<p class="text-sm text-gray-500">{$t('analytics.summary.longestStreak')}</p>
+					<p class="text-sm text-cocoa-500">{$t('analytics.summary.longestStreak')}</p>
 					<p class="text-2xl font-bold text-orange-600">{streakSummary?.longestActiveStreak || 0} {$t('analytics.streak.days')}</p>
 				</div>
 			</div>
@@ -100,12 +100,12 @@
 			<!-- Completion Rates -->
 			{#if completionRates}
 				<div class="card p-6 mb-8">
-					<h2 class="font-semibold text-gray-900 mb-4">{$t('analytics.rates.title')}</h2>
+					<h2 class="font-semibold text-cocoa-800 mb-4">{$t('analytics.rates.title')}</h2>
 					<div class="grid gap-6 sm:grid-cols-3">
 						<div>
 							<div class="flex items-center justify-between mb-2">
-								<span class="text-sm text-gray-600">{$t('analytics.rates.daily')}</span>
-								<span class="text-sm font-medium text-gray-900">{Math.round(completionRates.dailyRate)}%</span>
+								<span class="text-sm text-cocoa-600">{$t('analytics.rates.daily')}</span>
+								<span class="text-sm font-medium text-cocoa-800">{Math.round(completionRates.dailyRate)}%</span>
 							</div>
 							<div class="h-2 bg-gray-200 rounded-full overflow-hidden">
 								<div
@@ -116,8 +116,8 @@
 						</div>
 						<div>
 							<div class="flex items-center justify-between mb-2">
-								<span class="text-sm text-gray-600">{$t('analytics.rates.weekly')}</span>
-								<span class="text-sm font-medium text-gray-900">{Math.round(completionRates.weeklyRate)}%</span>
+								<span class="text-sm text-cocoa-600">{$t('analytics.rates.weekly')}</span>
+								<span class="text-sm font-medium text-cocoa-800">{Math.round(completionRates.weeklyRate)}%</span>
 							</div>
 							<div class="h-2 bg-gray-200 rounded-full overflow-hidden">
 								<div
@@ -128,8 +128,8 @@
 						</div>
 						<div>
 							<div class="flex items-center justify-between mb-2">
-								<span class="text-sm text-gray-600">{$t('analytics.rates.monthly')}</span>
-								<span class="text-sm font-medium text-gray-900">{Math.round(completionRates.monthlyRate)}%</span>
+								<span class="text-sm text-cocoa-600">{$t('analytics.rates.monthly')}</span>
+								<span class="text-sm font-medium text-cocoa-800">{Math.round(completionRates.monthlyRate)}%</span>
 							</div>
 							<div class="h-2 bg-gray-200 rounded-full overflow-hidden">
 								<div
@@ -139,7 +139,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm text-gray-500">
+					<div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm text-cocoa-500">
 						<span>{$t('analytics.rates.totalCompletions')}: {completionRates.totalCompletions}</span>
 						<span>{$t('analytics.rates.missedDays')}: {completionRates.missedDays}</span>
 					</div>
@@ -149,7 +149,7 @@
 			<!-- Heatmap -->
 			{#if heatmapData.length > 0}
 				<div class="card p-6 mb-8">
-					<h2 class="font-semibold text-gray-900 mb-4">{$t('analytics.heatmap.title')}</h2>
+					<h2 class="font-semibold text-cocoa-800 mb-4">{$t('analytics.heatmap.title')}</h2>
 					<div class="overflow-x-auto">
 						<div class="flex gap-1">
 							{#each getWeeksData() as week}
@@ -164,7 +164,7 @@
 							{/each}
 						</div>
 					</div>
-					<div class="flex items-center gap-2 mt-4 text-xs text-gray-500">
+					<div class="flex items-center gap-2 mt-4 text-xs text-cocoa-500">
 						<span>{$t('analytics.heatmap.less')}</span>
 						<div class="w-3 h-3 rounded-sm bg-gray-100"></div>
 						<div class="w-3 h-3 rounded-sm bg-green-200"></div>
@@ -179,13 +179,13 @@
 			<!-- Streak Details -->
 			{#if streakSummary && streakSummary.streaks.length > 0}
 				<div class="card p-6">
-					<h2 class="font-semibold text-gray-900 mb-4">{$t('analytics.streaks.title')}</h2>
+					<h2 class="font-semibold text-cocoa-800 mb-4">{$t('analytics.streaks.title')}</h2>
 					<div class="space-y-3">
 						{#each streakSummary.streaks as streak (streak.taskId)}
-							<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+							<div class="flex items-center justify-between p-3 bg-warm-cream rounded-2xl">
 								<div>
-									<p class="font-medium text-gray-900">{streak.taskTitle}</p>
-									<p class="text-xs text-gray-500">
+									<p class="font-medium text-cocoa-800">{streak.taskTitle}</p>
+									<p class="text-xs text-cocoa-500">
 										{$t('analytics.streaks.longest')}: {streak.longestStreak} {$t('analytics.streak.days')}
 										{#if streak.lastCompletedDate}
 											<span class="mx-1">•</span>
@@ -207,8 +207,8 @@
 					<div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
 						<span class="text-3xl">📊</span>
 					</div>
-					<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('analytics.empty.title')}</h3>
-					<p class="text-gray-500 mb-6">{$t('analytics.empty.description')}</p>
+					<h3 class="text-lg font-medium text-cocoa-800 mb-2">{$t('analytics.empty.title')}</h3>
+					<p class="text-cocoa-500 mb-6">{$t('analytics.empty.description')}</p>
 					<a href="/dashboard" class="btn-primary inline-block">{$t('analytics.empty.goToDashboard')}</a>
 				</div>
 			{/if}

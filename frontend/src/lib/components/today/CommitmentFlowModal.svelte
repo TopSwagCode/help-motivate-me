@@ -163,7 +163,7 @@
 	>
 		<!-- Modal -->
 		<div
-			class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col"
+			class="bg-warm-paper rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col"
 			onclick={(e) => e.stopPropagation()}
 		>
 			<!-- Header -->
@@ -173,14 +173,14 @@
 						{#if step !== 'identity'}
 							<button
 								onclick={goBack}
-								class="p-1 -ml-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
+								class="p-1 -ml-1 text-gray-400 hover:text-cocoa-600 rounded-2xl hover:bg-primary-50 transition-colors"
 							>
 								<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
 								</svg>
 							</button>
 						{/if}
-						<h2 class="text-lg font-semibold text-gray-900">
+						<h2 class="text-lg font-semibold text-cocoa-800">
 							{#if step === 'identity'}
 								{$t('dailyCommitment.modal.titleIdentity')}
 							{:else if step === 'action'}
@@ -192,7 +192,7 @@
 					</div>
 					<button
 						onclick={onClose}
-						class="p-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
+						class="p-1 text-gray-400 hover:text-cocoa-600 rounded-2xl hover:bg-primary-50 transition-colors"
 					>
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -204,14 +204,14 @@
 			<!-- Content -->
 			<div class="flex-1 overflow-y-auto p-5">
 				{#if error}
-					<div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+					<div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-2xl text-sm text-red-700">
 						{error}
 					</div>
 				{/if}
 
 				{#if step === 'identity'}
 					<!-- Step 1: Identity Selection -->
-					<p class="text-sm text-gray-600 mb-4">
+					<p class="text-sm text-cocoa-600 mb-4">
 						{$t('dailyCommitment.modal.identityPrompt')}
 					</p>
 
@@ -230,18 +230,18 @@
 									class="w-full p-3 rounded-xl border-2 text-left transition-all hover:scale-[1.01] active:scale-[0.99]
 										{selectedIdentity?.id === identity.id
 											? 'border-primary-500 bg-primary-50'
-											: 'border-gray-200 hover:border-gray-300 bg-white'}"
+											: 'border-primary-100 hover:border-primary-200 bg-warm-paper'}"
 								>
 									<div class="flex items-center gap-3">
 										<div
-											class="w-10 h-10 rounded-lg flex items-center justify-center"
-											style="background-color: {identity.color || '#6366f1'}20"
+											class="w-10 h-10 rounded-2xl flex items-center justify-center"
+											style="background-color: {identity.color || '#d4944c'}20"
 										>
 											<span class="text-lg">{identity.icon || '🎯'}</span>
 										</div>
 										<div class="flex-1 min-w-0">
 											<div class="flex items-center gap-2">
-												<span class="font-medium text-gray-900">{identity.name}</span>
+												<span class="font-medium text-cocoa-800">{identity.name}</span>
 												{#if identity.isRecommended}
 													<span class="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700">
 														{$t('dailyCommitment.modal.recommended')}
@@ -252,10 +252,10 @@
 												<div class="flex-1 h-1.5 bg-gray-100 rounded-full">
 													<div
 														class="h-1.5 rounded-full transition-all"
-														style="width: {identity.score}%; background-color: {identity.color || '#6366f1'}"
+														style="width: {identity.score}%; background-color: {identity.color || '#d4944c'}"
 													></div>
 												</div>
-												<span class="text-xs font-medium text-gray-500">{identity.score}</span>
+												<span class="text-xs font-medium text-cocoa-500">{identity.score}</span>
 											</div>
 										</div>
 										{#if selectedIdentity?.id === identity.id}
@@ -271,10 +271,10 @@
 
 				{:else if step === 'action'}
 					<!-- Step 2: Action Input -->
-					<p class="text-sm text-gray-600 mb-2">
+					<p class="text-sm text-cocoa-600 mb-2">
 						{$t('dailyCommitment.modal.actionPrompt', { values: { identity: selectedIdentity?.name } })}
 					</p>
-					<p class="text-xs text-gray-500 mb-4 italic">
+					<p class="text-xs text-cocoa-500 mb-4 italic">
 						💡 {$t('dailyCommitment.modal.actionHint')}
 					</p>
 
@@ -289,23 +289,23 @@
 						<!-- Suggestions -->
 						{#if suggestions.length > 0}
 							<div class="mb-4">
-								<p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+								<p class="text-xs font-medium text-cocoa-500 uppercase tracking-wide mb-2">
 									{$t('dailyCommitment.modal.suggestions')}
 								</p>
 								<div class="space-y-2">
 									{#each suggestions as suggestion, index (index)}
 										<button
 											onclick={() => selectSuggestion(suggestion)}
-											class="w-full p-3 rounded-lg border text-left transition-all
+											class="w-full p-3 rounded-2xl border text-left transition-all
 												{selectedSuggestion === suggestion
 													? 'border-primary-500 bg-primary-50'
-													: 'border-gray-200 hover:border-gray-300 bg-white'}"
+													: 'border-primary-100 hover:border-primary-200 bg-warm-paper'}"
 										>
 											<div class="flex items-center gap-2">
 												<span class="text-sm">
 													{suggestion.type === 'habit' ? '🔗' : '📋'}
 												</span>
-												<span class="text-sm text-gray-900">{suggestion.description}</span>
+												<span class="text-sm text-cocoa-800">{suggestion.description}</span>
 											</div>
 										</button>
 									{/each}
@@ -315,7 +315,7 @@
 
 						<!-- Custom input -->
 						<div>
-							<p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+							<p class="text-xs font-medium text-cocoa-500 uppercase tracking-wide mb-2">
 								{suggestions.length > 0 ? $t('dailyCommitment.modal.orCustom') : $t('dailyCommitment.modal.yourAction')}
 							</p>
 							<textarea
@@ -324,7 +324,7 @@
 								placeholder={$t('dailyCommitment.modal.customPlaceholder')}
 								rows="3"
 								maxlength="500"
-								class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none text-sm"
+								class="w-full px-3 py-2 border border-primary-100 rounded-2xl focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none text-sm"
 							></textarea>
 							<p class="text-xs text-gray-400 mt-1 text-right">{customAction.length}/500</p>
 						</div>
@@ -335,17 +335,17 @@
 					<div class="text-center py-4">
 						<div
 							class="w-16 h-16 mx-auto mb-4 rounded-xl flex items-center justify-center"
-							style="background-color: {selectedIdentity?.color || '#6366f1'}20"
+							style="background-color: {selectedIdentity?.color || '#d4944c'}20"
 						>
 							<span class="text-3xl">{selectedIdentity?.icon || '🎯'}</span>
 						</div>
-						<p class="text-sm text-gray-600 mb-2">
+						<p class="text-sm text-cocoa-600 mb-2">
 							{$t('dailyCommitment.modal.confirmPrompt')}
 						</p>
-						<p class="text-lg font-medium text-gray-900 mb-1">
+						<p class="text-lg font-medium text-cocoa-800 mb-1">
 							"{selectedSuggestion?.description || customAction.trim()}"
 						</p>
-						<p class="text-sm" style="color: {selectedIdentity?.color || '#6366f1'}">
+						<p class="text-sm" style="color: {selectedIdentity?.color || '#d4944c'}">
 							{$t('dailyCommitment.modal.asA', { values: { identity: selectedIdentity?.name } })}
 						</p>
 					</div>
@@ -356,10 +356,10 @@
 						<div class="w-20 h-20 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center animate-bounce">
 							<span class="text-4xl">🎉</span>
 						</div>
-						<h3 class="text-xl font-semibold text-gray-900 mb-2">
+						<h3 class="text-xl font-semibold text-cocoa-800 mb-2">
 							{$t('dailyCommitment.modal.successTitle')}
 						</h3>
-						<p class="text-gray-600">
+						<p class="text-cocoa-600">
 							{$t('dailyCommitment.reinforcement', { values: { identity: selectedIdentity?.name } })}
 						</p>
 					</div>
@@ -368,12 +368,12 @@
 
 			<!-- Footer -->
 			{#if step !== 'success'}
-				<div class="px-5 py-4 border-t border-gray-100 bg-gray-50">
+				<div class="px-5 py-4 border-t border-gray-100 bg-warm-cream">
 					{#if step === 'identity'}
 						<button
 							onclick={goToActionStep}
 							disabled={!selectedIdentity || isLoading}
-							class="w-full py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+							class="w-full py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-2xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 						>
 							{$t('dailyCommitment.modal.continueButton')}
 						</button>
@@ -381,7 +381,7 @@
 						<button
 							onclick={goToConfirmStep}
 							disabled={!selectedSuggestion && !customAction.trim()}
-							class="w-full py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+							class="w-full py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-2xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 						>
 							{$t('dailyCommitment.modal.continueButton')}
 						</button>
@@ -389,7 +389,7 @@
 						<button
 							onclick={createCommitment}
 							disabled={isLoading}
-							class="w-full py-2.5 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+							class="w-full py-2.5 bg-green-500 hover:bg-green-600 text-white font-medium rounded-2xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
 						>
 							{#if isLoading}
 								<svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">

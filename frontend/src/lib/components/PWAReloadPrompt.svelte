@@ -78,13 +78,13 @@
 </script>
 
 {#if needRefresh}
-	<div class="fixed bottom-20 left-4 right-4 sm:left-auto sm:right-4 sm:bottom-20 z-[100] rounded-lg bg-indigo-600 px-4 py-3 text-white shadow-lg">
+	<div class="fixed bottom-20 left-4 right-4 sm:left-auto sm:right-4 sm:bottom-20 z-[100] rounded-2xl bg-indigo-600 px-4 py-3 text-white shadow-lg">
 		<div class="flex items-center justify-between gap-4">
 			<span class="font-medium">New version available!</span>
 			<div class="flex items-center gap-2">
 				<button
 					onclick={handleUpdate}
-					class="rounded-lg bg-white px-4 py-2 font-semibold text-indigo-600 hover:bg-indigo-50 active:bg-indigo-100 touch-manipulation min-h-[44px] min-w-[80px]"
+					class="rounded-2xl bg-warm-paper px-4 py-2 font-semibold text-indigo-600 hover:bg-indigo-50 active:bg-indigo-100 touch-manipulation min-h-[44px] min-w-[80px]"
 				>
 					Update
 				</button>

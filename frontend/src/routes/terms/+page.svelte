@@ -217,15 +217,15 @@ Thank you for using Help Motivate Me. We're committed to helping you achieve you
 
 <div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
 	<!-- Header -->
-	<div class="bg-white shadow-sm border-b">
+	<div class="bg-warm-paper shadow-sm border-b">
 		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 			<div class="flex items-center justify-between">
 				<div>
 					<a href="/" class="text-primary-600 hover:text-primary-700 text-sm font-medium mb-2 inline-block">
 						&larr; Back to Home
 					</a>
-					<h1 class="text-3xl font-bold text-gray-900">Terms of Service</h1>
-					<p class="mt-2 text-gray-600">
+					<h1 class="text-3xl font-bold text-cocoa-800">Terms of Service</h1>
+					<p class="mt-2 text-cocoa-600">
 						Your rights and responsibilities when using our service
 					</p>
 				</div>
@@ -256,16 +256,16 @@ Thank you for using Help Motivate Me. We're committed to helping you achieve you
 	<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
 		<div class="space-y-4">
 			{#each sections as section}
-				<div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+				<div class="bg-warm-paper rounded-2xl shadow-sm border border-primary-100 overflow-hidden">
 					<button
 						onclick={() => toggleSection(section.id)}
-						class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+						class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-warm-cream transition-colors"
 					>
-						<h2 class="text-lg font-semibold text-gray-900">
+						<h2 class="text-lg font-semibold text-cocoa-800">
 							{section.title}
 						</h2>
 						<svg
-							class="w-5 h-5 text-gray-500 transform transition-transform {openSection === section.id ? 'rotate-180' : ''}"
+							class="w-5 h-5 text-cocoa-500 transform transition-transform {openSection === section.id ? 'rotate-180' : ''}"
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
@@ -280,8 +280,8 @@ Thank you for using Help Motivate Me. We're committed to helping you achieve you
 					</button>
 
 					{#if openSection === section.id}
-						<div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
-							<div class="prose prose-sm max-w-none text-gray-700">
+						<div class="px-6 py-4 border-t border-gray-100 bg-warm-cream">
+							<div class="prose prose-sm max-w-none text-cocoa-700">
 								{#each section.content.split('\n\n') as paragraph}
 									<p class="mb-4 last:mb-0 whitespace-pre-line">{paragraph}</p>
 								{/each}

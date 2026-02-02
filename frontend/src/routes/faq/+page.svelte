@@ -96,18 +96,18 @@
 
 <div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
 	<!-- Header -->
-	<div class="bg-white shadow-sm border-b">
+	<div class="bg-warm-paper shadow-sm border-b">
 		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 			<div class="flex items-center justify-between">
 				<div>
-					<h1 class="text-3xl font-bold text-gray-900">{$t('faq.title')}</h1>
-					<p class="mt-2 text-gray-600">
+					<h1 class="text-3xl font-bold text-cocoa-800">{$t('faq.title')}</h1>
+					<p class="mt-2 text-cocoa-600">
 						{$t('faq.subtitle')}
 					</p>
 				</div>
 				<a
 					href="/auth/login"
-					class="hidden sm:inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
+					class="hidden sm:inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-2xl text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
 				>
 					{$t('faq.getStarted')}
 				</a>
@@ -119,16 +119,16 @@
 	<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 		<div class="space-y-4">
 			{#each faqSections as section}
-				<div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+				<div class="bg-warm-paper rounded-2xl shadow-sm border border-primary-100 overflow-hidden">
 					<button
 						on:click={() => toggleSection(section.id)}
-						class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+						class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-warm-cream transition-colors"
 					>
-						<h2 class="text-lg font-semibold text-gray-900">
+						<h2 class="text-lg font-semibold text-cocoa-800">
 							{$t(section.titleKey)}
 						</h2>
 						<svg
-							class="w-5 h-5 text-gray-500 transform transition-transform {openSection ===
+							class="w-5 h-5 text-cocoa-500 transform transition-transform {openSection ===
 							section.id
 								? 'rotate-180'
 								: ''}"
@@ -146,8 +146,8 @@
 					</button>
 
 					{#if openSection === section.id}
-						<div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
-							<div class="prose prose-sm max-w-none text-gray-700">
+						<div class="px-6 py-4 border-t border-gray-100 bg-warm-cream">
+							<div class="prose prose-sm max-w-none text-cocoa-700">
 								{#each $t(section.contentKey).split('\n\n') as paragraph}
 									<p class="mb-4 last:mb-0 whitespace-pre-line">{paragraph}</p>
 								{/each}
@@ -167,13 +167,13 @@
 			<div class="flex flex-col sm:flex-row gap-4 justify-center">
 				<a
 					href="/auth/register"
-					class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-indigo-600 bg-white hover:bg-gray-50 transition-colors"
+					class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-2xl text-indigo-600 bg-warm-paper hover:bg-warm-cream transition-colors"
 				>
 					{$t('faq.cta.createAccount')}
 				</a>
 				<a
 					href="/auth/login"
-					class="inline-flex items-center justify-center px-6 py-3 border-2 border-white text-base font-medium rounded-lg text-white hover:bg-white hover:text-indigo-600 transition-colors"
+					class="inline-flex items-center justify-center px-6 py-3 border-2 border-white text-base font-medium rounded-2xl text-white hover:bg-warm-paper hover:text-indigo-600 transition-colors"
 				>
 					{$t('faq.cta.signIn')}
 				</a>
@@ -181,7 +181,7 @@
 		</div>
 
 		<!-- Footer Note -->
-		<div class="mt-8 text-center text-sm text-gray-500">
+		<div class="mt-8 text-center text-sm text-cocoa-500">
 			<p>
 				{$t('faq.footer.stillHaveQuestions')} <a href="/settings" class="text-indigo-600 hover:text-indigo-700"
 					>{$t('faq.footer.contactSupport')}</a

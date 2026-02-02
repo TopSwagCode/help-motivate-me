@@ -36,10 +36,10 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <div class="flex items-center gap-2 sm:gap-3">
-	<h1 class="text-xl sm:text-2xl font-bold text-gray-900">{title}</h1>
+	<h1 class="text-xl sm:text-2xl font-bold text-cocoa-800">{title}</h1>
 	<button
 		onclick={openOverlay}
-		class="group relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 text-primary-500 hover:text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-full transition-all duration-200 touch-manipulation hover:scale-110 active:scale-95 shadow-sm hover:shadow-md"
+		class="group relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 text-primary-500 hover:text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-full transition-all duration-300 touch-manipulation hover:scale-110 active:scale-95 shadow-sm hover:shadow-md"
 		title={get(t)('common.info.whatIsThis')}
 		aria-label={get(t)('common.info.whatIsThis')}
 	>
@@ -70,7 +70,7 @@
 	>
 		<!-- Modal -->
 		<div
-			class="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-2xl max-h-[92vh] overflow-hidden flex flex-col animate-slide-up"
+			class="bg-warm-paper rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-2xl max-h-[92vh] overflow-hidden flex flex-col animate-slide-up"
 		>
 			<!-- Decorative header bar -->
 			<div class="h-1.5 bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600"></div>
@@ -91,15 +91,15 @@
 									/>
 								</svg>
 							</div>
-							<h2 class="text-xl sm:text-2xl font-bold text-gray-900">{title}</h2>
+							<h2 class="text-xl sm:text-2xl font-bold text-cocoa-800">{title}</h2>
 						</div>
-						<p class="text-sm text-gray-600 ml-13 sm:ml-15">
+						<p class="text-sm text-cocoa-600 ml-13 sm:ml-15">
 							{$t('common.info.learnMore')}
 						</p>
 					</div>
 					<button
 						onclick={closeOverlay}
-						class="flex-shrink-0 p-2 text-gray-400 hover:text-gray-600 hover:bg-white/80 rounded-xl transition-all duration-200 touch-manipulation hover:scale-110 active:scale-95"
+						class="flex-shrink-0 p-2 text-gray-400 hover:text-cocoa-600 hover:bg-warm-paper/80 rounded-xl transition-all duration-300 touch-manipulation hover:scale-110 active:scale-95"
 						aria-label={get(t)('common.close')}
 					>
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -117,7 +117,7 @@
 			<!-- Content -->
 			<div class="flex-1 overflow-y-auto px-6 sm:px-8 py-6 sm:py-8">
 				<!-- Main description with enhanced styling -->
-				<div class="prose prose-sm sm:prose max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-strong:text-primary-700 prose-strong:font-semibold prose-ul:space-y-2 prose-li:text-gray-700">
+				<div class="prose prose-sm sm:prose max-w-none prose-headings:text-cocoa-800 prose-p:text-cocoa-700 prose-p:leading-relaxed prose-strong:text-primary-700 prose-strong:font-semibold prose-ul:space-y-2 prose-li:text-cocoa-700">
 					{@html description}
 				</div>
 
@@ -125,7 +125,7 @@
 					<!-- FAQ Link Section with card style -->
 					<div class="mt-8 p-5 bg-gradient-to-br from-primary-50 to-blue-50 border border-primary-100 rounded-2xl">
 						<div class="flex items-start gap-4">
-							<div class="flex-shrink-0 w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center">
+							<div class="flex-shrink-0 w-10 h-10 bg-warm-paper rounded-xl shadow-sm flex items-center justify-center">
 								<svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path
 										stroke-linecap="round"
@@ -136,7 +136,7 @@
 								</svg>
 							</div>
 							<div class="flex-1 min-w-0">
-								<p class="text-sm font-medium text-gray-900 mb-2">
+								<p class="text-sm font-medium text-cocoa-800 mb-2">
 									{$t('common.info.moreQuestions')}
 								</p>
 								<a
@@ -160,10 +160,10 @@
 			</div>
 
 			<!-- Footer -->
-			<div class="sticky bottom-0 bg-white px-6 sm:px-8 py-4 sm:py-5 border-t border-gray-100 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+			<div class="sticky bottom-0 bg-warm-paper px-6 sm:px-8 py-4 sm:py-5 border-t border-gray-100 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
 				<button
 					onclick={closeOverlay}
-					class="w-full btn-primary justify-center font-semibold shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-200"
+					class="w-full btn-primary justify-center font-semibold shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300"
 				>
 					<span>{$t('common.gotIt')}</span>
 					<svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

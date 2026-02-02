@@ -100,8 +100,8 @@
 	<div class="max-w-md w-full">
 		<div class="text-center mb-8">
 			<a href="/" class="text-2xl font-bold text-primary-600">Help Motivate Me</a>
-			<h1 class="mt-6 text-3xl font-bold text-gray-900">Sign in to your account</h1>
-			<p class="mt-2 text-gray-600">
+			<h1 class="mt-6 text-3xl font-bold text-cocoa-800">Sign in to your account</h1>
+			<p class="mt-2 text-cocoa-600">
 				Or
 				<a href="/auth/register" class="text-primary-600 hover:text-primary-500 font-medium">create a new account</a>
 			</p>
@@ -109,7 +109,7 @@
 
 		<div class="card p-8">
 			{#if error}
-				<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+				<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm mb-4">
 					{error}
 				</div>
 			{/if}
@@ -117,7 +117,7 @@
 			{#if loading && $page.url.searchParams.get('token')}
 				<div class="text-center py-8">
 					<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
-					<p class="text-gray-600">Signing you in...</p>
+					<p class="text-cocoa-600">Signing you in...</p>
 				</div>
 			{:else if emailLinkSent}
 				<div class="text-center py-8">
@@ -126,11 +126,11 @@
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
 						</svg>
 					</div>
-					<h2 class="text-xl font-semibold text-gray-900 mb-2">Check your email</h2>
-					<p class="text-gray-600 mb-4">
+					<h2 class="text-xl font-semibold text-cocoa-800 mb-2">Check your email</h2>
+					<p class="text-cocoa-600 mb-4">
 						We sent a login link to <strong>{email}</strong>
 					</p>
-					<p class="text-sm text-gray-500">
+					<p class="text-sm text-cocoa-500">
 						The link will expire in 24 hours.
 					</p>
 					<button
@@ -163,7 +163,7 @@
 
 				<button
 					onclick={() => showEmailLogin = false}
-					class="mt-4 w-full text-center text-sm text-gray-500 hover:text-gray-700"
+					class="mt-4 w-full text-center text-sm text-cocoa-500 hover:text-cocoa-700"
 				>
 					Back to other login options
 				</button>
@@ -213,10 +213,10 @@
 
 				<div class="relative my-6">
 					<div class="absolute inset-0 flex items-center">
-						<div class="w-full border-t border-gray-300"></div>
+						<div class="w-full border-t border-primary-200"></div>
 					</div>
 					<div class="relative flex justify-center text-sm">
-						<span class="px-2 bg-white text-gray-500">Or sign in with password</span>
+						<span class="px-2 bg-warm-paper text-cocoa-500">Or sign in with password</span>
 					</div>
 				</div>
 
@@ -253,7 +253,7 @@
 			{/if}
 		</div>
 
-		<div class="mt-6 text-center text-sm text-gray-500">
+		<div class="mt-6 text-center text-sm text-cocoa-500">
 			<p>
 				Need help? Check out our <a href="/faq" class="text-primary-600 hover:text-primary-500 font-medium">FAQ</a>
 			</p>

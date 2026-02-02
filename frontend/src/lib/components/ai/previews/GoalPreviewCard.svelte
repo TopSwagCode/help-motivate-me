@@ -91,14 +91,14 @@
 			bind:value={localData.title}
 			onblur={() => { editingTitle = false; onchange?.(localData); }}
 			onkeydown={(e) => { if (e.key === 'Enter') { editingTitle = false; onchange?.(localData); } if (e.key === 'Escape') editingTitle = false; }}
-			class="w-full text-lg font-semibold text-gray-900 bg-white border border-green-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-green-400"
+			class="w-full text-lg font-semibold text-cocoa-800 bg-warm-paper border border-green-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-green-400"
 			autofocus
 		/>
 	{:else}
 		<button
 			type="button"
 			onclick={() => editingTitle = true}
-			class="text-lg font-semibold text-gray-900 hover:bg-green-100 rounded px-1 -mx-1 transition-colors text-left w-full"
+			class="text-lg font-semibold text-cocoa-800 hover:bg-green-100 rounded px-1 -mx-1 transition-colors text-left w-full"
 			title={$t('ai.preview.clickToEdit')}
 		>
 			{localData.title || $t('ai.preview.notSet')}
@@ -111,7 +111,7 @@
 			bind:value={localData.description}
 			onblur={() => { editingDescription = false; onchange?.(localData); }}
 			onkeydown={(e) => { if (e.key === 'Escape') editingDescription = false; }}
-			class="w-full text-gray-600 mt-1 text-sm bg-white border border-green-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-green-400 resize-none"
+			class="w-full text-cocoa-600 mt-1 text-sm bg-warm-paper border border-green-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-green-400 resize-none"
 			rows="2"
 			autofocus
 		></textarea>
@@ -119,7 +119,7 @@
 		<button
 			type="button"
 			onclick={() => editingDescription = true}
-			class="text-gray-600 mt-1 text-sm hover:bg-green-100 rounded px-1 -mx-1 transition-colors text-left w-full {!localData.description ? 'italic text-gray-400' : ''}"
+			class="text-cocoa-600 mt-1 text-sm hover:bg-green-100 rounded px-1 -mx-1 transition-colors text-left w-full {!localData.description ? 'italic text-gray-400' : ''}"
 			title={$t('ai.preview.clickToEdit')}
 		>
 			{localData.description || $t('ai.preview.addDescription')}

@@ -79,8 +79,8 @@
 		<div class="card p-6">
 			<div class="flex items-center justify-between">
 				<div>
-					<p class="text-sm text-gray-500">{$t('admin.stats.totalUsers')}</p>
-					<p class="text-2xl font-bold text-gray-900">{stats.totalUsers}</p>
+					<p class="text-sm text-cocoa-500">{$t('admin.stats.totalUsers')}</p>
+					<p class="text-2xl font-bold text-cocoa-800">{stats.totalUsers}</p>
 				</div>
 				<div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
 					<svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,7 +88,7 @@
 					</svg>
 				</div>
 			</div>
-			<p class="text-sm text-gray-500 mt-2">
+			<p class="text-sm text-cocoa-500 mt-2">
 				{stats.activeUsers} {$t('admin.stats.activeUsers')}
 			</p>
 		</div>
@@ -97,19 +97,19 @@
 		<div class="card p-6">
 			<div class="flex items-center justify-between">
 				<div>
-					<p class="text-sm text-gray-500">{$t('admin.stats.membershipTiers')}</p>
+					<p class="text-sm text-cocoa-500">{$t('admin.stats.membershipTiers')}</p>
 					<div class="flex gap-4 mt-2">
 						<div class="text-center">
-							<p class="text-xl font-bold text-gray-900">{stats.membershipStats.freeUsers}</p>
-							<p class="text-xs text-gray-500">{$t('admin.tiers.free')}</p>
+							<p class="text-xl font-bold text-cocoa-800">{stats.membershipStats.freeUsers}</p>
+							<p class="text-xs text-cocoa-500">{$t('admin.tiers.free')}</p>
 						</div>
 						<div class="text-center">
 							<p class="text-xl font-bold text-blue-600">{stats.membershipStats.plusUsers}</p>
-							<p class="text-xs text-gray-500">{$t('admin.tiers.plus')}</p>
+							<p class="text-xs text-cocoa-500">{$t('admin.tiers.plus')}</p>
 						</div>
 						<div class="text-center">
 							<p class="text-xl font-bold text-purple-600">{stats.membershipStats.proUsers}</p>
-							<p class="text-xs text-gray-500">{$t('admin.tiers.pro')}</p>
+							<p class="text-xs text-cocoa-500">{$t('admin.tiers.pro')}</p>
 						</div>
 					</div>
 				</div>
@@ -125,8 +125,8 @@
 		<div class="card p-6">
 			<div class="flex items-center justify-between">
 				<div>
-					<p class="text-sm text-gray-500">{$t('admin.stats.usersLoggedInToday')}</p>
-					<p class="text-2xl font-bold text-gray-900">{stats.usersLoggedInToday}</p>
+					<p class="text-sm text-cocoa-500">{$t('admin.stats.usersLoggedInToday')}</p>
+					<p class="text-2xl font-bold text-cocoa-800">{stats.usersLoggedInToday}</p>
 				</div>
 				<div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
 					<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -134,7 +134,7 @@
 					</svg>
 				</div>
 			</div>
-			<p class="text-sm text-gray-500 mt-2">{$t('admin.stats.activeToday')}</p>
+			<p class="text-sm text-cocoa-500 mt-2">{$t('admin.stats.activeToday')}</p>
 		</div>
 	</div>
 
@@ -144,8 +144,8 @@
 		<div class="card p-6">
 			<div class="flex items-center justify-between">
 				<div>
-					<p class="text-sm text-gray-500">{$t('admin.stats.totalTasksCreated')}</p>
-					<p class="text-2xl font-bold text-gray-900">{stats.taskTotals.totalTasksCreated}</p>
+					<p class="text-sm text-cocoa-500">{$t('admin.stats.totalTasksCreated')}</p>
+					<p class="text-2xl font-bold text-cocoa-800">{stats.taskTotals.totalTasksCreated}</p>
 				</div>
 				<div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
 					<svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,14 +153,14 @@
 					</svg>
 				</div>
 			</div>
-			<p class="text-sm text-gray-500 mt-2">{$t('admin.stats.allTime')}</p>
+			<p class="text-sm text-cocoa-500 mt-2">{$t('admin.stats.allTime')}</p>
 		</div>
 
 		<!-- Total Tasks Completed -->
 		<div class="card p-6">
 			<div class="flex items-center justify-between">
 				<div>
-					<p class="text-sm text-gray-500">{$t('admin.stats.totalTasksCompleted')}</p>
+					<p class="text-sm text-cocoa-500">{$t('admin.stats.totalTasksCompleted')}</p>
 					<p class="text-2xl font-bold text-green-600">{stats.taskTotals.totalTasksCompleted}</p>
 				</div>
 				<div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
@@ -169,21 +169,21 @@
 					</svg>
 				</div>
 			</div>
-			<p class="text-sm text-gray-500 mt-2">{$t('admin.stats.allTime')}</p>
+			<p class="text-sm text-cocoa-500 mt-2">{$t('admin.stats.allTime')}</p>
 		</div>
 	</div>
 
 	<!-- Row 3: Daily Stats with Date Picker -->
 	<div class="card p-6">
 		<div class="flex items-center justify-between mb-6">
-			<h3 class="text-lg font-semibold text-gray-900">{$t('admin.stats.daily.title')}</h3>
+			<h3 class="text-lg font-semibold text-cocoa-800">{$t('admin.stats.daily.title')}</h3>
 			<div class="flex items-center gap-2">
 				<button
 					onclick={() => navigateDate('prev')}
-					class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+					class="p-2 hover:bg-primary-50 rounded-2xl transition-colors"
 					aria-label="Previous day"
 				>
-					<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<svg class="w-5 h-5 text-cocoa-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
 					</svg>
 				</button>
@@ -195,25 +195,25 @@
 				/>
 				<button
 					onclick={() => navigateDate('next')}
-					class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+					class="p-2 hover:bg-primary-50 rounded-2xl transition-colors"
 					disabled={isToday(selectedDate)}
 					class:opacity-50={isToday(selectedDate)}
 					class:cursor-not-allowed={isToday(selectedDate)}
 					aria-label="Next day"
 				>
-					<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<svg class="w-5 h-5 text-cocoa-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
 					</svg>
 				</button>
 			</div>
 		</div>
 
-		<p class="text-sm text-gray-500 mb-4">{formatDisplayDate(selectedDate)}</p>
+		<p class="text-sm text-cocoa-500 mb-4">{formatDisplayDate(selectedDate)}</p>
 
 		{#if dailyStats}
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 				<!-- Tasks Created on Date -->
-				<div class="bg-gray-50 rounded-lg p-4">
+				<div class="bg-warm-cream rounded-2xl p-4">
 					<div class="flex items-center gap-3">
 						<div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
 							<svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -221,14 +221,14 @@
 							</svg>
 						</div>
 						<div>
-							<p class="text-2xl font-bold text-gray-900">{dailyStats.tasksCreated}</p>
-							<p class="text-sm text-gray-500">{$t('admin.stats.daily.tasksCreated')}</p>
+							<p class="text-2xl font-bold text-cocoa-800">{dailyStats.tasksCreated}</p>
+							<p class="text-sm text-cocoa-500">{$t('admin.stats.daily.tasksCreated')}</p>
 						</div>
 					</div>
 				</div>
 
 				<!-- Tasks Completed on Date -->
-				<div class="bg-gray-50 rounded-lg p-4">
+				<div class="bg-warm-cream rounded-2xl p-4">
 					<div class="flex items-center gap-3">
 						<div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
 							<svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -237,13 +237,13 @@
 						</div>
 						<div>
 							<p class="text-2xl font-bold text-green-600">{dailyStats.tasksCompleted}</p>
-							<p class="text-sm text-gray-500">{$t('admin.stats.daily.tasksCompleted')}</p>
+							<p class="text-sm text-cocoa-500">{$t('admin.stats.daily.tasksCompleted')}</p>
 						</div>
 					</div>
 				</div>
 
 				<!-- Tasks Due on Date -->
-				<div class="bg-gray-50 rounded-lg p-4">
+				<div class="bg-warm-cream rounded-2xl p-4">
 					<div class="flex items-center gap-3">
 						<div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
 							<svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,7 +252,7 @@
 						</div>
 						<div>
 							<p class="text-2xl font-bold text-orange-600">{dailyStats.tasksDue}</p>
-							<p class="text-sm text-gray-500">{$t('admin.stats.daily.tasksDue')}</p>
+							<p class="text-sm text-cocoa-500">{$t('admin.stats.daily.tasksDue')}</p>
 						</div>
 					</div>
 				</div>

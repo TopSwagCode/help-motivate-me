@@ -45,7 +45,7 @@
 			{#if verifying}
 				<div class="py-8">
 					<div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-					<p class="text-gray-600">{$t('auth.verifyEmail.verifying')}</p>
+					<p class="text-cocoa-600">{$t('auth.verifyEmail.verifying')}</p>
 				</div>
 			{:else if success}
 				<div class="py-8">
@@ -54,8 +54,8 @@
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 						</svg>
 					</div>
-					<h2 class="text-2xl font-bold text-gray-900 mb-2">{$t('auth.verifyEmail.success')}</h2>
-					<p class="text-gray-600">{$t('auth.verifyEmail.redirecting')}</p>
+					<h2 class="text-2xl font-bold text-cocoa-800 mb-2">{$t('auth.verifyEmail.success')}</h2>
+					<p class="text-cocoa-600">{$t('auth.verifyEmail.redirecting')}</p>
 				</div>
 			{:else}
 				<div class="py-8">
@@ -64,7 +64,7 @@
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
 						</svg>
 					</div>
-					<h2 class="text-2xl font-bold text-gray-900 mb-2">{$t('auth.verifyEmail.failed')}</h2>
+					<h2 class="text-2xl font-bold text-cocoa-800 mb-2">{$t('auth.verifyEmail.failed')}</h2>
 					<p class="text-red-600 mb-6">{error}</p>
 
 					<div class="space-y-3">

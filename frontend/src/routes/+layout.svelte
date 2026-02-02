@@ -5,6 +5,7 @@
 	import { commandBar } from '$lib/stores/commandBar';
 	import { t } from 'svelte-i18n';
 	import TopNav from '$lib/components/layout/TopNav.svelte';
+	import BottomNav from '$lib/components/layout/BottomNav.svelte';
 	import BetaBanner from '$lib/components/layout/BetaBanner.svelte';
 	import CommandBar from '$lib/components/ai/CommandBar.svelte';
 	import PWAReloadPrompt from '$lib/components/PWAReloadPrompt.svelte';
@@ -175,10 +176,15 @@
 			<TopNav />
 		{/if}
 
-		<div class="flex-1">
+		<div class="flex-1 pb-24 md:pb-0">
 			{@render children()}
 		</div>
 	</div>
+
+	<!-- Mobile Bottom Navigation -->
+	{#if shouldShowNav()}
+		<BottomNav />
+	{/if}
 
 	<!-- Guided Tour (renders when tour is active) -->
 	{#if shouldShowNav()}
@@ -205,20 +211,20 @@
 		/>
 
 		<!-- Floating AI Assistant Button -->
-		<div class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 animate-wiggle">
+		<div class="fixed bottom-24 md:bottom-4 right-4 sm:bottom-24 sm:right-6 md:bottom-6 z-40 animate-wiggle">
 			<button
 				type="button"
 				onclick={() => commandBar.open()}
 				data-tour="ai-assistant"
 				class="group relative w-12 h-12 sm:w-14 sm:h-14
-				       bg-gradient-to-r from-primary-600 to-primary-700 
-				       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 
-				       transition-all duration-200 flex items-center justify-center
+				       bg-gradient-to-r from-primary-500 to-primary-600
+				       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110
+				       transition-all duration-300 flex items-center justify-center
 				       touch-manipulation"
 				title="AI Assistant (⌘K / Ctrl+K)"
 				aria-label="Open AI Assistant"
 			>
-				<span class="absolute right-full mr-3 px-3 py-1.5 bg-gray-900 text-white text-sm font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+				<span class="absolute right-full mr-3 px-3 py-1.5 bg-cocoa-900 text-white text-sm font-medium rounded-2xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
 					Commands
 				</span>
 				<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -233,20 +239,20 @@
 		</div>
 
 		<!-- Floating Identity Proof Button -->
-		<div class="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-40 animate-wiggle" style="animation-delay: 2.5s;">
+		<div class="fixed bottom-40 md:bottom-20 right-4 sm:bottom-40 sm:right-6 md:bottom-24 z-40 animate-wiggle" style="animation-delay: 2.5s;">
 			<button
 				type="button"
 				data-tour="log-win-button"
 				onclick={() => showProofModal = true}
 				class="group relative w-12 h-12 sm:w-14 sm:h-14
-				       bg-gradient-to-r from-amber-500 to-amber-600
+				       bg-gradient-to-r from-primary-400 to-primary-500
 				       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110
-				       transition-all duration-200 flex items-center justify-center
+				       transition-all duration-300 flex items-center justify-center
 				       touch-manipulation"
 				title={$t('identityProof.subtitle')}
 				aria-label={$t('identityProof.logProofButton')}
 			>
-				<span class="absolute right-full mr-3 px-3 py-1.5 bg-gray-900 text-white text-sm font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+				<span class="absolute right-full mr-3 px-3 py-1.5 bg-cocoa-900 text-white text-sm font-medium rounded-2xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
 					Log Win
 				</span>
 				<!-- Checkmark icon -->
@@ -263,7 +269,7 @@
 	{/if}
 {:else}
 	<!-- Loading state while i18n initializes -->
-	<div class="min-h-screen bg-gray-50 flex items-center justify-center">
-		<div class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full"></div>
+	<div class="min-h-screen bg-warm-cream flex items-center justify-center">
+		<div class="animate-spin w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full"></div>
 	</div>
 {/if}

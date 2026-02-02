@@ -240,7 +240,7 @@
 
 	<!-- Command Bar Modal -->
 	<div class="fixed inset-x-0 top-[15%] mx-auto max-w-2xl z-50 px-4">
-		<div class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
+		<div class="bg-warm-paper rounded-2xl shadow-2xl overflow-hidden border border-primary-100">
 			<!-- Success Message -->
 			{#if successMessage}
 				<div class="p-6 text-center">
@@ -256,11 +256,11 @@
 							/>
 						</svg>
 					</div>
-					<p class="text-lg font-semibold text-gray-900">{successMessage}</p>
+					<p class="text-lg font-semibold text-cocoa-800">{successMessage}</p>
 				</div>
 			{:else}
 				<!-- Input area -->
-				<div class="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border-b border-gray-200">
+				<div class="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border-b border-primary-100">
 					<svg class="w-5 h-5 text-gray-400 flex-shrink-0 hidden xs:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
 							stroke-linecap="round"
@@ -280,7 +280,7 @@
 					<div class="flex-shrink-0">
 						<VoiceInput onTranscription={handleVoiceTranscription} disabled={isLoading || isCreating} />
 					</div>
-					<kbd class="hidden sm:inline-block px-2 py-1 text-xs text-gray-500 bg-gray-100 rounded border border-gray-200 flex-shrink-0">
+					<kbd class="hidden sm:inline-block px-2 py-1 text-xs text-cocoa-500 bg-gray-100 rounded border border-primary-100 flex-shrink-0">
 						Esc
 					</kbd>
 				</div>
@@ -290,7 +290,7 @@
 					<div class="max-h-[50vh] overflow-y-auto">
 						<!-- AI Response -->
 						{#if displayContent}
-							<div class="p-4 text-gray-700 whitespace-pre-wrap">{displayContent}</div>
+							<div class="p-4 text-cocoa-700 whitespace-pre-wrap">{displayContent}</div>
 						{/if}
 
 						<!-- Preview Card -->
@@ -312,7 +312,7 @@
 												style="width: {currentIntent.confidence * 100}%"
 											></div>
 										</div>
-										<span class="text-gray-500">{getConfidenceLabel(currentIntent.confidence)}</span>
+										<span class="text-cocoa-500">{getConfidenceLabel(currentIntent.confidence)}</span>
 									</div>
 								{/if}
 
@@ -352,14 +352,14 @@
 
 						<!-- Clarifying Question -->
 						{#if currentIntent?.clarifyingQuestion && !currentIntent.preview}
-							<div class="px-4 pb-4 text-gray-600 italic">
+							<div class="px-4 pb-4 text-cocoa-600 italic">
 								{currentIntent.clarifyingQuestion}
 							</div>
 						{/if}
 
 						<!-- Loading indicator -->
 						{#if isLoading}
-							<div class="flex items-center gap-3 p-4 text-gray-500">
+							<div class="flex items-center gap-3 p-4 text-cocoa-500">
 								<div
 									class="animate-spin w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full"
 								></div>
@@ -371,17 +371,17 @@
 
 				<!-- Action buttons -->
 				{#if currentIntent?.actions?.length && !isLoading}
-					<div class="flex flex-wrap gap-2 p-4 border-t border-gray-100 bg-gray-50">
+					<div class="flex flex-wrap gap-2 p-4 border-t border-gray-100 bg-warm-cream">
 						{#each currentIntent.actions as action}
 							<button
 								onclick={() => handleAction(action)}
 								disabled={isCreating}
-								class="px-4 py-2 text-sm font-medium rounded-lg transition-colors disabled:opacity-50
+								class="px-4 py-2 text-sm font-medium rounded-2xl transition-colors disabled:opacity-50
                                     {action === 'confirm'
 									? 'bg-primary-600 text-white hover:bg-primary-700'
 									: action === 'cancel'
-										? 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-										: 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'}"
+										? 'bg-warm-paper border border-primary-200 text-cocoa-700 hover:bg-warm-cream'
+										: 'bg-warm-paper border border-primary-200 text-cocoa-700 hover:bg-warm-cream'}"
 							>
 								{#if action === 'confirm' && isCreating}
 									<span class="flex items-center gap-2">
