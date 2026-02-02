@@ -59,13 +59,17 @@
 	<div
 		class="bg-warm-paper rounded-2xl shadow-2xl max-w-lg w-full p-8 text-center transform animate-bounce-in"
 	>
-		<!-- Celebration icon -->
+		<!-- Celebration video -->
 		<div class="mb-6">
-			<div
-				class="w-20 h-20 mx-auto bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center shadow-lg"
-			>
-				<span class="text-4xl">🎉</span>
-			</div>
+			<video
+				class="w-32 h-32 mx-auto rounded-full shadow-lg object-cover"
+				src="/celebrate.webm"
+				autoplay
+				loop
+				playsinline
+				volume={0.2}
+				onloadedmetadata={(e) => { e.currentTarget.volume = 0.2; }}
+			></video>
 		</div>
 
 		<!-- Welcome message -->

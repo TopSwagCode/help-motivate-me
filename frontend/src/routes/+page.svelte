@@ -55,7 +55,7 @@
 					playsinline
 					class="w-full h-full object-cover"
 				>
-					<source src="/test.webm" type="video/webm" />
+					<source src="/welcome.webm" type="video/webm" />
 					Your browser does not support the video tag.
 				</video>
 			</div>
