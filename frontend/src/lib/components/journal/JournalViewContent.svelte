@@ -150,7 +150,7 @@
 
 {#if mode === 'buddy'}
 	<!-- Info Banner for buddy mode -->
-	<div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+	<div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
 		<p class="text-sm text-blue-800">
 			{$t('buddies.journal.infoBanner', { values: { name: buddyDisplayName } })}
 		</p>
@@ -160,34 +160,34 @@
 <!-- Filter Tabs (for feed mode or own mode with filtering enabled) -->
 {#if (mode === 'own' || mode === 'feed') && onFilterChange}
 	<div class="flex items-center justify-center gap-1 mb-6">
-		<div class="inline-flex bg-gray-100 rounded-lg p-1">
+		<div class="inline-flex bg-gray-100 rounded-2xl p-1">
 			<button
 				type="button"
 				onclick={() => handleFilterClick('all')}
-				class="px-4 py-2 text-sm font-medium rounded-md transition-all duration-200
+				class="px-4 py-2 text-sm font-medium rounded-md transition-all duration-300
 					{activeFilter === 'all' 
-						? 'bg-white text-gray-900 shadow-sm' 
-						: 'text-gray-600 hover:text-gray-900'}"
+						? 'bg-warm-paper text-cocoa-800 shadow-sm' 
+						: 'text-cocoa-600 hover:text-cocoa-800'}"
 			>
 				{$t('journal.filter.all')}
 			</button>
 			<button
 				type="button"
 				onclick={() => handleFilterClick('own')}
-				class="px-4 py-2 text-sm font-medium rounded-md transition-all duration-200
+				class="px-4 py-2 text-sm font-medium rounded-md transition-all duration-300
 					{activeFilter === 'own' 
-						? 'bg-white text-gray-900 shadow-sm' 
-						: 'text-gray-600 hover:text-gray-900'}"
+						? 'bg-warm-paper text-cocoa-800 shadow-sm' 
+						: 'text-cocoa-600 hover:text-cocoa-800'}"
 			>
 				{$t('journal.filter.you')}
 			</button>
 			<button
 				type="button"
 				onclick={() => handleFilterClick('buddies')}
-				class="px-4 py-2 text-sm font-medium rounded-md transition-all duration-200
+				class="px-4 py-2 text-sm font-medium rounded-md transition-all duration-300
 					{activeFilter === 'buddies' 
-						? 'bg-white text-gray-900 shadow-sm' 
-						: 'text-gray-600 hover:text-gray-900'}"
+						? 'bg-warm-paper text-cocoa-800 shadow-sm' 
+						: 'text-cocoa-600 hover:text-cocoa-800'}"
 			>
 				{$t('journal.filter.friends')}
 			</button>
@@ -220,19 +220,19 @@
 			</svg>
 		</div>
 		{#if mode === 'buddy'}
-			<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('buddies.journal.emptyTitle')}</h3>
-			<p class="text-gray-500 mb-6">
+			<h3 class="text-lg font-medium text-cocoa-800 mb-2">{$t('buddies.journal.emptyTitle')}</h3>
+			<p class="text-cocoa-500 mb-6">
 				{$t('buddies.journal.emptyDescription', { values: { name: buddyDisplayName } })}
 			</p>
 			<button onclick={onCreateEntry} class="btn-primary">{$t('buddies.journal.writeEncouragement')}</button>
 		{:else if activeFilter === 'buddies'}
-			<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('journal.emptyFriendsTitle')}</h3>
-			<p class="text-gray-500">{$t('journal.emptyFriendsDescription')}</p>
+			<h3 class="text-lg font-medium text-cocoa-800 mb-2">{$t('journal.emptyFriendsTitle')}</h3>
+			<p class="text-cocoa-500">{$t('journal.emptyFriendsDescription')}</p>
 		{:else}
 			<div class="max-w-md mx-auto">
-				<h3 class="text-lg font-medium text-gray-900 mb-2">{$t('journal.emptyTitle')}</h3>
-				<p class="text-gray-500 mb-4">{$t('journal.emptyDescription')}</p>
-				<p class="text-gray-500 text-sm mb-6 flex items-center justify-center gap-1 flex-wrap">
+				<h3 class="text-lg font-medium text-cocoa-800 mb-2">{$t('journal.emptyTitle')}</h3>
+				<p class="text-cocoa-500 mb-4">{$t('journal.emptyDescription')}</p>
+				<p class="text-cocoa-500 text-sm mb-6 flex items-center justify-center gap-1 flex-wrap">
 					{$t('journal.emptyHowTo')}
 					<button
 						type="button"
@@ -261,11 +261,11 @@
 				onkeydown={(e) => canEdit(entry) && e.key === 'Enter' && handleEntryClick(entry)}
 			>
 				<!-- Entry Header - Clear visual separation -->
-				<div class="px-5 py-4 bg-gradient-to-r from-slate-100 via-gray-50 to-slate-100 border-b-2 border-gray-200">
+				<div class="px-5 py-4 bg-gradient-to-r from-slate-100 via-gray-50 to-slate-100 border-b-2 border-primary-100">
 					<div class="flex items-center justify-between gap-3">
 						<div class="min-w-0">
-							<div class="font-semibold text-gray-900">{getAuthorDisplay(entry)}</div>
-							<div class="text-gray-500 text-sm" title={formatFullDate(entry.entryDate)}>
+							<div class="font-semibold text-cocoa-800">{getAuthorDisplay(entry)}</div>
+							<div class="text-cocoa-500 text-sm" title={formatFullDate(entry.entryDate)}>
 								{formatRelativeDate(entry.entryDate)}
 							</div>
 						</div>
@@ -283,13 +283,13 @@
 				</div>
 
 				<!-- Entry Content -->
-				<div class="p-5 bg-white">
+				<div class="p-5 bg-warm-paper">
 					<!-- Title -->
-					<h3 class="font-bold text-gray-900 text-lg mb-2">{entry.title}</h3>
+					<h3 class="font-bold text-cocoa-800 text-lg mb-2">{entry.title}</h3>
 
 					<!-- Description -->
 					{#if entry.description}
-						<p class="text-gray-600 whitespace-pre-wrap leading-relaxed">{entry.description}</p>
+						<p class="text-cocoa-600 whitespace-pre-wrap leading-relaxed">{entry.description}</p>
 					{/if}
 
 					<!-- Images -->
@@ -317,7 +317,7 @@
 					<!-- svelte-ignore a11y_click_events_have_key_events -->
 					<!-- svelte-ignore a11y_no_static_element_interactions -->
 					<div 
-						class="reactions-section px-5 py-3 border-t-2 border-gray-100 bg-gray-50"
+						class="reactions-section px-5 py-3 border-t-2 border-gray-100 bg-warm-cream"
 						onclick={(e) => e.stopPropagation()}
 						ontouchstart={(e) => e.stopPropagation()}
 						onmousedown={(e) => e.stopPropagation()}

@@ -11,8 +11,8 @@
 <div class="min-h-screen bg-gradient-to-b from-primary-50 to-white">
 	<div class="max-w-2xl mx-auto px-4 py-12">
 		<div class="text-center mb-10">
-			<h1 class="text-3xl font-bold text-gray-900 mb-3">{$t('onboarding.modeSelect.title')}</h1>
-			<p class="text-gray-600">
+			<h1 class="text-3xl font-bold text-cocoa-800 mb-3">{$t('onboarding.modeSelect.title')}</h1>
+			<p class="text-cocoa-600">
 				{$t('onboarding.modeSelect.subtitle')}
 			</p>
 		</div>
@@ -21,13 +21,13 @@
 			<!-- Manual Setup Card -->
 			<button
 				onclick={() => onselect('manual')}
-				class="card p-6 text-left hover:border-primary-300 hover:shadow-lg transition-all duration-200 group cursor-pointer"
+				class="card p-6 text-left hover:border-primary-300 hover:shadow-lg transition-all duration-300 group cursor-pointer"
 			>
 				<div
 					class="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-primary-100 transition-colors"
 				>
 					<svg
-						class="w-7 h-7 text-gray-600 group-hover:text-primary-600"
+						class="w-7 h-7 text-cocoa-600 group-hover:text-primary-600"
 						fill="none"
 						stroke="currentColor"
 						viewBox="0 0 24 24"
@@ -40,10 +40,10 @@
 						/>
 					</svg>
 				</div>
-				<h2 class="text-xl font-semibold text-gray-900 mb-2">
+				<h2 class="text-xl font-semibold text-cocoa-800 mb-2">
 					{$t('onboarding.modeSelect.manual.title')}
 				</h2>
-				<p class="text-gray-600 text-sm mb-4">
+				<p class="text-cocoa-600 text-sm mb-4">
 					{$t('onboarding.modeSelect.manual.description')}
 				</p>
 				<span
@@ -59,7 +59,7 @@
 			<!-- AI Assistant Card -->
 			<button
 				onclick={() => onselect('ai')}
-				class="card p-6 text-left hover:border-primary-300 hover:shadow-lg transition-all duration-200 group cursor-pointer relative overflow-hidden"
+				class="card p-6 text-left hover:border-primary-300 hover:shadow-lg transition-all duration-300 group cursor-pointer relative overflow-hidden"
 			>
 				<div
 					class="absolute top-3 right-3 px-2 py-1 bg-primary-100 text-primary-700 text-xs font-medium rounded-full"
@@ -83,13 +83,13 @@
 						/>
 					</svg>
 				</div>
-				<h2 class="text-xl font-semibold text-gray-900 mb-2">
+				<h2 class="text-xl font-semibold text-cocoa-800 mb-2">
 					{$t('onboarding.modeSelect.ai.title')}
 				</h2>
-				<p class="text-gray-600 text-sm mb-4">
+				<p class="text-cocoa-600 text-sm mb-4">
 					{$t('onboarding.modeSelect.ai.description')}
 				</p>
-				<div class="flex items-center gap-3 text-xs text-gray-500 mb-4">
+				<div class="flex items-center gap-3 text-xs text-cocoa-500 mb-4">
 					<span class="flex items-center gap-1">
 						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path

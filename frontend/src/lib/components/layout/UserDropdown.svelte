@@ -38,7 +38,7 @@
 <div class="user-dropdown relative">
 	<button
 		onclick={toggleDropdown}
-		class="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 px-2 py-1 rounded hover:bg-gray-100"
+		class="flex items-center gap-2 text-sm text-cocoa-600 hover:text-cocoa-800 px-2 py-1 rounded hover:bg-primary-50"
 	>
 		<span class="hidden sm:block">
 			{$auth.user?.displayName || $auth.user?.username}
@@ -55,7 +55,7 @@
 
 	{#if isOpen}
 		<div
-			class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50"
+			class="absolute right-0 mt-2 w-48 bg-warm-paper rounded-2xl shadow-lg border border-primary-100 py-1 z-50"
 		>
 			{#if isAdmin}
 				<button
@@ -78,18 +78,18 @@
 					</svg>
 					Admin Dashboard
 				</button>
-				<hr class="my-1 border-gray-200" />
+				<hr class="my-1 border-primary-100" />
 			{/if}
 			<button
 				onclick={handleSettingsClick}
-				class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+				class="w-full text-left px-4 py-2 text-sm text-cocoa-700 hover:bg-primary-50"
 			>
 				Settings
 			</button>
-			<hr class="my-1 border-gray-200" />
+			<hr class="my-1 border-primary-100" />
 			<button
 				onclick={handleLogout}
-				class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+				class="w-full text-left px-4 py-2 text-sm text-cocoa-700 hover:bg-primary-50"
 			>
 				Sign out
 			</button>

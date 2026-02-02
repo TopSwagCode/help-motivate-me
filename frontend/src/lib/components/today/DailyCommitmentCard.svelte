@@ -70,24 +70,24 @@
 	<!-- Main content area -->
 	<div
 		class="p-4"
-		style="background: linear-gradient(135deg, {commitment?.identityColor || '#6366f1'}08 0%, {commitment?.identityColor || '#6366f1'}15 100%)"
+		style="background: linear-gradient(135deg, {commitment?.identityColor || '#d4944c'}08 0%, {commitment?.identityColor || '#d4944c'}15 100%)"
 	>
 		{#if !commitment}
 			<!-- No commitment - Start your day prompt -->
 			<div class="text-center py-4">
-				<div class="w-14 h-14 mx-auto mb-3 rounded-full bg-white shadow-sm flex items-center justify-center">
+				<div class="w-14 h-14 mx-auto mb-3 rounded-full bg-warm-paper shadow-sm flex items-center justify-center">
 					<span class="text-2xl">🎯</span>
 				</div>
-				<h3 class="text-lg font-semibold text-gray-900 mb-1">
+				<h3 class="text-lg font-semibold text-cocoa-800 mb-1">
 					{$t('dailyCommitment.title')}
 				</h3>
-				<p class="text-sm text-gray-600 mb-4 max-w-xs mx-auto">
+				<p class="text-sm text-cocoa-600 mb-4 max-w-xs mx-auto">
 					{$t('dailyCommitment.prompt')}
 				</p>
 				{#if !readonly}
 					<button
 						onclick={onStartCommitment}
-						class="px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-all hover:scale-105 active:scale-95 shadow-sm"
+						class="px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-sm"
 					>
 						{$t('dailyCommitment.startButton')}
 					</button>
@@ -99,7 +99,7 @@
 			<div class="flex items-start gap-3">
 				<div
 					class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-					style="background-color: {commitment.identityColor || '#6366f1'}20"
+					style="background-color: {commitment.identityColor || '#d4944c'}20"
 				>
 					<span class="text-xl">{commitment.identityIcon || '🎯'}</span>
 				</div>
@@ -107,12 +107,12 @@
 					<div class="flex items-center gap-2 mb-1">
 						<span
 							class="text-xs font-medium px-2 py-0.5 rounded-full"
-							style="background-color: {commitment.identityColor || '#6366f1'}20; color: {commitment.identityColor || '#6366f1'}"
+							style="background-color: {commitment.identityColor || '#d4944c'}20; color: {commitment.identityColor || '#d4944c'}"
 						>
 							{commitment.identityName}
 						</span>
 					</div>
-					<p class="text-sm font-medium text-gray-900 mb-3">
+					<p class="text-sm font-medium text-cocoa-800 mb-3">
 						{commitment.actionDescription}
 					</p>
 					{#if !readonly}
@@ -120,7 +120,7 @@
 							<button
 								onclick={handleComplete}
 								disabled={isCompleting}
-								class="flex-1 px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+								class="flex-1 px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
 							>
 								{#if isCompleting}
 									<svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
@@ -137,7 +137,7 @@
 							<button
 								onclick={handleDismiss}
 								disabled={isDismissing}
-								class="px-3 py-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+								class="px-3 py-2 text-cocoa-500 hover:text-cocoa-700 hover:bg-primary-50 rounded-2xl transition-colors disabled:opacity-50"
 								title={$t('dailyCommitment.dismissButton')}
 							>
 								<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -164,12 +164,12 @@
 						</span>
 						<span
 							class="text-xs font-medium px-2 py-0.5 rounded-full"
-							style="background-color: {commitment.identityColor || '#6366f1'}20; color: {commitment.identityColor || '#6366f1'}"
+							style="background-color: {commitment.identityColor || '#d4944c'}20; color: {commitment.identityColor || '#d4944c'}"
 						>
 							{commitment.identityName}
 						</span>
 					</div>
-					<p class="text-sm text-gray-600 line-through">
+					<p class="text-sm text-cocoa-600 line-through">
 						{commitment.actionDescription}
 					</p>
 					<p class="text-sm font-medium text-green-600 mt-1">
@@ -188,7 +188,7 @@
 				</div>
 				<div class="flex-1 min-w-0">
 					<div class="flex items-center gap-2 mb-1">
-						<span class="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">
+						<span class="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-cocoa-500">
 							{$t('dailyCommitment.dismissedLabel')}
 						</span>
 					</div>

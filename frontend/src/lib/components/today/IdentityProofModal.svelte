@@ -131,7 +131,7 @@
 	>
 		<!-- Modal (bottom sheet on mobile, centered on desktop) -->
 		<div
-			class="bg-white rounded-t-2xl sm:rounded-xl shadow-xl w-full sm:max-w-sm overflow-hidden"
+			class="bg-warm-paper rounded-t-2xl sm:rounded-xl shadow-xl w-full sm:max-w-sm overflow-hidden"
 			onclick={(e) => e.stopPropagation()}
 		>
 			{#if showSuccess}
@@ -145,19 +145,19 @@
 					<p class="text-xl font-bold text-green-600">
 						+{successVoteValue}
 					</p>
-					<p class="text-sm text-gray-500 mt-1">
+					<p class="text-sm text-cocoa-500 mt-1">
 						{selectedIdentity?.name}
 					</p>
 				</div>
 			{:else}
 				<!-- Header -->
 				<div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-					<h2 class="text-base font-semibold text-gray-900">
+					<h2 class="text-base font-semibold text-cocoa-800">
 						{$t('identityProof.title')}
 					</h2>
 					<button
 						onclick={onClose}
-						class="p-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
+						class="p-1 text-gray-400 hover:text-cocoa-600 rounded-2xl hover:bg-primary-50 transition-colors"
 					>
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -168,7 +168,7 @@
 				<!-- Content -->
 				<div class="p-4">
 					{#if error}
-						<div class="mb-3 p-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+						<div class="mb-3 p-2 bg-red-50 border border-red-200 rounded-2xl text-sm text-red-700">
 							{error}
 						</div>
 					{/if}
@@ -183,7 +183,7 @@
 					{:else}
 						<!-- Identity Selection -->
 						<div class="mb-4">
-							<label for="identity-select" class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 block">
+							<label for="identity-select" class="text-xs font-medium text-cocoa-500 uppercase tracking-wide mb-2 block">
 								{$t('identityProof.whichIdentity')}
 							</label>
 							<select
@@ -193,7 +193,7 @@
 									const identity = identities.find(i => i.id === id);
 									if (identity) selectIdentity(identity);
 								}}
-								class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm bg-white"
+								class="w-full px-3 py-2 border border-primary-100 rounded-2xl focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm bg-warm-paper"
 							>
 								<option value="" disabled selected={!selectedIdentity}>
 									{$t('identityProof.selectIdentity')}
@@ -208,17 +208,17 @@
 
 						<!-- Intensity Selection -->
 						<div class="mb-4">
-							<p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+							<p class="text-xs font-medium text-cocoa-500 uppercase tracking-wide mb-2">
 								{$t('identityProof.howChallenging')}
 							</p>
 							<div class="flex gap-2">
 								{#each intensityOptions as option (option.value)}
 									<button
 										onclick={() => selectIntensity(option.value)}
-										class="flex-1 py-2 px-3 rounded-lg border text-center transition-all
+										class="flex-1 py-2 px-3 rounded-2xl border text-center transition-all
 											{selectedIntensity === option.value
 												? 'border-primary-500 bg-primary-50'
-												: 'border-gray-200 hover:border-gray-300 bg-white'}"
+												: 'border-primary-100 hover:border-primary-200 bg-warm-paper'}"
 									>
 										<!-- Intensity dots indicator -->
 										<div class="flex justify-center gap-1 mb-1">
@@ -228,7 +228,7 @@
 												></div>
 											{/each}
 										</div>
-										<span class="text-xs font-medium {selectedIntensity === option.value ? 'text-primary-700' : 'text-gray-600'}">
+										<span class="text-xs font-medium {selectedIntensity === option.value ? 'text-primary-700' : 'text-cocoa-600'}">
 											{$t(`identityProof.${option.value.toLowerCase()}`)}
 										</span>
 									</button>
@@ -238,7 +238,7 @@
 
 						<!-- Description (Optional) -->
 						<div>
-							<p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+							<p class="text-xs font-medium text-cocoa-500 uppercase tracking-wide mb-2">
 								{$t('identityProof.whatDidYouDo')} <span class="font-normal normal-case">({$t('common.optional')})</span>
 							</p>
 							<input
@@ -246,7 +246,7 @@
 								bind:value={description}
 								placeholder="..."
 								maxlength="200"
-								class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+								class="w-full px-3 py-2 border border-primary-100 rounded-2xl focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
 							/>
 						</div>
 					{/if}
@@ -257,7 +257,7 @@
 					<button
 						onclick={handleSubmit}
 						disabled={!selectedIdentity || isSubmitting}
-						class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+						class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-2xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
 					>
 						{#if isSubmitting}
 							<svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">

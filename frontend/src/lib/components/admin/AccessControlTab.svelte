@@ -111,8 +111,8 @@
 {:else}
 	<!-- Access Control Status -->
 	<div class="mb-6">
-		<h2 class="text-lg font-semibold text-gray-900">{$t('admin.accessControl.title')}</h2>
-		<p class="text-gray-500 mt-1">
+		<h2 class="text-lg font-semibold text-cocoa-800">{$t('admin.accessControl.title')}</h2>
+		<p class="text-cocoa-500 mt-1">
 			{#if allowSignups}
 				<span class="inline-flex items-center gap-1.5">
 					<span class="w-2 h-2 bg-green-500 rounded-full"></span>
@@ -129,7 +129,7 @@
 
 	<!-- Invite User Section -->
 	<div class="card p-6 mb-6">
-		<h3 class="text-lg font-semibold text-gray-900 mb-4">{$t('admin.invite.title')}</h3>
+		<h3 class="text-lg font-semibold text-cocoa-800 mb-4">{$t('admin.invite.title')}</h3>
 		<form onsubmit={handleInviteUser} class="flex gap-4">
 			<input
 				type="email"
@@ -146,7 +146,7 @@
 				{inviteLoading ? $t('admin.invite.sending') : $t('admin.invite.send')}
 			</button>
 		</form>
-		<p class="text-sm text-gray-500 mt-2">
+		<p class="text-sm text-cocoa-500 mt-2">
 			{$t('admin.invite.description')}
 		</p>
 	</div>
@@ -155,44 +155,44 @@
 	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 		<!-- Waitlist Table -->
 		<div class="card">
-			<div class="p-6 border-b border-gray-200">
+			<div class="p-6 border-b border-primary-100">
 				<div class="flex items-center justify-between">
-					<h3 class="text-lg font-semibold text-gray-900">{$t('admin.waitlist.title')}</h3>
+					<h3 class="text-lg font-semibold text-cocoa-800">{$t('admin.waitlist.title')}</h3>
 					<span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">
 						{waitlistEntries.length} {$t('admin.waitlist.pending')}
 					</span>
 				</div>
-				<p class="text-sm text-gray-500 mt-1">{$t('admin.waitlist.description')}</p>
+				<p class="text-sm text-cocoa-500 mt-1">{$t('admin.waitlist.description')}</p>
 			</div>
 
 			<div class="overflow-x-auto max-h-96 overflow-y-auto">
 				<table class="w-full">
-					<thead class="bg-gray-50 sticky top-0">
+					<thead class="bg-warm-cream sticky top-0">
 						<tr>
-							<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<th class="px-4 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">
 								{$t('admin.waitlist.email')}
 							</th>
-							<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<th class="px-4 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">
 								{$t('admin.waitlist.name')}
 							</th>
-							<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<th class="px-4 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">
 								{$t('admin.waitlist.date')}
 							</th>
-							<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<th class="px-4 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">
 								{$t('admin.waitlist.actions')}
 							</th>
 						</tr>
 					</thead>
-					<tbody class="bg-white divide-y divide-gray-200">
+					<tbody class="bg-warm-paper divide-y divide-gray-200">
 						{#each waitlistEntries as entry (entry.id)}
-							<tr class="hover:bg-gray-50">
-								<td class="px-4 py-3 text-sm text-gray-900 max-w-[150px] truncate" title={entry.email}>
+							<tr class="hover:bg-warm-cream">
+								<td class="px-4 py-3 text-sm text-cocoa-800 max-w-[150px] truncate" title={entry.email}>
 									{entry.email}
 								</td>
-								<td class="px-4 py-3 text-sm text-gray-500 max-w-[100px] truncate" title={entry.name}>
+								<td class="px-4 py-3 text-sm text-cocoa-500 max-w-[100px] truncate" title={entry.name}>
 									{entry.name}
 								</td>
-								<td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
+								<td class="px-4 py-3 text-sm text-cocoa-500 whitespace-nowrap">
 									{formatDate(entry.createdAt)}
 								</td>
 								<td class="px-4 py-3 text-sm whitespace-nowrap">
@@ -214,7 +214,7 @@
 							</tr>
 						{:else}
 							<tr>
-								<td colspan="4" class="px-4 py-8 text-center text-gray-500">
+								<td colspan="4" class="px-4 py-8 text-center text-cocoa-500">
 									{$t('admin.waitlist.empty')}
 								</td>
 							</tr>
@@ -226,41 +226,41 @@
 
 		<!-- Whitelist Table -->
 		<div class="card">
-			<div class="p-6 border-b border-gray-200">
+			<div class="p-6 border-b border-primary-100">
 				<div class="flex items-center justify-between">
-					<h3 class="text-lg font-semibold text-gray-900">{$t('admin.whitelist.title')}</h3>
+					<h3 class="text-lg font-semibold text-cocoa-800">{$t('admin.whitelist.title')}</h3>
 					<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">
 						{whitelistEntries.length} {$t('admin.whitelist.approved')}
 					</span>
 				</div>
-				<p class="text-sm text-gray-500 mt-1">{$t('admin.whitelist.description')}</p>
+				<p class="text-sm text-cocoa-500 mt-1">{$t('admin.whitelist.description')}</p>
 			</div>
 
 			<div class="overflow-x-auto max-h-96 overflow-y-auto">
 				<table class="w-full">
-					<thead class="bg-gray-50 sticky top-0">
+					<thead class="bg-warm-cream sticky top-0">
 						<tr>
-							<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<th class="px-4 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">
 								{$t('admin.whitelist.email')}
 							</th>
-							<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<th class="px-4 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">
 								{$t('admin.whitelist.added')}
 							</th>
-							<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<th class="px-4 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">
 								{$t('admin.whitelist.invited')}
 							</th>
-							<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<th class="px-4 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">
 								{$t('admin.whitelist.actions')}
 							</th>
 						</tr>
 					</thead>
-					<tbody class="bg-white divide-y divide-gray-200">
+					<tbody class="bg-warm-paper divide-y divide-gray-200">
 						{#each whitelistEntries as entry (entry.id)}
-							<tr class="hover:bg-gray-50">
-								<td class="px-4 py-3 text-sm text-gray-900 max-w-[150px] truncate" title={entry.email}>
+							<tr class="hover:bg-warm-cream">
+								<td class="px-4 py-3 text-sm text-cocoa-800 max-w-[150px] truncate" title={entry.email}>
 									{entry.email}
 								</td>
-								<td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
+								<td class="px-4 py-3 text-sm text-cocoa-500 whitespace-nowrap">
 									<div>
 										<p>{formatDate(entry.addedAt)}</p>
 										{#if entry.addedByUsername}
@@ -286,7 +286,7 @@
 							</tr>
 						{:else}
 							<tr>
-								<td colspan="4" class="px-4 py-8 text-center text-gray-500">
+								<td colspan="4" class="px-4 py-8 text-center text-cocoa-500">
 									{$t('admin.whitelist.empty')}
 								</td>
 							</tr>

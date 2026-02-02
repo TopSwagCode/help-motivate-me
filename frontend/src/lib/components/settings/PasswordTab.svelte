@@ -39,17 +39,17 @@
 </script>
 
 <div>
-	<h2 class="text-lg font-semibold text-gray-900 mb-4">Change Password</h2>
+	<h2 class="text-lg font-semibold text-cocoa-800 mb-4">Change Password</h2>
 
 	<form onsubmit={handleSubmit} class="space-y-4 max-w-md">
 		{#if error}
-			<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+			<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm">
 				{error}
 			</div>
 		{/if}
 
 		{#if success}
-			<div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
+			<div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-2xl text-sm">
 				{success}
 			</div>
 		{/if}
@@ -77,7 +77,7 @@
 				autocomplete="new-password"
 				class="input"
 			/>
-			<p class="mt-1 text-xs text-gray-500">Must be at least 8 characters</p>
+			<p class="mt-1 text-xs text-cocoa-500">Must be at least 8 characters</p>
 		</div>
 
 		<div>

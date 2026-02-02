@@ -7,19 +7,19 @@
 	let { value, onchange }: Props = $props();
 
 	let showCustomPicker = $state(false);
-	let customColor = $state('#6366f1');
+	let customColor = $state('#d4944c');
 
-	// Theme-appropriate default colors
+	// Theme-appropriate default colors (warm palette)
 	const defaultColors = [
-		{ color: '#6366f1', name: 'Indigo' },      // Primary brand color
-		{ color: '#8b5cf6', name: 'Purple' },      // Creative/Spiritual
-		{ color: '#ec4899', name: 'Pink' },        // Passion/Love
-		{ color: '#ef4444', name: 'Red' },         // Energy/Power
+		{ color: '#d4944c', name: 'Caramel' },     // Primary brand color
+		{ color: '#b87a3a', name: 'Toffee' },      // Deep warmth
+		{ color: '#965e2c', name: 'Cinnamon' },    // Rich brown
+		{ color: '#768862', name: 'Sage' },        // Natural green
+		{ color: '#8a6a54', name: 'Cocoa' },       // Cozy brown
 		{ color: '#f59e0b', name: 'Amber' },       // Warmth/Optimism
+		{ color: '#ec4899', name: 'Rose' },        // Passion/Love
+		{ color: '#8b5cf6', name: 'Lavender' },    // Creative/Spiritual
 		{ color: '#10b981', name: 'Emerald' },     // Growth/Health
-		{ color: '#06b6d4', name: 'Cyan' },        // Calm/Focus
-		{ color: '#3b82f6', name: 'Blue' },        // Trust/Productivity
-		{ color: '#64748b', name: 'Slate' },       // Neutral/Professional
 		{ color: '#78716c', name: 'Stone' }        // Grounded/Stable
 	];
 
@@ -29,7 +29,7 @@
 	}
 
 	function openCustomPicker() {
-		customColor = value || '#6366f1';
+		customColor = value || '#d4944c';
 		showCustomPicker = true;
 	}
 
@@ -58,9 +58,9 @@
 		{#each defaultColors as { color, name }}
 			<button
 				type="button"
-				class="w-10 h-10 rounded-lg border-2 transition-all {value === color
+				class="w-10 h-10 rounded-2xl border-2 transition-all {value === color
 					? 'border-gray-900 scale-110'
-					: 'border-gray-200 hover:border-gray-300 hover:scale-105'}"
+					: 'border-primary-100 hover:border-primary-200 hover:scale-105'}"
 				style="background-color: {color};"
 				title={name}
 				onclick={() => selectColor(color)}
@@ -70,7 +70,7 @@
 		<!-- Custom color button -->
 		<button
 			type="button"
-			class="w-10 h-10 rounded-lg border-2 border-gray-200 hover:border-gray-300 transition-colors flex items-center justify-center font-bold text-gray-500 hover:text-gray-700 bg-white"
+			class="w-10 h-10 rounded-2xl border-2 border-primary-100 hover:border-primary-200 transition-colors flex items-center justify-center font-bold text-cocoa-500 hover:text-cocoa-700 bg-warm-paper"
 			onclick={openCustomPicker}
 			title="Choose custom color"
 		>
@@ -80,8 +80,8 @@
 
 	<!-- Selected color indicator -->
 	{#if value && !defaultColors.some(c => c.color === value)}
-		<div class="mt-2 flex items-center gap-2 text-sm text-gray-600">
-			<div class="w-4 h-4 rounded border border-gray-300" style="background-color: {value};"></div>
+		<div class="mt-2 flex items-center gap-2 text-sm text-cocoa-600">
+			<div class="w-4 h-4 rounded border border-primary-200" style="background-color: {value};"></div>
 			<span>Custom color: {value}</span>
 		</div>
 	{/if}
@@ -94,14 +94,14 @@
 	<div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onclick={closeCustomPicker}>
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		<div class="bg-white rounded-xl shadow-xl max-w-md w-full" onclick={(e) => e.stopPropagation()}>
+		<div class="bg-warm-paper rounded-xl shadow-xl max-w-md w-full" onclick={(e) => e.stopPropagation()}>
 			<!-- Header -->
-			<div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-				<h3 class="text-lg font-semibold text-gray-900">Choose Custom Color</h3>
+			<div class="px-6 py-4 border-b border-primary-100 flex items-center justify-between">
+				<h3 class="text-lg font-semibold text-cocoa-800">Choose Custom Color</h3>
 				<button
 					type="button"
 					onclick={closeCustomPicker}
-					class="text-gray-400 hover:text-gray-500 transition-colors"
+					class="text-gray-400 hover:text-cocoa-500 transition-colors"
 					aria-label="Close color picker"
 				>
 					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -117,7 +117,7 @@
 					<input
 						type="color"
 						bind:value={customColor}
-						class="w-32 h-32 rounded-lg cursor-pointer border-2 border-gray-200"
+						class="w-32 h-32 rounded-2xl cursor-pointer border-2 border-primary-100"
 					/>
 				</div>
 
@@ -128,7 +128,7 @@
 						id="hex-input"
 						type="text"
 						bind:value={customColor}
-						placeholder="#6366f1"
+						placeholder="#d4944c"
 						maxlength="7"
 						pattern="^#[0-9A-Fa-f]{6}$"
 						class="input font-mono"
@@ -136,17 +136,17 @@
 				</div>
 
 				<!-- Preview -->
-				<div class="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-					<div class="w-12 h-12 rounded-lg border-2 border-gray-300" style="background-color: {customColor};"></div>
+				<div class="flex items-center gap-3 p-4 bg-warm-cream rounded-2xl">
+					<div class="w-12 h-12 rounded-2xl border-2 border-primary-200" style="background-color: {customColor};"></div>
 					<div class="flex-1">
-						<div class="text-sm font-medium text-gray-700">Preview</div>
-						<div class="text-xs text-gray-500 font-mono">{customColor}</div>
+						<div class="text-sm font-medium text-cocoa-700">Preview</div>
+						<div class="text-xs text-cocoa-500 font-mono">{customColor}</div>
 					</div>
 				</div>
 			</div>
 
 			<!-- Footer -->
-			<div class="px-6 py-4 border-t border-gray-200 flex gap-3 justify-end">
+			<div class="px-6 py-4 border-t border-primary-100 flex gap-3 justify-end">
 				<button type="button" onclick={closeCustomPicker} class="btn-secondary">
 					Cancel
 				</button>

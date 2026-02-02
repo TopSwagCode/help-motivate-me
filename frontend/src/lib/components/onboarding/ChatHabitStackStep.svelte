@@ -105,14 +105,14 @@
 </script>
 
 <div class="h-full flex flex-col">
-	<div class="p-3 sm:p-4 border-b bg-white flex-shrink-0">
+	<div class="p-3 sm:p-4 border-b bg-warm-paper flex-shrink-0">
 		<div class="flex items-center gap-2 sm:gap-3">
 			<div class="w-8 h-8 sm:w-10 sm:h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
 				<span class="text-lg sm:text-xl">🔗</span>
 			</div>
 			<div class="flex-1 min-w-0">
-				<h2 class="font-semibold text-gray-900 text-sm sm:text-base">{$t('onboarding.habitStack.title')}</h2>
-				<p class="text-xs sm:text-sm text-gray-500 truncate">
+				<h2 class="font-semibold text-cocoa-800 text-sm sm:text-base">{$t('onboarding.habitStack.title')}</h2>
+				<p class="text-xs sm:text-sm text-cocoa-500 truncate">
 					{#if createdItems.length > 0}
 						{$t('onboarding.habitStack.statusCreated', { values: { count: createdItems.length } })}
 					{:else}

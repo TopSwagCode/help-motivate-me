@@ -61,20 +61,20 @@
 </script>
 
 <div>
-	<h2 class="text-lg font-semibold text-gray-900 mb-2">Membership</h2>
-	<p class="text-sm text-gray-600 mb-6">
+	<h2 class="text-lg font-semibold text-cocoa-800 mb-2">Membership</h2>
+	<p class="text-sm text-cocoa-600 mb-6">
 		Current plan: <span class="font-medium text-primary-600">{$auth.user?.membershipTier}</span>
 	</p>
 
 	{#if error}
-		<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-6">
+		<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm mb-6">
 			{error}
 		</div>
 	{/if}
 
 	<!-- Billing Toggle -->
 	<div class="flex justify-center items-center gap-4 mb-6">
-		<span class="text-sm font-medium {billingPeriod === 'monthly' ? 'text-gray-900' : 'text-gray-500'}">
+		<span class="text-sm font-medium {billingPeriod === 'monthly' ? 'text-cocoa-800' : 'text-cocoa-500'}">
 			Monthly
 		</span>
 		<button
@@ -83,10 +83,10 @@
 			class="relative w-12 h-6 bg-gray-200 rounded-full transition-colors {billingPeriod === 'yearly' ? 'bg-primary-600' : ''}"
 		>
 			<span
-				class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform {billingPeriod === 'yearly' ? 'translate-x-6' : ''}"
+				class="absolute top-0.5 left-0.5 w-5 h-5 bg-warm-paper rounded-full shadow transition-transform {billingPeriod === 'yearly' ? 'translate-x-6' : ''}"
 			></span>
 		</button>
-		<span class="text-sm font-medium {billingPeriod === 'yearly' ? 'text-gray-900' : 'text-gray-500'}">
+		<span class="text-sm font-medium {billingPeriod === 'yearly' ? 'text-cocoa-800' : 'text-cocoa-500'}">
 			Yearly <span class="text-green-600 text-xs">Save more</span>
 		</span>
 	</div>
@@ -105,7 +105,7 @@
 					? 'border-primary-500 bg-primary-50'
 					: tier.popular
 						? 'border-primary-200 shadow-md'
-						: 'border-gray-200'}"
+						: 'border-primary-100'}"
 			>
 				{#if tier.popular && !isCurrentTier}
 					<span
@@ -116,16 +116,16 @@
 				{/if}
 
 				<div class="text-center">
-					<h3 class="text-lg font-semibold text-gray-900">{tier.name}</h3>
-					<p class="text-xs text-gray-500 mt-1">{tier.bestFor}</p>
+					<h3 class="text-lg font-semibold text-cocoa-800">{tier.name}</h3>
+					<p class="text-xs text-cocoa-500 mt-1">{tier.bestFor}</p>
 					
 					<div class="mt-3">
-						<span class="text-2xl font-bold text-gray-900">{formatPrice(tier)}</span>
+						<span class="text-2xl font-bold text-cocoa-800">{formatPrice(tier)}</span>
 						{#if billingPeriod === 'yearly' && tier.monthlyPrice > 0}
-							<span class="text-gray-500 text-sm">/year</span>
+							<span class="text-cocoa-500 text-sm">/year</span>
 						{/if}
 					</div>
-					<p class="text-xs text-gray-500">{getPriceSubtext(tier)}</p>
+					<p class="text-xs text-cocoa-500">{getPriceSubtext(tier)}</p>
 					
 					{#if billingPeriod === 'yearly' && tier.earlyBirdYearlyPrice}
 						<p class="text-xs text-green-600 font-medium mt-1">
@@ -133,7 +133,7 @@
 						</p>
 					{/if}
 					
-					<p class="text-sm text-gray-600 mt-2 italic">"{tier.description}"</p>
+					<p class="text-sm text-cocoa-600 mt-2 italic">"{tier.description}"</p>
 				</div>
 
 				<div class="mt-4">
@@ -164,17 +164,17 @@
 	</div>
 
 	<!-- Feature Comparison -->
-	<div class="bg-gray-50 rounded-xl p-4">
-		<h3 class="font-semibold text-gray-900 mb-4 text-center">Compare Plans</h3>
+	<div class="bg-warm-cream rounded-xl p-4">
+		<h3 class="font-semibold text-cocoa-800 mb-4 text-center">Compare Plans</h3>
 		
 		<!-- Desktop Table -->
 		<div class="hidden md:block overflow-x-auto">
 			<table class="w-full text-sm">
 				<thead>
-					<tr class="border-b border-gray-200">
-						<th class="py-2 px-3 text-left text-gray-700 font-medium">Feature</th>
+					<tr class="border-b border-primary-100">
+						<th class="py-2 px-3 text-left text-cocoa-700 font-medium">Feature</th>
 						{#each tiers as tier}
-							<th class="py-2 px-3 text-center font-medium {tier.id === $auth.user?.membershipTier ? 'text-primary-600 bg-primary-100 rounded-t' : 'text-gray-700'}">
+							<th class="py-2 px-3 text-center font-medium {tier.id === $auth.user?.membershipTier ? 'text-primary-600 bg-primary-100 rounded-t' : 'text-cocoa-700'}">
 								{tier.name}
 							</th>
 						{/each}
@@ -183,7 +183,7 @@
 				<tbody class="divide-y divide-gray-100">
 					{#each featureComparison as feature}
 						<tr>
-							<td class="py-2 px-3 text-gray-600">{feature.name}</td>
+							<td class="py-2 px-3 text-cocoa-600">{feature.name}</td>
 							{#each tiers as tier}
 								{@const value = getFeatureValue(feature.name, tier.id)}
 								<td class="py-2 px-3 text-center {tier.id === $auth.user?.membershipTier ? 'bg-primary-50' : ''}">
@@ -196,7 +196,7 @@
 											<span class="text-gray-300">—</span>
 										{/if}
 									{:else}
-										<span class="text-gray-600">{value}</span>
+										<span class="text-cocoa-600">{value}</span>
 									{/if}
 								</td>
 							{/each}
@@ -209,13 +209,13 @@
 		<!-- Mobile List -->
 		<div class="md:hidden space-y-3">
 			{#each featureComparison as feature}
-				<div class="bg-white rounded-lg p-3">
+				<div class="bg-warm-paper rounded-2xl p-3">
 					<p class="font-medium text-gray-800 text-sm mb-2">{feature.name}</p>
 					<div class="grid grid-cols-3 gap-2 text-xs text-center">
 						{#each tiers as tier}
 							{@const value = getFeatureValue(feature.name, tier.id)}
 							<div class="{tier.id === $auth.user?.membershipTier ? 'bg-primary-100 rounded py-1' : 'py-1'}">
-								<span class="text-gray-500 block">{tier.name}</span>
+								<span class="text-cocoa-500 block">{tier.name}</span>
 								{#if typeof value === 'boolean'}
 									{#if value}
 										<svg class="w-4 h-4 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -225,7 +225,7 @@
 										<span class="text-gray-300">—</span>
 									{/if}
 								{:else}
-									<span class="text-gray-700 font-medium">{value}</span>
+									<span class="text-cocoa-700 font-medium">{value}</span>
 								{/if}
 							</div>
 						{/each}
@@ -235,7 +235,7 @@
 		</div>
 	</div>
 
-	<p class="text-xs text-gray-500 mt-6 text-center">
+	<p class="text-xs text-cocoa-500 mt-6 text-center">
 		Note: This is a placeholder. Payment integration will be added in a future update.
 	</p>
 </div>

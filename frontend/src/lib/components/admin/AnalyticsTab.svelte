@@ -74,11 +74,11 @@
 	<!-- Time Period Selector -->
 	<div class="mb-6 flex items-center justify-between">
 		<div>
-			<h2 class="text-lg font-semibold text-gray-900">Analytics Events Overview</h2>
-			<p class="text-sm text-gray-500 mt-1">Privacy-focused usage analytics (no IP/user agent tracking)</p>
+			<h2 class="text-lg font-semibold text-cocoa-800">Analytics Events Overview</h2>
+			<p class="text-sm text-cocoa-500 mt-1">Privacy-focused usage analytics (no IP/user agent tracking)</p>
 		</div>
 		<div class="flex items-center gap-2">
-			<label for="days-select" class="text-sm text-gray-600">Time period:</label>
+			<label for="days-select" class="text-sm text-cocoa-600">Time period:</label>
 			<select
 				id="days-select"
 				bind:value={selectedDays}
@@ -98,8 +98,8 @@
 		<div class="card p-4">
 			<div class="flex items-center justify-between">
 				<div>
-					<p class="text-sm text-gray-500">Total Events</p>
-					<p class="text-2xl font-bold text-gray-900">{analytics.totalEvents.toLocaleString()}</p>
+					<p class="text-sm text-cocoa-500">Total Events</p>
+					<p class="text-2xl font-bold text-cocoa-800">{analytics.totalEvents.toLocaleString()}</p>
 				</div>
 				<div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
 					<svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -113,8 +113,8 @@
 		<div class="card p-4">
 			<div class="flex items-center justify-between">
 				<div>
-					<p class="text-sm text-gray-500">Active Users</p>
-					<p class="text-2xl font-bold text-gray-900">{analytics.uniqueUsers}</p>
+					<p class="text-sm text-cocoa-500">Active Users</p>
+					<p class="text-2xl font-bold text-cocoa-800">{analytics.uniqueUsers}</p>
 				</div>
 				<div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
 					<svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,8 +128,8 @@
 		<div class="card p-4">
 			<div class="flex items-center justify-between">
 				<div>
-					<p class="text-sm text-gray-500">Total Sessions</p>
-					<p class="text-2xl font-bold text-gray-900">{analytics.uniqueSessions}</p>
+					<p class="text-sm text-cocoa-500">Total Sessions</p>
+					<p class="text-2xl font-bold text-cocoa-800">{analytics.uniqueSessions}</p>
 				</div>
 				<div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
 					<svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -143,8 +143,8 @@
 		<div class="card p-4">
 			<div class="flex items-center justify-between">
 				<div>
-					<p class="text-sm text-gray-500">Avg Events/Session</p>
-					<p class="text-2xl font-bold text-gray-900">{analytics.avgEventsPerSession}</p>
+					<p class="text-sm text-cocoa-500">Avg Events/Session</p>
+					<p class="text-2xl font-bold text-cocoa-800">{analytics.avgEventsPerSession}</p>
 				</div>
 				<div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
 					<svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -158,7 +158,7 @@
 	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
 		<!-- Daily Events Chart -->
 		<div class="card p-6">
-			<h3 class="text-lg font-semibold text-gray-900 mb-4">Daily Events</h3>
+			<h3 class="text-lg font-semibold text-cocoa-800 mb-4">Daily Events</h3>
 			{#if analytics.dailyEventCounts.length > 0}
 				<div class="h-48 flex items-end gap-1">
 					{#each analytics.dailyEventCounts as day}
@@ -173,7 +173,7 @@
 						</div>
 					{/each}
 				</div>
-				<div class="flex justify-between mt-2 text-xs text-gray-500">
+				<div class="flex justify-between mt-2 text-xs text-cocoa-500">
 					<span>{analytics.dailyEventCounts[0]?.date}</span>
 					<span>{analytics.dailyEventCounts[analytics.dailyEventCounts.length - 1]?.date}</span>
 				</div>
@@ -186,14 +186,14 @@
 
 		<!-- Top Event Types -->
 		<div class="card p-6">
-			<h3 class="text-lg font-semibold text-gray-900 mb-4">Top Event Types</h3>
+			<h3 class="text-lg font-semibold text-cocoa-800 mb-4">Top Event Types</h3>
 			{#if analytics.topEventTypes.length > 0}
 				<div class="space-y-3">
 					{#each analytics.topEventTypes as eventType, i}
 						{@const maxCount = analytics.topEventTypes[0]?.count || 1}
 						{@const percentage = (eventType.count / maxCount) * 100}
 						<div class="flex items-center gap-3">
-							<span class="text-sm font-medium text-gray-700 w-48 truncate" title={eventType.eventType}>
+							<span class="text-sm font-medium text-cocoa-700 w-48 truncate" title={eventType.eventType}>
 								{eventType.eventType}
 							</span>
 							<div class="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
@@ -202,7 +202,7 @@
 									style="width: {percentage}%"
 								></div>
 							</div>
-							<span class="text-sm text-gray-500 w-16 text-right">{eventType.count}</span>
+							<span class="text-sm text-cocoa-500 w-16 text-right">{eventType.count}</span>
 						</div>
 					{/each}
 				</div>
@@ -216,54 +216,54 @@
 
 	<!-- Recent Sessions Table -->
 	<div class="card">
-		<div class="p-6 border-b border-gray-200">
-			<h3 class="text-lg font-semibold text-gray-900">Recent Sessions</h3>
-			<p class="text-sm text-gray-500 mt-1">Last 20 sessions with activity details</p>
+		<div class="p-6 border-b border-primary-100">
+			<h3 class="text-lg font-semibold text-cocoa-800">Recent Sessions</h3>
+			<p class="text-sm text-cocoa-500 mt-1">Last 20 sessions with activity details</p>
 		</div>
 
 		<div class="overflow-x-auto">
 			<table class="w-full">
-				<thead class="bg-gray-50">
+				<thead class="bg-warm-cream">
 					<tr>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Session Start</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Activity</th>
-						<th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Events</th>
-						<th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">User</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">Session Start</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">Last Activity</th>
+						<th class="px-6 py-3 text-right text-xs font-medium text-cocoa-500 uppercase tracking-wider">Events</th>
+						<th class="px-6 py-3 text-right text-xs font-medium text-cocoa-500 uppercase tracking-wider">Duration</th>
 					</tr>
 				</thead>
-				<tbody class="bg-white divide-y divide-gray-200">
+				<tbody class="bg-warm-paper divide-y divide-gray-200">
 					{#each analytics.recentSessions as session (session.sessionId)}
-						<tr class="hover:bg-gray-50">
+						<tr class="hover:bg-warm-cream">
 							<td class="px-6 py-4 whitespace-nowrap">
 								<div class="flex items-center">
 									<div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-medium text-sm">
 										{session.username.charAt(0).toUpperCase()}
 									</div>
 									<div class="ml-3">
-										<p class="text-sm font-medium text-gray-900">{session.username}</p>
+										<p class="text-sm font-medium text-cocoa-800">{session.username}</p>
 										<p class="text-xs text-gray-400 font-mono">{session.sessionId.slice(0, 8)}...</p>
 									</div>
 								</div>
 							</td>
-							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-cocoa-500">
 								{formatDateTime(session.firstEvent)}
 							</td>
-							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-cocoa-500">
 								{formatDateTime(session.lastEvent)}
 							</td>
-							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-medium">
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-cocoa-800 text-right font-medium">
 								{session.eventCount}
 							</td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm text-right">
-								<span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+								<span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-cocoa-700">
 									{formatDuration(session.durationMinutes)}
 								</span>
 							</td>
 						</tr>
 					{:else}
 						<tr>
-							<td colspan="5" class="px-6 py-8 text-center text-gray-500">
+							<td colspan="5" class="px-6 py-8 text-center text-cocoa-500">
 								No sessions recorded in this period
 							</td>
 						</tr>

@@ -570,9 +570,9 @@
 	}
 </script>
 
-<div class="bg-gray-50">
+<div class="bg-warm-cream">
 	<!-- Date Navigation Sub-header -->
-	<div class="bg-white border-b border-gray-100">
+	<div class="bg-warm-paper border-b border-gray-100">
 		<div class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">
 			<!-- Page Title with Info -->
 			<div class="flex items-center justify-between pt-4 pb-2">
@@ -585,7 +585,7 @@
 			<div class="flex items-center justify-center py-3 gap-2 sm:gap-4">
 				<button
 					onclick={goToPreviousDay}
-					class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg flex-shrink-0 touch-manipulation"
+					class="p-2 text-cocoa-500 hover:text-cocoa-700 hover:bg-primary-50 rounded-2xl flex-shrink-0 touch-manipulation"
 					title="Previous day"
 				>
 					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -595,14 +595,14 @@
 
 				<button
 					onclick={() => (showDatePicker = !showDatePicker)}
-					class="text-base sm:text-lg font-semibold text-gray-900 hover:text-primary-600 px-2 sm:px-3 py-1 rounded-lg hover:bg-gray-100 min-w-0 sm:min-w-[320px] text-center flex-1 sm:flex-initial truncate"
+					class="text-base sm:text-lg font-semibold text-cocoa-800 hover:text-primary-600 px-2 sm:px-3 py-1 rounded-2xl hover:bg-primary-50 min-w-0 sm:min-w-[320px] text-center flex-1 sm:flex-initial truncate"
 				>
 					{formatDisplayDate(currentDate)}
 				</button>
 
 				<button
 					onclick={goToNextDay}
-					class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg flex-shrink-0 touch-manipulation"
+					class="p-2 text-cocoa-500 hover:text-cocoa-700 hover:bg-primary-50 rounded-2xl flex-shrink-0 touch-manipulation"
 					title="Next day"
 				>
 					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -616,7 +616,7 @@
 				<div class="flex justify-center pb-3">
 					<button
 						onclick={goToToday}
-						class="px-4 py-1.5 text-sm text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg font-medium transition-colors touch-manipulation"
+						class="px-4 py-1.5 text-sm text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-2xl font-medium transition-colors touch-manipulation"
 					>
 						{$t('today.jumpToToday')}
 					</button>
@@ -630,7 +630,7 @@
 						type="date"
 						value={currentDate}
 						onchange={handleDateChange}
-						class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+						class="w-full px-3 py-2 border border-primary-200 rounded-2xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
 					/>
 				</div>
 			{/if}
@@ -684,25 +684,25 @@
 	<!-- Postpone Popup -->
 	{#if showPostponePopup && postponingTask}
 		<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-			<div class="bg-white rounded-xl shadow-xl max-w-sm w-full p-6">
-				<h3 class="text-lg font-semibold text-gray-900 mb-4">{$t('today.postponeTask')}</h3>
-				<p class="text-gray-600 mb-4 truncate">{postponingTask.title}</p>
+			<div class="bg-warm-paper rounded-xl shadow-xl max-w-sm w-full p-6">
+				<h3 class="text-lg font-semibold text-cocoa-800 mb-4">{$t('today.postponeTask')}</h3>
+				<p class="text-cocoa-600 mb-4 truncate">{postponingTask.title}</p>
 
 				<div class="mb-6">
-					<label for="newDueDate" class="block text-sm font-medium text-gray-700 mb-2">{$t('today.newDueDate')}</label>
+					<label for="newDueDate" class="block text-sm font-medium text-cocoa-700 mb-2">{$t('today.newDueDate')}</label>
 					<input
 						type="date"
 						id="newDueDate"
 						bind:value={newDueDate}
 						min={getLocalDateString()}
-						class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+						class="w-full px-3 py-2 border border-primary-200 rounded-2xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
 					/>
 				</div>
 
 				<div class="flex justify-end gap-3">
 					<button
 						onclick={closePostponePopup}
-						class="px-4 py-2 text-gray-600 hover:text-gray-800"
+						class="px-4 py-2 text-cocoa-600 hover:text-gray-800"
 					>
 						{$t('common.cancel')}
 					</button>
@@ -720,12 +720,12 @@
 	<!-- Edit Task Popup -->
 	{#if showEditPopup && editingTask}
 		<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-			<div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-				<h3 class="text-lg font-semibold text-gray-900 mb-4">{$t('today.editTask')}</h3>
+			<div class="bg-warm-paper rounded-xl shadow-xl max-w-md w-full p-6">
+				<h3 class="text-lg font-semibold text-cocoa-800 mb-4">{$t('today.editTask')}</h3>
 
 				<div class="space-y-4">
 					<div>
-						<label for="editTitle" class="block text-sm font-medium text-gray-700 mb-1">{$t('today.taskTitle')}</label>
+						<label for="editTitle" class="block text-sm font-medium text-cocoa-700 mb-1">{$t('today.taskTitle')}</label>
 						<input
 							type="text"
 							id="editTitle"
@@ -736,7 +736,7 @@
 					</div>
 
 					<div>
-						<label for="editDescription" class="block text-sm font-medium text-gray-700 mb-1">
+						<label for="editDescription" class="block text-sm font-medium text-cocoa-700 mb-1">
 							{$t('today.taskDescription')} <span class="text-gray-400 font-normal">({$t('common.optional')})</span>
 						</label>
 						<textarea
@@ -749,7 +749,7 @@
 					</div>
 
 					<div>
-						<label for="editDueDate" class="block text-sm font-medium text-gray-700 mb-1">
+						<label for="editDueDate" class="block text-sm font-medium text-cocoa-700 mb-1">
 							{$t('today.dueDate')} <span class="text-gray-400 font-normal">({$t('common.optional')})</span>
 						</label>
 						<input
@@ -762,7 +762,7 @@
 
 					{#if identities.length > 0}
 						<div>
-							<label for="editIdentity" class="block text-sm font-medium text-gray-700 mb-1">
+							<label for="editIdentity" class="block text-sm font-medium text-cocoa-700 mb-1">
 								{$t('today.identity')} <span class="text-gray-400 font-normal">({$t('common.optional')})</span>
 							</label>
 							<select
@@ -782,7 +782,7 @@
 				<div class="flex justify-end gap-3 mt-6">
 					<button
 						onclick={closeEditPopup}
-						class="px-4 py-2 text-gray-600 hover:text-gray-800"
+						class="px-4 py-2 text-cocoa-600 hover:text-gray-800"
 						disabled={editSaving}
 					>
 						{$t('common.cancel')}

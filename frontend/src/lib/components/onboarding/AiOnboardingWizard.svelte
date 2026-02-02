@@ -46,8 +46,8 @@
 	<div class="max-w-2xl mx-auto px-3 sm:px-4 py-3 sm:py-6 w-full flex-shrink-0">
 		<!-- Header with skip button -->
 		<div class="flex justify-between items-center mb-4 sm:mb-6">
-			<h1 class="text-lg sm:text-xl font-bold text-gray-900">AI-Assisted Setup</h1>
-			<button onclick={onskip} class="text-sm text-gray-500 hover:text-gray-700">
+			<h1 class="text-lg sm:text-xl font-bold text-cocoa-800">AI-Assisted Setup</h1>
+			<button onclick={onskip} class="text-sm text-cocoa-500 hover:text-cocoa-700">
 				Skip for now
 			</button>
 		</div>
@@ -61,7 +61,7 @@
 						<div
 							class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium transition-colors {currentStep >= step.number
 								? 'bg-primary-600 text-white'
-								: 'bg-gray-200 text-gray-500'}"
+								: 'bg-gray-200 text-cocoa-500'}"
 						>
 							{#if currentStep > step.number}
 								<svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -105,7 +105,7 @@
 
 	<!-- Step indicator text -->
 	<div class="max-w-2xl mx-auto px-4 py-2 sm:py-3 w-full flex-shrink-0">
-		<p class="text-center text-xs sm:text-sm text-gray-500">
+		<p class="text-center text-xs sm:text-sm text-cocoa-500">
 			Step {currentStep} of {totalSteps}: {steps[currentStep - 1].description}
 		</p>
 	</div>

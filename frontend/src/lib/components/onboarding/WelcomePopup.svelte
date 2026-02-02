@@ -15,7 +15,7 @@
 		const duration = 3000;
 		const end = Date.now() + duration;
 
-		const colors = ['#6366f1', '#8b5cf6', '#a855f7', '#22c55e', '#3b82f6'];
+		const colors = ['#d4944c', '#8b5cf6', '#a855f7', '#22c55e', '#3b82f6'];
 
 		function frame() {
 			confetti({
@@ -57,7 +57,7 @@
 	aria-modal="true"
 >
 	<div
-		class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 text-center transform animate-bounce-in"
+		class="bg-warm-paper rounded-2xl shadow-2xl max-w-lg w-full p-8 text-center transform animate-bounce-in"
 	>
 		<!-- Celebration icon -->
 		<div class="mb-6">
@@ -69,16 +69,16 @@
 		</div>
 
 		<!-- Welcome message -->
-		<h2 class="text-2xl font-bold text-gray-900 mb-3">{$t('onboarding.welcome.title')}</h2>
+		<h2 class="text-2xl font-bold text-cocoa-800 mb-3">{$t('onboarding.welcome.title')}</h2>
 
-		<p class="text-gray-600 mb-6">
+		<p class="text-cocoa-600 mb-6">
 			{@html $t('onboarding.welcome.subtitle')}
 		</p>
 
 		<!-- Feature highlights -->
-		<div class="bg-gray-50 rounded-xl p-4 mb-6 text-left">
-			<h3 class="font-medium text-gray-900 mb-3">{$t('onboarding.welcome.hereYouCan')}</h3>
-			<ul class="space-y-2 text-sm text-gray-600">
+		<div class="bg-warm-cream rounded-xl p-4 mb-6 text-left">
+			<h3 class="font-medium text-cocoa-800 mb-3">{$t('onboarding.welcome.hereYouCan')}</h3>
+			<ul class="space-y-2 text-sm text-cocoa-600">
 				<li class="flex items-start gap-2">
 					<svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
 						<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
@@ -109,7 +109,7 @@
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
 					</svg>
 				</button>
-				<button onclick={onclose} class="w-full text-gray-500 hover:text-gray-700 text-sm py-2">
+				<button onclick={onclose} class="w-full text-cocoa-500 hover:text-cocoa-700 text-sm py-2">
 					{$t('tour.welcome.skipTour')}
 				</button>
 			{:else}

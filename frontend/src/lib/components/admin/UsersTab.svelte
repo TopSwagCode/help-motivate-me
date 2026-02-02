@@ -199,7 +199,7 @@
 			case 'Plus':
 				return 'bg-blue-100 text-blue-700';
 			default:
-				return 'bg-gray-100 text-gray-700';
+				return 'bg-gray-100 text-cocoa-700';
 		}
 	}
 </script>
@@ -214,8 +214,8 @@
 	</div>
 {:else}
 	<div class="card">
-		<div class="p-6 border-b border-gray-200">
-			<h2 class="text-lg font-semibold text-gray-900">{$t('admin.users.title')}</h2>
+		<div class="p-6 border-b border-primary-100">
+			<h2 class="text-lg font-semibold text-cocoa-800">{$t('admin.users.title')}</h2>
 
 			<!-- Filters -->
 			<div class="mt-4 flex flex-wrap gap-4">
@@ -252,36 +252,36 @@
 
 		<div class="overflow-x-auto">
 			<table class="w-full">
-				<thead class="bg-gray-50">
+				<thead class="bg-warm-cream">
 					<tr>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{$t('admin.users.user')}</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{$t('admin.users.email')}</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{$t('admin.users.tier')}</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{$t('admin.users.role')}</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{$t('admin.users.status')}</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{$t('admin.users.joined')}</th>
-						<th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{$t('admin.users.aiCalls')}</th>
-						<th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{$t('admin.users.aiCost')}</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{$t('admin.users.actions')}</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">{$t('admin.users.user')}</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">{$t('admin.users.email')}</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">{$t('admin.users.tier')}</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">{$t('admin.users.role')}</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">{$t('admin.users.status')}</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">{$t('admin.users.joined')}</th>
+						<th class="px-6 py-3 text-right text-xs font-medium text-cocoa-500 uppercase tracking-wider">{$t('admin.users.aiCalls')}</th>
+						<th class="px-6 py-3 text-right text-xs font-medium text-cocoa-500 uppercase tracking-wider">{$t('admin.users.aiCost')}</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-cocoa-500 uppercase tracking-wider">{$t('admin.users.actions')}</th>
 					</tr>
 				</thead>
-				<tbody class="bg-white divide-y divide-gray-200">
+				<tbody class="bg-warm-paper divide-y divide-gray-200">
 					{#each users as user (user.id)}
-						<tr class="hover:bg-gray-50 cursor-pointer" onclick={() => showUserActivity(user)}>
+						<tr class="hover:bg-warm-cream cursor-pointer" onclick={() => showUserActivity(user)}>
 							<td class="px-6 py-4 whitespace-nowrap">
 								<div class="flex items-center">
 									<div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-medium text-sm">
 										{user.username.charAt(0).toUpperCase()}
 									</div>
 									<div class="ml-3">
-										<p class="text-sm font-medium text-gray-900">{user.username}</p>
+										<p class="text-sm font-medium text-cocoa-800">{user.username}</p>
 										{#if user.displayName}
-											<p class="text-sm text-gray-500">{user.displayName}</p>
+											<p class="text-sm text-cocoa-500">{user.displayName}</p>
 										{/if}
 									</div>
 								</div>
 							</td>
-							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-cocoa-500">{user.email}</td>
 							<td class="px-6 py-4 whitespace-nowrap">
 								<span class="px-2 py-1 text-xs font-medium rounded-full {getTierBadgeClass(user.membershipTier)}">
 									{user.membershipTier}
@@ -292,7 +292,7 @@
 									value={user.role}
 									onchange={(e) => handleRoleChange(user, (e.target as HTMLSelectElement).value as UserRole)}
 									onclick={(e) => e.stopPropagation()}
-									class="text-sm border border-gray-300 rounded py-1"
+									class="text-sm border border-primary-200 rounded py-1"
 								>
 									<option value="User">{$t('admin.users.roleUser')}</option>
 									<option value="Admin">{$t('admin.users.roleAdmin')}</option>
@@ -305,8 +305,8 @@
 									<span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">{$t('admin.users.inactive')}</span>
 								{/if}
 							</td>
-							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(user.createdAt)}</td>
-							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">{user.aiCallsCount}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-cocoa-500">{formatDate(user.createdAt)}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-cocoa-500 text-right">{user.aiCallsCount}</td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm text-right">
 								{#if user.aiTotalCostUsd > 0}
 									<span class="text-amber-600 font-medium">${user.aiTotalCostUsd.toFixed(4)}</span>
@@ -338,7 +338,7 @@
 						</tr>
 					{:else}
 						<tr>
-							<td colspan="9" class="px-6 py-8 text-center text-gray-500">{$t('admin.users.noUsers')}</td>
+							<td colspan="9" class="px-6 py-8 text-center text-cocoa-500">{$t('admin.users.noUsers')}</td>
 						</tr>
 					{/each}
 				</tbody>
@@ -355,25 +355,25 @@
 		role="presentation"
 	>
 		<div
-			class="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-auto"
+			class="bg-warm-paper rounded-2xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-auto"
 			onclick={(e) => e.stopPropagation()}
 			onkeydown={(e) => e.key === 'Escape' && closeActivityModal()}
 			role="dialog"
 			aria-modal="true"
 			tabindex="-1"
 		>
-			<div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+			<div class="sticky top-0 bg-warm-paper border-b border-primary-100 px-6 py-4 flex items-center justify-between">
 				<div>
-					<h2 class="text-xl font-semibold text-gray-900">{$t('admin.users.activity.title')}</h2>
+					<h2 class="text-xl font-semibold text-cocoa-800">{$t('admin.users.activity.title')}</h2>
 					{#if selectedUserActivity}
-						<p class="text-sm text-gray-500 mt-1">
+						<p class="text-sm text-cocoa-500 mt-1">
 							{selectedUserActivity.username} ({selectedUserActivity.email})
 						</p>
 					{/if}
 				</div>
 				<button
 					onclick={closeActivityModal}
-					class="text-gray-400 hover:text-gray-600 transition-colors"
+					class="text-gray-400 hover:text-cocoa-600 transition-colors"
 					aria-label={$t('admin.users.activity.close')}
 				>
 					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -386,49 +386,49 @@
 				{#if activityModalLoading}
 					<div class="flex items-center justify-center py-12">
 						<div class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full"></div>
-						<span class="ml-3 text-gray-600">{$t('admin.users.activity.loading')}</span>
+						<span class="ml-3 text-cocoa-600">{$t('admin.users.activity.loading')}</span>
 					</div>
 				{:else if selectedUserActivity}
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 						<!-- Last Week Column -->
 						<div class="space-y-4">
-							<h3 class="text-lg font-semibold text-gray-900 border-b pb-2">{$t('admin.users.activity.lastWeek')}</h3>
+							<h3 class="text-lg font-semibold text-cocoa-800 border-b pb-2">{$t('admin.users.activity.lastWeek')}</h3>
 							<div class="space-y-3">
 								<div class="flex justify-between items-center">
-									<span class="text-gray-600">{$t('admin.users.activity.tasksCreated')}</span>
-									<span class="font-semibold text-gray-900">{selectedUserActivity.lastWeek.tasksCreated}</span>
+									<span class="text-cocoa-600">{$t('admin.users.activity.tasksCreated')}</span>
+									<span class="font-semibold text-cocoa-800">{selectedUserActivity.lastWeek.tasksCreated}</span>
 								</div>
 								<div class="flex justify-between items-center">
-									<span class="text-gray-600">{$t('admin.users.activity.tasksCompleted')}</span>
+									<span class="text-cocoa-600">{$t('admin.users.activity.tasksCompleted')}</span>
 									<span class="font-semibold text-green-600">{selectedUserActivity.lastWeek.tasksCompleted}</span>
 								</div>
 								<div class="flex justify-between items-center">
-									<span class="text-gray-600">{$t('admin.users.activity.goalsCreated')}</span>
-									<span class="font-semibold text-gray-900">{selectedUserActivity.lastWeek.goalsCreated}</span>
+									<span class="text-cocoa-600">{$t('admin.users.activity.goalsCreated')}</span>
+									<span class="font-semibold text-cocoa-800">{selectedUserActivity.lastWeek.goalsCreated}</span>
 								</div>
 								<div class="flex justify-between items-center">
-									<span class="text-gray-600">{$t('admin.users.activity.identitiesCreated')}</span>
-									<span class="font-semibold text-gray-900">{selectedUserActivity.lastWeek.identitiesCreated}</span>
+									<span class="text-cocoa-600">{$t('admin.users.activity.identitiesCreated')}</span>
+									<span class="font-semibold text-cocoa-800">{selectedUserActivity.lastWeek.identitiesCreated}</span>
 								</div>
 								<div class="flex justify-between items-center">
-									<span class="text-gray-600">{$t('admin.users.activity.habitStacksCreated')}</span>
-									<span class="font-semibold text-gray-900">{selectedUserActivity.lastWeek.habitStacksCreated}</span>
+									<span class="text-cocoa-600">{$t('admin.users.activity.habitStacksCreated')}</span>
+									<span class="font-semibold text-cocoa-800">{selectedUserActivity.lastWeek.habitStacksCreated}</span>
 								</div>
 								<div class="flex justify-between items-center">
-									<span class="text-gray-600">{$t('admin.users.activity.habitCompletions')}</span>
+									<span class="text-cocoa-600">{$t('admin.users.activity.habitCompletions')}</span>
 									<span class="font-semibold text-green-600">{selectedUserActivity.lastWeek.habitCompletions}</span>
 								</div>
 								<div class="flex justify-between items-center">
-									<span class="text-gray-600">{$t('admin.users.activity.journalEntries')}</span>
-									<span class="font-semibold text-gray-900">{selectedUserActivity.lastWeek.journalEntries}</span>
+									<span class="text-cocoa-600">{$t('admin.users.activity.journalEntries')}</span>
+									<span class="font-semibold text-cocoa-800">{selectedUserActivity.lastWeek.journalEntries}</span>
 								</div>
 								<div class="border-t pt-3 mt-3">
 									<div class="flex justify-between items-center">
-										<span class="text-gray-600">{$t('admin.users.activity.aiCalls')}</span>
+										<span class="text-cocoa-600">{$t('admin.users.activity.aiCalls')}</span>
 										<span class="font-semibold text-primary-600">{selectedUserActivity.lastWeek.aiCalls}</span>
 									</div>
 									<div class="flex justify-between items-center mt-2">
-										<span class="text-gray-600">{$t('admin.users.activity.aiCost')}</span>
+										<span class="text-cocoa-600">{$t('admin.users.activity.aiCost')}</span>
 										<span class="font-semibold text-amber-600">${selectedUserActivity.lastWeek.aiCostUsd.toFixed(4)}</span>
 									</div>
 								</div>
@@ -437,43 +437,43 @@
 
 						<!-- Total Column -->
 						<div class="space-y-4">
-							<h3 class="text-lg font-semibold text-gray-900 border-b pb-2">{$t('admin.users.activity.total')}</h3>
+							<h3 class="text-lg font-semibold text-cocoa-800 border-b pb-2">{$t('admin.users.activity.total')}</h3>
 							<div class="space-y-3">
 								<div class="flex justify-between items-center">
-									<span class="text-gray-600">{$t('admin.users.activity.tasksCreated')}</span>
-									<span class="font-semibold text-gray-900">{selectedUserActivity.total.tasksCreated}</span>
+									<span class="text-cocoa-600">{$t('admin.users.activity.tasksCreated')}</span>
+									<span class="font-semibold text-cocoa-800">{selectedUserActivity.total.tasksCreated}</span>
 								</div>
 								<div class="flex justify-between items-center">
-									<span class="text-gray-600">{$t('admin.users.activity.tasksCompleted')}</span>
+									<span class="text-cocoa-600">{$t('admin.users.activity.tasksCompleted')}</span>
 									<span class="font-semibold text-green-600">{selectedUserActivity.total.tasksCompleted}</span>
 								</div>
 								<div class="flex justify-between items-center">
-									<span class="text-gray-600">{$t('admin.users.activity.goalsCreated')}</span>
-									<span class="font-semibold text-gray-900">{selectedUserActivity.total.goalsCreated}</span>
+									<span class="text-cocoa-600">{$t('admin.users.activity.goalsCreated')}</span>
+									<span class="font-semibold text-cocoa-800">{selectedUserActivity.total.goalsCreated}</span>
 								</div>
 								<div class="flex justify-between items-center">
-									<span class="text-gray-600">{$t('admin.users.activity.identitiesCreated')}</span>
-									<span class="font-semibold text-gray-900">{selectedUserActivity.total.identitiesCreated}</span>
+									<span class="text-cocoa-600">{$t('admin.users.activity.identitiesCreated')}</span>
+									<span class="font-semibold text-cocoa-800">{selectedUserActivity.total.identitiesCreated}</span>
 								</div>
 								<div class="flex justify-between items-center">
-									<span class="text-gray-600">{$t('admin.users.activity.habitStacksCreated')}</span>
-									<span class="font-semibold text-gray-900">{selectedUserActivity.total.habitStacksCreated}</span>
+									<span class="text-cocoa-600">{$t('admin.users.activity.habitStacksCreated')}</span>
+									<span class="font-semibold text-cocoa-800">{selectedUserActivity.total.habitStacksCreated}</span>
 								</div>
 								<div class="flex justify-between items-center">
-									<span class="text-gray-600">{$t('admin.users.activity.habitCompletions')}</span>
+									<span class="text-cocoa-600">{$t('admin.users.activity.habitCompletions')}</span>
 									<span class="font-semibold text-green-600">{selectedUserActivity.total.habitCompletions}</span>
 								</div>
 								<div class="flex justify-between items-center">
-									<span class="text-gray-600">{$t('admin.users.activity.journalEntries')}</span>
-									<span class="font-semibold text-gray-900">{selectedUserActivity.total.journalEntries}</span>
+									<span class="text-cocoa-600">{$t('admin.users.activity.journalEntries')}</span>
+									<span class="font-semibold text-cocoa-800">{selectedUserActivity.total.journalEntries}</span>
 								</div>
 								<div class="border-t pt-3 mt-3">
 									<div class="flex justify-between items-center">
-										<span class="text-gray-600">{$t('admin.users.activity.aiCalls')}</span>
+										<span class="text-cocoa-600">{$t('admin.users.activity.aiCalls')}</span>
 										<span class="font-semibold text-primary-600">{selectedUserActivity.total.aiCalls}</span>
 									</div>
 									<div class="flex justify-between items-center mt-2">
-										<span class="text-gray-600">{$t('admin.users.activity.aiCost')}</span>
+										<span class="text-cocoa-600">{$t('admin.users.activity.aiCost')}</span>
 										<span class="font-semibold text-amber-600">${selectedUserActivity.total.aiCostUsd.toFixed(4)}</span>
 									</div>
 								</div>
@@ -484,7 +484,7 @@
 					<div class="mt-6 flex justify-end">
 						<button
 							onclick={closeActivityModal}
-							class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+							class="px-4 py-2 bg-gray-200 text-cocoa-700 rounded-2xl hover:bg-gray-300 transition-colors"
 						>
 							{$t('admin.users.activity.close')}
 						</button>
@@ -503,21 +503,21 @@
 		role="presentation"
 	>
 		<div
-			class="bg-white rounded-lg shadow-xl max-w-md w-full"
+			class="bg-warm-paper rounded-2xl shadow-xl max-w-md w-full"
 			onclick={(e) => e.stopPropagation()}
 			onkeydown={(e) => e.key === 'Escape' && closePushModal()}
 			role="dialog"
 			aria-modal="true"
 			tabindex="-1"
 		>
-			<div class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+			<div class="border-b border-primary-100 px-6 py-4 flex items-center justify-between">
 				<div>
-					<h2 class="text-lg font-semibold text-gray-900">Send Push Notification</h2>
-					<p class="text-sm text-gray-500 mt-1">To: {pushModalUser.username}</p>
+					<h2 class="text-lg font-semibold text-cocoa-800">Send Push Notification</h2>
+					<p class="text-sm text-cocoa-500 mt-1">To: {pushModalUser.username}</p>
 				</div>
 				<button
 					onclick={closePushModal}
-					class="text-gray-400 hover:text-gray-600 transition-colors"
+					class="text-gray-400 hover:text-cocoa-600 transition-colors"
 					aria-label="Close"
 				>
 					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -528,7 +528,7 @@
 
 			<form onsubmit={handleSendPushToUser} class="p-6 space-y-4">
 				<div>
-					<label for="push-modal-title" class="block text-sm font-medium text-gray-700 mb-1">
+					<label for="push-modal-title" class="block text-sm font-medium text-cocoa-700 mb-1">
 						Title <span class="text-red-500">*</span>
 					</label>
 					<input
@@ -543,7 +543,7 @@
 				</div>
 
 				<div>
-					<label for="push-modal-body" class="block text-sm font-medium text-gray-700 mb-1">
+					<label for="push-modal-body" class="block text-sm font-medium text-cocoa-700 mb-1">
 						Message <span class="text-red-500">*</span>
 					</label>
 					<textarea
@@ -557,7 +557,7 @@
 				</div>
 
 				<div>
-					<label for="push-modal-url" class="block text-sm font-medium text-gray-700 mb-1">
+					<label for="push-modal-url" class="block text-sm font-medium text-cocoa-700 mb-1">
 						Click URL (optional)
 					</label>
 					<input
@@ -570,7 +570,7 @@
 				</div>
 
 				{#if pushModalResult}
-					<div class="p-3 rounded-lg {pushModalResult.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}">
+					<div class="p-3 rounded-2xl {pushModalResult.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}">
 						{pushModalResult.message}
 					</div>
 				{/if}
@@ -579,7 +579,7 @@
 					<button
 						type="button"
 						onclick={closePushModal}
-						class="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+						class="flex-1 px-4 py-2 bg-gray-200 text-cocoa-700 rounded-2xl hover:bg-gray-300 transition-colors"
 					>
 						Cancel
 					</button>

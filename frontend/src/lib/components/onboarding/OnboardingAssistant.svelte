@@ -374,12 +374,12 @@
 		{#if displayContent || isLoading}
 			<div class="mb-4">
 				{#if isLoading}
-					<div class="flex items-center gap-3 text-gray-500">
+					<div class="flex items-center gap-3 text-cocoa-500">
 						<div class="animate-spin w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full"></div>
 						<span>{$t('ai.commandBar.thinking')}</span>
 					</div>
 				{:else}
-					<p class="text-gray-700 whitespace-pre-wrap">{displayContent}</p>
+					<p class="text-cocoa-700 whitespace-pre-wrap">{displayContent}</p>
 				{/if}
 			</div>
 		{/if}
@@ -408,7 +408,7 @@
 	</div>
 
 	<!-- Input and actions area -->
-	<div class="border-t bg-white p-4 flex-shrink-0">
+	<div class="border-t bg-warm-paper p-4 flex-shrink-0">
 		<!-- Input row -->
 		<div class="flex items-end gap-2 mb-3">
 			<div class="flex-1">
@@ -480,7 +480,7 @@
 
 			<button
 				onclick={onSkip}
-				class="btn-text px-4 py-2 text-sm text-gray-500 hover:text-gray-700"
+				class="btn-text px-4 py-2 text-sm text-cocoa-500 hover:text-cocoa-700"
 			>
 				{$t('onboarding.chat.skipStep')}
 			</button>
@@ -488,7 +488,7 @@
 			{#if showBack && onBack}
 				<button
 					onclick={onBack}
-					class="btn-text px-4 py-2 text-sm text-gray-500 hover:text-gray-700 ml-auto"
+					class="btn-text px-4 py-2 text-sm text-cocoa-500 hover:text-cocoa-700 ml-auto"
 				>
 					{$t('onboarding.chat.back')}
 				</button>

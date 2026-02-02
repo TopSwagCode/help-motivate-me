@@ -376,7 +376,7 @@
 	}
 </script>
 
-<div class="bg-gray-50">
+<div class="bg-warm-cream">
 	<main class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
 		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
 			<InfoOverlay 
@@ -421,13 +421,13 @@
 			role="dialog"
 			aria-modal="true"
 		>
-			<div class="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+			<div class="bg-warm-paper rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
 				<div class="p-4 sm:p-6">
 					<div class="flex items-center justify-between mb-4 sm:mb-6">
-						<h2 class="text-lg sm:text-xl font-semibold text-gray-900">
+						<h2 class="text-lg sm:text-xl font-semibold text-cocoa-800">
 							{isEditing ? $t('journal.modal.editTitle') : $t('journal.modal.createTitle')}
 						</h2>
-						<button onclick={closeModal} class="text-gray-400 hover:text-gray-600 p-1" aria-label={$t('common.close')}>
+						<button onclick={closeModal} class="text-gray-400 hover:text-cocoa-600 p-1" aria-label={$t('common.close')}>
 							<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
 									stroke-linecap="round"
@@ -440,13 +440,13 @@
 					</div>
 
 					{#if modalError}
-						<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4 whitespace-pre-line">
+						<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm mb-4 whitespace-pre-line">
 							{modalError}
 						</div>
 					{/if}
 
 					{#if imageProcessWarnings.length > 0}
-						<div class="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg text-sm mb-4">
+						<div class="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-2xl text-sm mb-4">
 							{#each imageProcessWarnings as warning}
 								<p class="mb-1 last:mb-0">{warning}</p>
 							{/each}
@@ -455,7 +455,7 @@
 
 					<div class="space-y-4">
 						<div>
-							<label for="title" class="block text-sm font-medium text-gray-700 mb-1">{$t('journal.form.title')} *</label>
+							<label for="title" class="block text-sm font-medium text-cocoa-700 mb-1">{$t('journal.form.title')} *</label>
 							<input
 								type="text"
 								id="title"
@@ -468,13 +468,13 @@
 
 						{#if isEditing}
 						<div>
-							<label for="entryDate" class="block text-sm font-medium text-gray-700 mb-1">{$t('journal.form.date')}</label>
+							<label for="entryDate" class="block text-sm font-medium text-cocoa-700 mb-1">{$t('journal.form.date')}</label>
 							<input type="date" id="entryDate" bind:value={modalEntryDate} class="input" />
 						</div>
 						{/if}
 
 						<div>
-							<label for="description" class="block text-sm font-medium text-gray-700 mb-1"
+							<label for="description" class="block text-sm font-medium text-cocoa-700 mb-1"
 								>{$t('journal.form.description')}</label
 							>
 							<textarea
@@ -487,7 +487,7 @@
 						</div>
 
 						<div>
-							<span class="block text-sm font-medium text-gray-700 mb-2">{$t('journal.form.linkTo')}</span>
+							<span class="block text-sm font-medium text-cocoa-700 mb-2">{$t('journal.form.linkTo')}</span>
 							<div class="flex gap-2 mb-2">
 								<button
 									type="button"
@@ -499,7 +499,7 @@
 									class="px-3 py-1.5 rounded-full text-sm font-medium border-2 transition-colors {modalLinkType ===
 									'none'
 										? 'border-primary-500 bg-primary-50 text-primary-700'
-										: 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'}"
+										: 'border-primary-100 bg-warm-paper text-cocoa-700 hover:border-primary-200'}"
 								>
 									{$t('journal.form.linkNone')}
 								</button>
@@ -512,7 +512,7 @@
 									class="px-3 py-1.5 rounded-full text-sm font-medium border-2 transition-colors {modalLinkType ===
 									'habitStack'
 										? 'border-primary-500 bg-primary-50 text-primary-700'
-										: 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'}"
+										: 'border-primary-100 bg-warm-paper text-cocoa-700 hover:border-primary-200'}"
 								>
 									{$t('journal.form.linkHabitStack')}
 								</button>
@@ -525,7 +525,7 @@
 									class="px-3 py-1.5 rounded-full text-sm font-medium border-2 transition-colors {modalLinkType ===
 									'task'
 										? 'border-primary-500 bg-primary-50 text-primary-700'
-										: 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'}"
+										: 'border-primary-100 bg-warm-paper text-cocoa-700 hover:border-primary-200'}"
 								>
 									{$t('journal.form.linkTask')}
 								</button>
@@ -550,7 +550,7 @@
 
 						<!-- Images Section -->
 						<div>
-							<span class="block text-sm font-medium text-gray-700 mb-2">{$t('journal.images.title')}</span>
+							<span class="block text-sm font-medium text-cocoa-700 mb-2">{$t('journal.images.title')}</span>
 
 							<!-- Existing images (edit mode) -->
 							{#if isEditing && editingEntry && editingEntry.images.length > 0}
@@ -560,7 +560,7 @@
 											<img
 												src={image.url}
 												alt={image.fileName}
-												class="w-20 h-20 object-cover rounded-lg"
+												class="w-20 h-20 object-cover rounded-2xl"
 											/>
 											<button
 												type="button"
@@ -590,12 +590,12 @@
 											<img
 												src={URL.createObjectURL(file)}
 												alt={file.name}
-												class="w-20 h-20 object-cover rounded-lg opacity-70"
+												class="w-20 h-20 object-cover rounded-2xl opacity-70"
 											/>
 											<button
 												type="button"
 												onclick={() => removePendingImage(index)}
-												class="absolute -top-2 -right-2 w-6 h-6 bg-gray-500 text-white rounded-full flex items-center justify-center"
+												class="absolute -top-2 -right-2 w-6 h-6 bg-warm-cream0 text-white rounded-full flex items-center justify-center"
 												aria-label={$t('journal.images.delete')}
 											>
 												<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -619,12 +619,12 @@
 							<!-- Upload button -->
 							{#if (editingEntry?.images.length || 0) + pendingImages.length < 5}
 								<label
-									class="flex items-center justify-center w-full h-20 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition-colors {processingImages ? 'opacity-50 cursor-wait' : ''}"
+									class="flex items-center justify-center w-full h-20 border-2 border-dashed border-primary-200 rounded-2xl cursor-pointer hover:border-gray-400 transition-colors {processingImages ? 'opacity-50 cursor-wait' : ''}"
 								>
 									<div class="text-center">
 										{#if processingImages}
 											<div class="animate-spin w-6 h-6 mx-auto border-2 border-primary-600 border-t-transparent rounded-full"></div>
-											<span class="text-xs text-gray-500 mt-1">{$t('journal.images.processing')}</span>
+											<span class="text-xs text-cocoa-500 mt-1">{$t('journal.images.processing')}</span>
 										{:else}
 											<svg
 												class="w-6 h-6 mx-auto text-gray-400"
@@ -639,7 +639,7 @@
 													d="M12 4v16m8-8H4"
 												/>
 											</svg>
-											<span class="text-xs text-gray-500">{$t('journal.images.add')}</span>
+											<span class="text-xs text-cocoa-500">{$t('journal.images.add')}</span>
 										{/if}
 									</div>
 									<input
@@ -652,13 +652,13 @@
 									/>
 								</label>
 							{/if}
-							<p class="text-xs text-gray-500 mt-1">
+							<p class="text-xs text-cocoa-500 mt-1">
 								{$t('journal.images.hint')}
 							</p>
 						</div>
 					</div>
 
-					<div class="flex justify-between gap-3 mt-6 pt-4 border-t border-gray-200">
+					<div class="flex justify-between gap-3 mt-6 pt-4 border-t border-primary-100">
 						<div>
 							{#if isEditing && editingEntry}
 								<button
@@ -745,7 +745,7 @@
 				<img
 					src={lightboxImages[lightboxIndex].url}
 					alt={lightboxImages[lightboxIndex].fileName}
-					class="max-w-full max-h-[90vh] object-contain rounded-lg"
+					class="max-w-full max-h-[90vh] object-contain rounded-2xl"
 				/>
 			</div>
 

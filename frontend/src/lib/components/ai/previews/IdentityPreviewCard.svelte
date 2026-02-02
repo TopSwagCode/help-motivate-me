@@ -61,14 +61,14 @@
 			bind:value={localData.name}
 			onblur={() => { editingName = false; onchange?.(localData); }}
 			onkeydown={(e) => { if (e.key === 'Enter') { editingName = false; onchange?.(localData); } if (e.key === 'Escape') editingName = false; }}
-			class="w-full text-lg font-semibold text-gray-900 bg-white border border-purple-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-purple-400"
+			class="w-full text-lg font-semibold text-cocoa-800 bg-warm-paper border border-purple-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-purple-400"
 			autofocus
 		/>
 	{:else}
 		<button
 			type="button"
 			onclick={() => editingName = true}
-			class="text-lg font-semibold text-gray-900 hover:bg-purple-100 rounded px-1 -mx-1 transition-colors text-left w-full"
+			class="text-lg font-semibold text-cocoa-800 hover:bg-purple-100 rounded px-1 -mx-1 transition-colors text-left w-full"
 			title={$t('ai.preview.clickToEdit')}
 		>
 			{localData.name || $t('ai.preview.notSet')}
@@ -81,7 +81,7 @@
 			bind:value={localData.description}
 			onblur={() => { editingDescription = false; onchange?.(localData); }}
 			onkeydown={(e) => { if (e.key === 'Escape') editingDescription = false; }}
-			class="w-full text-gray-600 mt-1 text-sm bg-white border border-purple-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-purple-400 resize-none"
+			class="w-full text-cocoa-600 mt-1 text-sm bg-warm-paper border border-purple-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-purple-400 resize-none"
 			rows="2"
 			autofocus
 		></textarea>
@@ -89,7 +89,7 @@
 		<button
 			type="button"
 			onclick={() => editingDescription = true}
-			class="text-gray-600 mt-1 text-sm hover:bg-purple-100 rounded px-1 -mx-1 transition-colors text-left w-full {!localData.description ? 'italic text-gray-400' : ''}"
+			class="text-cocoa-600 mt-1 text-sm hover:bg-purple-100 rounded px-1 -mx-1 transition-colors text-left w-full {!localData.description ? 'italic text-gray-400' : ''}"
 			title={$t('ai.preview.clickToEdit')}
 		>
 			{localData.description || $t('ai.preview.addDescription')}
@@ -100,7 +100,7 @@
 	<div class="mt-4 flex flex-wrap gap-4">
 		<!-- Editable Icon (Emoji) -->
 		<div class="flex-1 min-w-0">
-			<div class="text-xs font-medium text-gray-500 mb-2">{$t('identities.form.emoji')}</div>
+			<div class="text-xs font-medium text-cocoa-500 mb-2">{$t('identities.form.emoji')}</div>
 			{#if showEmojiPicker}
 				<div class="relative">
 					<EmojiPicker value={localData.icon || ''} onchange={handleEmojiChange} />
@@ -116,7 +116,7 @@
 				<button
 					type="button"
 					onclick={() => showEmojiPicker = true}
-					class="flex items-center gap-2 px-3 py-2 bg-white border border-purple-200 rounded-lg hover:bg-purple-50 transition-colors"
+					class="flex items-center gap-2 px-3 py-2 bg-warm-paper border border-purple-200 rounded-2xl hover:bg-purple-50 transition-colors"
 					title={$t('ai.preview.clickToEdit')}
 				>
 					{#if localData.icon}
@@ -133,10 +133,10 @@
 
 		<!-- Editable Color -->
 		<div class="flex-1 min-w-0">
-			<div class="text-xs font-medium text-gray-500 mb-2">{$t('identities.form.color')}</div>
+			<div class="text-xs font-medium text-cocoa-500 mb-2">{$t('identities.form.color')}</div>
 			{#if showColorPicker}
 				<div class="relative">
-					<ColorPicker value={localData.color || '#6366f1'} onchange={handleColorChange} />
+					<ColorPicker value={localData.color || '#d4944c'} onchange={handleColorChange} />
 					<button
 						type="button"
 						onclick={() => showColorPicker = false}
@@ -149,14 +149,14 @@
 				<button
 					type="button"
 					onclick={() => showColorPicker = true}
-					class="flex items-center gap-2 px-3 py-2 bg-white border border-purple-200 rounded-lg hover:bg-purple-50 transition-colors"
+					class="flex items-center gap-2 px-3 py-2 bg-warm-paper border border-purple-200 rounded-2xl hover:bg-purple-50 transition-colors"
 					title={$t('ai.preview.clickToEdit')}
 				>
 					<span
-						class="w-6 h-6 rounded-full border border-gray-200"
-						style="background-color: {localData.color || '#6366f1'}"
+						class="w-6 h-6 rounded-full border border-primary-100"
+						style="background-color: {localData.color || '#d4944c'}"
 					></span>
-					<span class="text-sm text-gray-600">{localData.color || '#6366f1'}</span>
+					<span class="text-sm text-cocoa-600">{localData.color || '#d4944c'}</span>
 					<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
 					</svg>
@@ -166,7 +166,7 @@
 	</div>
 
 	{#if localData.reasoning}
-		<div class="mt-4 p-3 bg-purple-100 rounded-lg">
+		<div class="mt-4 p-3 bg-purple-100 rounded-2xl">
 			<div class="flex items-start gap-2">
 				<svg class="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />

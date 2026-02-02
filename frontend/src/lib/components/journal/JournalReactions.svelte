@@ -106,17 +106,17 @@
 				onfocus={() => showTooltip(reaction.id)}
 				onblur={hideTooltip}
 				disabled={loading}
-				class="reaction-btn inline-flex items-center gap-1.5 rounded-full text-lg transition-all duration-200
+				class="reaction-btn inline-flex items-center gap-1.5 rounded-full text-lg transition-all duration-300
 					{isOwnReaction(reaction) 
 						? 'bg-primary-100 border-2 border-primary-400 hover:bg-primary-200 hover:border-primary-500 shadow-sm' 
-						: 'bg-white border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300'}
+						: 'bg-warm-paper border-2 border-primary-100 hover:bg-warm-cream hover:border-primary-200'}
 					{loading ? 'opacity-50' : ''}
 					{compact ? 'px-2 py-1' : 'px-3 py-1.5'}"
 			>
 				<span class="reaction-emoji text-xl">{reaction.emoji}</span>
 				{#if !compact}
 					<span class="reaction-name text-xs font-medium truncate max-w-[80px]
-						{isOwnReaction(reaction) ? 'text-primary-700' : 'text-gray-600'}">
+						{isOwnReaction(reaction) ? 'text-primary-700' : 'text-cocoa-600'}">
 						{isOwnReaction(reaction) ? $t('journal.reactions.you') : reaction.userDisplayName}
 					</span>
 				{/if}
@@ -125,7 +125,7 @@
 			<!-- Custom tooltip -->
 			{#if hoveredReactionId === reaction.id}
 				<div class="tooltip absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 
-					bg-gray-900 text-white text-sm rounded-lg shadow-lg whitespace-nowrap z-50
+					bg-gray-900 text-white text-sm rounded-2xl shadow-lg whitespace-nowrap z-50
 					animate-fade-in">
 					<div class="font-medium">{reaction.userDisplayName}</div>
 					<div class="text-gray-300 text-xs mt-0.5">
@@ -153,9 +153,9 @@
 				onclick={handleOpenPicker}
 				ontouchend={handleOpenPicker}
 				disabled={loading}
-				class="add-reaction-btn inline-flex items-center gap-1.5 rounded-full bg-white
-					border-2 border-dashed border-gray-300 hover:border-primary-400 hover:bg-primary-50
-					text-gray-500 hover:text-primary-600 transition-all duration-200 
+				class="add-reaction-btn inline-flex items-center gap-1.5 rounded-full bg-warm-paper
+					border-2 border-dashed border-primary-200 hover:border-primary-400 hover:bg-primary-50
+					text-cocoa-500 hover:text-primary-600 transition-all duration-300 
 					active:bg-primary-100 active:border-primary-500
 					{compact ? 'px-2 py-1' : 'px-3 py-1.5'}"
 				title={$t('journal.reactions.addReaction')}

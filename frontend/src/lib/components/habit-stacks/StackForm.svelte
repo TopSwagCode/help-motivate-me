@@ -114,13 +114,13 @@
 
 <form bind:this={formContainerRef} onsubmit={handleSubmit} class="space-y-6">
 	{#if error}
-		<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+		<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm">
 			{error}
 		</div>
 	{/if}
 
 	<div>
-		<label for="name" class="block text-sm font-medium text-gray-700 mb-1">{$t('habitStacks.form.name')}</label>
+		<label for="name" class="block text-sm font-medium text-cocoa-700 mb-1">{$t('habitStacks.form.name')}</label>
 		<input
 			type="text"
 			id="name"
@@ -133,7 +133,7 @@
 
 	{#if identities.length > 0}
 		<div>
-			<label for="identityId" class="block text-sm font-medium text-gray-700 mb-1">
+			<label for="identityId" class="block text-sm font-medium text-cocoa-700 mb-1">
 				{$t('habitStacks.form.identity')}
 			</label>
 			<select
@@ -149,22 +149,22 @@
 					</option>
 				{/each}
 			</select>
-			<p class="text-xs text-gray-500 mt-1">{$t('habitStacks.form.identityHint')}</p>
+			<p class="text-xs text-cocoa-500 mt-1">{$t('habitStacks.form.identityHint')}</p>
 		</div>
 	{/if}
 
 	<div>
-		<span class="block text-sm font-medium text-gray-700 mb-3">{$t('habitStacks.createPopup.habitChain')}</span>
+		<span class="block text-sm font-medium text-cocoa-700 mb-3">{$t('habitStacks.createPopup.habitChain')}</span>
 		<div class="space-y-4">
 			{#each items as item, i (i)}
-				<div class="relative pl-6 pb-4 {i < items.length - 1 ? 'border-l-2 border-gray-200 ml-3' : 'ml-3'}">
+				<div class="relative pl-6 pb-4 {i < items.length - 1 ? 'border-l-2 border-primary-100 ml-3' : 'ml-3'}">
 					<div class="absolute left-0 top-0 w-6 h-6 -ml-3 rounded-full bg-primary-100 border-2 border-primary-500 flex items-center justify-center">
 						<span class="text-xs font-medium text-primary-700">{i + 1}</span>
 					</div>
-					<div class="bg-gray-50 rounded-lg p-4">
+					<div class="bg-warm-cream rounded-2xl p-4">
 						<div class="space-y-3">
 							<div>
-								<label for="cue-input-{i}" class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.afterI')}</label>
+								<label for="cue-input-{i}" class="block text-xs font-medium text-cocoa-500 mb-1">{$t('habitStacks.createPopup.afterI')}</label>
 								<input
 									id="cue-input-{i}"
 									type="text"
@@ -175,7 +175,7 @@
 								/>
 							</div>
 							<div>
-								<label for="habit-input-{i}" class="block text-xs font-medium text-gray-500 mb-1">{$t('habitStacks.createPopup.iWillDo')}</label>
+								<label for="habit-input-{i}" class="block text-xs font-medium text-cocoa-500 mb-1">{$t('habitStacks.createPopup.iWillDo')}</label>
 								<input
 									id="habit-input-{i}"
 									type="text"
@@ -213,7 +213,7 @@
 		</button>
 	</div>
 
-	<div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+	<div class="flex justify-end gap-3 pt-4 border-t border-primary-100">
 		<button type="button" onclick={oncancel} class="btn-secondary" disabled={loading}>
 			{$t('common.cancel')}
 		</button>

@@ -20,7 +20,7 @@
 	};
 
 	const getStreakColor = () => {
-		if (currentStreak === 0) return 'bg-gray-100 text-gray-600';
+		if (currentStreak === 0) return 'bg-gray-100 text-cocoa-600';
 		if (isOnGracePeriod) return 'bg-yellow-100 text-yellow-700';
 		if (currentStreak >= 30) return 'bg-orange-100 text-orange-700';
 		if (currentStreak >= 7) return 'bg-green-100 text-green-700';

@@ -251,11 +251,11 @@
 </script>
 
 <div>
-	<h2 class="text-lg font-semibold text-gray-900 mb-2">{$t('settings.notifications.title')}</h2>
-	<p class="text-sm text-gray-600 mb-6">{$t('settings.notifications.description')}</p>
+	<h2 class="text-lg font-semibold text-cocoa-800 mb-2">{$t('settings.notifications.title')}</h2>
+	<p class="text-sm text-cocoa-600 mb-6">{$t('settings.notifications.description')}</p>
 
 	{#if error}
-		<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+		<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm mb-4">
 			{error}
 		</div>
 	{/if}
@@ -272,21 +272,21 @@
 			<button
 				onclick={toggleMaster}
 				disabled={saving}
-				class="w-full flex items-center justify-between p-4 rounded-lg border-2 transition-all duration-200 {preferences.notificationsEnabled
+				class="w-full flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-300 {preferences.notificationsEnabled
 					? 'border-primary-500 bg-primary-50'
-					: 'border-gray-200 bg-white hover:border-gray-300'}"
+					: 'border-primary-100 bg-warm-paper hover:border-primary-200'}"
 			>
 				<div class="flex-1 text-left">
-					<h3 class="font-medium text-gray-900">{$t('settings.notifications.master.label')}</h3>
-					<p class="text-sm text-gray-500">{$t('settings.notifications.master.description')}</p>
+					<h3 class="font-medium text-cocoa-800">{$t('settings.notifications.master.label')}</h3>
+					<p class="text-sm text-cocoa-500">{$t('settings.notifications.master.description')}</p>
 				</div>
 				<div
-					class="relative w-12 h-6 rounded-full transition-colors duration-200 {preferences.notificationsEnabled
+					class="relative w-12 h-6 rounded-full transition-colors duration-300 {preferences.notificationsEnabled
 						? 'bg-primary-600'
 						: 'bg-gray-300'}"
 				>
 					<div
-						class="absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 {preferences.notificationsEnabled
+						class="absolute top-0.5 w-5 h-5 bg-warm-paper rounded-full shadow-sm transition-transform duration-300 {preferences.notificationsEnabled
 							? 'translate-x-6'
 							: 'translate-x-0.5'}"
 					></div>
@@ -297,7 +297,7 @@
 		{#if preferences.notificationsEnabled}
 			<!-- Delivery Channels -->
 			<div class="mb-8">
-				<h3 class="text-sm font-medium text-gray-900 mb-3">
+				<h3 class="text-sm font-medium text-cocoa-800 mb-3">
 					{$t('settings.notifications.channels.title')}
 				</h3>
 				<div class="space-y-2">
@@ -305,15 +305,15 @@
 					<button
 						onclick={() => toggleChannel('emailEnabled')}
 						disabled={saving}
-						class="w-full flex items-center justify-between p-3 rounded-lg border transition-all duration-200 {preferences.emailEnabled
+						class="w-full flex items-center justify-between p-3 rounded-2xl border transition-all duration-300 {preferences.emailEnabled
 							? 'border-primary-300 bg-primary-50'
-							: 'border-gray-200 bg-white hover:border-gray-300'}"
+							: 'border-primary-100 bg-warm-paper hover:border-primary-200'}"
 					>
 						<div class="flex items-center gap-3">
 							<div
 								class="w-8 h-8 rounded-full flex items-center justify-center {preferences.emailEnabled
 									? 'bg-primary-100 text-primary-600'
-									: 'bg-gray-100 text-gray-500'}"
+									: 'bg-gray-100 text-cocoa-500'}"
 							>
 								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path
@@ -325,19 +325,19 @@
 								</svg>
 							</div>
 							<div class="text-left">
-								<p class="font-medium text-gray-900">{$t('settings.notifications.channels.email')}</p>
-								<p class="text-xs text-gray-500">
+								<p class="font-medium text-cocoa-800">{$t('settings.notifications.channels.email')}</p>
+								<p class="text-xs text-cocoa-500">
 									{$t('settings.notifications.channels.emailDescription')}
 								</p>
 							</div>
 						</div>
 						<div
-							class="w-10 h-5 rounded-full transition-colors duration-200 {preferences.emailEnabled
+							class="w-10 h-5 rounded-full transition-colors duration-300 {preferences.emailEnabled
 								? 'bg-primary-600'
 								: 'bg-gray-300'}"
 						>
 							<div
-								class="w-4 h-4 mt-0.5 bg-white rounded-full shadow-sm transition-transform duration-200 {preferences.emailEnabled
+								class="w-4 h-4 mt-0.5 bg-warm-paper rounded-full shadow-sm transition-transform duration-300 {preferences.emailEnabled
 									? 'translate-x-5'
 									: 'translate-x-0.5'}"
 							></div>
@@ -348,15 +348,15 @@
 					<button
 						onclick={() => toggleChannel('smsEnabled')}
 						disabled={saving}
-						class="w-full flex items-center justify-between p-3 rounded-lg border transition-all duration-200 {preferences.smsEnabled
+						class="w-full flex items-center justify-between p-3 rounded-2xl border transition-all duration-300 {preferences.smsEnabled
 							? 'border-primary-300 bg-primary-50'
-							: 'border-gray-200 bg-white hover:border-gray-300'}"
+							: 'border-primary-100 bg-warm-paper hover:border-primary-200'}"
 					>
 						<div class="flex items-center gap-3">
 							<div
 								class="w-8 h-8 rounded-full flex items-center justify-center {preferences.smsEnabled
 									? 'bg-primary-100 text-primary-600'
-									: 'bg-gray-100 text-gray-500'}"
+									: 'bg-gray-100 text-cocoa-500'}"
 							>
 								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path
@@ -368,19 +368,19 @@
 								</svg>
 							</div>
 							<div class="text-left">
-								<p class="font-medium text-gray-900">{$t('settings.notifications.channels.sms')}</p>
-								<p class="text-xs text-gray-500">
+								<p class="font-medium text-cocoa-800">{$t('settings.notifications.channels.sms')}</p>
+								<p class="text-xs text-cocoa-500">
 									{$t('settings.notifications.channels.smsDescription')}
 								</p>
 							</div>
 						</div>
 						<div
-							class="w-10 h-5 rounded-full transition-colors duration-200 {preferences.smsEnabled
+							class="w-10 h-5 rounded-full transition-colors duration-300 {preferences.smsEnabled
 								? 'bg-primary-600'
 								: 'bg-gray-300'}"
 						>
 							<div
-								class="w-4 h-4 mt-0.5 bg-white rounded-full shadow-sm transition-transform duration-200 {preferences.smsEnabled
+								class="w-4 h-4 mt-0.5 bg-warm-paper rounded-full shadow-sm transition-transform duration-300 {preferences.smsEnabled
 									? 'translate-x-5'
 									: 'translate-x-0.5'}"
 							></div>
@@ -393,15 +393,15 @@
 							<button
 								onclick={togglePush}
 								disabled={pushLoading}
-								class="w-full flex items-center justify-between p-3 rounded-lg border transition-all duration-200 {pushEnabled
+								class="w-full flex items-center justify-between p-3 rounded-2xl border transition-all duration-300 {pushEnabled
 									? 'border-primary-300 bg-primary-50'
-									: 'border-gray-200 bg-white hover:border-gray-300'}"
+									: 'border-primary-100 bg-warm-paper hover:border-primary-200'}"
 							>
 								<div class="flex items-center gap-3">
 									<div
 										class="w-8 h-8 rounded-full flex items-center justify-center {pushEnabled
 											? 'bg-primary-100 text-primary-600'
-											: 'bg-gray-100 text-gray-500'}"
+											: 'bg-gray-100 text-cocoa-500'}"
 									>
 										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path
@@ -413,8 +413,8 @@
 										</svg>
 									</div>
 									<div class="text-left">
-										<p class="font-medium text-gray-900">{$t('settings.notifications.channels.push')}</p>
-										<p class="text-xs text-gray-500">
+										<p class="font-medium text-cocoa-800">{$t('settings.notifications.channels.push')}</p>
+										<p class="text-xs text-cocoa-500">
 											{#if pushPermission === 'denied'}
 												{$t('settings.notifications.channels.pushBlocked')}
 											{:else if pushEnabled}
@@ -429,12 +429,12 @@
 									<div class="animate-spin w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full"></div>
 								{:else}
 									<div
-										class="w-10 h-5 rounded-full transition-colors duration-200 {pushEnabled
+										class="w-10 h-5 rounded-full transition-colors duration-300 {pushEnabled
 											? 'bg-primary-600'
 										: 'bg-gray-300'} {pushPermission === 'denied' ? 'opacity-50' : ''}"
 								>
 									<div
-										class="w-4 h-4 mt-0.5 bg-white rounded-full shadow-sm transition-transform duration-200 {pushEnabled
+										class="w-4 h-4 mt-0.5 bg-warm-paper rounded-full shadow-sm transition-transform duration-300 {pushEnabled
 											? 'translate-x-5'
 											: 'translate-x-0.5'}"
 									></div>
@@ -442,7 +442,7 @@
 							{/if}
 						</button>
 						{#if totalDevices > 0}
-							<p class="text-xs text-gray-500 px-3 py-1 bg-gray-50 rounded">
+							<p class="text-xs text-cocoa-500 px-3 py-1 bg-warm-cream rounded">
 								💡 Push notifications are enabled on <strong>{totalDevices}</strong> {totalDevices === 1 ? 'device' : 'devices'}. 
 								Enable on each device separately via Settings → Notifications.
 							</p>
@@ -456,7 +456,7 @@
 
 					<!-- Phone (Coming Soon) -->
 					<div
-						class="w-full flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-gray-50 opacity-60"
+						class="w-full flex items-center justify-between p-3 rounded-2xl border border-primary-100 bg-warm-cream opacity-60"
 					>
 						<div class="flex items-center gap-3">
 							<div class="w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 text-gray-400">
@@ -470,14 +470,14 @@
 								</svg>
 							</div>
 							<div class="text-left">
-								<p class="font-medium text-gray-500">{$t('settings.notifications.channels.phone')}</p>
+								<p class="font-medium text-cocoa-500">{$t('settings.notifications.channels.phone')}</p>
 								<p class="text-xs text-gray-400">
 									{$t('settings.notifications.channels.phoneDescription')}
 								</p>
 							</div>
 						</div>
 						<span
-							class="px-2 py-0.5 text-xs font-medium bg-gray-200 text-gray-600 rounded-full"
+							class="px-2 py-0.5 text-xs font-medium bg-gray-200 text-cocoa-600 rounded-full"
 						>
 							{$t('settings.notifications.channels.comingSoon')}
 						</span>
@@ -488,7 +488,7 @@
 			<!-- Notification Types -->
 			<div class="mb-8">
 				<div class="flex items-center justify-between mb-3">
-					<h3 class="text-sm font-medium text-gray-900">
+					<h3 class="text-sm font-medium text-cocoa-800">
 						{$t('settings.notifications.types.title')}
 					</h3>
 					<button
@@ -504,29 +504,29 @@
 						<button
 							onclick={() => toggleNotificationType(type.field)}
 							disabled={saving}
-							class="w-full flex items-center justify-between p-3 rounded-lg border transition-all duration-200 {preferences[
+							class="w-full flex items-center justify-between p-3 rounded-2xl border transition-all duration-300 {preferences[
 								type.field
 							]
 								? 'border-primary-300 bg-primary-50'
-								: 'border-gray-200 bg-white hover:border-gray-300'}"
+								: 'border-primary-100 bg-warm-paper hover:border-primary-200'}"
 						>
 							<div class="text-left">
-								<p class="font-medium text-gray-900">
+								<p class="font-medium text-cocoa-800">
 									{$t(`settings.notifications.types.${type.key}`)}
 								</p>
-								<p class="text-xs text-gray-500">
+								<p class="text-xs text-cocoa-500">
 									{$t(`settings.notifications.types.${type.key}Description`)}
 								</p>
 							</div>
 							<div
-								class="w-10 h-5 rounded-full transition-colors duration-200 flex-shrink-0 ml-3 {preferences[
+								class="w-10 h-5 rounded-full transition-colors duration-300 flex-shrink-0 ml-3 {preferences[
 									type.field
 								]
 									? 'bg-primary-600'
 									: 'bg-gray-300'}"
 							>
 								<div
-									class="w-4 h-4 mt-0.5 bg-white rounded-full shadow-sm transition-transform duration-200 {preferences[
+									class="w-4 h-4 mt-0.5 bg-warm-paper rounded-full shadow-sm transition-transform duration-300 {preferences[
 										type.field
 									]
 										? 'translate-x-5'
@@ -540,16 +540,16 @@
 
 			<!-- Schedule Section -->
 			<div class="mb-6">
-				<h3 class="text-sm font-medium text-gray-900 mb-1">
+				<h3 class="text-sm font-medium text-cocoa-800 mb-1">
 					{$t('settings.notifications.schedule.title')}
 				</h3>
-				<p class="text-xs text-gray-500 mb-4">
+				<p class="text-xs text-cocoa-500 mb-4">
 					{$t('settings.notifications.schedule.description')}
 				</p>
 
 				<!-- Days Selection -->
 				<div class="mb-6">
-					<p class="text-xs font-medium text-gray-700 mb-2">
+					<p class="text-xs font-medium text-cocoa-700 mb-2">
 						{$t('settings.notifications.schedule.days.title')}
 					</p>
 
@@ -561,7 +561,7 @@
 							class="px-3 py-1.5 text-xs font-medium rounded-full transition-colors {preferences.selectedDays ===
 							NotificationDays.All
 								? 'bg-primary-600 text-white'
-								: 'bg-gray-100 text-gray-600 hover:bg-gray-200'}"
+								: 'bg-gray-100 text-cocoa-600 hover:bg-gray-200'}"
 						>
 							{$t('settings.notifications.schedule.days.selectAll')}
 						</button>
@@ -571,7 +571,7 @@
 							class="px-3 py-1.5 text-xs font-medium rounded-full transition-colors {preferences.selectedDays ===
 							NotificationDays.Weekdays
 								? 'bg-primary-600 text-white'
-								: 'bg-gray-100 text-gray-600 hover:bg-gray-200'}"
+								: 'bg-gray-100 text-cocoa-600 hover:bg-gray-200'}"
 						>
 							{$t('settings.notifications.schedule.days.weekdays')}
 						</button>
@@ -581,7 +581,7 @@
 							class="px-3 py-1.5 text-xs font-medium rounded-full transition-colors {preferences.selectedDays ===
 							NotificationDays.Weekend
 								? 'bg-primary-600 text-white'
-								: 'bg-gray-100 text-gray-600 hover:bg-gray-200'}"
+								: 'bg-gray-100 text-cocoa-600 hover:bg-gray-200'}"
 						>
 							{$t('settings.notifications.schedule.days.weekend')}
 						</button>
@@ -593,11 +593,11 @@
 							<button
 								onclick={() => toggleDay(day.flag)}
 								disabled={saving}
-								class="w-10 h-10 rounded-lg text-xs font-medium transition-colors {isDaySelected(
+								class="w-10 h-10 rounded-2xl text-xs font-medium transition-colors {isDaySelected(
 									day.flag
 								)
 									? 'bg-primary-600 text-white'
-									: 'bg-gray-100 text-gray-600 hover:bg-gray-200'}"
+									: 'bg-gray-100 text-cocoa-600 hover:bg-gray-200'}"
 							>
 								{$t(`settings.notifications.schedule.days.${day.key}`)}
 							</button>
@@ -607,7 +607,7 @@
 
 				<!-- Time Slot Selection -->
 				<div class="mb-6">
-					<p class="text-xs font-medium text-gray-700 mb-2">
+					<p class="text-xs font-medium text-cocoa-700 mb-2">
 						{$t('settings.notifications.schedule.timeSlot.title')}
 					</p>
 					<div class="grid grid-cols-2 gap-2">
@@ -615,16 +615,16 @@
 							<button
 								onclick={() => selectTimeSlot(slot.id)}
 								disabled={saving}
-								class="p-3 rounded-lg border-2 text-left transition-all duration-200 {preferences.preferredTimeSlot ===
+								class="p-3 rounded-2xl border-2 text-left transition-all duration-300 {preferences.preferredTimeSlot ===
 								slot.id
 									? 'border-primary-500 bg-primary-50'
-									: 'border-gray-200 bg-white hover:border-gray-300'}"
+									: 'border-primary-100 bg-warm-paper hover:border-primary-200'}"
 							>
-								<p class="font-medium text-gray-900 text-sm">
+								<p class="font-medium text-cocoa-800 text-sm">
 									{$t(`settings.notifications.schedule.timeSlot.${slot.labelKey}`)}
 								</p>
 								{#if slot.timeKey}
-									<p class="text-xs text-gray-500">
+									<p class="text-xs text-cocoa-500">
 										{$t(`settings.notifications.schedule.timeSlot.${slot.timeKey}`)}
 									</p>
 								{/if}
@@ -636,7 +636,7 @@
 					{#if preferences.preferredTimeSlot === 'Custom'}
 						<div class="mt-3 flex gap-3">
 							<div class="flex-1">
-								<label for="customTimeStart" class="block text-xs font-medium text-gray-700 mb-1">
+								<label for="customTimeStart" class="block text-xs font-medium text-cocoa-700 mb-1">
 									{$t('settings.notifications.schedule.timeSlot.customStart')}
 								</label>
 								<input
@@ -645,11 +645,11 @@
 									value={preferences.customTimeStart || ''}
 									onchange={updateCustomTimeStart}
 									disabled={saving}
-									class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+									class="w-full px-3 py-2 border border-primary-200 rounded-2xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
 								/>
 							</div>
 							<div class="flex-1">
-								<label for="customTimeEnd" class="block text-xs font-medium text-gray-700 mb-1">
+								<label for="customTimeEnd" class="block text-xs font-medium text-cocoa-700 mb-1">
 									{$t('settings.notifications.schedule.timeSlot.customEnd')}
 								</label>
 								<input
@@ -658,7 +658,7 @@
 									value={preferences.customTimeEnd || ''}
 									onchange={updateCustomTimeEnd}
 									disabled={saving}
-									class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+									class="w-full px-3 py-2 border border-primary-200 rounded-2xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
 								/>
 							</div>
 						</div>
@@ -667,10 +667,10 @@
 
 				<!-- Timezone -->
 				<div class="mb-4">
-					<p class="text-xs font-medium text-gray-700 mb-1">
+					<p class="text-xs font-medium text-cocoa-700 mb-1">
 						{$t('settings.notifications.schedule.timezone.title')}
 					</p>
-					<div class="flex items-center gap-2 text-sm text-gray-600">
+					<div class="flex items-center gap-2 text-sm text-cocoa-600">
 						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path
 								stroke-linecap="round"
@@ -684,7 +684,7 @@
 				</div>
 
 				<!-- Estimated timing note -->
-				<div class="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+				<div class="p-3 bg-amber-50 border border-amber-200 rounded-2xl">
 					<p class="text-xs text-amber-800">
 						{$t('settings.notifications.schedule.estimatedNote')}
 					</p>
@@ -693,7 +693,7 @@
 		{/if}
 
 		{#if saving}
-			<p class="text-sm text-gray-500 text-center">{$t('common.saving')}</p>
+			<p class="text-sm text-cocoa-500 text-center">{$t('common.saving')}</p>
 		{/if}
 	{/if}
 </div>

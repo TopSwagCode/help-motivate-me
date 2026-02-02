@@ -54,8 +54,8 @@
 	<div class="max-w-md w-full">
 		<div class="text-center mb-8">
 			<a href="/" class="text-2xl font-bold text-primary-600">Help Motivate Me</a>
-			<h1 class="mt-6 text-3xl font-bold text-gray-900">Create your account</h1>
-			<p class="mt-2 text-gray-600">
+			<h1 class="mt-6 text-3xl font-bold text-cocoa-800">Create your account</h1>
+			<p class="mt-2 text-cocoa-600">
 				Already have an account?
 				<a href="/auth/login" class="text-primary-600 hover:text-primary-500 font-medium">Sign in</a>
 			</p>
@@ -100,17 +100,17 @@
 
 			<div class="relative my-6">
 				<div class="absolute inset-0 flex items-center">
-					<div class="w-full border-t border-gray-300"></div>
+					<div class="w-full border-t border-primary-200"></div>
 				</div>
 				<div class="relative flex justify-center text-sm">
-					<span class="px-2 bg-white text-gray-500">Or continue with</span>
+					<span class="px-2 bg-warm-paper text-cocoa-500">Or continue with</span>
 				</div>
 			</div>
 
 			<!-- Registration Form -->
 			<form onsubmit={handleSubmit} class="space-y-4">
 				{#if error}
-					<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+					<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm">
 						{error}
 					</div>
 				{/if}
@@ -163,7 +163,7 @@
 						autocomplete="new-password"
 						class="input"
 					/>
-					<p class="mt-1 text-xs text-gray-500">Must be at least 8 characters</p>
+					<p class="mt-1 text-xs text-cocoa-500">Must be at least 8 characters</p>
 				</div>
 
 				<button type="submit" disabled={loading} class="btn-primary w-full">
@@ -172,7 +172,7 @@
 			</form>
 		</div>
 
-		<div class="mt-6 text-center text-sm text-gray-500">
+		<div class="mt-6 text-center text-sm text-cocoa-500">
 			<p>
 				Need help? Check out our <a href="/faq" class="text-primary-600 hover:text-primary-500 font-medium">FAQ</a>
 			</p>

@@ -75,12 +75,12 @@
 
 	<!-- Identity Selection -->
 	<div class="mb-3">
-		<label class="block text-xs text-gray-500 mb-1">{$t('ai.preview.forIdentity')}</label>
+		<label class="block text-xs text-cocoa-500 mb-1">{$t('ai.preview.forIdentity')}</label>
 		{#if identities.length > 0}
 			<select
 				value={localData.identityId}
 				onchange={handleIdentityChange}
-				class="w-full px-2 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-amber-400 focus:outline-none"
+				class="w-full px-2 py-1.5 border border-amber-300 rounded-2xl text-sm bg-warm-paper focus:ring-2 focus:ring-amber-400 focus:outline-none"
 			>
 				{#each identities as identity}
 					<option value={identity.id}>
@@ -89,7 +89,7 @@
 				{/each}
 			</select>
 		{:else}
-			<div class="flex items-center gap-2 text-sm text-gray-700">
+			<div class="flex items-center gap-2 text-sm text-cocoa-700">
 				<span>{localData.identityName}</span>
 			</div>
 		{/if}
@@ -97,13 +97,13 @@
 
 	<!-- Editable Description -->
 	<div class="mb-3">
-		<label class="block text-xs text-gray-500 mb-1">{$t('ai.preview.whatYouDid')}</label>
+		<label class="block text-xs text-cocoa-500 mb-1">{$t('ai.preview.whatYouDid')}</label>
 		{#if editingDescription}
 			<textarea
 				bind:value={localData.description}
 				onblur={() => { editingDescription = false; onchange?.(localData); }}
 				onkeydown={(e) => { if (e.key === 'Escape') editingDescription = false; }}
-				class="w-full text-sm text-gray-700 bg-white border border-amber-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-amber-400 resize-none"
+				class="w-full text-sm text-cocoa-700 bg-warm-paper border border-amber-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-amber-400 resize-none"
 				rows="2"
 				autofocus
 			></textarea>
@@ -111,7 +111,7 @@
 			<button
 				type="button"
 				onclick={() => editingDescription = true}
-				class="text-sm text-gray-700 hover:bg-amber-100 rounded px-1 -mx-1 transition-colors text-left w-full min-h-[40px]"
+				class="text-sm text-cocoa-700 hover:bg-amber-100 rounded px-1 -mx-1 transition-colors text-left w-full min-h-[40px]"
 				title={$t('ai.preview.clickToEdit')}
 			>
 				{localData.description || $t('ai.preview.notSet')}
@@ -121,11 +121,11 @@
 
 	<!-- Intensity Selection -->
 	<div class="mb-3">
-		<label class="block text-xs text-gray-500 mb-1">{$t('ai.preview.effortLevel')}</label>
+		<label class="block text-xs text-cocoa-500 mb-1">{$t('ai.preview.effortLevel')}</label>
 		<select
 			value={localData.intensity}
 			onchange={handleIntensityChange}
-			class="w-full px-2 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-amber-400 focus:outline-none"
+			class="w-full px-2 py-1.5 border border-amber-300 rounded-2xl text-sm bg-warm-paper focus:ring-2 focus:ring-amber-400 focus:outline-none"
 		>
 			<option value="Easy">{intensityEmoji.Easy} {$t('identityProof.intensity.easy')}</option>
 			<option value="Moderate">{intensityEmoji.Moderate} {$t('identityProof.intensity.moderate')}</option>

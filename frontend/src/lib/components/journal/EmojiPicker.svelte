@@ -222,7 +222,7 @@
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div 
-			class="emoji-picker-content bg-white rounded-t-2xl w-full max-h-[70vh] overflow-hidden animate-slide-up"
+			class="emoji-picker-content bg-warm-paper rounded-t-2xl w-full max-h-[70vh] overflow-hidden animate-slide-up"
 			onclick={(e) => e.stopPropagation()}
 			ontouchstart={(e) => e.stopPropagation()}
 		>
@@ -233,15 +233,15 @@
 
 			<!-- Header -->
 			<div class="flex items-center justify-between px-4 pb-3 border-b border-gray-100">
-				<h3 class="text-lg font-semibold text-gray-900">
+				<h3 class="text-lg font-semibold text-cocoa-800">
 					{$t('journal.reactions.addReaction')}
 				</h3>
 				<button
 					type="button"
 					onclick={handleCloseButton}
 					ontouchend={handleCloseButton}
-					class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600 
-						hover:bg-gray-100 rounded-full transition-colors active:bg-gray-200"
+					class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-cocoa-600 
+						hover:bg-primary-50 rounded-full transition-colors active:bg-gray-200"
 					aria-label="Close"
 				>
 					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -254,7 +254,7 @@
 				{#if !showExtended}
 					<!-- Quick emoji section -->
 					<div class="mb-4">
-						<div class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
+						<div class="text-xs font-medium text-cocoa-500 uppercase tracking-wider mb-3">
 							{$t('journal.reactions.quickReactions')}
 						</div>
 						<div class="flex justify-around">
@@ -288,7 +288,7 @@
 							type="button"
 							onclick={toggleExtended}
 							ontouchend={toggleExtended}
-							class="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 active:text-gray-900"
+							class="flex items-center gap-2 text-cocoa-600 hover:text-cocoa-800 mb-4 active:text-cocoa-800"
 						>
 							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -299,7 +299,7 @@
 
 					<!-- Category tabs -->
 					<div class="mb-4">
-						<div class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
+						<div class="text-xs font-medium text-cocoa-500 uppercase tracking-wider mb-2">
 							{$t('journal.reactions.category')}
 						</div>
 						<div class="flex gap-2 p-1.5 bg-gray-100 rounded-xl overflow-x-auto overflow-y-hidden">
@@ -308,10 +308,10 @@
 									type="button"
 									onclick={(e) => selectCategory(e, index)}
 									ontouchend={(e) => selectCategory(e, index)}
-									class="flex-1 min-w-[44px] h-11 flex items-center justify-center text-xl rounded-lg transition-all
+									class="flex-1 min-w-[44px] h-11 flex items-center justify-center text-xl rounded-2xl transition-all
 										{activeCategory === index 
-											? 'bg-white shadow-sm' 
-											: 'hover:bg-white/50 active:bg-white/70'}"
+											? 'bg-warm-paper shadow-sm' 
+											: 'hover:bg-warm-paper/50 active:bg-warm-paper/70'}"
 								>
 									{category.label}
 								</button>
@@ -352,7 +352,7 @@
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<div 
 		bind:this={pickerRef}
-		class="emoji-picker-content fixed bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden"
+		class="emoji-picker-content fixed bg-warm-paper rounded-xl shadow-xl border border-primary-100 overflow-hidden"
 		style="width: {PICKER_WIDTH}px; height: {currentHeight}px; z-index: 9999; {positionStyle}"
 		onclick={(e) => e.stopPropagation()}
 		ontouchstart={(e) => e.stopPropagation()}
@@ -366,7 +366,7 @@
 							type="button"
 							onclick={(e) => handleQuickSelect(e, emoji)}
 							ontouchend={(e) => handleQuickSelect(e, emoji)}
-							class="emoji-btn w-10 h-10 flex items-center justify-center text-xl rounded-lg transition-all cursor-pointer
+							class="emoji-btn w-10 h-10 flex items-center justify-center text-xl rounded-2xl transition-all cursor-pointer
 								hover:bg-primary-100 active:scale-95 active:bg-primary-100"
 							title={emoji}
 						>
@@ -378,7 +378,7 @@
 						onclick={toggleExtended}
 						ontouchend={toggleExtended}
 						class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-primary-600 
-							hover:bg-primary-50 rounded-lg transition-all ml-1 cursor-pointer border border-dashed border-gray-300 hover:border-primary-400"
+							hover:bg-primary-50 rounded-2xl transition-all ml-1 cursor-pointer border border-dashed border-primary-200 hover:border-primary-400"
 						title={$t('journal.reactions.moreEmojis')}
 					>
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -396,15 +396,15 @@
 						type="button"
 						onclick={toggleExtended}
 						ontouchend={toggleExtended}
-						class="w-7 h-7 flex items-center justify-center text-gray-500 hover:text-gray-700 
-							hover:bg-gray-100 rounded-md transition-all cursor-pointer"
+						class="w-7 h-7 flex items-center justify-center text-cocoa-500 hover:text-cocoa-700 
+							hover:bg-primary-50 rounded-md transition-all cursor-pointer"
 						title={$t('journal.reactions.hideMore')}
 					>
 						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
 						</svg>
 					</button>
-					<span class="text-xs font-medium text-gray-500 uppercase tracking-wide">
+					<span class="text-xs font-medium text-cocoa-500 uppercase tracking-wide">
 						{$t('journal.reactions.moreEmojis')}
 					</span>
 				</div>
@@ -414,7 +414,7 @@
 					<div class="text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-1.5 px-0.5">
 						{$t('journal.reactions.category')}
 					</div>
-					<div class="flex gap-1 p-1 bg-gray-50 rounded-lg">
+					<div class="flex gap-1 p-1 bg-warm-cream rounded-2xl">
 						{#each emojiCategories as category, index}
 							<button
 								type="button"
@@ -422,8 +422,8 @@
 								ontouchend={(e) => selectCategory(e, index)}
 								class="category-btn flex-1 h-8 flex items-center justify-center text-base rounded-md transition-all cursor-pointer
 									{activeCategory === index 
-										? 'bg-white shadow-sm border border-gray-200' 
-										: 'hover:bg-white/50'}"
+										? 'bg-warm-paper shadow-sm border border-primary-100' 
+										: 'hover:bg-warm-paper/50'}"
 								title={category.name}
 							>
 								{category.label}
@@ -439,7 +439,7 @@
 							type="button"
 							onclick={(e) => handleExtendedSelect(e, emoji)}
 							ontouchend={(e) => handleExtendedSelect(e, emoji)}
-							class="emoji-btn w-10 h-10 flex items-center justify-center text-xl rounded-lg transition-all cursor-pointer
+							class="emoji-btn w-10 h-10 flex items-center justify-center text-xl rounded-2xl transition-all cursor-pointer
 								hover:bg-primary-100 active:scale-95 active:bg-primary-100"
 						>
 							{emoji}

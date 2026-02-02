@@ -62,9 +62,9 @@
 	<title>{$t('admin.title')} - {$t('common.appName')}</title>
 </svelte:head>
 
-<div class="bg-gray-50">
+<div class="bg-warm-cream">
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-		<h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">{$t('admin.title')}</h1>
+		<h1 class="text-xl sm:text-2xl font-bold text-cocoa-800 mb-4 sm:mb-6">{$t('admin.title')}</h1>
 
 		{#if loading}
 			<div class="flex justify-center py-12">
@@ -74,7 +74,7 @@
 			</div>
 		{:else}
 			<!-- Tab Navigation -->
-			<div class="border-b border-gray-200 mb-4 sm:mb-6 -mx-4 sm:mx-0 px-4 sm:px-0">
+			<div class="border-b border-primary-100 mb-4 sm:mb-6 -mx-4 sm:mx-0 px-4 sm:px-0">
 				<nav class="flex gap-2 sm:gap-4 overflow-x-auto scrollbar-hide">
 					{#each tabs as tab}
 						<button
@@ -82,7 +82,7 @@
 							class="px-2 sm:px-1 py-2 sm:py-3 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 {activeTab ===
 							tab.id
 								? 'border-primary-600 text-primary-600'
-								: 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}"
+								: 'border-transparent text-cocoa-500 hover:text-cocoa-700 hover:border-primary-200'}"
 						>
 							{tab.label}
 						</button>

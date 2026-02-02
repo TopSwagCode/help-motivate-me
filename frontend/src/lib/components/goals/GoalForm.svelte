@@ -60,7 +60,7 @@
 
 <form onsubmit={handleSubmit} class="space-y-4">
 	{#if error}
-		<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+		<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm">
 			{error}
 		</div>
 	{/if}
@@ -92,7 +92,7 @@
 	</div>
 
 	<div>
-		<label for="identityId" class="label">{$t('goals.form.identity')} <span class="text-gray-500 text-sm">({$t('common.optional')})</span></label>
+		<label for="identityId" class="label">{$t('goals.form.identity')} <span class="text-cocoa-500 text-sm">({$t('common.optional')})</span></label>
 		<select
 			id="identityId"
 			bind:value={identityId}
@@ -107,9 +107,9 @@
 			{/each}
 		</select>
 		{#if identities.length > 0}
-			<p class="text-xs text-gray-500 mt-1">{$t('goals.form.identityHint')}</p>
+			<p class="text-xs text-cocoa-500 mt-1">{$t('goals.form.identityHint')}</p>
 		{:else}
-			<p class="text-xs text-gray-500 mt-1">
+			<p class="text-xs text-cocoa-500 mt-1">
 				<a href="/identities" class="text-primary-600 hover:text-primary-700">{$t('goals.form.createIdentity')}</a>
 			</p>
 		{/if}

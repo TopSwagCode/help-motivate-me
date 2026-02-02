@@ -10,7 +10,7 @@
 </script>
 
 <div
-	class="mt-3 p-3 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg"
+	class="mt-3 p-3 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-2xl"
 >
 	<div class="flex items-start gap-2">
 		<svg

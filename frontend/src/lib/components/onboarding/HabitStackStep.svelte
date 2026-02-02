@@ -33,15 +33,15 @@
 			<div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
 				<span class="text-2xl">🔗</span>
 			</div>
-			<h2 class="text-xl font-semibold text-gray-900">{$t('onboarding.manual.habitStack.title')}</h2>
+			<h2 class="text-xl font-semibold text-cocoa-800">{$t('onboarding.manual.habitStack.title')}</h2>
 		</div>
 
-		<div class="prose prose-sm text-gray-600">
+		<div class="prose prose-sm text-cocoa-600">
 			<p class="mb-3">
 				{@html $t('onboarding.manual.habitStack.intro')}
 			</p>
 			<p class="mb-3">{$t('onboarding.manual.habitStack.formula')}</p>
-			<div class="bg-gray-50 rounded-lg p-3 my-3 text-center font-medium">
+			<div class="bg-warm-cream rounded-2xl p-3 my-3 text-center font-medium">
 				{$t('onboarding.manual.habitStack.formulaText')}
 			</div>
 			<p class="mb-3 text-sm">{$t('onboarding.manual.habitStack.examplesIntro')}</p>
@@ -58,7 +58,7 @@
 
 	<!-- Created stack feedback -->
 	{#if createdStack}
-		<div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+		<div class="bg-green-50 border border-green-200 rounded-2xl p-4 mb-6">
 			<div class="flex items-center gap-2">
 				<svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 24 24">
 					<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />

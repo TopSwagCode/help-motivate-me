@@ -79,8 +79,8 @@
 {:else}
 	<!-- Push Notifications Header -->
 	<div class="mb-6">
-		<h2 class="text-lg font-semibold text-gray-900">Push Notifications</h2>
-		<p class="text-gray-500 mt-1">
+		<h2 class="text-lg font-semibold text-cocoa-800">Push Notifications</h2>
+		<p class="text-cocoa-500 mt-1">
 			{#if pushStats}
 				<span class="inline-flex items-center gap-1.5">
 					<span class="w-2 h-2 bg-green-500 rounded-full"></span>
@@ -98,11 +98,11 @@
 	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 		<!-- Send Push Notification Form -->
 		<div class="card p-6">
-			<h3 class="text-lg font-semibold text-gray-900 mb-4">Send Push Notification to All Users</h3>
+			<h3 class="text-lg font-semibold text-cocoa-800 mb-4">Send Push Notification to All Users</h3>
 
 			<form onsubmit={handleSendPushToAll} class="space-y-4">
 				<div>
-					<label for="push-title" class="block text-sm font-medium text-gray-700 mb-1">
+					<label for="push-title" class="block text-sm font-medium text-cocoa-700 mb-1">
 						Title <span class="text-red-500">*</span>
 					</label>
 					<input
@@ -117,7 +117,7 @@
 				</div>
 
 				<div>
-					<label for="push-body" class="block text-sm font-medium text-gray-700 mb-1">
+					<label for="push-body" class="block text-sm font-medium text-cocoa-700 mb-1">
 						Message <span class="text-red-500">*</span>
 					</label>
 					<textarea
@@ -131,7 +131,7 @@
 				</div>
 
 				<div>
-					<label for="push-url" class="block text-sm font-medium text-gray-700 mb-1">
+					<label for="push-url" class="block text-sm font-medium text-cocoa-700 mb-1">
 						Click URL (optional)
 					</label>
 					<input
@@ -141,11 +141,11 @@
 						placeholder="/today or https://example.com"
 						class="input w-full"
 					/>
-					<p class="text-xs text-gray-500 mt-1">Where users go when they click the notification</p>
+					<p class="text-xs text-cocoa-500 mt-1">Where users go when they click the notification</p>
 				</div>
 
 				{#if pushResult}
-					<div class="p-3 rounded-lg {pushResult.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}">
+					<div class="p-3 rounded-2xl {pushResult.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}">
 						{pushResult.message}
 					</div>
 				{/if}
@@ -173,11 +173,11 @@
 
 		<!-- Push Stats Card -->
 		<div class="card p-6">
-			<h3 class="text-lg font-semibold text-gray-900 mb-4">Push Notification Stats</h3>
+			<h3 class="text-lg font-semibold text-cocoa-800 mb-4">Push Notification Stats</h3>
 
 			{#if pushStats}
 				<div class="space-y-4">
-					<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+					<div class="flex items-center justify-between p-3 bg-warm-cream rounded-2xl">
 						<div class="flex items-center gap-3">
 							<div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
 								<svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -185,17 +185,17 @@
 								</svg>
 							</div>
 							<div>
-								<p class="text-sm text-gray-500">Users with Push Enabled</p>
-								<p class="text-xl font-bold text-gray-900">{pushStats.usersWithPush}</p>
+								<p class="text-sm text-cocoa-500">Users with Push Enabled</p>
+								<p class="text-xl font-bold text-cocoa-800">{pushStats.usersWithPush}</p>
 							</div>
 						</div>
 						<div class="text-right">
 							<p class="text-2xl font-bold text-blue-600">{pushStats.percentageWithPush.toFixed(0)}%</p>
-							<p class="text-xs text-gray-500">of all users</p>
+							<p class="text-xs text-cocoa-500">of all users</p>
 						</div>
 					</div>
 
-					<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+					<div class="flex items-center justify-between p-3 bg-warm-cream rounded-2xl">
 						<div class="flex items-center gap-3">
 							<div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
 								<svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -203,15 +203,15 @@
 								</svg>
 							</div>
 							<div>
-								<p class="text-sm text-gray-500">Total Subscriptions</p>
-								<p class="text-xl font-bold text-gray-900">{pushStats.totalSubscriptions}</p>
+								<p class="text-sm text-cocoa-500">Total Subscriptions</p>
+								<p class="text-xl font-bold text-cocoa-800">{pushStats.totalSubscriptions}</p>
 							</div>
 						</div>
-						<p class="text-xs text-gray-500">Across all devices</p>
+						<p class="text-xs text-cocoa-500">Across all devices</p>
 					</div>
 
-					<div class="pt-4 border-t border-gray-200">
-						<p class="text-sm text-gray-500">
+					<div class="pt-4 border-t border-primary-100">
+						<p class="text-sm text-cocoa-500">
 							Users can have multiple subscriptions if they enable push notifications on different devices or browsers.
 						</p>
 					</div>
@@ -223,7 +223,7 @@
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
 						</svg>
 					</div>
-					<p class="text-gray-500 mb-2">Push notifications not configured</p>
+					<p class="text-cocoa-500 mb-2">Push notifications not configured</p>
 					<p class="text-sm text-gray-400">
 						Configure VAPID keys in appsettings to enable push notifications.
 					</p>

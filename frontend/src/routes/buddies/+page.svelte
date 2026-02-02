@@ -114,7 +114,7 @@
 	}
 </script>
 
-<div class="bg-gray-50">
+<div class="bg-warm-cream">
 	<main class="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-8">
 		<div class="mb-6">
 			<InfoOverlay 
@@ -137,8 +137,8 @@
 			<div data-tour="buddies-section">
 			<!-- Invite New Buddy Section -->
 			<div class="card p-6 mb-8">
-				<h2 class="text-lg font-semibold text-gray-900 mb-4">{$t('buddies.invite.title')}</h2>
-				<p class="text-sm text-gray-600 mb-4">
+				<h2 class="text-lg font-semibold text-cocoa-800 mb-4">{$t('buddies.invite.title')}</h2>
+				<p class="text-sm text-cocoa-600 mb-4">
 					{$t('buddies.invite.description')}
 				</p>
 
@@ -165,13 +165,13 @@
 
 			<!-- My Accountability Buddies -->
 			<div class="card p-6 mb-8">
-				<h2 class="text-lg font-semibold text-gray-900 mb-4">{$t('buddies.myBuddies.title')}</h2>
-				<p class="text-sm text-gray-600 mb-4">
+				<h2 class="text-lg font-semibold text-cocoa-800 mb-4">{$t('buddies.myBuddies.title')}</h2>
+				<p class="text-sm text-cocoa-600 mb-4">
 					{$t('buddies.myBuddies.description')}
 				</p>
 
 				{#if relationships.myBuddies.length === 0}
-					<div class="text-center py-8 text-gray-500">
+					<div class="text-center py-8 text-cocoa-500">
 						<p>{$t('buddies.myBuddies.empty')}</p>
 						<p class="text-sm mt-2">{$t('buddies.myBuddies.emptyHint')}</p>
 					</div>
@@ -179,11 +179,11 @@
 					<div class="space-y-3">
 						{#each relationships.myBuddies as buddy (buddy.id)}
 							<div
-								class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200"
+								class="flex items-center justify-between p-4 bg-warm-cream rounded-2xl border border-primary-100"
 							>
 								<div>
-									<p class="font-medium text-gray-900">{buddy.buddyDisplayName}</p>
-									<p class="text-sm text-gray-500">{buddy.buddyEmail}</p>
+									<p class="font-medium text-cocoa-800">{buddy.buddyDisplayName}</p>
+									<p class="text-sm text-cocoa-500">{buddy.buddyEmail}</p>
 									<p class="text-xs text-gray-400 mt-1">{$t('buddies.myBuddies.added')} {formatDate(buddy.createdAt)}</p>
 								</div>
 								<button
@@ -200,24 +200,24 @@
 
 			<!-- I'm Accountability Buddy For -->
 			<div class="card p-6">
-				<h2 class="text-lg font-semibold text-gray-900 mb-4">{$t('buddies.buddyingFor.title')}</h2>
-				<p class="text-sm text-gray-600 mb-4">
+				<h2 class="text-lg font-semibold text-cocoa-800 mb-4">{$t('buddies.buddyingFor.title')}</h2>
+				<p class="text-sm text-cocoa-600 mb-4">
 					{$t('buddies.buddyingFor.description')}
 				</p>
 
 				{#if relationships.buddyingFor.length === 0}
-					<div class="text-center py-8 text-gray-500">
+					<div class="text-center py-8 text-cocoa-500">
 						<p>{$t('buddies.buddyingFor.empty')}</p>
 					</div>
 				{:else}
 					<div class="space-y-3">
 						{#each relationships.buddyingFor as buddyFor (buddyFor.id)}
 							<div
-								class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200"
+								class="flex items-center justify-between p-4 bg-warm-cream rounded-2xl border border-primary-100"
 							>
 								<div>
-									<p class="font-medium text-gray-900">{buddyFor.userDisplayName}</p>
-									<p class="text-sm text-gray-500">{buddyFor.userEmail}</p>
+									<p class="font-medium text-cocoa-800">{buddyFor.userDisplayName}</p>
+									<p class="text-sm text-cocoa-500">{buddyFor.userEmail}</p>
 									<p class="text-xs text-gray-400 mt-1">{$t('buddies.buddyingFor.since')} {formatDate(buddyFor.createdAt)}</p>
 								</div>
 								<div class="flex gap-2">
@@ -229,7 +229,7 @@
 									</a>
 									<button
 										onclick={() => handleLeaveBuddy(buddyFor.userId, buddyFor.userDisplayName)}
-										class="text-gray-500 hover:text-red-600 text-sm"
+										class="text-cocoa-500 hover:text-red-600 text-sm"
 									>
 										{$t('buddies.buddyingFor.leave')}
 									</button>

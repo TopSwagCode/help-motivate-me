@@ -115,7 +115,7 @@
 		if (diffDays < 0) return 'text-red-600 font-medium';
 		if (diffDays === 0) return 'text-red-600 font-medium';
 		if (diffDays === 1) return 'text-orange-600';
-		return 'text-gray-500';
+		return 'text-cocoa-500';
 	}
 
 	function getStreakEmoji(streak: number): string {
@@ -220,7 +220,7 @@
 					onclick={() => toggleSection('identityProgress')}
 					class="flex items-center gap-2 text-left group"
 				>
-					<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+					<h2 class="text-base font-semibold text-cocoa-800 flex items-center gap-2">
 						<span>📊</span> {$t('today.identityProgress')}
 					</h2>
 					<svg
@@ -236,7 +236,7 @@
 					{#each todayData.identityProgress as progress (progress.id)}
 						{@const feedback = feedbackByIdentityId.get(progress.id)}
 						<div
-							class="relative rounded-lg p-3 transition-all hover:scale-[1.02] {feedback ? 'cursor-pointer' : 'cursor-default'} {activeFeedbackId === progress.id ? 'z-50' : 'z-0'}"
+							class="relative rounded-2xl p-3 transition-all hover:scale-[1.02] {feedback ? 'cursor-pointer' : 'cursor-default'} {activeFeedbackId === progress.id ? 'z-50' : 'z-0'}"
 							style="background-color: {progress.color}15; border: 1px solid {progress.color}30"
 							data-feedback-badge
 							role={feedback ? 'button' : undefined}
@@ -254,7 +254,7 @@
 									{#if feedback}
 										<span
 											class="inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-bold rounded-full"
-											style="background-color: {progress.color || '#6366f1'}; color: white"
+											style="background-color: {progress.color || '#d4944c'}; color: white"
 											title={feedback.reinforcementMessage}
 										>
 											+{feedback.totalVotes}
@@ -274,9 +274,9 @@
 								</div>
 							</div>
 							<!-- Name (truncated) -->
-							<p class="text-xs font-medium text-gray-700 truncate mb-1.5" title={progress.name}>{progress.name}</p>
+							<p class="text-xs font-medium text-cocoa-700 truncate mb-1.5" title={progress.name}>{progress.name}</p>
 							<!-- Mini progress bar -->
-							<div class="bg-white/50 rounded-full h-1.5">
+							<div class="bg-warm-paper/50 rounded-full h-1.5">
 								<div
 									class="h-1.5 rounded-full transition-all duration-500"
 									style="width: {progress.score}%; background-color: {progress.color || '#9CA3AF'}"
@@ -299,9 +299,9 @@
 			onclick={() => toggleSection('habitStacks')}
 			class="w-full flex items-center justify-between text-left mb-3 group"
 		>
-			<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+			<h2 class="text-base font-semibold text-cocoa-800 flex items-center gap-2">
 				<span>🔗</span> {$t('today.habitStacks')}
-				<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.habitStacks.length}</span>
+				<span class="text-xs font-normal text-cocoa-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.habitStacks.length}</span>
 			</h2>
 			<svg 
 				class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.habitStacks ? 'rotate-180' : ''}"
@@ -315,19 +315,19 @@
 				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					{#each todayData.habitStacks as stack (stack.id)}
 						<div 
-							class="rounded-lg overflow-hidden transition-all group/stack"
-							style="background-color: {stack.identityColor || '#6366f1'}08; border: 1px solid {stack.identityColor || '#6366f1'}20"
+							class="rounded-2xl overflow-hidden transition-all group/stack"
+							style="background-color: {stack.identityColor || '#d4944c'}08; border: 1px solid {stack.identityColor || '#d4944c'}20"
 						>
 							<!-- Stack Header -->
 							<div 
 								class="px-3 py-2"
-								style="background-color: {stack.identityColor || '#6366f1'}15"
+								style="background-color: {stack.identityColor || '#d4944c'}15"
 							>
 								<div class="flex items-center gap-2 mb-2">
 									{#if stack.identityIcon}
 										<span 
 											class="text-sm flex-shrink-0 px-1.5 py-0.5 rounded-full"
-											style="background-color: {stack.identityColor || '#6366f1'}25"
+											style="background-color: {stack.identityColor || '#d4944c'}25"
 											title={stack.identityName}
 										>
 											{stack.identityIcon}
@@ -347,15 +347,15 @@
 								<!-- Progress bar and action area -->
 								<div class="flex items-center gap-2">
 									<!-- Progress bar -->
-									<div class="flex-1 h-2 bg-white/50 rounded-full overflow-hidden">
+									<div class="flex-1 h-2 bg-warm-paper/50 rounded-full overflow-hidden">
 										<div 
 											class="h-full rounded-full transition-all duration-300"
-											style="width: {(stack.completedCount / stack.totalCount) * 100}%; background-color: {stack.completedCount === stack.totalCount ? '#22c55e' : (stack.identityColor || '#6366f1')}"
+											style="width: {(stack.completedCount / stack.totalCount) * 100}%; background-color: {stack.completedCount === stack.totalCount ? '#22c55e' : (stack.identityColor || '#d4944c')}"
 										></div>
 									</div>
 									
 									<!-- Progress count -->
-									<span class="text-xs font-semibold tabular-nums" style="color: {stack.identityColor || '#6366f1'}">
+									<span class="text-xs font-semibold tabular-nums" style="color: {stack.identityColor || '#d4944c'}">
 										{stack.completedCount}/{stack.totalCount}
 									</span>
 									
@@ -364,7 +364,7 @@
 										<button
 											onclick={() => handleCompleteAllHabits(stack.id)}
 											class="flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full transition-all hover:scale-105 active:scale-95"
-											style="background-color: {stack.identityColor || '#6366f1'}; color: white"
+											style="background-color: {stack.identityColor || '#d4944c'}; color: white"
 											title={$t('today.completeAll')}
 										>
 											<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -381,10 +381,10 @@
 								{#each stack.items as item, index (item.id)}
 									{#if readonly}
 										<div
-											class="w-full flex items-center gap-2 px-2 py-2 rounded-lg text-left
+											class="w-full flex items-center gap-2 px-2 py-2 rounded-2xl text-left
 												{item.isCompletedToday 
 													? 'bg-green-500/15' 
-													: 'bg-white/40'}"
+													: 'bg-warm-paper/40'}"
 										>
 											<!-- Checkbox area -->
 											<div class="flex flex-col items-center w-5 flex-shrink-0">
@@ -402,8 +402,8 @@
 													</div>
 												{:else}
 													<div 
-														class="w-5 h-5 rounded-full border-2 bg-white"
-														style="border-color: {stack.identityColor || '#6366f1'}"
+														class="w-5 h-5 rounded-full border-2 bg-warm-paper"
+														style="border-color: {stack.identityColor || '#d4944c'}"
 													></div>
 												{/if}
 												{#if index < stack.items.length - 1}
@@ -415,7 +415,7 @@
 											</div>
 											
 											<!-- Habit text -->
-											<span class="flex-1 text-xs {item.isCompletedToday ? 'text-green-700 line-through' : 'text-gray-700'}">
+											<span class="flex-1 text-xs {item.isCompletedToday ? 'text-green-700 line-through' : 'text-cocoa-700'}">
 												{item.habitDescription}
 											</span>
 											
@@ -429,10 +429,10 @@
 									{:else}
 										<button
 											onclick={() => handleToggleHabitItem(item.id)}
-											class="w-full flex items-center gap-2 px-2 py-2 rounded-lg transition-all text-left group/item
+											class="w-full flex items-center gap-2 px-2 py-2 rounded-2xl transition-all text-left group/item
 												{item.isCompletedToday 
 													? 'bg-green-500/15' 
-													: 'bg-white/40 hover:bg-white hover:shadow-sm cursor-pointer active:scale-[0.98]'}"
+													: 'bg-warm-paper/40 hover:bg-warm-paper hover:shadow-sm cursor-pointer active:scale-[0.98]'}"
 										>
 											<!-- Checkbox area -->
 											<div class="flex flex-col items-center w-5 flex-shrink-0">
@@ -451,11 +451,11 @@
 												{:else}
 													<div 
 														class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all group-hover/item:border-3 group-hover/item:scale-110"
-														style="border-color: {stack.identityColor || '#6366f1'}; background-color: white"
+														style="border-color: {stack.identityColor || '#d4944c'}; background-color: white"
 													>
 														<div 
 															class="w-2 h-2 rounded-full opacity-0 group-hover/item:opacity-100 transition-opacity"
-															style="background-color: {stack.identityColor || '#6366f1'}40"
+															style="background-color: {stack.identityColor || '#d4944c'}40"
 														></div>
 													</div>
 												{/if}
@@ -468,7 +468,7 @@
 											</div>
 											
 											<!-- Habit text -->
-											<span class="flex-1 text-xs {item.isCompletedToday ? 'text-green-700 line-through' : 'text-gray-700 group-hover/item:text-gray-900'}">
+											<span class="flex-1 text-xs {item.isCompletedToday ? 'text-green-700 line-through' : 'text-cocoa-700 group-hover/item:text-cocoa-800'}">
 												{item.habitDescription}
 											</span>
 											
@@ -488,15 +488,15 @@
 					{/each}
 				</div>
 			{:else}
-				<div class="py-6 px-4 rounded-lg bg-gray-50 border border-gray-100">
-					<p class="text-gray-500 flex flex-col sm:flex-row items-center justify-center gap-2 text-sm mb-3">{$t('today.noHabitStacks')}</p>
+				<div class="py-6 px-4 rounded-2xl bg-warm-cream border border-gray-100">
+					<p class="text-cocoa-500 flex flex-col sm:flex-row items-center justify-center gap-2 text-sm mb-3">{$t('today.noHabitStacks')}</p>
 					{#if !readonly}
 						<div class="flex flex-col sm:flex-row items-center justify-center gap-2 text-sm">
 							<a href="/habit-stacks" class="text-primary-600 hover:text-primary-700 font-medium">
 								{$t('today.createHabitStack')} →
 							</a>
 							<span class="text-gray-400 hidden sm:inline">•</span>
-							<span class="text-gray-500 flex items-center gap-1">
+							<span class="text-cocoa-500 flex items-center gap-1">
 								{$t('today.orUseAssistant')}
 								<button
 									type="button"
@@ -523,12 +523,12 @@
 				onclick={() => toggleSection('wins')}
 				class="flex items-center gap-2 text-left group"
 			>
-				<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+				<h2 class="text-base font-semibold text-cocoa-800 flex items-center gap-2">
 					<svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
 					</svg>
 					{$t('today.wins')}
-					<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{wins.length}</span>
+					<span class="text-xs font-normal text-cocoa-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{wins.length}</span>
 				</h2>
 				<svg
 					class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.wins ? 'rotate-180' : ''}"
@@ -543,7 +543,7 @@
 				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					{#each wins as win (win.id)}
 						<div
-							class="rounded-lg overflow-hidden transition-all group/win"
+							class="rounded-2xl overflow-hidden transition-all group/win"
 							style="background-color: {win.identityColor || '#f59e0b'}08; border: 1px solid {win.identityColor || '#f59e0b'}20"
 						>
 							<!-- Win Header -->
@@ -582,7 +582,7 @@
 							<!-- Win Content -->
 							<div class="p-3">
 								{#if win.description}
-									<p class="text-sm text-gray-700">{win.description}</p>
+									<p class="text-sm text-cocoa-700">{win.description}</p>
 								{:else}
 									<p class="text-sm text-gray-400 italic">{$t('identityProof.intensity.' + win.intensity.toLowerCase())}</p>
 								{/if}
@@ -606,8 +606,8 @@
 					{/each}
 				</div>
 			{:else}
-				<div class="py-6 px-4 rounded-lg bg-gray-50 border border-gray-100">
-					<p class="text-gray-500 flex flex-col sm:flex-row items-center justify-center gap-2 text-sm mb-3">{$t('today.noWins')}</p>
+				<div class="py-6 px-4 rounded-2xl bg-warm-cream border border-gray-100">
+					<p class="text-cocoa-500 flex flex-col sm:flex-row items-center justify-center gap-2 text-sm mb-3">{$t('today.noWins')}</p>
 					{#if !readonly && onLogIdentityProof}
 						<div class="flex flex-col sm:flex-row items-center justify-center gap-2 text-sm">
 							<button
@@ -620,7 +620,7 @@
 								{$t('today.logFirstWin')} →
 							</button>
 							<span class="text-gray-400 hidden sm:inline">•</span>
-							<span class="text-gray-500 flex items-center gap-1">
+							<span class="text-cocoa-500 flex items-center gap-1">
 								{$t('today.orUseAssistant')}
 								<button
 									type="button"
@@ -647,9 +647,9 @@
 				onclick={() => toggleSection('tasks')}
 				class="flex items-center gap-2 text-left group"
 			>
-				<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+				<h2 class="text-base font-semibold text-cocoa-800 flex items-center gap-2">
 					<span>📋</span> {$t('today.tasks')}
-					<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.upcomingTasks.length}</span>
+					<span class="text-xs font-normal text-cocoa-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.upcomingTasks.length}</span>
 				</h2>
 				<svg 
 					class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.tasks ? 'rotate-180' : ''}"
@@ -672,16 +672,16 @@
 				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					{#each sortedUpcomingTasks as task (task.id)}
 						<div
-							class="relative rounded-lg overflow-hidden transition-all duration-300
+							class="relative rounded-2xl overflow-hidden transition-all duration-300
 								{!readonly && transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95' : ''}
 								{!readonly && newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight' : ''}
 								{!readonly && snoozingTaskIds.includes(task.id) ? 'bg-amber-50' : ''}
 								{!readonly && removingAfterSnoozeIds.includes(task.id) ? 'animate-snooze-remove' : ''}"
-							style="background-color: {task.identityColor || '#6366f1'}08; border: 1px solid {task.identityColor || '#6366f1'}20"
+							style="background-color: {task.identityColor || '#d4944c'}08; border: 1px solid {task.identityColor || '#d4944c'}20"
 						>
 							<!-- Snooze animation overlay -->
 							{#if !readonly && snoozingTaskIds.includes(task.id)}
-								<div class="absolute inset-0 flex items-center justify-center bg-amber-100/90 rounded-lg z-10">
+								<div class="absolute inset-0 flex items-center justify-center bg-amber-100/90 rounded-2xl z-10">
 									<span class="text-amber-700 font-bold flex items-center gap-1">
 										💤 +7 days
 									</span>
@@ -689,8 +689,8 @@
 							{/if}
 							<!-- Removal message overlay -->
 							{#if !readonly && removingAfterSnoozeIds.includes(task.id)}
-								<div class="absolute inset-0 flex items-center justify-center bg-gray-100/90 rounded-lg z-10">
-									<span class="text-gray-600 font-medium text-sm">
+								<div class="absolute inset-0 flex items-center justify-center bg-gray-100/90 rounded-2xl z-10">
+									<span class="text-cocoa-600 font-medium text-sm">
 										📅 {$t('today.movedOutsideView')}
 									</span>
 								</div>
@@ -699,13 +699,13 @@
 							<!-- Task Header with identity color -->
 							<div
 								class="px-3 py-1.5 flex items-center justify-between"
-								style="background-color: {task.identityColor || '#6366f1'}15"
+								style="background-color: {task.identityColor || '#d4944c'}15"
 							>
 								<div class="flex items-center gap-1.5">
 									{#if task.identityIcon || task.identityName}
 										<span
 											class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-medium"
-											style="background-color: {task.identityColor || '#6366f1'}25; color: {task.identityColor || '#6366f1'}"
+											style="background-color: {task.identityColor || '#d4944c'}25; color: {task.identityColor || '#d4944c'}"
 											title={task.identityName}
 										>
 											{#if task.identityIcon}
@@ -728,7 +728,7 @@
 								<div class="flex items-start gap-2">
 									{#if readonly}
 										<div class="flex-shrink-0 mt-0.5">
-											<div class="w-5 h-5 rounded-full border-2 border-gray-300"></div>
+											<div class="w-5 h-5 rounded-full border-2 border-primary-200"></div>
 										</div>
 									{:else}
 										<button
@@ -737,11 +737,11 @@
 											title="Mark as completed"
 										>
 											<div
-												class="w-5 h-5 rounded-full border-2 transition-all duration-200 flex items-center justify-center
+												class="w-5 h-5 rounded-full border-2 transition-all duration-300 flex items-center justify-center
 													{transitioningTaskIds.includes(task.id)
 														? 'bg-green-500 border-green-500'
 														: 'group-hover:bg-green-50'}"
-												style={!transitioningTaskIds.includes(task.id) ? `border-color: ${task.identityColor || '#6366f1'}60` : ''}
+												style={!transitioningTaskIds.includes(task.id) ? `border-color: ${task.identityColor || '#d4944c'}60` : ''}
 											>
 												{#if transitioningTaskIds.includes(task.id)}
 													<svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -752,7 +752,7 @@
 										</button>
 									{/if}
 									<div class="flex-1 min-w-0">
-										<p class="text-sm font-medium text-gray-900 leading-tight {!readonly && transitioningTaskIds.includes(task.id) ? 'line-through text-gray-400' : ''}">
+										<p class="text-sm font-medium text-cocoa-800 leading-tight {!readonly && transitioningTaskIds.includes(task.id) ? 'line-through text-gray-400' : ''}">
 											{task.title}
 										</p>
 									</div>
@@ -799,15 +799,15 @@
 					{/each}
 				</div>
 			{:else}
-				<div class="py-6 px-4 rounded-lg bg-gray-50 border border-gray-100">
-					<p class="text-gray-500 flex flex-col sm:flex-row items-center justify-center gap-2 text-sm mb-3">{$t('today.noPendingTasks')}</p>
+				<div class="py-6 px-4 rounded-2xl bg-warm-cream border border-gray-100">
+					<p class="text-cocoa-500 flex flex-col sm:flex-row items-center justify-center gap-2 text-sm mb-3">{$t('today.noPendingTasks')}</p>
 					{#if !readonly}
 						<div class="flex flex-col sm:flex-row items-center justify-center gap-2 text-sm">
 							<a href="/goals" class="text-primary-600 hover:text-primary-700 font-medium">
 								{$t('today.goToGoals')} →
 							</a>
 							<span class="text-gray-400 hidden sm:inline">•</span>
-							<span class="text-gray-500 flex items-center gap-1">
+							<span class="text-cocoa-500 flex items-center gap-1">
 								{$t('today.orUseAssistant')}
 								<button
 									type="button"
@@ -833,9 +833,9 @@
 			onclick={() => toggleSection('completedTasks')}
 			class="w-full flex items-center justify-between text-left mb-3 group"
 		>
-			<h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+			<h2 class="text-base font-semibold text-cocoa-800 flex items-center gap-2">
 				<span>✅</span> {$t('today.completed')}
-				<span class="text-xs font-normal text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.completedTasks.length}</span>
+				<span class="text-xs font-normal text-cocoa-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.completedTasks.length}</span>
 			</h2>
 			<svg 
 				class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.completedTasks ? 'rotate-180' : ''}"
@@ -849,20 +849,20 @@
 				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					{#each todayData.completedTasks as task (task.id)}
 						<div
-							class="relative rounded-lg overflow-hidden transition-all duration-300
+							class="relative rounded-2xl overflow-hidden transition-all duration-300
 								{!readonly && transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95' : ''}
 								{!readonly && newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight-green' : ''}"
-							style="background: linear-gradient(135deg, {task.identityColor || '#6366f1'}10, #f0fdf4); border: 1px solid {task.identityColor || '#22c55e'}30"
+							style="background: linear-gradient(135deg, {task.identityColor || '#d4944c'}10, #f0fdf4); border: 1px solid {task.identityColor || '#22c55e'}30"
 						>
 							<!-- Completed Task Header -->
 							<div
 								class="px-2.5 py-1 flex items-center justify-between"
-								style="background: linear-gradient(90deg, {task.identityColor || '#6366f1'}20, #dcfce7)"
+								style="background: linear-gradient(90deg, {task.identityColor || '#d4944c'}20, #dcfce7)"
 							>
 								{#if task.identityIcon || task.identityName}
 									<span
 										class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-medium opacity-80"
-										style="background-color: {task.identityColor || '#6366f1'}25; color: {task.identityColor || '#6366f1'}"
+										style="background-color: {task.identityColor || '#d4944c'}25; color: {task.identityColor || '#d4944c'}"
 										title={task.identityName}
 									>
 										{#if task.identityIcon}
@@ -903,7 +903,7 @@
 										</div>
 									</button>
 								{/if}
-								<p class="flex-1 text-sm text-gray-500 line-through truncate">
+								<p class="flex-1 text-sm text-cocoa-500 line-through truncate">
 									{task.title}
 								</p>
 							</div>

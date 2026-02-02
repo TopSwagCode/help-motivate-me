@@ -33,10 +33,10 @@
 			<div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
 				<span class="text-2xl">🎯</span>
 			</div>
-			<h2 class="text-xl font-semibold text-gray-900">{$t('onboarding.manual.goals.title')}</h2>
+			<h2 class="text-xl font-semibold text-cocoa-800">{$t('onboarding.manual.goals.title')}</h2>
 		</div>
 
-		<div class="prose prose-sm text-gray-600">
+		<div class="prose prose-sm text-cocoa-600">
 			<p class="mb-3">
 				{@html $t('onboarding.manual.goals.intro')}
 			</p>
@@ -54,7 +54,7 @@
 
 	<!-- Created goal feedback -->
 	{#if createdGoal}
-		<div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+		<div class="bg-green-50 border border-green-200 rounded-2xl p-4 mb-6">
 			<div class="flex items-center gap-2">
 				<svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 24 24">
 					<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />

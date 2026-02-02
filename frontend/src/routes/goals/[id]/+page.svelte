@@ -403,7 +403,7 @@
 		if (diffDays < 0) return 'text-red-600 font-medium';
 		if (diffDays === 0) return 'text-red-600 font-medium';
 		if (diffDays === 1) return 'text-orange-600';
-		return 'text-gray-500';
+		return 'text-cocoa-500';
 	}
 
 	// Sort by due date: tasks with due dates come first (nearest first), then tasks without due dates
@@ -418,14 +418,14 @@
 	const completedTasks = $derived(tasks.filter((t) => t.status === 'Completed'));
 </script>
 
-<div class="bg-gray-50">
+<div class="bg-warm-cream">
 	<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 		{#if loading}
 			<div class="flex justify-center py-12">
 				<div class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full"></div>
 			</div>
 		{:else if error}
-			<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+			<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl mb-4">
 				{error}
 			</div>
 		{:else if goal}
@@ -438,7 +438,7 @@
 							<input
 								type="text"
 								bind:value={newTitle}
-								class="w-full text-2xl font-bold text-gray-900 px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+								class="w-full text-2xl font-bold text-cocoa-800 px-2 py-1 border border-primary-200 rounded focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
 								onkeydown={(e) => {
 									if (e.key === 'Enter') saveTitle();
 									if (e.key === 'Escape') cancelEditTitle();
@@ -453,7 +453,7 @@
 								</button>
 								<button
 									onclick={cancelEditTitle}
-									class="text-gray-500 hover:text-gray-700 text-sm"
+									class="text-cocoa-500 hover:text-cocoa-700 text-sm"
 								>
 									{$t('common.cancel')}
 								</button>
@@ -462,7 +462,7 @@
 					{:else if !goal.isCompleted}
 						<button
 							onclick={startEditTitle}
-							class="text-2xl font-bold text-gray-900 hover:text-primary-600 transition-colors text-left flex items-center gap-2 group"
+							class="text-2xl font-bold text-cocoa-800 hover:text-primary-600 transition-colors text-left flex items-center gap-2 group"
 							title="Click to edit title"
 						>
 							{goal.title}
@@ -471,7 +471,7 @@
 							</svg>
 						</button>
 					{:else}
-						<h1 class="text-2xl font-bold text-gray-900 line-through opacity-60">
+						<h1 class="text-2xl font-bold text-cocoa-800 line-through opacity-60">
 							{goal.title}
 						</h1>
 					{/if}
@@ -494,7 +494,7 @@
 						<textarea
 							bind:value={newDescription}
 							rows="3"
-							class="w-full text-gray-600 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+							class="w-full text-cocoa-600 px-3 py-2 border border-primary-200 rounded focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
 							placeholder={$t('goals.form.descriptionPlaceholder')}
 							onkeydown={(e) => {
 								if (e.key === 'Escape') cancelEditDescription();
@@ -509,7 +509,7 @@
 							</button>
 							<button
 								onclick={cancelEditDescription}
-								class="text-gray-500 hover:text-gray-700 text-sm"
+								class="text-cocoa-500 hover:text-cocoa-700 text-sm"
 							>
 								{$t('common.cancel')}
 							</button>
@@ -522,7 +522,7 @@
 						title="Click to edit description"
 					>
 						{#if goal.description}
-							<p class="text-gray-600 hover:text-primary-600 transition-colors flex items-start gap-2">
+							<p class="text-cocoa-600 hover:text-primary-600 transition-colors flex items-start gap-2">
 								{goal.description}
 								<svg class="w-3 h-3 opacity-0 group-hover:opacity-50 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -538,16 +538,16 @@
 						{/if}
 					</button>
 				{:else if goal.description}
-					<p class="text-gray-600 mb-4">{goal.description}</p>
+					<p class="text-cocoa-600 mb-4">{goal.description}</p>
 				{/if}
 
 				<!-- Identity display/edit -->
 				<div class="flex items-center gap-2 mb-4 text-sm">
-					<span class="text-gray-500">{$t('goals.identity')}:</span>
+					<span class="text-cocoa-500">{$t('goals.identity')}:</span>
 					{#if editingGoalIdentity && !goal.isCompleted}
 						<select
 							bind:value={newGoalIdentityId}
-							class="px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+							class="px-2 py-1 text-sm border border-primary-200 rounded focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
 						>
 							<option value="">{$t('goals.noIdentity')}</option>
 							{#each identities as identity (identity.id)}
@@ -564,7 +564,7 @@
 						</button>
 						<button
 							onclick={cancelEditGoalIdentity}
-							class="text-gray-500 hover:text-gray-700"
+							class="text-cocoa-500 hover:text-cocoa-700"
 						>
 							{$t('common.cancel')}
 						</button>
@@ -578,7 +578,7 @@
 								<span class="text-lg">{goal.identityIcon}</span>
 							{/if}
 							{#if goal.identityName}
-								<span class="font-medium text-gray-700">{goal.identityName}</span>
+								<span class="font-medium text-cocoa-700">{goal.identityName}</span>
 							{:else}
 								<span class="text-gray-400">{$t('goals.noIdentity')}</span>
 							{/if}
@@ -591,14 +591,14 @@
 							<span class="text-lg">{goal.identityIcon}</span>
 						{/if}
 						{#if goal.identityName}
-							<span class="font-medium text-gray-700">{goal.identityName}</span>
+							<span class="font-medium text-cocoa-700">{goal.identityName}</span>
 						{:else}
 							<span class="text-gray-400">{$t('goals.noIdentity')}</span>
 						{/if}
 					{/if}
 				</div>
 
-				<div class="flex items-center gap-4 text-sm text-gray-500">
+				<div class="flex items-center gap-4 text-sm text-cocoa-500">
 					{#if editingTargetDate && !goal.isCompleted}
 						<div class="flex items-center gap-2">
 							<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -607,7 +607,7 @@
 							<input
 								type="date"
 								bind:value={newTargetDate}
-								class="px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+								class="px-2 py-1 text-sm border border-primary-200 rounded focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
 							/>
 							<button
 								onclick={saveTargetDate}
@@ -617,7 +617,7 @@
 							</button>
 							<button
 								onclick={cancelEditTargetDate}
-								class="text-gray-500 hover:text-gray-700"
+								class="text-cocoa-500 hover:text-cocoa-700"
 							>
 								{$t('common.cancel')}
 							</button>
@@ -722,7 +722,7 @@
 
 			<!-- Readonly notice for completed goals -->
 			{#if goal.isCompleted}
-				<div class="bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-lg mb-6 flex items-center gap-2">
+				<div class="bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-2xl mb-6 flex items-center gap-2">
 					<svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
 					</svg>
@@ -732,7 +732,7 @@
 
 			<!-- Tasks List - Always show both sections -->
 			<section class="mb-6">
-				<h2 class="text-lg font-semibold text-gray-900 mb-3">{$t('goals.pendingTasksSection')} ({pendingTasks.length})</h2>
+				<h2 class="text-lg font-semibold text-cocoa-800 mb-3">{$t('goals.pendingTasksSection')} ({pendingTasks.length})</h2>
 				<div class="card divide-y divide-gray-200 {goal.isCompleted ? 'opacity-60' : ''}">
 					{#if pendingTasks.length > 0}
 						{#each pendingTasks as task (task.id)}
@@ -742,22 +742,22 @@
 									{transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95' : ''}
 									{newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight' : ''}
 									{snoozingTaskIds.includes(task.id) ? 'bg-amber-50' : ''}"
-								style={!transitioningTaskIds.includes(task.id) && !snoozingTaskIds.includes(task.id) ? `background-color: ${task.identityColor || '#6366f1'}08` : transitioningTaskIds.includes(task.id) ? 'background-color: rgb(240 253 244)' : ''}
+								style={!transitioningTaskIds.includes(task.id) && !snoozingTaskIds.includes(task.id) ? `background-color: ${task.identityColor || '#d4944c'}08` : transitioningTaskIds.includes(task.id) ? 'background-color: rgb(240 253 244)' : ''}
 							>
 								<!-- Snooze animation overlay -->
 								{#if snoozingTaskIds.includes(task.id)}
-									<div class="absolute inset-0 flex items-center justify-center bg-amber-100/80 rounded-lg animate-snooze-pulse z-10">
+									<div class="absolute inset-0 flex items-center justify-center bg-amber-100/80 rounded-2xl animate-snooze-pulse z-10">
 										<span class="text-amber-700 font-bold text-lg flex items-center gap-2">
 											💤 +7 days
 										</span>
 									</div>
 								{/if}
 								{#if goal.isCompleted}
-									<div class="flex-shrink-0 w-5 h-5 rounded-full border-2 border-gray-300"></div>
+									<div class="flex-shrink-0 w-5 h-5 rounded-full border-2 border-primary-200"></div>
 								{:else}
 									<button
 										onclick={() => handleCompleteTask(task.id)}
-										class="flex-shrink-0 w-5 h-5 rounded-full border-2 border-gray-300 hover:border-primary-500 transition-all duration-200
+										class="flex-shrink-0 w-5 h-5 rounded-full border-2 border-primary-200 hover:border-primary-500 transition-all duration-300
 											{transitioningTaskIds.includes(task.id) ? 'bg-green-500 border-green-500' : ''}"
 										title={$t('goals.markCompleted')}
 									>
@@ -772,9 +772,9 @@
 									<span class="flex-shrink-0 text-lg" title={task.identityName || 'Identity'}>{task.identityIcon}</span>
 								{/if}
 								<div class="flex-1 min-w-0">
-									<p class="text-gray-900 {transitioningTaskIds.includes(task.id) ? 'line-through text-gray-500' : ''}">{task.title}</p>
+									<p class="text-cocoa-800 {transitioningTaskIds.includes(task.id) ? 'line-through text-cocoa-500' : ''}">{task.title}</p>
 									{#if task.description}
-										<p class="text-sm text-gray-500 mt-0.5 line-clamp-2">{task.description}</p>
+										<p class="text-sm text-cocoa-500 mt-0.5 line-clamp-2">{task.description}</p>
 									{/if}
 									<div class="flex items-center gap-3 mt-1">
 										{#if task.dueDate}
@@ -833,7 +833,7 @@
 			</section>
 
 			<section>
-				<h2 class="text-lg font-semibold text-gray-900 mb-3">{$t('goals.completedTasksSection')} ({completedTasks.length})</h2>
+				<h2 class="text-lg font-semibold text-cocoa-800 mb-3">{$t('goals.completedTasksSection')} ({completedTasks.length})</h2>
 				<div class="card divide-y divide-gray-200 {goal.isCompleted ? 'opacity-60' : ''}">
 					{#if completedTasks.length > 0}
 						{#each completedTasks as task (task.id)}
@@ -841,7 +841,7 @@
 								class="p-4 flex items-center gap-3 transition-all duration-300
 									{transitioningTaskIds.includes(task.id) ? 'opacity-50 scale-95' : ''}
 									{newlyArrivedTaskIds.includes(task.id) ? 'animate-slide-in-highlight-green' : ''}"
-								style="background: linear-gradient(135deg, {task.identityColor || '#6366f1'}10, rgb(240 253 244))"
+								style="background: linear-gradient(135deg, {task.identityColor || '#d4944c'}10, rgb(240 253 244))"
 							>
 								{#if goal.isCompleted}
 									<div class="flex-shrink-0 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
@@ -864,7 +864,7 @@
 									<span class="flex-shrink-0 text-lg opacity-50" title={task.identityName || 'Identity'}>{task.identityIcon}</span>
 								{/if}
 								<div class="flex-1 min-w-0">
-									<p class="text-gray-500 line-through">{task.title}</p>
+									<p class="text-cocoa-500 line-through">{task.title}</p>
 									{#if task.description}
 										<p class="text-sm text-gray-400 mt-0.5 line-clamp-1 line-through">{task.description}</p>
 									{/if}
@@ -895,12 +895,12 @@
 	<!-- Edit Task Popup -->
 	{#if showEditPopup && editingTask}
 		<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-			<div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-				<h3 class="text-lg font-semibold text-gray-900 mb-4">{$t('goals.editTask')}</h3>
+			<div class="bg-warm-paper rounded-xl shadow-xl max-w-md w-full p-6">
+				<h3 class="text-lg font-semibold text-cocoa-800 mb-4">{$t('goals.editTask')}</h3>
 
 				<div class="space-y-4">
 					<div>
-						<label for="editTitle" class="block text-sm font-medium text-gray-700 mb-1">{$t('goals.form.taskTitle')}</label>
+						<label for="editTitle" class="block text-sm font-medium text-cocoa-700 mb-1">{$t('goals.form.taskTitle')}</label>
 						<input
 							type="text"
 							id="editTitle"
@@ -911,7 +911,7 @@
 					</div>
 
 					<div>
-						<label for="editDescription" class="block text-sm font-medium text-gray-700 mb-1">
+						<label for="editDescription" class="block text-sm font-medium text-cocoa-700 mb-1">
 							{$t('goals.form.taskDescription')} <span class="text-gray-400 font-normal">({$t('goals.form.optional')})</span>
 						</label>
 						<textarea
@@ -924,7 +924,7 @@
 					</div>
 
 					<div>
-						<label for="editDueDate" class="block text-sm font-medium text-gray-700 mb-1">
+						<label for="editDueDate" class="block text-sm font-medium text-cocoa-700 mb-1">
 							{$t('goals.dueDate')} <span class="text-gray-400 font-normal">({$t('goals.form.optional')})</span>
 						</label>
 						<input
@@ -937,7 +937,7 @@
 
 					{#if identities.length > 0}
 						<div>
-							<label for="editIdentity" class="block text-sm font-medium text-gray-700 mb-1">
+							<label for="editIdentity" class="block text-sm font-medium text-cocoa-700 mb-1">
 								{$t('goals.form.identity')} <span class="text-gray-400 font-normal">({$t('goals.form.optional')})</span>
 							</label>
 							<select
@@ -957,7 +957,7 @@
 				<div class="flex justify-end gap-3 mt-6">
 					<button
 						onclick={closeEditPopup}
-						class="px-4 py-2 text-gray-600 hover:text-gray-800"
+						class="px-4 py-2 text-cocoa-600 hover:text-gray-800"
 					>
 						{$t('common.cancel')}
 					</button>
@@ -976,24 +976,24 @@
 	<!-- Postpone Popup -->
 	{#if showPostponePopup && postponingTask}
 		<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-			<div class="bg-white rounded-xl shadow-xl max-w-sm w-full p-6">
-				<h3 class="text-lg font-semibold text-gray-900 mb-4">{$t('goals.changeDueDate')}</h3>
-				<p class="text-gray-600 mb-4 truncate">{postponingTask.title}</p>
+			<div class="bg-warm-paper rounded-xl shadow-xl max-w-sm w-full p-6">
+				<h3 class="text-lg font-semibold text-cocoa-800 mb-4">{$t('goals.changeDueDate')}</h3>
+				<p class="text-cocoa-600 mb-4 truncate">{postponingTask.title}</p>
 
 				<div class="mb-6">
-					<label for="newDueDate" class="block text-sm font-medium text-gray-700 mb-2">{$t('goals.dueDate')}</label>
+					<label for="newDueDate" class="block text-sm font-medium text-cocoa-700 mb-2">{$t('goals.dueDate')}</label>
 					<input
 						type="date"
 						id="newDueDate"
 						bind:value={newDueDate}
-						class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+						class="w-full px-3 py-2 border border-primary-200 rounded-2xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
 					/>
 				</div>
 
 				<div class="flex justify-end gap-3">
 					<button
 						onclick={closePostponePopup}
-						class="px-4 py-2 text-gray-600 hover:text-gray-800"
+						class="px-4 py-2 text-cocoa-600 hover:text-gray-800"
 					>
 						{$t('common.cancel')}
 					</button>
