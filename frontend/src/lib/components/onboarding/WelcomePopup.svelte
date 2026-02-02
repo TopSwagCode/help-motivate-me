@@ -62,7 +62,7 @@
 		<!-- Celebration video -->
 		<div class="mb-6">
 			<video
-				class="w-32 h-32 mx-auto rounded-full shadow-lg object-cover"
+				class="w-32 h-32 mx-auto rounded-full object-cover"
 				src="/celebrate.webm"
 				autoplay
 				loop
