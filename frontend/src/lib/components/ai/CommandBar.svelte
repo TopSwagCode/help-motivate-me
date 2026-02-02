@@ -360,7 +360,7 @@
 						<!-- Loading indicator -->
 						{#if isLoading}
 							<div class="flex flex-col items-center justify-center p-4 text-cocoa-500">
-								<div class="w-32 h-28 overflow-hidden">
+								<div class="w-32 h-32 overflow-hidden">
 									<!-- svelte-ignore a11y_media_has_caption -->
 									<video 
 										autoplay 
