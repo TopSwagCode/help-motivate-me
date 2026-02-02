@@ -354,7 +354,7 @@
 					<!-- Step 4: Success -->
 					<div class="text-center py-8">
 						<div class="w-20 h-20 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center animate-bounce">
-							<img src="/done.png" alt="Done" class="w-12 h-12 object-contain" />
+							<img src="/done.png" alt="Done" class="object-contain" />
 						</div>
 						<h3 class="text-xl font-semibold text-cocoa-800 mb-2">
 							{$t('dailyCommitment.modal.successTitle')}
