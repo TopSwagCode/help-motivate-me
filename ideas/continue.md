@@ -1,0 +1,1 @@
+Make new icon for Daily commitment complete to get away from emoji!
