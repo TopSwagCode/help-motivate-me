@@ -54,7 +54,7 @@
 					muted 
 					playsinline
 					class="w-full h-auto"
-					style="clip-path: inset(10% 0 10% 0);"
+					style="margin-top: -10%; margin-bottom: -10%;"
 				>
 					<source src="/test.webm" type="video/webm" />
 					Your browser does not support the video tag.
