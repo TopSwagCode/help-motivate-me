@@ -1,13 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
-	import { signupForWaitlist } from '$lib/api/waitlist';
-
-	let waitlistEmail = $state('');
-	let waitlistName = $state('');
-	let waitlistLoading = $state(false);
-	let waitlistSuccess = $state(false);
-	let waitlistError = $state('');
 
 	// Redirect to /today if already logged in
 	$effect(() => {
@@ -21,23 +14,6 @@
 			goto('/today');
 		} else {
 			goto('/auth/login');
-		}
-	}
-
-	async function handleWaitlistSubmit(e: Event) {
-		e.preventDefault();
-		if (!waitlistEmail.trim() || !waitlistName.trim()) return;
-
-		waitlistLoading = true;
-		waitlistError = '';
-
-		try {
-			await signupForWaitlist({ email: waitlistEmail.trim(), name: waitlistName.trim() });
-			waitlistSuccess = true;
-		} catch (err) {
-			waitlistError = err instanceof Error ? err.message : 'Failed to join waitlist';
-		} finally {
-			waitlistLoading = false;
 		}
 	}
 </script>
@@ -65,56 +41,30 @@
 		</div>
 	</main>
 
-	<!-- Waitlist Signup Section -->
+	<!-- Meet Milo - Your Gentle Motivator -->
 	<section class="py-12 px-4 sm:px-6 lg:px-8 bg-primary-50 border-t border-primary-100">
-		<div class="max-w-xl mx-auto text-center">
-			<div class="inline-flex items-center gap-2 px-3 py-1 bg-primary-100 rounded-full text-primary-700 text-sm font-medium mb-4">
-				<span class="w-2 h-2 bg-primary-500 rounded-full"></span>
-				Closed Beta
+		<div class="max-w-2xl mx-auto text-center">
+			<h2 class="text-2xl font-bold text-cocoa-800 mb-2">Meet Milo</h2>
+			<p class="text-primary-600 font-medium mb-6">Your gentle motivator</p>
+			
+			<div class="mb-6 rounded-2xl overflow-hidden shadow-lg mx-auto max-w-md">
+				<video 
+					autoplay 
+					loop 
+					muted 
+					playsinline
+					class="w-full h-auto"
+				>
+					<source src="/test.webm" type="video/webm" />
+					Your browser does not support the video tag.
+				</video>
 			</div>
-			<h2 class="text-2xl font-bold text-cocoa-800 mb-2">Join the Waitlist</h2>
-			<p class="text-cocoa-600 mb-6">
-				We're currently in closed beta. Sign up to get notified when we open to the public.
+			
+			<p class="text-cocoa-600 leading-relaxed max-w-lg mx-auto">
+				This sloth isn't here to rush you or yell at you. It's here to remind you that showing up — even a little — counts. One habit at a time, one day at a time, you're making progress. And your sloth is right there with you.
 			</p>
-
-			{#if waitlistSuccess}
-				<div class="bg-green-50 border border-green-200 text-green-700 px-6 py-4 rounded-2xl">
-					<div class="flex items-center justify-center gap-2 mb-1">
-						<svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-						</svg>
-						<span class="font-semibold">You're on the list!</span>
-					</div>
-					<p class="text-sm">We'll send you an email when access becomes available.</p>
-				</div>
-			{:else}
-				<form onsubmit={handleWaitlistSubmit} class="flex flex-col sm:flex-row gap-3">
-					<input
-						type="text"
-						placeholder="Your name"
-						bind:value={waitlistName}
-						required
-						class="input flex-1"
-					/>
-					<input
-						type="email"
-						placeholder="Your email"
-						bind:value={waitlistEmail}
-						required
-						class="input flex-1"
-					/>
-					<button
-						type="submit"
-						disabled={waitlistLoading}
-						class="btn-primary whitespace-nowrap px-6"
-					>
-						{waitlistLoading ? 'Joining...' : 'Join Waitlist'}
-					</button>
-				</form>
-				{#if waitlistError}
-					<p class="text-red-600 text-sm mt-2">{waitlistError}</p>
-				{/if}
-			{/if}
+			
+			<p class="text-sm text-cocoa-400 mt-4 italic">This is our mascot</p>
 		</div>
 	</section>
 
