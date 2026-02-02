@@ -359,10 +359,19 @@
 
 						<!-- Loading indicator -->
 						{#if isLoading}
-							<div class="flex items-center gap-3 p-4 text-cocoa-500">
-								<div
-									class="animate-spin w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full"
-								></div>
+							<div class="flex flex-col items-center justify-center p-4 text-cocoa-500">
+								<div class="w-16 h-12 overflow-hidden">
+									<!-- svelte-ignore a11y_media_has_caption -->
+									<video 
+										autoplay 
+										loop 
+										playsinline 
+										class="w-16 h-16 object-cover object-top"
+										onloadedmetadata={(e) => { e.currentTarget.volume = 0.2; }}
+									>
+										<source src="/thinking.webm" type="video/webm" />
+									</video>
+								</div>
 								<span>{$t('ai.commandBar.thinking')}</span>
 							</div>
 						{/if}
