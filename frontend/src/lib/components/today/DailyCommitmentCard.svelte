@@ -155,7 +155,7 @@
 				<div
 					class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-green-100"
 				>
-					<img src="/done.png" alt="Done" class="w-8 h-8 object-contain" />
+					<img src="/done.png" alt="Done" class="object-contain" />
 				</div>
 				<div class="flex-1 min-w-0">
 					<div class="flex items-center gap-2 mb-1">
