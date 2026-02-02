@@ -63,8 +63,6 @@
 			<p class="text-cocoa-600 leading-relaxed max-w-lg mx-auto">
 				This sloth isn't here to rush you or yell at you. It's here to remind you that showing up — even a little — counts. One habit at a time, one day at a time, you're making progress. And your sloth is right there with you.
 			</p>
-			
-			<p class="text-sm text-cocoa-400 mt-4 italic">This is our mascot</p>
 		</div>
 	</section>
 
