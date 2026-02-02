@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlothTasks Header Grass</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f5f1e8;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .header-demo {
+            width: 100%;
+            max-width: 400px;
+            height: 140px;
+            background: linear-gradient(180deg, #d4a574 0%, #c89a68 100%);
+            border-radius: 24px 24px 0 0;
+            border: 4px solid #6b4423;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .grass-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Demo text to show it works */
+        .demo-content {
+            position: relative;
+            z-index: 10;
+            padding: 20px;
+            color: #fff;
+            text-align: center;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-demo">
+        <div class="demo-content">
+            <h1 style="font-size: 24px; margin-bottom: 10px;">SlothTasks</h1>
+        </div>
+        
+        <div class="grass-container">
+            <svg viewBox="0 0 400 50" preserveAspectRatio="none">
+                <defs>
+                    <filter id="grassSoften">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="0.8" />
+                    </filter>
+                </defs>
+                
+                <!-- Back layer (darker green) -->
+                <g opacity="0.5">
+                    <ellipse cx="30" cy="35" rx="18" ry="14" fill="#7a9b5e"/>
+                    <ellipse cx="55" cy="38" rx="16" ry="12" fill="#6d8c52"/>
+                    <ellipse cx="80" cy="36" rx="20" ry="15" fill="#7a9b5e"/>
+                    <ellipse cx="110" cy="39" rx="17" ry="13" fill="#6d8c52"/>
+                    <ellipse cx="140" cy="35" rx="19" ry="14" fill="#7a9b5e"/>
+                    <ellipse cx="170" cy="37" rx="18" ry="13" fill="#6d8c52"/>
+                    <ellipse cx="200" cy="36" rx="20" ry="15" fill="#7a9b5e"/>
+                    <ellipse cx="230" cy="38" rx="16" ry="12" fill="#6d8c52"/>
+                    <ellipse cx="260" cy="35" rx="19" ry="14" fill="#7a9b5e"/>
+                    <ellipse cx="290" cy="39" rx="17" ry="13" fill="#6d8c52"/>
+                    <ellipse cx="320" cy="36" rx="18" ry="14" fill="#7a9b5e"/>
+                    <ellipse cx="350" cy="37" rx="20" ry="15" fill="#6d8c52"/>
+                    <ellipse cx="380" cy="38" rx="16" ry="12" fill="#7a9b5e"/>
+                </g>
+                
+                <!-- Mid layer (medium green) -->
+                <g opacity="0.7" filter="url(#grassSoften)">
+                    <ellipse cx="20" cy="32" rx="20" ry="16" fill="#8db36a"/>
+                    <ellipse cx="48" cy="30" rx="17" ry="14" fill="#9bc277"/>
+                    <ellipse cx="75" cy="33" rx="19" ry="15" fill="#8db36a"/>
+                    <ellipse cx="105" cy="31" rx="21" ry="17" fill="#9bc277"/>
+                    <ellipse cx="135" cy="32" rx="18" ry="15" fill="#8db36a"/>
+                    <ellipse cx="165" cy="30" rx="20" ry="16" fill="#9bc277"/>
+                    <ellipse cx="195" cy="33" rx="19" ry="14" fill="#8db36a"/>
+                    <ellipse cx="225" cy="31" rx="21" ry="17" fill="#9bc277"/>
+                    <ellipse cx="255" cy="32" rx="18" ry="15" fill="#8db36a"/>
+                    <ellipse cx="285" cy="30" rx="20" ry="16" fill="#9bc277"/>
+                    <ellipse cx="315" cy="33" rx="19" ry="15" fill="#8db36a"/>
+                    <ellipse cx="345" cy="31" rx="21" ry="17" fill="#9bc277"/>
+                    <ellipse cx="375" cy="32" rx="18" ry="14" fill="#8db36a"/>
+                </g>
+                
+                <!-- Front layer (lighter green) -->
+                <g opacity="0.85" filter="url(#grassSoften)">
+                    <ellipse cx="10" cy="28" rx="16" ry="13" fill="#a8cc85"/>
+                    <ellipse cx="35" cy="26" rx="14" ry="11" fill="#b8d99a"/>
+                    <ellipse cx="60" cy="29" rx="17" ry="14" fill="#a8cc85"/>
+                    <ellipse cx="88" cy="27" rx="15" ry="12" fill="#b8d99a"/>
+                    <ellipse cx="115" cy="28" rx="18" ry="15" fill="#a8cc85"/>
+                    <ellipse cx="145" cy="26" rx="16" ry="13" fill="#b8d99a"/>
+                    <ellipse cx="175" cy="29" rx="17" ry="14" fill="#a8cc85"/>
+                    <ellipse cx="205" cy="27" rx="19" ry="15" fill="#b8d99a"/>
+                    <ellipse cx="235" cy="28" rx="16" ry="13" fill="#a8cc85"/>
+                    <ellipse cx="265" cy="26" rx="18" ry="14" fill="#b8d99a"/>
+                    <ellipse cx="295" cy="29" rx="17" ry="13" fill="#a8cc85"/>
+                    <ellipse cx="325" cy="27" rx="16" ry="15" fill="#b8d99a"/>
+                    <ellipse cx="355" cy="28" rx="18" ry="13" fill="#a8cc85"/>
+                    <ellipse cx="385" cy="26" rx="15" ry="12" fill="#b8d99a"/>
+                </g>
+                
+                <!-- Highlight details (brightest) -->
+                <g opacity="0.6" filter="url(#grassSoften)">
+                    <ellipse cx="25" cy="24" rx="12" ry="10" fill="#c8e6a8"/>
+                    <ellipse cx="70" cy="23" rx="10" ry="8" fill="#d4f0b8"/>
+                    <ellipse cx="120" cy="25" rx="13" ry="11" fill="#c8e6a8"/>
+                    <ellipse cx="170" cy="22" rx="11" ry="9" fill="#d4f0b8"/>
+                    <ellipse cx="220" cy="24" rx="12" ry="10" fill="#c8e6a8"/>
+                    <ellipse cx="270" cy="23" rx="13" ry="11" fill="#d4f0b8"/>
+                    <ellipse cx="320" cy="25" rx="11" ry="9" fill="#c8e6a8"/>
+                    <ellipse cx="370" cy="22" rx="12" ry="10" fill="#d4f0b8"/>
+                </g>
+            </svg>
+        </div>
+    </div>
+</body>
+</html>

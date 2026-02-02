@@ -176,7 +176,7 @@
 			<TopNav />
 		{/if}
 
-		<div class="flex-1 pb-28 md:pb-0">
+		<div class="flex-1 pb-28">
 			{@render children()}
 		</div>
 	</div>
@@ -211,7 +211,7 @@
 		/>
 
 		<!-- Floating AI Assistant Button -->
-		<div class="fixed bottom-24 md:bottom-4 right-4 sm:bottom-24 sm:right-6 md:bottom-6 z-40 animate-wiggle">
+		<div class="fixed bottom-24 right-4 sm:right-6 z-30 animate-wiggle">
 			<button
 				type="button"
 				onclick={() => commandBar.open()}
@@ -239,7 +239,7 @@
 		</div>
 
 		<!-- Floating Identity Proof Button -->
-		<div class="fixed bottom-40 md:bottom-20 right-4 sm:bottom-40 sm:right-6 md:bottom-24 z-40 animate-wiggle" style="animation-delay: 2.5s;">
+		<div class="fixed bottom-40 right-4 sm:right-6 z-30 animate-wiggle" style="animation-delay: 2.5s;">
 			<button
 				type="button"
 				data-tour="log-win-button"

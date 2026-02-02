@@ -9,12 +9,12 @@
 	}
 </script>
 
-<!-- Mobile Bottom Navigation Bar -->
+<!-- Floating Bottom Navigation Bar -->
 <nav
-	class="md:hidden fixed left-4 right-4 z-40 rounded-2xl shadow-lg shadow-primary-500/20 px-2 py-2"
+	class="fixed left-4 right-4 md:left-auto md:right-auto md:left-1/2 md:-translate-x-1/2 z-40 rounded-2xl shadow-lg shadow-primary-500/20 px-2 py-2 md:px-4"
 	style="background: linear-gradient(135deg, #fdfcfa 0%, #faf7f2 50%, #f9e8d2 100%); bottom: max(1rem, env(safe-area-inset-bottom));"
 >
-	<div class="flex items-center justify-around">
+	<div class="flex items-center justify-around md:gap-1">
 		<!-- Today -->
 		<a
 			href="/today"
