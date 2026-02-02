@@ -47,13 +47,14 @@
 			<h2 class="text-2xl font-bold text-cocoa-800 mb-2">Meet Milo</h2>
 			<p class="text-primary-600 font-medium mb-6">Your gentle motivator</p>
 			
-			<div class="mb-6 rounded-2xl overflow-hidden shadow-lg mx-auto max-w-md">
+			<div class="mb-6 rounded-2xl overflow-hidden mx-auto max-w-md">
 				<video 
 					autoplay 
 					loop 
 					muted 
 					playsinline
 					class="w-full h-auto"
+					style="clip-path: inset(10% 0 10% 0);"
 				>
 					<source src="/test.webm" type="video/webm" />
 					Your browser does not support the video tag.
