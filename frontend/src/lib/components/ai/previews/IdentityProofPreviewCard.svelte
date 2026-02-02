@@ -46,9 +46,9 @@
 	}
 
 	const intensityColors = {
-		Easy: 'bg-green-100 text-green-700',
-		Moderate: 'bg-yellow-100 text-yellow-700',
-		Hard: 'bg-red-100 text-red-700'
+		Easy: 'bg-sage-400/20 text-sage-600',
+		Moderate: 'bg-primary-100 text-primary-700',
+		Hard: 'bg-cocoa-400/20 text-cocoa-700'
 	};
 
 	const intensityEmoji = {
@@ -58,9 +58,9 @@
 	};
 </script>
 
-<div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+<div class="bg-primary-50 border border-primary-200 rounded-xl p-4">
 	<div class="flex items-start justify-between mb-2">
-		<div class="flex items-center gap-2 text-amber-600 text-sm font-medium">
+		<div class="flex items-center gap-2 text-primary-600 text-sm font-medium">
 			<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path
 					stroke-linecap="round"
@@ -80,7 +80,7 @@
 			<select
 				value={localData.identityId}
 				onchange={handleIdentityChange}
-				class="w-full px-2 py-1.5 border border-amber-300 rounded-2xl text-sm bg-warm-paper focus:ring-2 focus:ring-amber-400 focus:outline-none"
+				class="w-full px-2 py-1.5 border border-primary-300 rounded-2xl text-sm bg-warm-paper focus:ring-2 focus:ring-primary-400 focus:outline-none"
 			>
 				{#each identities as identity}
 					<option value={identity.id}>
@@ -103,7 +103,7 @@
 				bind:value={localData.description}
 				onblur={() => { editingDescription = false; onchange?.(localData); }}
 				onkeydown={(e) => { if (e.key === 'Escape') editingDescription = false; }}
-				class="w-full text-sm text-cocoa-700 bg-warm-paper border border-amber-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-amber-400 resize-none"
+				class="w-full text-sm text-cocoa-700 bg-warm-paper border border-primary-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-primary-400 resize-none"
 				rows="2"
 				autofocus
 			></textarea>
@@ -111,7 +111,7 @@
 			<button
 				type="button"
 				onclick={() => editingDescription = true}
-				class="text-sm text-cocoa-700 hover:bg-amber-100 rounded px-1 -mx-1 transition-colors text-left w-full min-h-[40px]"
+				class="text-sm text-cocoa-700 hover:bg-primary-100 rounded px-1 -mx-1 transition-colors text-left w-full min-h-[40px]"
 				title={$t('ai.preview.clickToEdit')}
 			>
 				{localData.description || $t('ai.preview.notSet')}
@@ -125,7 +125,7 @@
 		<select
 			value={localData.intensity}
 			onchange={handleIntensityChange}
-			class="w-full px-2 py-1.5 border border-amber-300 rounded-2xl text-sm bg-warm-paper focus:ring-2 focus:ring-amber-400 focus:outline-none"
+			class="w-full px-2 py-1.5 border border-primary-300 rounded-2xl text-sm bg-warm-paper focus:ring-2 focus:ring-primary-400 focus:outline-none"
 		>
 			<option value="Easy">{intensityEmoji.Easy} {$t('identityProof.intensity.easy')}</option>
 			<option value="Moderate">{intensityEmoji.Moderate} {$t('identityProof.intensity.moderate')}</option>
@@ -135,8 +135,8 @@
 
 	<!-- Reasoning (read-only) -->
 	{#if localData.reasoning}
-		<div class="mt-3 pt-3 border-t border-amber-200">
-			<p class="text-xs text-amber-600 italic">
+		<div class="mt-3 pt-3 border-t border-primary-200">
+			<p class="text-xs text-primary-600 italic">
 				💡 {localData.reasoning}
 			</p>
 		</div>

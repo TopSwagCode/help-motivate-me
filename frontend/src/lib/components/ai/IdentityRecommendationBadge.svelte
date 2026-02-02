@@ -10,11 +10,11 @@
 </script>
 
 <div
-	class="mt-3 p-3 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-2xl"
+	class="mt-3 p-3 bg-gradient-to-r from-primary-50 to-warm-beige border border-primary-200 rounded-2xl"
 >
 	<div class="flex items-start gap-2">
 		<svg
-			class="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5"
+			class="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5"
 			fill="none"
 			stroke="currentColor"
 			viewBox="0 0 24 24"
@@ -27,13 +27,13 @@
 			/>
 		</svg>
 		<div class="flex-1">
-			<p class="text-sm font-medium text-purple-900">
-				{$t('ai.preview.identityRecommendation')}: <span class="text-purple-700"
+			<p class="text-sm font-medium text-cocoa-800">
+				{$t('ai.preview.identityRecommendation')}: <span class="text-primary-700"
 					>{identityName}</span
 				>
 			</p>
 			{#if reasoning}
-				<p class="text-xs text-purple-600 mt-1">{reasoning}</p>
+				<p class="text-xs text-cocoa-600 mt-1">{reasoning}</p>
 			{/if}
 		</div>
 	</div>

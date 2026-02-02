@@ -73,9 +73,9 @@
 	}
 </script>
 
-<div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+<div class="bg-primary-50 border border-primary-200 rounded-xl p-4">
 	<div class="flex items-start justify-between mb-2">
-		<div class="flex items-center gap-2 text-amber-600 text-sm font-medium">
+		<div class="flex items-center gap-2 text-primary-600 text-sm font-medium">
 			<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path
 					stroke-linecap="round"
@@ -95,14 +95,14 @@
 			bind:value={localData.name}
 			onblur={() => { editingName = false; onchange?.(localData); }}
 			onkeydown={(e) => { if (e.key === 'Enter') { editingName = false; onchange?.(localData); } if (e.key === 'Escape') editingName = false; }}
-			class="w-full text-lg font-semibold text-cocoa-800 bg-warm-paper border border-amber-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-amber-400"
+			class="w-full text-lg font-semibold text-cocoa-800 bg-warm-paper border border-primary-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-primary-400"
 			autofocus
 		/>
 	{:else}
 		<button
 			type="button"
 			onclick={() => editingName = true}
-			class="text-lg font-semibold text-cocoa-800 hover:bg-amber-100 rounded px-1 -mx-1 transition-colors text-left w-full"
+			class="text-lg font-semibold text-cocoa-800 hover:bg-primary-100 rounded px-1 -mx-1 transition-colors text-left w-full"
 			title={$t('ai.preview.clickToEdit')}
 		>
 			{localData.name || $t('ai.preview.notSet')}
@@ -115,7 +115,7 @@
 			bind:value={localData.description}
 			onblur={() => { editingDescription = false; onchange?.(localData); }}
 			onkeydown={(e) => { if (e.key === 'Escape') editingDescription = false; }}
-			class="w-full text-cocoa-600 mt-1 text-sm bg-warm-paper border border-amber-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-amber-400 resize-none"
+			class="w-full text-cocoa-600 mt-1 text-sm bg-warm-paper border border-primary-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-primary-400 resize-none"
 			rows="2"
 			autofocus
 		></textarea>
@@ -123,7 +123,7 @@
 		<button
 			type="button"
 			onclick={() => editingDescription = true}
-			class="text-cocoa-600 mt-1 text-sm hover:bg-amber-100 rounded px-1 -mx-1 transition-colors text-left w-full {!localData.description ? 'italic text-gray-400' : ''}"
+			class="text-cocoa-600 mt-1 text-sm hover:bg-primary-100 rounded px-1 -mx-1 transition-colors text-left w-full {!localData.description ? 'italic text-gray-400' : ''}"
 			title={$t('ai.preview.clickToEdit')}
 		>
 			{localData.description || $t('ai.preview.addDescription')}
@@ -131,7 +131,7 @@
 	{/if}
 
 	<!-- Editable Trigger cue -->
-	<div class="mt-3 flex items-center gap-2 text-sm text-amber-700">
+	<div class="mt-3 flex items-center gap-2 text-sm text-primary-700">
 		<span class="font-medium">{$t('ai.preview.trigger')}:</span>
 		{#if editingTrigger}
 			<input
@@ -139,14 +139,14 @@
 				bind:value={localData.triggerCue}
 				onblur={() => { editingTrigger = false; onchange?.(localData); }}
 				onkeydown={(e) => { if (e.key === 'Enter') { editingTrigger = false; onchange?.(localData); } if (e.key === 'Escape') editingTrigger = false; }}
-				class="flex-1 italic bg-warm-paper border border-amber-300 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-amber-400 text-sm"
+				class="flex-1 italic bg-warm-paper border border-primary-300 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-primary-400 text-sm"
 				autofocus
 			/>
 		{:else}
 			<button
 				type="button"
 				onclick={() => editingTrigger = true}
-				class="italic hover:bg-amber-100 rounded px-1 transition-colors {!localData.triggerCue ? 'text-amber-500' : ''}"
+				class="italic hover:bg-primary-100 rounded px-1 transition-colors {!localData.triggerCue ? 'text-primary-500' : ''}"
 				title={$t('ai.preview.clickToEdit')}
 			>
 				{localData.triggerCue || $t('ai.preview.notSet')}
@@ -160,7 +160,7 @@
 			{#each localData.habits as habit, index}
 				<div class="flex items-start gap-2 text-sm group">
 					<div
-						class="flex-shrink-0 w-5 h-5 rounded-full bg-amber-200 text-amber-700 flex items-center justify-center text-xs font-medium"
+						class="flex-shrink-0 w-5 h-5 rounded-full bg-primary-200 text-primary-700 flex items-center justify-center text-xs font-medium"
 					>
 						{index + 1}
 					</div>
@@ -172,7 +172,7 @@
 									value={habit.cueDescription}
 									onchange={(e) => updateHabit(index, 'cueDescription', e.currentTarget.value)}
 									onblur={() => { editingHabitIndex = null; onchange?.(localData); }}
-									class="w-full text-cocoa-500 bg-warm-paper border border-amber-300 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-amber-400 text-sm"
+									class="w-full text-cocoa-500 bg-warm-paper border border-primary-300 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-primary-400 text-sm"
 									placeholder="After I..."
 								/>
 								<div class="flex items-center gap-1">
@@ -182,7 +182,7 @@
 										value={habit.habitDescription}
 										onchange={(e) => updateHabit(index, 'habitDescription', e.currentTarget.value)}
 										onblur={() => { editingHabitIndex = null; onchange?.(localData); }}
-										class="flex-1 font-medium text-cocoa-800 bg-warm-paper border border-amber-300 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-amber-400 text-sm"
+										class="flex-1 font-medium text-cocoa-800 bg-warm-paper border border-primary-300 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-primary-400 text-sm"
 										placeholder="I will..."
 									/>
 								</div>
@@ -191,7 +191,7 @@
 							<button
 								type="button"
 								onclick={() => editingHabitIndex = index}
-								class="text-left hover:bg-amber-100 rounded px-1 -mx-1 transition-colors w-full"
+								class="text-left hover:bg-primary-100 rounded px-1 -mx-1 transition-colors w-full"
 								title={$t('ai.preview.clickToEdit')}
 							>
 								<span class="text-cocoa-500">{habit.cueDescription}</span>
@@ -219,7 +219,7 @@
 			<button
 				type="button"
 				onclick={addHabit}
-				class="flex items-center gap-2 text-sm text-amber-600 hover:text-amber-700 hover:bg-amber-100 rounded px-2 py-1 transition-colors w-full"
+				class="flex items-center gap-2 text-sm text-primary-600 hover:text-primary-700 hover:bg-primary-100 rounded px-2 py-1 transition-colors w-full"
 			>
 				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -232,11 +232,11 @@
 	<!-- Editable Identity link -->
 	<div class="mt-3 flex flex-wrap gap-2">
 		{#if identities.length > 0}
-			<div class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-purple-700 bg-purple-100 rounded-full">
+			<div class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-cocoa-700 bg-warm-beige rounded-full">
 				<select
 					value={localData.identityId || ''}
 					onchange={(e) => handleIdentityChange(e.currentTarget.value)}
-					class="bg-transparent border-none outline-none text-xs font-medium text-purple-700 cursor-pointer appearance-none pr-4"
+					class="bg-transparent border-none outline-none text-xs font-medium text-cocoa-700 cursor-pointer appearance-none pr-4"
 				>
 					<option value="">{$t('ai.preview.none')}</option>
 					{#each identities as identity}
@@ -244,11 +244,11 @@
 					{/each}
 				</select>
 				{#if !localData.identityId}
-					<span class="text-purple-500 -ml-3">{$t('ai.preview.selectIdentity')}</span>
+					<span class="text-cocoa-500 -ml-3">{$t('ai.preview.selectIdentity')}</span>
 				{/if}
 			</div>
 		{:else if localData.identityName}
-			<span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-purple-700 bg-purple-100 rounded-full">
+			<span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-cocoa-700 bg-warm-beige rounded-full">
 				{localData.identityName}
 			</span>
 		{/if}

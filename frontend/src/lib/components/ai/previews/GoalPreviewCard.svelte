@@ -69,9 +69,9 @@
 	}
 </script>
 
-<div class="bg-green-50 border border-green-200 rounded-xl p-4">
+<div class="bg-primary-50 border border-primary-200 rounded-xl p-4">
 	<div class="flex items-start justify-between mb-2">
-		<div class="flex items-center gap-2 text-green-600 text-sm font-medium">
+		<div class="flex items-center gap-2 text-primary-600 text-sm font-medium">
 			<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path
 					stroke-linecap="round"
@@ -91,14 +91,14 @@
 			bind:value={localData.title}
 			onblur={() => { editingTitle = false; onchange?.(localData); }}
 			onkeydown={(e) => { if (e.key === 'Enter') { editingTitle = false; onchange?.(localData); } if (e.key === 'Escape') editingTitle = false; }}
-			class="w-full text-lg font-semibold text-cocoa-800 bg-warm-paper border border-green-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-green-400"
+			class="w-full text-lg font-semibold text-cocoa-800 bg-warm-paper border border-primary-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-primary-400"
 			autofocus
 		/>
 	{:else}
 		<button
 			type="button"
 			onclick={() => editingTitle = true}
-			class="text-lg font-semibold text-cocoa-800 hover:bg-green-100 rounded px-1 -mx-1 transition-colors text-left w-full"
+			class="text-lg font-semibold text-cocoa-800 hover:bg-primary-100 rounded px-1 -mx-1 transition-colors text-left w-full"
 			title={$t('ai.preview.clickToEdit')}
 		>
 			{localData.title || $t('ai.preview.notSet')}
@@ -111,7 +111,7 @@
 			bind:value={localData.description}
 			onblur={() => { editingDescription = false; onchange?.(localData); }}
 			onkeydown={(e) => { if (e.key === 'Escape') editingDescription = false; }}
-			class="w-full text-cocoa-600 mt-1 text-sm bg-warm-paper border border-green-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-green-400 resize-none"
+			class="w-full text-cocoa-600 mt-1 text-sm bg-warm-paper border border-primary-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-primary-400 resize-none"
 			rows="2"
 			autofocus
 		></textarea>
@@ -119,7 +119,7 @@
 		<button
 			type="button"
 			onclick={() => editingDescription = true}
-			class="text-cocoa-600 mt-1 text-sm hover:bg-green-100 rounded px-1 -mx-1 transition-colors text-left w-full {!localData.description ? 'italic text-gray-400' : ''}"
+			class="text-cocoa-600 mt-1 text-sm hover:bg-primary-100 rounded px-1 -mx-1 transition-colors text-left w-full {!localData.description ? 'italic text-gray-400' : ''}"
 			title={$t('ai.preview.clickToEdit')}
 		>
 			{localData.description || $t('ai.preview.addDescription')}
@@ -128,7 +128,7 @@
 
 	<div class="flex flex-wrap gap-2 mt-3">
 		<!-- Editable Target Date -->
-		<div class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
+		<div class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-primary-700 bg-primary-100 rounded-full">
 			<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path
 					stroke-linecap="round"
@@ -142,20 +142,20 @@
 				type="date"
 				value={formatDateForInput(localData.targetDate)}
 				onchange={(e) => updateField('targetDate', e.currentTarget.value || null)}
-				class="bg-transparent border-none outline-none text-xs font-medium text-green-700 cursor-pointer"
+				class="bg-transparent border-none outline-none text-xs font-medium text-primary-700 cursor-pointer"
 			/>
 			{#if !localData.targetDate}
-				<span class="text-green-500">{$t('ai.preview.setDate')}</span>
+				<span class="text-primary-500">{$t('ai.preview.setDate')}</span>
 			{/if}
 		</div>
 
 		<!-- Editable Identity -->
 		{#if identities.length > 0}
-			<div class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-purple-700 bg-purple-100 rounded-full">
+			<div class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-cocoa-700 bg-warm-beige rounded-full">
 				<select
 					value={localData.identityId || ''}
 					onchange={(e) => handleIdentityChange(e.currentTarget.value)}
-					class="bg-transparent border-none outline-none text-xs font-medium text-purple-700 cursor-pointer appearance-none pr-4"
+					class="bg-transparent border-none outline-none text-xs font-medium text-cocoa-700 cursor-pointer appearance-none pr-4"
 				>
 					<option value="">{$t('ai.preview.none')}</option>
 					{#each identities as identity}
@@ -163,11 +163,11 @@
 					{/each}
 				</select>
 				{#if !localData.identityId}
-					<span class="text-purple-500 -ml-3">{$t('ai.preview.selectIdentity')}</span>
+					<span class="text-cocoa-500 -ml-3">{$t('ai.preview.selectIdentity')}</span>
 				{/if}
 			</div>
 		{:else if localData.identityName}
-			<span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-purple-700 bg-purple-100 rounded-full">
+			<span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-cocoa-700 bg-warm-beige rounded-full">
 				{localData.identityName}
 			</span>
 		{/if}
