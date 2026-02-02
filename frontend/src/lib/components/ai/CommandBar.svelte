@@ -360,13 +360,13 @@
 						<!-- Loading indicator -->
 						{#if isLoading}
 							<div class="flex flex-col items-center justify-center p-4 text-cocoa-500">
-								<div class="w-32 h-32 overflow-hidden">
+								<div class="w-32 h-32">
 									<!-- svelte-ignore a11y_media_has_caption -->
 									<video 
 										autoplay 
 										loop 
 										playsinline 
-										class="w-32 h-32 object-cover object-top"
+										class="w-32 h-32"
 										onloadedmetadata={(e) => { e.currentTarget.volume = 0.2; }}
 									>
 										<source src="/thinking.webm" type="video/webm" />
