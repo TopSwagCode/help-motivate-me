@@ -54,7 +54,7 @@ export default defineConfig({
 				]
 			},
 			injectManifest: {
-				globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,woff,woff2}'],
+				globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,webm,woff,woff2}'],
 				globIgnores: ['**/sw*', '**/*.html']
 			},
 			kit: {
