@@ -11,10 +11,10 @@
 
 <!-- Floating Bottom Navigation Bar -->
 <nav
-	class="fixed left-4 right-4 md:left-auto md:right-auto md:left-1/2 md:-translate-x-1/2 z-40 rounded-2xl shadow-lg shadow-primary-500/20 px-2 py-2 md:px-4"
+	class="fixed left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] md:w-auto z-40 rounded-2xl shadow-lg shadow-primary-500/20 px-2 py-2 md:px-4"
 	style="background: linear-gradient(135deg, #fdfcfa 0%, #faf7f2 50%, #f9e8d2 100%); bottom: max(1rem, env(safe-area-inset-bottom));"
 >
-	<div class="flex items-center justify-around md:gap-1">
+	<div class="flex items-center justify-around md:justify-center md:gap-2">
 		<!-- Today -->
 		<a
 			href="/today"
