@@ -118,33 +118,26 @@
 			<!-- Scrollable Content -->
 			<div class="flex-1 overflow-y-auto p-4">
 				<!-- Guided Tour CTA -->
-				<div class="mb-4 p-4 bg-gradient-to-r from-primary-50 to-primary-100 rounded-xl border border-primary-200">
+				<div class="mb-4 p-4 bg-white rounded-xl border border-primary-200">
+					<!-- Text and Video side by side -->
 					<div class="flex items-start gap-4">
-						<div class="flex-1">
-							<div class="flex items-start gap-3">
-								<div class="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0">
-									<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-									</svg>
-								</div>
-								<div class="flex-1">
-									<h3 class="font-semibold text-cocoa-800 text-sm">{$t('help.tour.title')}</h3>
-									<p class="text-xs text-cocoa-600 mt-0.5">{$t('help.tour.description')}</p>
-									<button
-										onclick={handleRestartTour}
-										class="mt-2 px-4 py-1.5 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-full transition-colors"
-									>
-										{$t('help.tour.button')}
-									</button>
-								</div>
+						<div class="flex items-start gap-3 flex-1">
+							<div class="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0">
+								<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+								</svg>
+							</div>
+							<div class="flex-1">
+								<h3 class="font-semibold text-cocoa-800 text-sm">{$t('help.tour.title')}</h3>
+								<p class="text-xs text-cocoa-600 mt-0.5">{$t('help.tour.description')}</p>
 							</div>
 						</div>
 						<!-- Tour Preview Video -->
-						<div class="hidden sm:block flex-shrink-0">
+						<div class="flex-shrink-0">
 							<video
 								bind:this={videoElement}
-								class="w-32 h-24 rounded-lg object-cover shadow-sm"
+								class="w-24 sm:w-32 h-auto rounded-lg object-contain"
 								autoplay
 								loop
 								playsinline
@@ -153,6 +146,13 @@
 							</video>
 						</div>
 					</div>
+					<!-- Button spanning full width below -->
+					<button
+						onclick={handleRestartTour}
+						class="mt-3 w-full px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-full transition-colors"
+					>
+						{$t('help.tour.button')}
+					</button>
 				</div>
 
 				<!-- Accordion Sections -->
