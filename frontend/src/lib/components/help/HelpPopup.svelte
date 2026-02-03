@@ -135,7 +135,7 @@
 						</div>
 						<!-- Tour Preview Video (cropped container) -->
 						<div class="flex-shrink-0 w-24 sm:w-32 overflow-hidden rounded-lg"
-							style="--crop-top: 20px; --crop-bottom: 20px;">
+							style="--crop-top: 40px; --crop-bottom: 40px;">
 							<video
 								bind:this={videoElement}
 								class="w-full h-auto object-contain"
