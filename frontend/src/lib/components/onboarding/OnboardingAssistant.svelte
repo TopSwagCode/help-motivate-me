@@ -374,8 +374,13 @@
 		{#if displayContent || isLoading}
 			<div class="mb-4">
 				{#if isLoading}
-					<div class="flex items-center gap-3 text-cocoa-500">
-						<div class="animate-spin w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full"></div>
+					<div class="flex flex-col items-center justify-center text-cocoa-500">
+						<div class="w-32 h-32">
+							<!-- svelte-ignore a11y_media_has_caption -->
+							<video autoplay loop playsinline muted class="w-32 h-32">
+								<source src="/thinking.webm" type="video/webm" />
+							</video>
+						</div>
 						<span>{$t('ai.commandBar.thinking')}</span>
 					</div>
 				{:else}

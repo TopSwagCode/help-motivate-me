@@ -67,10 +67,13 @@
 </svelte:head>
 
 {#if loading}
-	<div class="min-h-screen bg-warm-cream flex items-center justify-center">
-		<div
-			class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full"
-		></div>
+	<div class="min-h-screen bg-warm-cream flex flex-col items-center justify-center">
+		<div class="w-32 h-32">
+			<!-- svelte-ignore a11y_media_has_caption -->
+			<video autoplay loop playsinline muted class="w-32 h-32">
+				<source src="/thinking.webm" type="video/webm" />
+			</video>
+		</div>
 	</div>
 {:else if mode === 'language'}
 	<LanguageSelectStep oncontinue={handleLanguageContinue} />
