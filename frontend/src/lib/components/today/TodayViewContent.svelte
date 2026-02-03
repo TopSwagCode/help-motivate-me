@@ -6,6 +6,10 @@
 	import type { BuddyTodayViewResponse, BuddyTodayTask, BuddyTodayHabitStack } from '$lib/types/buddy';
 	import type { IdentityProof } from '$lib/types/identityProof';
 	import VoteBreakdownPopover from './VoteBreakdownPopover.svelte';
+	import IdentityProgressIcon from '$lib/components/icons/IdentityProgressIcon.svelte';
+	import HabitStackIcon from '$lib/components/icons/HabitStackIcon.svelte';
+	import TasksIcon from '$lib/components/icons/TasksIcon.svelte';
+	import CompletedIcon from '$lib/components/icons/CompletedIcon.svelte';
 
 	// Unified type to accept both TodayView and BuddyTodayViewResponse
 	type TodayViewData = TodayView | BuddyTodayViewResponse;
@@ -221,7 +225,7 @@
 					class="flex items-center gap-2 text-left group"
 				>
 					<h2 class="text-base font-semibold text-cocoa-800 flex items-center gap-2">
-						<span>📊</span> {$t('today.identityProgress')}
+						<IdentityProgressIcon class="text-cocoa-600" /> {$t('today.identityProgress')}
 					</h2>
 					<svg
 						class="w-4 h-4 text-gray-400 transition-transform {sectionsExpanded.identityProgress ? 'rotate-180' : ''}"
@@ -300,7 +304,7 @@
 			class="w-full flex items-center justify-between text-left mb-3 group"
 		>
 			<h2 class="text-base font-semibold text-cocoa-800 flex items-center gap-2">
-				<span>🔗</span> {$t('today.habitStacks')}
+				<HabitStackIcon class="text-cocoa-600" /> {$t('today.habitStacks')}
 				<span class="text-xs font-normal text-cocoa-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.habitStacks.length}</span>
 			</h2>
 			<svg 
@@ -648,7 +652,7 @@
 				class="flex items-center gap-2 text-left group"
 			>
 				<h2 class="text-base font-semibold text-cocoa-800 flex items-center gap-2">
-					<span>📋</span> {$t('today.tasks')}
+					<TasksIcon class="text-cocoa-600" /> {$t('today.tasks')}
 					<span class="text-xs font-normal text-cocoa-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.upcomingTasks.length}</span>
 				</h2>
 				<svg 
@@ -834,7 +838,7 @@
 			class="w-full flex items-center justify-between text-left mb-3 group"
 		>
 			<h2 class="text-base font-semibold text-cocoa-800 flex items-center gap-2">
-				<span>✅</span> {$t('today.completed')}
+				<CompletedIcon class="text-green-600" /> {$t('today.completed')}
 				<span class="text-xs font-normal text-cocoa-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{todayData.completedTasks.length}</span>
 			</h2>
 			<svg 
