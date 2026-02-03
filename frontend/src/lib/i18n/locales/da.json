@@ -1417,6 +1417,88 @@
 		"enable": "Aktivér",
 		"notNow": "Ikke nu"
 	},
+	"help": {
+		"title": "Hjælp & Support",
+		"subtitle": "Lær hvordan du bruger Help Motivate Me",
+		"tour": {
+			"title": "Guidet rundvisning",
+			"description": "Tag en interaktiv rundvisning af alle funktionerne",
+			"button": "Start guidet rundvisning"
+		},
+		"sections": {
+			"today": {
+				"title": "I dag-visning",
+				"tips": [
+					"Dit daglige kontrolcenter der viser opgaver, vaner og sejre",
+					"Brug 7-dages tidslinjen til at planlægge og gennemgå fremskridt",
+					"Fuldfør vaner i rækkefølge for at opbygge kraftfulde striber",
+					"Log sejre for at forstærke din identitet gennem dagen"
+				]
+			},
+			"identities": {
+				"title": "Identiteter",
+				"tips": [
+					"Definer hvem du vil blive, ikke kun hvad du vil gøre",
+					"Hver fuldført opgave og vane er en stemme for din identitet",
+					"Knyt mål og vaner til identiteter for dybere motivation",
+					"Følg din identitetsscore for at se din transformation"
+				]
+			},
+			"goals": {
+				"title": "Mål",
+				"tips": [
+					"Opret mål der tjener din identitet, ikke kun resultater",
+					"Opdel mål i små, handlingsvenlige opgaver",
+					"Knyt mål til identiteter for varig motivation",
+					"Sæt måldatoer for at holde dig ansvarlig"
+				]
+			},
+			"habitStacks": {
+				"title": "Vanestakke",
+				"tips": [
+					"Kæd nye vaner til eksisterende rutiner for nemmere adoption",
+					"Brug formlen: Efter jeg [trigger], vil jeg [vane]",
+					"Start med små, pinligt nemme vaner",
+					"Fuldfør stakke i rækkefølge for at opbygge momentum"
+				]
+			},
+			"journal": {
+				"title": "Dagbog",
+				"tips": [
+					"Reflekter over hvad der virkede og hvad der ikke gjorde hver dag",
+					"Knyt indlæg til vanestakke eller opgaver for kontekst",
+					"Tilføj billeder for at fastholde meningsfulde øjeblikke",
+					"Gennemgå tidligere indlæg for at se hvor langt du er kommet"
+				]
+			},
+			"analytics": {
+				"title": "Analyse",
+				"tips": [
+					"Følg fuldførelsesrater og identificer mønstre",
+					"Se dine vanestriber og længste rekorder",
+					"Se identitetsstemme-tendenser over tid",
+					"Brug data til at optimere dine rutiner"
+				]
+			},
+			"aiAssistant": {
+				"title": "AI-assistent",
+				"tips": [
+					"Opret opgaver, mål og vaner ved hjælp af naturligt sprog",
+					"Åbn når som helst med Cmd+K (Mac) eller Ctrl+K (Windows)",
+					"Beskriv hvad du ønsker og lad AI foreslå den rigtige type",
+					"Log sejre hurtigt ved at fortælle assistenten hvad du gjorde"
+				]
+			}
+		},
+		"faq": {
+			"title": "Brug for mere hjælp?",
+			"link": "Besøg FAQ"
+		},
+		"contact": {
+			"title": "Har du stadig brug for hjælp?",
+			"link": "Kontakt support"
+		}
+	},
 	"tour": {
 		"welcome": {
 			"takeTour": "Tag en guidet rundvisning",

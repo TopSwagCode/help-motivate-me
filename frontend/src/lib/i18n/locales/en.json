@@ -1417,6 +1417,88 @@
 		"enable": "Enable",
 		"notNow": "Not Now"
 	},
+	"help": {
+		"title": "Help & Support",
+		"subtitle": "Learn how to use Help Motivate Me",
+		"tour": {
+			"title": "Guided Tour",
+			"description": "Take an interactive tour of all the features",
+			"button": "Start Guided Tour"
+		},
+		"sections": {
+			"today": {
+				"title": "Today View",
+				"tips": [
+					"Your daily command center showing tasks, habits, and wins",
+					"Use the 7-day timeline to plan ahead and review progress",
+					"Complete habits in order to build powerful streaks",
+					"Log wins to reinforce your identity throughout the day"
+				]
+			},
+			"identities": {
+				"title": "Identities",
+				"tips": [
+					"Define who you want to become, not just what you want to do",
+					"Every completed task and habit is a vote for your identity",
+					"Link goals and habits to identities for deeper motivation",
+					"Track your identity score to see your transformation"
+				]
+			},
+			"goals": {
+				"title": "Goals",
+				"tips": [
+					"Create goals that serve your identity, not just outcomes",
+					"Break goals into small, actionable tasks",
+					"Link goals to identities for lasting motivation",
+					"Set target dates to stay accountable"
+				]
+			},
+			"habitStacks": {
+				"title": "Habit Stacks",
+				"tips": [
+					"Chain new habits to existing routines for easier adoption",
+					"Use the formula: After I [trigger], I will [habit]",
+					"Start with small, embarrassingly easy habits",
+					"Complete stacks in order to build momentum"
+				]
+			},
+			"journal": {
+				"title": "Journal",
+				"tips": [
+					"Reflect on what worked and what didn't each day",
+					"Link entries to habit stacks or tasks for context",
+					"Add images to capture meaningful moments",
+					"Review past entries to see how far you've come"
+				]
+			},
+			"analytics": {
+				"title": "Analytics",
+				"tips": [
+					"Track completion rates and identify patterns",
+					"View your habit streaks and longest records",
+					"See identity vote trends over time",
+					"Use data to optimize your routines"
+				]
+			},
+			"aiAssistant": {
+				"title": "AI Assistant",
+				"tips": [
+					"Create tasks, goals, and habits using natural language",
+					"Open anytime with Cmd+K (Mac) or Ctrl+K (Windows)",
+					"Describe what you want and let AI suggest the right type",
+					"Log wins quickly by telling the assistant what you did"
+				]
+			}
+		},
+		"faq": {
+			"title": "Need more help?",
+			"link": "Visit FAQ"
+		},
+		"contact": {
+			"title": "Still need help?",
+			"link": "Contact Support"
+		}
+	},
 	"tour": {
 		"welcome": {
 			"takeTour": "Take Guided Tour",

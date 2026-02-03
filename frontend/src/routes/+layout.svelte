@@ -14,6 +14,7 @@
 	import ConnectionErrorOverlay from '$lib/components/ConnectionErrorOverlay.svelte';
 	import GuidedTour from '$lib/components/tour/GuidedTour.svelte';
 	import IdentityProofModal from '$lib/components/today/IdentityProofModal.svelte';
+	import HelpPopup from '$lib/components/help/HelpPopup.svelte';
 	import { initI18n, setLocale, getLocaleFromLanguage } from '$lib/i18n';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
@@ -34,6 +35,7 @@
 	let i18nReady = $state(false);
 	let authChecked = $state(false);
 	let showProofModal = $state(false);
+	let showHelpPopup = $state(false);
 
 	// Initialize i18n and auth on mount
 	onMount(async () => {
@@ -266,6 +268,40 @@
 				</svg>
 			</button>
 		</div>
+
+		<!-- Floating Help Button -->
+		<div class="fixed bottom-56 right-4 sm:right-6 z-30 animate-wiggle" style="animation-delay: 3s;">
+			<button
+				type="button"
+				onclick={() => showHelpPopup = true}
+				class="group relative w-12 h-12 sm:w-14 sm:h-14
+				       bg-gradient-to-r from-primary-300 to-primary-400
+				       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110
+				       transition-all duration-300 flex items-center justify-center
+				       touch-manipulation"
+				title={$t('help.title')}
+				aria-label={$t('help.title')}
+			>
+				<span class="absolute right-full mr-3 px-3 py-1.5 bg-cocoa-900 text-white text-sm font-medium rounded-2xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+					{$t('help.title')}
+				</span>
+				<!-- Question mark icon -->
+				<svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+					/>
+				</svg>
+			</button>
+		</div>
+
+		<!-- Help Popup -->
+		<HelpPopup
+			isOpen={showHelpPopup}
+			onClose={() => showHelpPopup = false}
+		/>
 	{/if}
 {:else}
 	<!-- Loading state while i18n initializes -->
