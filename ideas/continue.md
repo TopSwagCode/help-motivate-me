@@ -1,1 +1,4 @@
-Make new icon for Daily commitment complete to get away from emoji!
+Ideas:
+
+* Onboarding flow for Accountability buddy.
+* Help button (driver.js point out that users needs and point it out.)
