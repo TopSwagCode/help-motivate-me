@@ -133,11 +133,12 @@
 								<p class="text-xs text-cocoa-600 mt-0.5">{$t('help.tour.description')}</p>
 							</div>
 						</div>
-						<!-- Tour Preview Video -->
-						<div class="flex-shrink-0">
+						<!-- Tour Preview Video (cropped container) -->
+						<div class="flex-shrink-0 w-24 sm:w-32 overflow-hidden rounded-lg"
+							style="--crop-top: 100px; --crop-bottom: 100px;">
 							<video
 								bind:this={videoElement}
-								class="w-24 sm:w-32 h-auto rounded-lg object-contain"
+								class="w-full h-auto object-contain"
 								autoplay
 								loop
 								playsinline
