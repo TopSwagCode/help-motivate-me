@@ -17,11 +17,13 @@ public class HabitStacksController : ControllerBase
     private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
     private readonly IAnalyticsService _analyticsService;
+    private readonly IMilestoneService _milestoneService;
 
-    public HabitStacksController(AppDbContext db, IAnalyticsService analyticsService)
+    public HabitStacksController(AppDbContext db, IAnalyticsService analyticsService, IMilestoneService milestoneService)
     {
         _db = db;
         _analyticsService = analyticsService;
+        _milestoneService = milestoneService;
     }
 
     [HttpGet]
@@ -336,6 +338,7 @@ public class HabitStacksController : ControllerBase
         {
             var sessionId = GetSessionId();
             await _analyticsService.LogEventAsync(userId, sessionId, "HabitCompleted", new { habitStackId = item.HabitStackId, itemId });
+            await _milestoneService.RecordEventAsync(userId, "HabitCompleted", new { habitStackId = item.HabitStackId, itemId });
         }
 
         return Ok(new HabitStackItemCompletionResponse(
@@ -394,6 +397,12 @@ public class HabitStacksController : ControllerBase
         }
 
         await _db.SaveChangesAsync();
+
+        // Record milestone events for each completed habit
+        for (var i = 0; i < completedCount; i++)
+        {
+            await _milestoneService.RecordEventAsync(userId, "HabitCompleted", new { habitStackId = stack.Id });
+        }
 
         return Ok(new CompleteAllResponse(
             stack.Id,

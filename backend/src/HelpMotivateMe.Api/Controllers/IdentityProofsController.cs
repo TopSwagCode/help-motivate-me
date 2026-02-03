@@ -15,13 +15,16 @@ public class IdentityProofsController : ControllerBase
     private const string SessionIdKey = "AnalyticsSessionId";
     private readonly IdentityProofService _proofService;
     private readonly IAnalyticsService _analyticsService;
+    private readonly IMilestoneService _milestoneService;
 
     public IdentityProofsController(
         IdentityProofService proofService,
-        IAnalyticsService analyticsService)
+        IAnalyticsService analyticsService,
+        IMilestoneService milestoneService)
     {
         _proofService = proofService;
         _analyticsService = analyticsService;
+        _milestoneService = milestoneService;
     }
 
     /// <summary>
@@ -56,6 +59,8 @@ public class IdentityProofsController : ControllerBase
                 intensity = request.Intensity.ToString(),
                 voteValue = (int)request.Intensity
             });
+
+            await _milestoneService.RecordEventAsync(userId, "IdentityProofAdded", new { identityId = request.IdentityId });
 
             return CreatedAtAction(nameof(GetProofs), null, proof);
         }

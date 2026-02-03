@@ -23,11 +23,14 @@ public class JournalController : ControllerBase
     private const int MaxImageSizeBytes = 5 * 1024 * 1024; // 5MB
     private const int MaxImagesPerEntry = 5;
 
-    public JournalController(AppDbContext db, IStorageService storage, IAnalyticsService analyticsService)
+    private readonly IMilestoneService _milestoneService;
+
+    public JournalController(AppDbContext db, IStorageService storage, IAnalyticsService analyticsService, IMilestoneService milestoneService)
     {
         _db = db;
         _storage = storage;
         _analyticsService = analyticsService;
+        _milestoneService = milestoneService;
     }
 
     [HttpGet]
@@ -130,6 +133,7 @@ public class JournalController : ControllerBase
 
         var sessionId = GetSessionId();
         await _analyticsService.LogEventAsync(userId, sessionId, "JournalEntryCreated", new { entryId = entry.Id });
+        await _milestoneService.RecordEventAsync(userId, "JournalEntryCreated", new { entryId = entry.Id });
 
         // Reload with navigation properties
         await _db.Entry(entry).Reference(e => e.HabitStack).LoadAsync();

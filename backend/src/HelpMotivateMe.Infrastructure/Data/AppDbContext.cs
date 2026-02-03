@@ -35,6 +35,12 @@ public class AppDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<DailyCommitmentNotificationLog> DailyCommitmentNotificationLogs => Set<DailyCommitmentNotificationLog>();
     public DbSet<IdentityProof> IdentityProofs => Set<IdentityProof>();
 
+    // Milestone Engine
+    public DbSet<DomainEvent> DomainEvents => Set<DomainEvent>();
+    public DbSet<UserStats> UserStats => Set<UserStats>();
+    public DbSet<MilestoneDefinition> MilestoneDefinitions => Set<MilestoneDefinition>();
+    public DbSet<UserMilestone> UserMilestones => Set<UserMilestone>();
+
     // Data Protection keys for persistent authentication across restarts and instances
     public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
 

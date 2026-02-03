@@ -23,13 +23,20 @@ public class AuthController : ControllerBase
     private readonly IConfiguration _configuration;
     private readonly IEmailService _emailService;
     private readonly IAnalyticsService _analyticsService;
+    private readonly IMilestoneService _milestoneService;
 
-    public AuthController(AppDbContext db, IConfiguration configuration, IEmailService emailService, IAnalyticsService analyticsService)
+    public AuthController(
+        AppDbContext db,
+        IConfiguration configuration,
+        IEmailService emailService,
+        IAnalyticsService analyticsService,
+        IMilestoneService milestoneService)
     {
         _db = db;
         _configuration = configuration;
         _emailService = emailService;
         _analyticsService = analyticsService;
+        _milestoneService = milestoneService;
     }
 
     [HttpPost("register")]
@@ -122,6 +129,7 @@ public class AuthController : ControllerBase
 
         var sessionId = GetSessionId();
         await _analyticsService.LogEventAsync(user.Id, sessionId, "UserLoggedIn");
+        await _milestoneService.RecordEventAsync(user.Id, "UserLoggedIn");
 
         return Ok(MapToResponse(user));
     }
@@ -250,6 +258,7 @@ public class AuthController : ControllerBase
         }
 
         await SignInUser(user);
+        await _milestoneService.RecordEventAsync(user.Id, "UserLoggedIn");
 
         return Redirect(returnUrl ?? "/dashboard");
     }
@@ -416,6 +425,7 @@ public class AuthController : ControllerBase
         await _db.SaveChangesAsync();
 
         await SignInUser(token.User);
+        await _milestoneService.RecordEventAsync(token.User.Id, "UserLoggedIn");
 
         return Ok(MapToResponse(token.User));
     }
@@ -454,6 +464,7 @@ public class AuthController : ControllerBase
 
         // Auto-login the user
         await SignInUser(token.User);
+        await _milestoneService.RecordEventAsync(token.User.Id, "UserLoggedIn");
 
         var sessionId = GetSessionId();
         await _analyticsService.LogEventAsync(token.User.Id, sessionId, "EmailVerified");
@@ -765,6 +776,7 @@ public class AuthController : ControllerBase
         await _db.SaveChangesAsync();
 
         await SignInUser(token.BuddyUser);
+        await _milestoneService.RecordEventAsync(token.BuddyUser.Id, "UserLoggedIn");
 
         return Ok(new BuddyLoginResponse(
             MapToResponse(token.BuddyUser),

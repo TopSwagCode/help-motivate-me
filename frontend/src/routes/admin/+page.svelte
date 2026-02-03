@@ -10,8 +10,9 @@
 	import PushNotificationsTab from '$lib/components/admin/PushNotificationsTab.svelte';
 	import AnalyticsTab from '$lib/components/admin/AnalyticsTab.svelte';
 	import AiUsageTab from '$lib/components/admin/AiUsageTab.svelte';
+	import MilestonesTab from '$lib/components/admin/MilestonesTab.svelte';
 
-	type Tab = 'stats' | 'users' | 'access' | 'push' | 'analytics' | 'ai-usage';
+	type Tab = 'stats' | 'users' | 'access' | 'push' | 'analytics' | 'ai-usage' | 'milestones';
 
 	let activeTab = $state<Tab>('stats');
 	let loading = $state(true);
@@ -19,7 +20,7 @@
 	// Read tab from URL hash
 	$effect(() => {
 		const hash = $page.url.hash.slice(1) as Tab;
-		if (['stats', 'users', 'access', 'push', 'analytics', 'ai-usage'].includes(hash)) {
+		if (['stats', 'users', 'access', 'push', 'analytics', 'ai-usage', 'milestones'].includes(hash)) {
 			activeTab = hash;
 		}
 	});
@@ -54,7 +55,8 @@
 		{ id: 'access', label: 'Access Control' },
 		{ id: 'push', label: 'Push Notifications' },
 		{ id: 'analytics', label: 'Analytics Events' },
-		{ id: 'ai-usage', label: 'AI Usage' }
+		{ id: 'ai-usage', label: 'AI Usage' },
+		{ id: 'milestones', label: 'Milestones' }
 	];
 </script>
 
@@ -104,6 +106,8 @@
 					<AnalyticsTab />
 				{:else if activeTab === 'ai-usage'}
 					<AiUsageTab />
+				{:else if activeTab === 'milestones'}
+					<MilestonesTab />
 				{/if}
 			</div>
 		{/if}

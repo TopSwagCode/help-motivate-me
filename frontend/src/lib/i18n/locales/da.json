@@ -1267,6 +1267,19 @@
 			"removeWaitlistFailed": "Kunne ikke fjerne fra venteliste",
 			"removeWhitelistFailed": "Kunne ikke fjerne fra whitelist",
 			"inviteFailed": "Kunne ikke invitere bruger"
+		},
+		"milestones": {
+			"title": "Milepælsdefinitioner",
+			"definitions": "definitioner",
+			"icon": "Ikon",
+			"code": "Kode",
+			"trigger": "Udløser",
+			"rule": "Regel",
+			"status": "Status",
+			"actions": "Handlinger",
+			"active": "Aktiv",
+			"inactive": "Inaktiv",
+			"preview": "Forhåndsvisning"
 		}
 	},
 	"faq": {
@@ -1488,6 +1501,92 @@
 		"contact": {
 			"title": "Har du stadig brug for hjælp?",
 			"link": "Kontakt support"
+		}
+	},
+	"milestones": {
+		"celebration": {
+			"title": "Milepæl opnået!",
+			"awesome": "Fantastisk!"
+		},
+		"first_login": {
+			"title": "Første skridt",
+			"description": "Du har logget ind for første gang. Velkommen til din rejse!"
+		},
+		"logins_7": {
+			"title": "Ugens kriger",
+			"description": "Du har logget ind 7 gange. Konsistens er nøglen!"
+		},
+		"logins_30": {
+			"title": "Månedlig mester",
+			"description": "30 logins! Du opbygger en stærk vane."
+		},
+		"return_after_2_weeks": {
+			"title": "Velkommen tilbage!",
+			"description": "Du vendte tilbage efter 2+ uger. Hver tilbagevenden tæller!"
+		},
+		"first_habit": {
+			"title": "Vane-starter",
+			"description": "Du fuldførte din første vane. Rejsen begynder!"
+		},
+		"habits_10": {
+			"title": "Vane-bygger",
+			"description": "10 vaner fuldført! Du opbygger momentum."
+		},
+		"habits_50": {
+			"title": "Vane-mester",
+			"description": "50 vaner fuldført! Du er ustoppelig."
+		},
+		"habits_100": {
+			"title": "Vane-legende",
+			"description": "100 vaner fuldført! Sand dedikation."
+		},
+		"habits_5_in_week": {
+			"title": "Ugentlig streak",
+			"description": "5 vaner på én uge! Imponerende konsistens."
+		},
+		"first_task": {
+			"title": "Opgave-tackler",
+			"description": "Du fuldførte din første opgave. Momentum bygges!"
+		},
+		"tasks_10": {
+			"title": "Opgave-mester",
+			"description": "10 opgaver færdige! Du gør fremskridt."
+		},
+		"tasks_50": {
+			"title": "Opgave-titan",
+			"description": "50 opgaver fuldført! Bemærkelsesværdig produktivitet."
+		},
+		"first_journal": {
+			"title": "Første indgang",
+			"description": "Du skrev din første dagbogsindgang. Refleksion er kraftfuldt!"
+		},
+		"journals_10": {
+			"title": "Tankefuld forfatter",
+			"description": "10 dagbogsindgange! Din rejse er veldokumenteret."
+		},
+		"first_identity_proof": {
+			"title": "Identitets-stemmer",
+			"description": "Du loggede din første sejr. Hver stemme tæller!"
+		},
+		"identity_proofs_10": {
+			"title": "Identitets-bygger",
+			"description": "10 sejre logget! Du bliver den, du vil være."
+		},
+		"identity_proofs_50": {
+			"title": "Identitets-mester",
+			"description": "50 sejre! Din identitetstransformation er bemærkelsesværdig."
+		},
+		"wins_25": {
+			"title": "Kvart århundrede",
+			"description": "25 samlede sejre! Stabile fremskridt."
+		},
+		"wins_100": {
+			"title": "Århundrede-klub",
+			"description": "100 samlede sejre! Du er i brand."
+		},
+		"wins_500": {
+			"title": "Elite-opnår",
+			"description": "500 samlede sejre! Du er i en liga for dig selv."
 		}
 	},
 	"tour": {

@@ -71,6 +71,9 @@ builder.Services.AddScoped<IDailyCommitmentNotificationService, DailyCommitmentN
 // Analytics Service
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
+// Milestone Service
+builder.Services.AddScoped<IMilestoneService, MilestoneService>();
+
 // Query Interface - read-only queries with AsNoTracking for better performance
 builder.Services.AddScoped(typeof(IQueryInterface<>), typeof(QueryInterface<>));
 
@@ -90,8 +93,9 @@ builder.Services.AddSession(options =>
         : CookieSecurePolicy.Always;
 });
 
-// Database Seeder
+// Database Seeders
 builder.Services.AddHostedService<AdminUserSeeder>();
+builder.Services.AddHostedService<MilestoneSeeder>();
 
 // CORS
 builder.Services.AddCors(options =>

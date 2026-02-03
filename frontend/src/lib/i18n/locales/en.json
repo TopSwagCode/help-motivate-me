@@ -1267,6 +1267,19 @@
 			"removeWaitlistFailed": "Failed to remove from waitlist",
 			"removeWhitelistFailed": "Failed to remove from whitelist",
 			"inviteFailed": "Failed to invite user"
+		},
+		"milestones": {
+			"title": "Milestone Definitions",
+			"definitions": "definitions",
+			"icon": "Icon",
+			"code": "Code",
+			"trigger": "Trigger",
+			"rule": "Rule",
+			"status": "Status",
+			"actions": "Actions",
+			"active": "Active",
+			"inactive": "Inactive",
+			"preview": "Preview"
 		}
 	},
 	"faq": {
@@ -1488,6 +1501,92 @@
 		"contact": {
 			"title": "Still need help?",
 			"link": "Contact Support"
+		}
+	},
+	"milestones": {
+		"celebration": {
+			"title": "Achievement Unlocked!",
+			"awesome": "Awesome!"
+		},
+		"first_login": {
+			"title": "First Steps",
+			"description": "You've logged in for the first time. Welcome to your journey!"
+		},
+		"logins_7": {
+			"title": "Weekly Warrior",
+			"description": "You've logged in 7 times. Consistency is key!"
+		},
+		"logins_30": {
+			"title": "Monthly Master",
+			"description": "30 logins! You're building a strong habit."
+		},
+		"return_after_2_weeks": {
+			"title": "Welcome Back!",
+			"description": "You returned after 2+ weeks. Every comeback counts!"
+		},
+		"first_habit": {
+			"title": "Habit Starter",
+			"description": "You completed your first habit. The journey begins!"
+		},
+		"habits_10": {
+			"title": "Habit Builder",
+			"description": "10 habits completed! You're building momentum."
+		},
+		"habits_50": {
+			"title": "Habit Champion",
+			"description": "50 habits completed! You're unstoppable."
+		},
+		"habits_100": {
+			"title": "Habit Legend",
+			"description": "100 habits completed! True dedication."
+		},
+		"habits_5_in_week": {
+			"title": "Weekly Streak",
+			"description": "5 habits in one week! Impressive consistency."
+		},
+		"first_task": {
+			"title": "Task Tackler",
+			"description": "You completed your first task. Momentum building!"
+		},
+		"tasks_10": {
+			"title": "Task Master",
+			"description": "10 tasks done! You're making progress."
+		},
+		"tasks_50": {
+			"title": "Task Titan",
+			"description": "50 tasks completed! Remarkable productivity."
+		},
+		"first_journal": {
+			"title": "First Entry",
+			"description": "You wrote your first journal entry. Reflection is powerful!"
+		},
+		"journals_10": {
+			"title": "Thoughtful Writer",
+			"description": "10 journal entries! Your journey is well documented."
+		},
+		"first_identity_proof": {
+			"title": "Identity Voter",
+			"description": "You logged your first win. Every vote counts!"
+		},
+		"identity_proofs_10": {
+			"title": "Identity Builder",
+			"description": "10 wins logged! You're becoming who you want to be."
+		},
+		"identity_proofs_50": {
+			"title": "Identity Champion",
+			"description": "50 wins! Your identity transformation is remarkable."
+		},
+		"wins_25": {
+			"title": "Quarter Century",
+			"description": "25 total wins! Steady progress."
+		},
+		"wins_100": {
+			"title": "Century Club",
+			"description": "100 total wins! You're on fire."
+		},
+		"wins_500": {
+			"title": "Elite Achiever",
+			"description": "500 total wins! You're in a league of your own."
 		}
 	},
 	"tour": {

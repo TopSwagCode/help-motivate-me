@@ -17,11 +17,13 @@ public class TasksController : ControllerBase
     private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
     private readonly IAnalyticsService _analyticsService;
+    private readonly IMilestoneService _milestoneService;
 
-    public TasksController(AppDbContext db, IAnalyticsService analyticsService)
+    public TasksController(AppDbContext db, IAnalyticsService analyticsService, IMilestoneService milestoneService)
     {
         _db = db;
         _analyticsService = analyticsService;
+        _milestoneService = milestoneService;
     }
 
     [HttpGet("api/goals/{goalId:guid}/tasks")]
@@ -256,6 +258,7 @@ public class TasksController : ControllerBase
         {
             var sessionId = GetSessionId();
             await _analyticsService.LogEventAsync(userId, sessionId, "TaskCompleted", new { taskId = id });
+            await _milestoneService.RecordEventAsync(userId, "TaskCompleted", new { taskId = id });
         }
 
         return Ok(MapToResponse(task));
@@ -284,12 +287,18 @@ public class TasksController : ControllerBase
                 task.Status = TaskItemStatus.Completed;
                 task.CompletedAt = targetDate;
                 task.UpdatedAt = DateTime.UtcNow;
-                
+
                 completedCount++;
             }
         }
 
         await _db.SaveChangesAsync();
+
+        // Record milestone events for each completed task
+        for (var i = 0; i < completedCount; i++)
+        {
+            await _milestoneService.RecordEventAsync(userId, "TaskCompleted");
+        }
 
         return Ok(new CompleteMultipleTasksResponse(completedCount, tasks.Count));
     }
