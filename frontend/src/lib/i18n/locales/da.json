@@ -1471,15 +1471,6 @@
 					"Gennemgå tidligere indlæg for at se hvor langt du er kommet"
 				]
 			},
-			"analytics": {
-				"title": "Analyse",
-				"tips": [
-					"Følg fuldførelsesrater og identificer mønstre",
-					"Se dine vanestriber og længste rekorder",
-					"Se identitetsstemme-tendenser over tid",
-					"Brug data til at optimere dine rutiner"
-				]
-			},
 			"aiAssistant": {
 				"title": "AI-assistent",
 				"tips": [

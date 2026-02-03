@@ -25,7 +25,6 @@
 			else if (path.startsWith('/goals')) sectionToExpand = 'goals';
 			else if (path.startsWith('/habit-stacks')) sectionToExpand = 'habitStacks';
 			else if (path.startsWith('/journal')) sectionToExpand = 'journal';
-			else if (path.startsWith('/analytics')) sectionToExpand = 'analytics';
 
 			if (sectionToExpand) {
 				expandedSections = new Set([sectionToExpand]);
@@ -45,10 +44,13 @@
 		expandedSections = newSections;
 	}
 
-	function handleRestartTour() {
-		tour.resetTour();
+	async function handleRestartTour() {
 		onClose();
-		goto('/today');
+		await goto('/today');
+		// Short delay to allow the page to render before starting the tour
+		setTimeout(() => {
+			tour.resetTour();
+		}, 300);
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
@@ -63,7 +65,6 @@
 		{ id: 'goals', icon: '🏆' },
 		{ id: 'habitStacks', icon: '🔗' },
 		{ id: 'journal', icon: '📝' },
-		{ id: 'analytics', icon: '📊' },
 		{ id: 'aiAssistant', icon: '⚡' }
 	];
 </script>

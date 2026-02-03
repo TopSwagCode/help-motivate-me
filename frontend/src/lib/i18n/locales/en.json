@@ -1471,15 +1471,6 @@
 					"Review past entries to see how far you've come"
 				]
 			},
-			"analytics": {
-				"title": "Analytics",
-				"tips": [
-					"Track completion rates and identify patterns",
-					"View your habit streaks and longest records",
-					"See identity vote trends over time",
-					"Use data to optimize your routines"
-				]
-			},
 			"aiAssistant": {
 				"title": "AI Assistant",
 				"tips": [
