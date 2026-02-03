@@ -139,6 +139,7 @@
 							<video
 								bind:this={videoElement}
 								class="w-full h-auto object-contain"
+								style="margin-top: calc(-1 * var(--crop-top)); margin-bottom: calc(-1 * var(--crop-bottom));"
 								autoplay
 								loop
 								playsinline
