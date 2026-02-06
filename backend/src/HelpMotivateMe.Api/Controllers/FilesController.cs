@@ -36,7 +36,7 @@ public class FilesController : ControllerBase
         // Ensure the resolved path is still within the base path (security check)
         var resolvedPath = Path.GetFullPath(fullPath);
         var resolvedBasePath = Path.GetFullPath(_basePath);
-        
+
         if (!resolvedPath.StartsWith(resolvedBasePath))
         {
             _logger.LogWarning("Attempted path traversal attack: {FilePath}", filepath);

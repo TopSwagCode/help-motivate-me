@@ -364,7 +364,7 @@ public class MilestoneService : IMilestoneService
         var userMilestones = await _db.UserMilestones
             .Where(um => um.MilestoneDefinitionId == id)
             .ToListAsync();
-        
+
         _db.UserMilestones.RemoveRange(userMilestones);
         _db.MilestoneDefinitions.Remove(definition);
         await _db.SaveChangesAsync();

@@ -113,10 +113,10 @@ public static class LocalizedPrompts
             contextLines.Add(language == Language.Danish
                 ? "BRUGERENS IDENTITETER (link vaner og mål til disse når relevant):"
                 : "USER'S IDENTITIES (link habits and goals to these when relevant):");
-            
+
             var identitiesJson = System.Text.Json.JsonSerializer.Serialize(userIdentities);
             contextLines.Add(identitiesJson);
-            
+
             contextLines.Add("");
             contextLines.Add(language == Language.Danish
                 ? "VIGTIGT: Når du opretter vane-stakke eller mål, prøv at matche dem med en af brugerens identiteter baseret på indholdet. Inkluder 'identityName' i JSON når der er et klart match. For eksempel: fitness vaner -> link til fitness/atlet identitet, læse vaner -> link til læser identitet."

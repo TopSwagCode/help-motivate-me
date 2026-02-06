@@ -29,9 +29,9 @@ public class WebPushNotificationService : IPushNotificationService
         _webPushClient = new WebPushClient();
 
         var vapidSubject = _configuration["Vapid:Subject"] ?? "mailto:admin@helpmotivateme.app";
-        var vapidPublicKey = _configuration["Vapid:PublicKey"] 
+        var vapidPublicKey = _configuration["Vapid:PublicKey"]
             ?? throw new InvalidOperationException("Vapid:PublicKey is not configured");
-        var vapidPrivateKey = _configuration["Vapid:PrivateKey"] 
+        var vapidPrivateKey = _configuration["Vapid:PrivateKey"]
             ?? throw new InvalidOperationException("Vapid:PrivateKey is not configured");
 
         _vapidDetails = new VapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey);

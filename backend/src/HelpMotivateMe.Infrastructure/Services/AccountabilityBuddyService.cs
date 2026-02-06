@@ -260,10 +260,10 @@ public class AccountabilityBuddyService
     /// Create a journal entry for a buddy.
     /// </summary>
     public async Task<BuddyJournalEntryData> CreateBuddyJournalEntryAsync(
-        Guid authorUserId, 
-        Guid targetUserId, 
-        string title, 
-        string? description, 
+        Guid authorUserId,
+        Guid targetUserId,
+        string title,
+        string? description,
         string? entryDate)
     {
         var author = await _db.Users.FirstAsync(u => u.Id == authorUserId);

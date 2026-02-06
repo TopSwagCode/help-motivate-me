@@ -247,9 +247,9 @@ public class IdentityScoreService
         {
             if (stack.Items.Count > 0)
             {
-                var itemsCompletedToday = stack.Items.Count(i => 
+                var itemsCompletedToday = stack.Items.Count(i =>
                     i.Completions.Any(c => c.CompletedDate == date));
-                
+
                 if (itemsCompletedToday == stack.Items.Count)
                 {
                     votes += 2; // Bonus for completing full stack

@@ -328,7 +328,7 @@ public class JournalController : ApiControllerBase
         {
             entry = await _db.JournalEntries
                 .Where(j => j.Id == entryId)
-                .Where(j => _db.AccountabilityBuddies.Any(b => 
+                .Where(j => _db.AccountabilityBuddies.Any(b =>
                     b.UserId == j.UserId && b.BuddyUserId == userId))
                 .FirstOrDefaultAsync();
         }

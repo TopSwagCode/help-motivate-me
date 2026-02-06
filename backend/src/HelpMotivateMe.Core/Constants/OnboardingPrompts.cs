@@ -226,7 +226,7 @@ public static class OnboardingPrompts
     public static string BuildSystemPrompt(string step, Dictionary<string, object>? context)
     {
         var basePrompt = GetPromptForStep(step);
-        
+
         if (context == null || context.Count == 0)
         {
             return basePrompt;

@@ -14,10 +14,10 @@ public class LocalFileStorageService : IStorageService
     {
         _basePath = configuration["LocalStorage:BasePath"]
             ?? throw new InvalidOperationException("LocalStorage:BasePath not configured");
-        
+
         _baseUrl = configuration["LocalStorage:BaseUrl"]
             ?? throw new InvalidOperationException("LocalStorage:BaseUrl not configured");
-        
+
         _logger = logger;
 
         // Ensure the base directory exists
@@ -42,7 +42,7 @@ public class LocalFileStorageService : IStorageService
         {
             await using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, useAsync: true);
             await stream.CopyToAsync(fileStream, cancellationToken);
-            
+
             _logger.LogInformation("Uploaded file: {Key} to {FilePath}", key, filePath);
             return key;
         }
@@ -116,7 +116,7 @@ public class LocalFileStorageService : IStorageService
         // For local storage, return a direct URL to the file serving endpoint
         // Strip any existing api/files/ prefix to handle legacy data
         var cleanKey = key.StartsWith("api/files/") ? key.Substring("api/files/".Length) : key;
-        
+
         // If baseUrl already ends with /api/files, don't add it again
         // Otherwise, append /api/files to the base URL
         var baseUrl = _baseUrl.TrimEnd('/');
