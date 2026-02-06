@@ -18,14 +18,34 @@ public class AccountabilityBuddyController : ControllerBase
 {
     private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
+    private readonly IQueryInterface<AccountabilityBuddy> _buddies;
+    private readonly IQueryInterface<HabitStack> _habitStacks;
+    private readonly IQueryInterface<TaskItem> _taskItems;
+    private readonly IQueryInterface<Identity> _identities;
+    private readonly IQueryInterface<JournalEntry> _journalEntries;
     private readonly IConfiguration _configuration;
     private readonly IEmailService _emailService;
     private readonly IStorageService _storage;
     private readonly IAnalyticsService _analyticsService;
 
-    public AccountabilityBuddyController(AppDbContext db, IConfiguration configuration, IEmailService emailService, IStorageService storage, IAnalyticsService analyticsService)
+    public AccountabilityBuddyController(
+        AppDbContext db,
+        IQueryInterface<AccountabilityBuddy> buddies,
+        IQueryInterface<HabitStack> habitStacks,
+        IQueryInterface<TaskItem> taskItems,
+        IQueryInterface<Identity> identities,
+        IQueryInterface<JournalEntry> journalEntries,
+        IConfiguration configuration,
+        IEmailService emailService,
+        IStorageService storage,
+        IAnalyticsService analyticsService)
     {
         _db = db;
+        _buddies = buddies;
+        _habitStacks = habitStacks;
+        _taskItems = taskItems;
+        _identities = identities;
+        _journalEntries = journalEntries;
         _configuration = configuration;
         _emailService = emailService;
         _storage = storage;
@@ -44,7 +64,7 @@ public class AccountabilityBuddyController : ControllerBase
         await _analyticsService.LogEventAsync(userId, sessionId, "BuddiesPageLoaded");
 
         // Get my accountability buddies (people I've added)
-        var myBuddies = await _db.AccountabilityBuddies
+        var myBuddies = await _buddies
             .Include(ab => ab.BuddyUser)
             .Where(ab => ab.UserId == userId)
             .Select(ab => new BuddyResponse(
@@ -57,7 +77,7 @@ public class AccountabilityBuddyController : ControllerBase
             .ToListAsync();
 
         // Get people I'm an accountability buddy for
-        var buddyingFor = await _db.AccountabilityBuddies
+        var buddyingFor = await _buddies
             .Include(ab => ab.User)
             .Where(ab => ab.BuddyUserId == userId)
             .Select(ab => new BuddyForResponse(
@@ -210,7 +230,7 @@ public class AccountabilityBuddyController : ControllerBase
         var userId = GetUserId();
 
         // Verify buddy relationship exists
-        var isBuddy = await _db.AccountabilityBuddies
+        var isBuddy = await _buddies
             .AnyAsync(ab => ab.UserId == targetUserId && ab.BuddyUserId == userId);
 
         if (!isBuddy)
@@ -258,7 +278,7 @@ public class AccountabilityBuddyController : ControllerBase
         var userId = GetUserId();
 
         // Verify buddy relationship exists
-        var isBuddy = await _db.AccountabilityBuddies
+        var isBuddy = await _buddies
             .AnyAsync(ab => ab.UserId == targetUserId && ab.BuddyUserId == userId);
 
         if (!isBuddy)
@@ -266,7 +286,7 @@ public class AccountabilityBuddyController : ControllerBase
             return Forbid();
         }
 
-        var entries = await _db.JournalEntries
+        var entries = await _journalEntries
             .Include(j => j.Author)
             .Include(j => j.Images.OrderBy(i => i.SortOrder))
             .Include(j => j.Reactions)
@@ -302,7 +322,7 @@ public class AccountabilityBuddyController : ControllerBase
         var userId = GetUserId();
 
         // Verify buddy relationship exists
-        var isBuddy = await _db.AccountabilityBuddies
+        var isBuddy = await _buddies
             .AnyAsync(ab => ab.UserId == targetUserId && ab.BuddyUserId == userId);
 
         if (!isBuddy)
@@ -365,7 +385,7 @@ public class AccountabilityBuddyController : ControllerBase
         var userId = GetUserId();
 
         // Verify buddy relationship exists
-        var isBuddy = await _db.AccountabilityBuddies
+        var isBuddy = await _buddies
             .AnyAsync(ab => ab.UserId == targetUserId && ab.BuddyUserId == userId);
 
         if (!isBuddy)
@@ -456,7 +476,7 @@ public class AccountabilityBuddyController : ControllerBase
         var userId = GetUserId();
 
         // Verify buddy relationship exists
-        var isBuddy = await _db.AccountabilityBuddies
+        var isBuddy = await _buddies
             .AnyAsync(ab => ab.UserId == targetUserId && ab.BuddyUserId == userId);
 
         if (!isBuddy)
@@ -515,7 +535,7 @@ public class AccountabilityBuddyController : ControllerBase
         var userId = GetUserId();
 
         // Verify buddy relationship exists
-        var isBuddy = await _db.AccountabilityBuddies
+        var isBuddy = await _buddies
             .AnyAsync(ab => ab.UserId == targetUserId && ab.BuddyUserId == userId);
 
         if (!isBuddy)
@@ -541,10 +561,10 @@ public class AccountabilityBuddyController : ControllerBase
     // Helper methods copied from TodayController for consistency
     private async Task<List<TodayHabitStackResponse>> GetTodayHabitStacks(Guid userId, DateOnly targetDate)
     {
-        var stacks = await _db.HabitStacks
+        var stacks = await _habitStacks
             .Include(s => s.Identity)
             .Include(s => s.Items.OrderBy(i => i.SortOrder))
-                .ThenInclude(i => i.Completions)
+                .ThenInclude(i => i.Completions.Where(c => c.CompletedDate == targetDate))
             .Where(s => s.UserId == userId && s.IsActive)
             .OrderBy(s => s.SortOrder)
             .ThenBy(s => s.Name)
@@ -561,10 +581,10 @@ public class AccountabilityBuddyController : ControllerBase
             s.Items.Select(i => new TodayHabitStackItemResponse(
                 i.Id,
                 i.HabitDescription,
-                i.Completions.Any(c => c.CompletedDate == targetDate),
+                i.Completions.Any(), // Already filtered to targetDate
                 i.CurrentStreak
             )),
-            s.Items.Count(i => i.Completions.Any(c => c.CompletedDate == targetDate)),
+            s.Items.Count(i => i.Completions.Any()), // Already filtered to targetDate
             s.Items.Count
         )).ToList();
     }
@@ -573,7 +593,7 @@ public class AccountabilityBuddyController : ControllerBase
     {
         var weekFromNow = targetDate.AddDays(7);
 
-        var tasks = await _db.TaskItems
+        var tasks = await _taskItems
             .Include(t => t.Goal)
             .Include(t => t.Identity)
             .Where(t => t.Goal.UserId == userId &&
@@ -604,7 +624,7 @@ public class AccountabilityBuddyController : ControllerBase
     {
         var weekFromNow = targetDate.AddDays(7);
 
-        var tasks = await _db.TaskItems
+        var tasks = await _taskItems
             .Include(t => t.Goal)
             .Include(t => t.Identity)
             .Where(t => t.Goal.UserId == userId &&
@@ -632,38 +652,35 @@ public class AccountabilityBuddyController : ControllerBase
 
     private async Task<List<TodayIdentityFeedbackResponse>> GetIdentityFeedback(Guid userId, DateOnly targetDate)
     {
-        var identities = await _db.Identities
+        // Get identities with only today's completions (filtered at database level)
+        var identities = await _identities
             .Include(i => i.HabitStacks)
                 .ThenInclude(hs => hs.Items)
-                    .ThenInclude(hsi => hsi.Completions)
-            .Include(i => i.Tasks)
-            .Include(i => i.Proofs)
+                    .ThenInclude(hsi => hsi.Completions.Where(c => c.CompletedDate == targetDate))
+            .Include(i => i.Tasks.Where(t => t.Status == TaskItemStatus.Completed &&
+                                             t.CompletedAt == targetDate))
+            .Include(i => i.Proofs.Where(p => p.ProofDate == targetDate))
             .Where(i => i.UserId == userId)
             .ToListAsync();
 
         return identities.Select(i =>
         {
-            // Count habit stack item completions - 1 vote each
+            // Count habit stack item completions (already filtered to targetDate) - 1 vote each
             var habitVotes = i.HabitStacks
                 .SelectMany(hs => hs.Items)
-                .SelectMany(hsi => hsi.Completions.Where(c => c.CompletedDate == targetDate))
+                .SelectMany(hsi => hsi.Completions)
                 .Count();
 
             // Count fully completed stacks - 2 bonus votes per completed stack
             var stackBonusVotes = i.HabitStacks
-                .Where(hs => hs.Items.Count > 0 && hs.Items.All(item => item.Completions.Any(c => c.CompletedDate == targetDate)))
+                .Where(hs => hs.Items.Count > 0 && hs.Items.All(item => item.Completions.Any()))
                 .Count() * 2;
 
-            // Count task completions - 2 votes each
-            var taskVotes = i.Tasks
-                .Count(t => t.Status == TaskItemStatus.Completed &&
-                           t.CompletedAt.HasValue &&
-                           t.CompletedAt.Value == targetDate) * 2;
+            // Count task completions (already filtered to targetDate) - 2 votes each
+            var taskVotes = i.Tasks.Count * 2;
 
             // Sum proof intensities (Easy=1, Moderate=2, Hard=3)
-            var proofVotes = i.Proofs
-                .Where(p => p.ProofDate == targetDate)
-                .Sum(p => (int)p.Intensity);
+            var proofVotes = i.Proofs.Sum(p => (int)p.Intensity);
 
             var totalVotes = habitVotes + stackBonusVotes + taskVotes + proofVotes;
 

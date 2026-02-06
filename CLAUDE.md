@@ -124,6 +124,15 @@ frontend/src/
 - **AI Features**: OpenAI-powered onboarding, command bar (Cmd+K), voice transcription
 - **Push Notifications**: Web push with scheduled delivery and admin broadcasting
 
+### Data Access Patterns
+
+- **Read-only queries**: Use `IQueryInterface<T>` (auto-applies `AsNoTracking()` for better performance)
+- **Write operations**: Use `AppDbContext` directly (for Add, Update, Delete, SaveChanges)
+- **Mixed controllers**: Inject BOTH `IQueryInterface<T>` for reads and `AppDbContext` for writes
+- **Filtering**: Always apply `Where` clauses via IQueryable before `ToListAsync()` - never load then filter in memory
+- **Filtered includes**: Use `.Include(x => x.Items.Where(...))` to limit loaded navigation properties
+- **Reference**: `TodayController` demonstrates the correct pattern
+
 ## Development URLs
 
 - Frontend: http://localhost:5173

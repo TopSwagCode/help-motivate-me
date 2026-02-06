@@ -16,12 +16,14 @@ public class HabitStacksController : ControllerBase
 {
     private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
+    private readonly IQueryInterface<HabitStack> _habitStacksQuery;
     private readonly IAnalyticsService _analyticsService;
     private readonly IMilestoneService _milestoneService;
 
-    public HabitStacksController(AppDbContext db, IAnalyticsService analyticsService, IMilestoneService milestoneService)
+    public HabitStacksController(AppDbContext db, IQueryInterface<HabitStack> habitStacksQuery, IAnalyticsService analyticsService, IMilestoneService milestoneService)
     {
         _db = db;
+        _habitStacksQuery = habitStacksQuery;
         _analyticsService = analyticsService;
         _milestoneService = milestoneService;
     }
@@ -34,7 +36,7 @@ public class HabitStacksController : ControllerBase
 
         await _analyticsService.LogEventAsync(userId, sessionId, "HabitStacksPageLoaded");
 
-        var stacks = await _db.HabitStacks
+        var stacks = await _habitStacksQuery
             .Include(hs => hs.Identity)
             .Include(hs => hs.Items.OrderBy(i => i.SortOrder))
             .Where(hs => hs.UserId == userId)
@@ -50,7 +52,7 @@ public class HabitStacksController : ControllerBase
     {
         var userId = GetUserId();
 
-        var stack = await _db.HabitStacks
+        var stack = await _habitStacksQuery
             .Include(hs => hs.Identity)
             .Include(hs => hs.Items.OrderBy(i => i.SortOrder))
             .FirstOrDefaultAsync(hs => hs.Id == id && hs.UserId == userId);

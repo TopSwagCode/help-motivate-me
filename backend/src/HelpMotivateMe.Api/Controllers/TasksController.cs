@@ -16,12 +16,16 @@ public class TasksController : ControllerBase
 {
     private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
+    private readonly IQueryInterface<TaskItem> _taskItemsQuery;
+    private readonly IQueryInterface<Goal> _goalsQuery;
     private readonly IAnalyticsService _analyticsService;
     private readonly IMilestoneService _milestoneService;
 
-    public TasksController(AppDbContext db, IAnalyticsService analyticsService, IMilestoneService milestoneService)
+    public TasksController(AppDbContext db, IQueryInterface<TaskItem> taskItemsQuery, IQueryInterface<Goal> goalsQuery, IAnalyticsService analyticsService, IMilestoneService milestoneService)
     {
         _db = db;
+        _taskItemsQuery = taskItemsQuery;
+        _goalsQuery = goalsQuery;
         _analyticsService = analyticsService;
         _milestoneService = milestoneService;
     }
@@ -32,13 +36,13 @@ public class TasksController : ControllerBase
         var userId = GetUserId();
 
         // Verify goal belongs to user
-        var goalExists = await _db.Goals.AnyAsync(g => g.Id == goalId && g.UserId == userId);
+        var goalExists = await _goalsQuery.AnyAsync(g => g.Id == goalId && g.UserId == userId);
         if (!goalExists)
         {
             return NotFound(new { message = "Goal not found" });
         }
 
-        var tasks = await _db.TaskItems
+        var tasks = await _taskItemsQuery
             .Include(t => t.Identity)
             .Include(t => t.Subtasks)
             .Include(t => t.Subtasks)
@@ -56,7 +60,7 @@ public class TasksController : ControllerBase
     {
         var userId = GetUserId();
 
-        var task = await _db.TaskItems
+        var task = await _taskItemsQuery
             .Include(t => t.Goal)
             .Include(t => t.Identity)
             .Include(t => t.Subtasks)

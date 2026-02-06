@@ -17,11 +17,13 @@ public class GoalsController : ControllerBase
 {
     private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
+    private readonly IQueryInterface<Goal> _goalsQuery;
     private readonly IAnalyticsService _analyticsService;
 
-    public GoalsController(AppDbContext db, IAnalyticsService analyticsService)
+    public GoalsController(AppDbContext db, IQueryInterface<Goal> goalsQuery, IAnalyticsService analyticsService)
     {
         _db = db;
+        _goalsQuery = goalsQuery;
         _analyticsService = analyticsService;
     }
 
@@ -33,7 +35,7 @@ public class GoalsController : ControllerBase
 
         await _analyticsService.LogEventAsync(userId, sessionId, "GoalsPageLoaded");
 
-        var goals = await _db.Goals
+        var goals = await _goalsQuery
             .Include(g => g.Tasks)
             .Include(g => g.Identity)
             .Where(g => g.UserId == userId)
@@ -52,7 +54,7 @@ public class GoalsController : ControllerBase
 
         await _analyticsService.LogEventAsync(userId, sessionId, "GoalDetailLoaded", new { goalId = id });
 
-        var goal = await _db.Goals
+        var goal = await _goalsQuery
             .Include(g => g.Tasks)
             .Include(g => g.Identity)
             .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);

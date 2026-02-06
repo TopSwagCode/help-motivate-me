@@ -15,11 +15,19 @@ namespace HelpMotivateMe.Api.Controllers;
 public class PushNotificationsController : ControllerBase
 {
     private readonly AppDbContext _db;
+    private readonly IQueryInterface<PushSubscription> _pushSubscriptionsQuery;
+    private readonly IQueryInterface<User> _usersQuery;
     private readonly IPushNotificationService _pushService;
 
-    public PushNotificationsController(AppDbContext db, IPushNotificationService pushService)
+    public PushNotificationsController(
+        AppDbContext db,
+        IQueryInterface<PushSubscription> pushSubscriptionsQuery,
+        IQueryInterface<User> usersQuery,
+        IPushNotificationService pushService)
     {
         _db = db;
+        _pushSubscriptionsQuery = pushSubscriptionsQuery;
+        _usersQuery = usersQuery;
         _pushService = pushService;
     }
 
@@ -107,7 +115,7 @@ public class PushNotificationsController : ControllerBase
     public async Task<ActionResult<PushSubscriptionsStatusResponse>> GetStatus()
     {
         var userId = GetUserId();
-        var subscriptions = await _db.PushSubscriptions
+        var subscriptions = await _pushSubscriptionsQuery
             .Where(s => s.UserId == userId)
             .Select(s => new PushSubscriptionStatusResponse(
                 s.Id,
@@ -159,7 +167,7 @@ public class PushNotificationsController : ControllerBase
         [FromQuery] bool? hasPush = null,
         [FromQuery] string? search = null)
     {
-        var query = _db.Users
+        var query = _usersQuery
             .Include(u => u.PushSubscriptions)
             .AsQueryable();
 
@@ -168,6 +176,13 @@ public class PushNotificationsController : ControllerBase
             var searchLower = search.ToLower();
             query = query.Where(u =>
                 u.Email.ToLower().Contains(searchLower));
+        }
+
+        if (hasPush.HasValue)
+        {
+            query = hasPush.Value
+                ? query.Where(u => u.PushSubscriptions.Any())
+                : query.Where(u => !u.PushSubscriptions.Any());
         }
 
         var users = await query
@@ -180,11 +195,6 @@ public class PushNotificationsController : ControllerBase
             ))
             .ToListAsync();
 
-        if (hasPush.HasValue)
-        {
-            users = users.Where(u => u.HasPushEnabled == hasPush.Value).ToList();
-        }
-
         return Ok(users);
     }
 
@@ -195,18 +205,18 @@ public class PushNotificationsController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<PushNotificationStatsResponse>> GetPushStats()
     {
-        var totalSubscriptions = await _db.PushSubscriptions.CountAsync();
-        var usersWithPush = await _db.PushSubscriptions
+        var totalSubscriptions = await _pushSubscriptionsQuery.CountAsync();
+        var usersWithPush = await _pushSubscriptionsQuery
             .Select(s => s.UserId)
             .Distinct()
             .CountAsync();
-        
-        var oldestSubscription = await _db.PushSubscriptions
+
+        var oldestSubscription = await _pushSubscriptionsQuery
             .OrderBy(s => s.CreatedAt)
             .Select(s => (DateTime?)s.CreatedAt)
             .FirstOrDefaultAsync();
-            
-        var newestSubscription = await _db.PushSubscriptions
+
+        var newestSubscription = await _pushSubscriptionsQuery
             .OrderByDescending(s => s.CreatedAt)
             .Select(s => (DateTime?)s.CreatedAt)
             .FirstOrDefaultAsync();

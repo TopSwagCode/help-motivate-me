@@ -17,6 +17,9 @@ public class JournalController : ControllerBase
 {
     private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
+    private readonly IQueryInterface<JournalEntry> _journalEntriesQuery;
+    private readonly IQueryInterface<HabitStack> _habitStacksQuery;
+    private readonly IQueryInterface<TaskItem> _taskItemsQuery;
     private readonly IStorageService _storage;
     private readonly IAnalyticsService _analyticsService;
     private static readonly string[] AllowedContentTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
@@ -25,9 +28,19 @@ public class JournalController : ControllerBase
 
     private readonly IMilestoneService _milestoneService;
 
-    public JournalController(AppDbContext db, IStorageService storage, IAnalyticsService analyticsService, IMilestoneService milestoneService)
+    public JournalController(
+        AppDbContext db,
+        IQueryInterface<JournalEntry> journalEntriesQuery,
+        IQueryInterface<HabitStack> habitStacksQuery,
+        IQueryInterface<TaskItem> taskItemsQuery,
+        IStorageService storage,
+        IAnalyticsService analyticsService,
+        IMilestoneService milestoneService)
     {
         _db = db;
+        _journalEntriesQuery = journalEntriesQuery;
+        _habitStacksQuery = habitStacksQuery;
+        _taskItemsQuery = taskItemsQuery;
         _storage = storage;
         _analyticsService = analyticsService;
         _milestoneService = milestoneService;
@@ -42,7 +55,7 @@ public class JournalController : ControllerBase
         await _analyticsService.LogEventAsync(userId, sessionId, "JournalPageLoaded");
 
         // Start with all entries belonging to this user's journal
-        var query = _db.JournalEntries
+        var query = _journalEntriesQuery
             .Include(j => j.HabitStack)
             .Include(j => j.TaskItem)
             .Include(j => j.Author)
@@ -77,7 +90,7 @@ public class JournalController : ControllerBase
     {
         var userId = GetUserId();
 
-        var entry = await _db.JournalEntries
+        var entry = await _journalEntriesQuery
             .Include(j => j.HabitStack)
             .Include(j => j.TaskItem)
             .Include(j => j.Author)
@@ -377,7 +390,7 @@ public class JournalController : ControllerBase
     {
         var userId = GetUserId();
 
-        var stacks = await _db.HabitStacks
+        var stacks = await _habitStacksQuery
             .Where(h => h.UserId == userId && h.IsActive)
             .OrderBy(h => h.Name)
             .Select(h => new LinkableHabitStackResponse(h.Id, h.Name))
@@ -391,7 +404,7 @@ public class JournalController : ControllerBase
     {
         var userId = GetUserId();
 
-        var tasks = await _db.TaskItems
+        var tasks = await _taskItemsQuery
             .Include(t => t.Goal)
             .Where(t => t.Goal.UserId == userId && t.Status != TaskItemStatus.Completed)
             .OrderBy(t => t.Goal.Title)

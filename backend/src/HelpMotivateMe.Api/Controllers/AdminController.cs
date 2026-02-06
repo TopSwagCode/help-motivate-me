@@ -18,13 +18,53 @@ namespace HelpMotivateMe.Api.Controllers;
 public class AdminController : ControllerBase
 {
     private readonly AppDbContext _db;
+    private readonly IQueryInterface<User> _users;
+    private readonly IQueryInterface<TaskItem> _taskItems;
+    private readonly IQueryInterface<AiUsageLog> _aiUsageLogs;
+    private readonly IQueryInterface<WaitlistEntry> _waitlistEntries;
+    private readonly IQueryInterface<WhitelistEntry> _whitelistEntries;
+    private readonly IQueryInterface<AnalyticsEvent> _analyticsEvents;
+    private readonly IQueryInterface<PushSubscription> _pushSubscriptions;
+    private readonly IQueryInterface<Goal> _goals;
+    private readonly IQueryInterface<Identity> _identitiesQuery;
+    private readonly IQueryInterface<HabitStack> _habitStacks;
+    private readonly IQueryInterface<HabitStackItemCompletion> _habitCompletions;
+    private readonly IQueryInterface<JournalEntry> _journalEntries;
     private readonly IConfiguration _configuration;
     private readonly IEmailService _emailService;
     private readonly IAiBudgetService _aiBudgetService;
 
-    public AdminController(AppDbContext db, IConfiguration configuration, IEmailService emailService, IAiBudgetService aiBudgetService)
+    public AdminController(
+        AppDbContext db,
+        IQueryInterface<User> users,
+        IQueryInterface<TaskItem> taskItems,
+        IQueryInterface<AiUsageLog> aiUsageLogs,
+        IQueryInterface<WaitlistEntry> waitlistEntries,
+        IQueryInterface<WhitelistEntry> whitelistEntries,
+        IQueryInterface<AnalyticsEvent> analyticsEvents,
+        IQueryInterface<PushSubscription> pushSubscriptions,
+        IQueryInterface<Goal> goals,
+        IQueryInterface<Identity> identitiesQuery,
+        IQueryInterface<HabitStack> habitStacks,
+        IQueryInterface<HabitStackItemCompletion> habitCompletions,
+        IQueryInterface<JournalEntry> journalEntries,
+        IConfiguration configuration,
+        IEmailService emailService,
+        IAiBudgetService aiBudgetService)
     {
         _db = db;
+        _users = users;
+        _taskItems = taskItems;
+        _aiUsageLogs = aiUsageLogs;
+        _waitlistEntries = waitlistEntries;
+        _whitelistEntries = whitelistEntries;
+        _analyticsEvents = analyticsEvents;
+        _pushSubscriptions = pushSubscriptions;
+        _goals = goals;
+        _identitiesQuery = identitiesQuery;
+        _habitStacks = habitStacks;
+        _habitCompletions = habitCompletions;
+        _journalEntries = journalEntries;
         _configuration = configuration;
         _emailService = emailService;
         _aiBudgetService = aiBudgetService;
@@ -37,23 +77,23 @@ public class AdminController : ControllerBase
         var tomorrow = today.AddDays(1);
 
         // User stats
-        var totalUsers = await _db.Users.CountAsync();
-        var activeUsers = await _db.Users.CountAsync(u => u.IsActive);
+        var totalUsers = await _users.CountAsync();
+        var activeUsers = await _users.CountAsync(u => u.IsActive);
 
         // Users logged in today (users who updated their record today - approximation via UpdatedAt)
-        var usersLoggedInToday = await _db.Users
+        var usersLoggedInToday = await _users
             .CountAsync(u => u.UpdatedAt >= today && u.UpdatedAt < tomorrow);
 
         // Membership tier breakdown
         var membershipStats = new MembershipStats(
-            FreeUsers: await _db.Users.CountAsync(u => u.MembershipTier == MembershipTier.Free),
-            PlusUsers: await _db.Users.CountAsync(u => u.MembershipTier == MembershipTier.Plus),
-            ProUsers: await _db.Users.CountAsync(u => u.MembershipTier == MembershipTier.Pro)
+            FreeUsers: await _users.CountAsync(u => u.MembershipTier == MembershipTier.Free),
+            PlusUsers: await _users.CountAsync(u => u.MembershipTier == MembershipTier.Plus),
+            ProUsers: await _users.CountAsync(u => u.MembershipTier == MembershipTier.Pro)
         );
 
         // Total task stats (all time)
-        var totalTasksCreated = await _db.TaskItems.CountAsync();
-        var totalTasksCompleted = await _db.TaskItems
+        var totalTasksCreated = await _taskItems.CountAsync();
+        var totalTasksCompleted = await _taskItems
             .CountAsync(t => t.CompletedAt != null);
 
         var taskTotals = new TaskTotals(
@@ -87,15 +127,15 @@ public class AdminController : ControllerBase
         var nextDay = targetDateTime.AddDays(1);
 
         // Tasks created on this date
-        var tasksCreated = await _db.TaskItems
+        var tasksCreated = await _taskItems
             .CountAsync(t => t.CreatedAt >= targetDateTime && t.CreatedAt < nextDay);
 
         // Tasks completed on this date
-        var tasksCompleted = await _db.TaskItems
+        var tasksCompleted = await _taskItems
             .CountAsync(t => t.CompletedAt == targetDate);
 
         // Tasks due on this date
-        var tasksDue = await _db.TaskItems
+        var tasksDue = await _taskItems
             .CountAsync(t => t.DueDate == targetDate);
 
         return Ok(new DailyStatsResponse(
@@ -114,7 +154,7 @@ public class AdminController : ControllerBase
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 50)
     {
-        var query = _db.Users.AsQueryable();
+        var query = _users.AsQueryable();
 
         // Apply filters
         if (!string.IsNullOrWhiteSpace(search))
@@ -138,18 +178,20 @@ public class AdminController : ControllerBase
         // Get total count for pagination info
         var totalCount = await query.CountAsync();
 
-        // Get AI usage stats grouped by user
-        var aiUsageStats = await _db.AiUsageLogs
-            .GroupBy(a => a.UserId)
-            .Select(g => new { UserId = g.Key, CallsCount = g.Count(), TotalCost = g.Sum(a => a.EstimatedCostUsd) })
-            .ToDictionaryAsync(x => x.UserId, x => new { x.CallsCount, x.TotalCost });
-
-        // Apply pagination and ordering
+        // Apply pagination and ordering first
         var users = await query
             .OrderByDescending(u => u.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
+
+        // Get AI usage stats only for the paginated user IDs
+        var userIds = users.Select(u => u.Id).ToList();
+        var aiUsageStats = await _aiUsageLogs
+            .Where(a => userIds.Contains(a.UserId))
+            .GroupBy(a => a.UserId)
+            .Select(g => new { UserId = g.Key, CallsCount = g.Count(), TotalCost = g.Sum(a => a.EstimatedCostUsd) })
+            .ToDictionaryAsync(x => x.UserId, x => new { x.CallsCount, x.TotalCost });
 
         var result = users.Select(u =>
         {
@@ -259,50 +301,43 @@ public class AdminController : ControllerBase
         var lastWeekStart = now.AddDays(-7);
         var lastWeekStartDate = DateOnly.FromDateTime(lastWeekStart);
 
-        // Last week stats
-        var userGoalIds = await _db.Goals.Where(g => g.UserId == userId).Select(g => g.Id).ToListAsync();
-        var userHabitStackIds = await _db.HabitStacks.Where(hs => hs.UserId == userId).Select(hs => hs.Id).ToListAsync();
-        var userHabitStackItemIds = await _db.HabitStackItems
-            .Where(hsi => userHabitStackIds.Contains(hsi.HabitStackId))
-            .Select(hsi => hsi.Id)
-            .ToListAsync();
+        // Last week stats - use navigation property joins to avoid pre-fetching IDs
+        var tasksCreatedLastWeek = await _taskItems
+            .Where(t => t.Goal.UserId == userId && t.CreatedAt >= lastWeekStart)
+            .CountAsync();
+        var tasksCompletedLastWeek = await _taskItems
+            .Where(t => t.Goal.UserId == userId && t.CompletedAt >= lastWeekStartDate)
+            .CountAsync();
+        var goalsCreatedLastWeek = await _goals.CountAsync(g => g.UserId == userId && g.CreatedAt >= lastWeekStart);
+        var identitiesCreatedLastWeek = await _identitiesQuery.CountAsync(i => i.UserId == userId && i.CreatedAt >= lastWeekStart);
+        var habitStacksCreatedLastWeek = await _habitStacks.CountAsync(hs => hs.UserId == userId && hs.CreatedAt >= lastWeekStart);
+        var habitCompletionsLastWeek = await _habitCompletions
+            .Where(hc => hc.HabitStackItem.HabitStack.UserId == userId && hc.CompletedAt >= lastWeekStart)
+            .CountAsync();
+        var journalEntriesLastWeek = await _journalEntries.CountAsync(j => j.UserId == userId && j.CreatedAt >= lastWeekStart);
 
-        var tasksCreatedLastWeek = await _db.TaskItems
-            .Where(t => userGoalIds.Contains(t.GoalId) && t.CreatedAt >= lastWeekStart)
-            .CountAsync();
-        var tasksCompletedLastWeek = await _db.TaskItems
-            .Where(t => userGoalIds.Contains(t.GoalId) && t.CompletedAt >= lastWeekStartDate)
-            .CountAsync();
-        var goalsCreatedLastWeek = await _db.Goals.CountAsync(g => g.UserId == userId && g.CreatedAt >= lastWeekStart);
-        var identitiesCreatedLastWeek = await _db.Identities.CountAsync(i => i.UserId == userId && i.CreatedAt >= lastWeekStart);
-        var habitStacksCreatedLastWeek = await _db.HabitStacks.CountAsync(hs => hs.UserId == userId && hs.CreatedAt >= lastWeekStart);
-        var habitCompletionsLastWeek = await _db.HabitStackItemCompletions
-            .Where(hc => userHabitStackItemIds.Contains(hc.HabitStackItemId) && hc.CompletedAt >= lastWeekStart)
-            .CountAsync();
-        var journalEntriesLastWeek = await _db.JournalEntries.CountAsync(j => j.UserId == userId && j.CreatedAt >= lastWeekStart);
-        
-        var aiStatsLastWeek = await _db.AiUsageLogs
+        var aiStatsLastWeek = await _aiUsageLogs
             .Where(a => a.UserId == userId && a.CreatedAt >= lastWeekStart)
             .GroupBy(a => a.UserId)
             .Select(g => new { CallsCount = g.Count(), TotalCost = g.Sum(a => a.EstimatedCostUsd) })
             .FirstOrDefaultAsync();
 
         // Total (all time) stats
-        var tasksCreatedTotal = await _db.TaskItems
-            .Where(t => userGoalIds.Contains(t.GoalId))
+        var tasksCreatedTotal = await _taskItems
+            .Where(t => t.Goal.UserId == userId)
             .CountAsync();
-        var tasksCompletedTotal = await _db.TaskItems
-            .Where(t => userGoalIds.Contains(t.GoalId) && t.CompletedAt != null)
+        var tasksCompletedTotal = await _taskItems
+            .Where(t => t.Goal.UserId == userId && t.CompletedAt != null)
             .CountAsync();
-        var goalsCreatedTotal = await _db.Goals.CountAsync(g => g.UserId == userId);
-        var identitiesCreatedTotal = await _db.Identities.CountAsync(i => i.UserId == userId);
-        var habitStacksCreatedTotal = await _db.HabitStacks.CountAsync(hs => hs.UserId == userId);
-        var habitCompletionsTotal = await _db.HabitStackItemCompletions
-            .Where(hc => userHabitStackItemIds.Contains(hc.HabitStackItemId))
+        var goalsCreatedTotal = await _goals.CountAsync(g => g.UserId == userId);
+        var identitiesCreatedTotal = await _identitiesQuery.CountAsync(i => i.UserId == userId);
+        var habitStacksCreatedTotal = await _habitStacks.CountAsync(hs => hs.UserId == userId);
+        var habitCompletionsTotal = await _habitCompletions
+            .Where(hc => hc.HabitStackItem.HabitStack.UserId == userId)
             .CountAsync();
-        var journalEntriesTotal = await _db.JournalEntries.CountAsync(j => j.UserId == userId);
-        
-        var aiStatsTotal = await _db.AiUsageLogs
+        var journalEntriesTotal = await _journalEntries.CountAsync(j => j.UserId == userId);
+
+        var aiStatsTotal = await _aiUsageLogs
             .Where(a => a.UserId == userId)
             .GroupBy(a => a.UserId)
             .Select(g => new { CallsCount = g.Count(), TotalCost = g.Sum(a => a.EstimatedCostUsd) })
@@ -353,7 +388,7 @@ public class AdminController : ControllerBase
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 50)
     {
-        var query = _db.WaitlistEntries.AsQueryable();
+        var query = _waitlistEntries.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -466,7 +501,7 @@ public class AdminController : ControllerBase
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 50)
     {
-        var query = _db.WhitelistEntries
+        var query = _whitelistEntries
             .Include(w => w.AddedByUser)
             .AsQueryable();
 
@@ -576,19 +611,19 @@ public class AdminController : ControllerBase
         var startDate = DateTime.UtcNow.AddDays(-days);
 
         // Total events in period
-        var totalEvents = await _db.AnalyticsEvents
+        var totalEvents = await _analyticsEvents
             .Where(e => e.CreatedAt >= startDate)
             .CountAsync();
 
         // Unique users
-        var uniqueUsers = await _db.AnalyticsEvents
+        var uniqueUsers = await _analyticsEvents
             .Where(e => e.CreatedAt >= startDate)
             .Select(e => e.UserId)
             .Distinct()
             .CountAsync();
 
         // Unique sessions
-        var uniqueSessions = await _db.AnalyticsEvents
+        var uniqueSessions = await _analyticsEvents
             .Where(e => e.CreatedAt >= startDate)
             .Select(e => e.SessionId)
             .Distinct()
@@ -598,7 +633,7 @@ public class AdminController : ControllerBase
         var avgEventsPerSession = uniqueSessions > 0 ? (double)totalEvents / uniqueSessions : 0;
 
         // Top event types
-        var topEventTypesRaw = await _db.AnalyticsEvents
+        var topEventTypesRaw = await _analyticsEvents
             .Where(e => e.CreatedAt >= startDate)
             .GroupBy(e => e.EventType)
             .Select(g => new { EventType = g.Key, Count = g.Count() })
@@ -611,7 +646,7 @@ public class AdminController : ControllerBase
             .ToList();
 
         // Daily event counts
-        var dailyEventCounts = await _db.AnalyticsEvents
+        var dailyEventCounts = await _analyticsEvents
             .Where(e => e.CreatedAt >= startDate)
             .GroupBy(e => e.CreatedAt.Date)
             .Select(g => new { Date = g.Key, Count = g.Count() })
@@ -623,7 +658,7 @@ public class AdminController : ControllerBase
             .ToList();
 
         // Recent sessions with duration
-        var recentSessionsRaw = await _db.AnalyticsEvents
+        var recentSessionsRaw = await _analyticsEvents
             .Where(e => e.CreatedAt >= startDate)
             .GroupBy(e => new { e.SessionId, e.UserId })
             .Select(g => new
@@ -640,7 +675,7 @@ public class AdminController : ControllerBase
 
         // Fetch usernames
         var userIds = recentSessionsRaw.Select(s => s.UserId).Distinct().ToList();
-        var users = await _db.Users
+        var users = await _users
             .Where(u => userIds.Contains(u.Id))
             .ToDictionaryAsync(u => u.Id, u => u.Email);
 
@@ -686,10 +721,10 @@ public class AdminController : ControllerBase
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 50)
     {
-        var totalCount = await _db.AiUsageLogs.CountAsync();
+        var totalCount = await _aiUsageLogs.CountAsync();
         var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-        var logs = await _db.AiUsageLogs
+        var logs = await _aiUsageLogs
             .OrderByDescending(l => l.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)

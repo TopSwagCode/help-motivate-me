@@ -14,11 +14,19 @@ namespace HelpMotivateMe.Api.Controllers;
 public class WaitlistController : ControllerBase
 {
     private readonly AppDbContext _db;
+    private readonly IQueryInterface<WhitelistEntry> _whitelistEntriesQuery;
+    private readonly IQueryInterface<WaitlistEntry> _waitlistEntriesQuery;
     private readonly IEmailService _emailService;
 
-    public WaitlistController(AppDbContext db, IEmailService emailService)
+    public WaitlistController(
+        AppDbContext db,
+        IQueryInterface<WhitelistEntry> whitelistEntriesQuery,
+        IQueryInterface<WaitlistEntry> waitlistEntriesQuery,
+        IEmailService emailService)
     {
         _db = db;
+        _whitelistEntriesQuery = whitelistEntriesQuery;
+        _waitlistEntriesQuery = waitlistEntriesQuery;
         _emailService = emailService;
     }
 
@@ -39,14 +47,14 @@ public class WaitlistController : ControllerBase
         var name = request.Name.Trim();
 
         // Check if already on whitelist
-        var isWhitelisted = await _db.WhitelistEntries.AnyAsync(w => w.Email.ToLower() == email);
+        var isWhitelisted = await _whitelistEntriesQuery.AnyAsync(w => w.Email.ToLower() == email);
         if (isWhitelisted)
         {
             return Ok(new { message = "Great news! You already have access. You can sign up or log in now.", canSignup = true });
         }
 
         // Check if already on waitlist
-        var existingEntry = await _db.WaitlistEntries.FirstOrDefaultAsync(w => w.Email.ToLower() == email);
+        var existingEntry = await _waitlistEntriesQuery.FirstOrDefaultAsync(w => w.Email.ToLower() == email);
         if (existingEntry != null)
         {
             // Don't leak that they're already on the list - just return success
@@ -78,7 +86,7 @@ public class WaitlistController : ControllerBase
         }
 
         var normalizedEmail = email.ToLowerInvariant().Trim();
-        var isWhitelisted = await _db.WhitelistEntries.AnyAsync(w => w.Email.ToLower() == normalizedEmail);
+        var isWhitelisted = await _whitelistEntriesQuery.AnyAsync(w => w.Email.ToLower() == normalizedEmail);
 
         return Ok(new WhitelistCheckResponse(isWhitelisted));
     }

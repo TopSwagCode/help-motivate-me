@@ -17,6 +17,7 @@ public class IdentitiesController : ControllerBase
 {
     private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
+    private readonly IQueryInterface<Identity> _identitiesQuery;
     private readonly IAnalyticsService _analyticsService;
     private static readonly string[] ReinforcementTemplates = [
         "That's what a {0} does!",
@@ -26,9 +27,10 @@ public class IdentitiesController : ControllerBase
         "A true {0} moment!"
     ];
 
-    public IdentitiesController(AppDbContext db, IAnalyticsService analyticsService)
+    public IdentitiesController(AppDbContext db, IQueryInterface<Identity> identitiesQuery, IAnalyticsService analyticsService)
     {
         _db = db;
+        _identitiesQuery = identitiesQuery;
         _analyticsService = analyticsService;
     }
 
@@ -40,7 +42,7 @@ public class IdentitiesController : ControllerBase
 
         await _analyticsService.LogEventAsync(userId, sessionId, "IdentitiesPageLoaded");
 
-        var identities = await _db.Identities
+        var identities = await _identitiesQuery
             .Where(i => i.UserId == userId)
             .Include(i => i.Tasks)
             .Include(i => i.Goals)
@@ -57,7 +59,7 @@ public class IdentitiesController : ControllerBase
     {
         var userId = GetUserId();
 
-        var identity = await _db.Identities
+        var identity = await _identitiesQuery
             .Include(i => i.Tasks)
             .Include(i => i.Goals)
             .Include(i => i.Proofs)
@@ -143,7 +145,7 @@ public class IdentitiesController : ControllerBase
     {
         var userId = GetUserId();
 
-        var identity = await _db.Identities
+        var identity = await _identitiesQuery
             .Include(i => i.Tasks)
             .FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
 
