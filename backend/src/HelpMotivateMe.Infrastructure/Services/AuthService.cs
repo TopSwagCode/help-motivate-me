@@ -44,8 +44,6 @@ public class AuthService : IAuthService
         return CryptographicOperations.FixedTimeEquals(hash, computedHash);
     }
 
-
-
     public string GenerateSecureToken()
     {
         var tokenBytes = RandomNumberGenerator.GetBytes(32);
@@ -54,8 +52,6 @@ public class AuthService : IAuthService
             .Replace("/", "_")
             .TrimEnd('=');
     }
-
-
 
     public async Task<User?> GetUserByEmailAsync(string email)
     {
@@ -100,8 +96,6 @@ public class AuthService : IAuthService
         await _db.SaveChangesAsync();
     }
 
-
-
     public async Task<EmailVerificationToken> CreateEmailVerificationTokenAsync(Guid userId, string email)
     {
         var token = GenerateSecureToken();
@@ -127,8 +121,6 @@ public class AuthService : IAuthService
             .FirstOrDefaultAsync(t => t.Token == token);
     }
 
-
-
     public async Task<EmailLoginToken> CreateLoginTokenAsync(Guid userId, string email, int expiryHours = 24)
     {
         var token = GenerateSecureToken();
@@ -153,8 +145,6 @@ public class AuthService : IAuthService
                 .ThenInclude(u => u.ExternalLogins)
             .FirstOrDefaultAsync(t => t.Token == token);
     }
-
-
 
     public async Task<UserExternalLogin?> GetExternalLoginAsync(string provider, string providerKey)
     {
@@ -204,8 +194,6 @@ public class AuthService : IAuthService
         return user.PasswordHash != null || user.ExternalLogins.Count > 1;
     }
 
-
-
     public async Task<bool> IsEmailWhitelistedAsync(string email)
     {
         return await _db.WhitelistEntries.AnyAsync(w => w.Email.ToLower() == email.ToLower());
@@ -216,8 +204,6 @@ public class AuthService : IAuthService
         // Default to true if not configured
         return !bool.TryParse(_configuration["Auth:AllowSignups"], out var allowed) || allowed;
     }
-
-
 
     public async Task<NotificationPreferences> GetOrCreateNotificationPreferencesAsync(Guid userId)
     {
@@ -282,8 +268,6 @@ public class AuthService : IAuthService
         return prefs;
     }
 
-
-
     public async Task DeleteAccountAsync(Guid userId)
     {
         // Delete notification preferences
@@ -314,14 +298,10 @@ public class AuthService : IAuthService
         await _db.SaveChangesAsync();
     }
 
-
-
     public string GetFrontendUrl()
     {
         return _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
     }
-
-
 
     public async Task<BuddyInviteToken?> GetBuddyInviteTokenAsync(string token)
     {
