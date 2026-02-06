@@ -6,22 +6,22 @@ public class PushSubscription
     public Guid UserId { get; set; }
 
     /// <summary>
-    /// The push service endpoint URL
+    ///     The push service endpoint URL
     /// </summary>
     public required string Endpoint { get; set; }
 
     /// <summary>
-    /// The P256DH key for encryption
+    ///     The P256DH key for encryption
     /// </summary>
     public required string P256dh { get; set; }
 
     /// <summary>
-    /// The auth secret for encryption
+    ///     The auth secret for encryption
     /// </summary>
     public required string Auth { get; set; }
 
     /// <summary>
-    /// User agent string for debugging
+    ///     User agent string for debugging
     /// </summary>
     public string? UserAgent { get; set; }
 

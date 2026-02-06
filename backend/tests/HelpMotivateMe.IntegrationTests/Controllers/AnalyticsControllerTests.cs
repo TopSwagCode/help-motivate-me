@@ -1,4 +1,3 @@
-using System.Net;
 using System.Net.Http.Json;
 using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.IntegrationTests.Helpers;
@@ -31,7 +30,6 @@ public class AnalyticsControllerTests : IntegrationTestBase
     }
 
 
-
     [Fact]
     public async Task GetCompletionRates_CalculatesCorrectPercentage()
     {
@@ -43,7 +41,7 @@ public class AnalyticsControllerTests : IntegrationTestBase
         await DataBuilder.CreateTaskAsync(goal.Id, "Task 1", TaskItemStatus.Completed);
         await DataBuilder.CreateTaskAsync(goal.Id, "Task 2", TaskItemStatus.Completed);
         await DataBuilder.CreateTaskAsync(goal.Id, "Task 3", TaskItemStatus.Completed);
-        await DataBuilder.CreateTaskAsync(goal.Id, "Task 4", TaskItemStatus.Pending);
+        await DataBuilder.CreateTaskAsync(goal.Id, "Task 4");
 
         // Act
         Client.AuthenticateAs(user.Id);
@@ -90,7 +88,6 @@ public class AnalyticsControllerTests : IntegrationTestBase
     }
 
 
-
     [Fact]
     public async Task GetHeatmap_ReturnsCorrectDaysRange()
     {
@@ -108,7 +105,8 @@ public class AnalyticsControllerTests : IntegrationTestBase
 
         // Create task completed 100 days ago (outside 90 day default)
         var hundredDaysAgo = today.AddDays(-100);
-        await DataBuilder.CreateTaskAsync(goal.Id, "Very old task", TaskItemStatus.Completed, completedAt: hundredDaysAgo);
+        await DataBuilder.CreateTaskAsync(goal.Id, "Very old task", TaskItemStatus.Completed,
+            completedAt: hundredDaysAgo);
 
         // Act - default is 90 days
         Client.AuthenticateAs(user.Id);
@@ -177,7 +175,7 @@ public class AnalyticsControllerTests : IntegrationTestBase
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
         // Create pending task (should not appear)
-        await DataBuilder.CreateTaskAsync(goal.Id, "Pending task", TaskItemStatus.Pending);
+        await DataBuilder.CreateTaskAsync(goal.Id, "Pending task");
 
         // Create completed task
         await DataBuilder.CreateTaskAsync(goal.Id, "Completed task", TaskItemStatus.Completed, completedAt: today);
@@ -216,7 +214,6 @@ public class AnalyticsControllerTests : IntegrationTestBase
         response[1].Date.Should().Be(yesterday);
         response[2].Date.Should().Be(today);
     }
-
 
 
     [Fact]
@@ -266,7 +263,6 @@ public class AnalyticsControllerTests : IntegrationTestBase
         response.Should().ContainSingle();
         response![0].Count.Should().Be(1);
     }
-
 }
 
 // Response DTOs for deserialization

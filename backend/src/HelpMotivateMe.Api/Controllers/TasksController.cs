@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.Tasks;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
@@ -13,13 +12,14 @@ namespace HelpMotivateMe.Api.Controllers;
 [Authorize]
 public class TasksController : ApiControllerBase
 {
-    private readonly AppDbContext _db;
-    private readonly IQueryInterface<TaskItem> _taskItemsQuery;
-    private readonly IQueryInterface<Goal> _goalsQuery;
     private readonly IAnalyticsService _analyticsService;
+    private readonly AppDbContext _db;
+    private readonly IQueryInterface<Goal> _goalsQuery;
     private readonly IMilestoneService _milestoneService;
+    private readonly IQueryInterface<TaskItem> _taskItemsQuery;
 
-    public TasksController(AppDbContext db, IQueryInterface<TaskItem> taskItemsQuery, IQueryInterface<Goal> goalsQuery, IAnalyticsService analyticsService, IMilestoneService milestoneService)
+    public TasksController(AppDbContext db, IQueryInterface<TaskItem> taskItemsQuery, IQueryInterface<Goal> goalsQuery,
+        IAnalyticsService analyticsService, IMilestoneService milestoneService)
     {
         _db = db;
         _taskItemsQuery = taskItemsQuery;
@@ -35,16 +35,13 @@ public class TasksController : ApiControllerBase
 
         // Verify goal belongs to user
         var goalExists = await _goalsQuery.AnyAsync(g => g.Id == goalId && g.UserId == userId);
-        if (!goalExists)
-        {
-            return NotFound(new { message = "Goal not found" });
-        }
+        if (!goalExists) return NotFound(new { message = "Goal not found" });
 
         var tasks = await _taskItemsQuery
             .Include(t => t.Identity)
             .Include(t => t.Subtasks)
             .Include(t => t.Subtasks)
-                .ThenInclude(s => s.Identity)
+            .ThenInclude(s => s.Identity)
             .Where(t => t.GoalId == goalId && t.ParentTaskId == null)
             .OrderBy(t => t.SortOrder)
             .ThenByDescending(t => t.CreatedAt)
@@ -63,13 +60,10 @@ public class TasksController : ApiControllerBase
             .Include(t => t.Identity)
             .Include(t => t.Subtasks)
             .Include(t => t.Subtasks)
-                .ThenInclude(s => s.Identity)
+            .ThenInclude(s => s.Identity)
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);
 
-        if (task == null)
-        {
-            return NotFound();
-        }
+        if (task == null) return NotFound();
 
         return Ok(MapToResponse(task));
     }
@@ -81,10 +75,7 @@ public class TasksController : ApiControllerBase
 
         // Verify goal belongs to user
         var goal = await _db.Goals.FirstOrDefaultAsync(g => g.Id == goalId && g.UserId == userId);
-        if (goal == null)
-        {
-            return NotFound(new { message = "Goal not found" });
-        }
+        if (goal == null) return NotFound(new { message = "Goal not found" });
 
         var task = new TaskItem
         {
@@ -106,10 +97,7 @@ public class TasksController : ApiControllerBase
         await _db.SaveChangesAsync();
 
         // Load identity for response
-        if (task.IdentityId.HasValue)
-        {
-            await _db.Entry(task).Reference(t => t.Identity).LoadAsync();
-        }
+        if (task.IdentityId.HasValue) await _db.Entry(task).Reference(t => t.Identity).LoadAsync();
 
         return CreatedAtAction(nameof(GetTask), new { id = task.Id }, MapToResponse(task));
     }
@@ -123,10 +111,7 @@ public class TasksController : ApiControllerBase
             .Include(t => t.Goal)
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);
 
-        if (parentTask == null)
-        {
-            return NotFound(new { message = "Parent task not found" });
-        }
+        if (parentTask == null) return NotFound(new { message = "Parent task not found" });
 
         var subtask = new TaskItem
         {
@@ -149,10 +134,7 @@ public class TasksController : ApiControllerBase
         await _db.SaveChangesAsync();
 
         // Load identity for response
-        if (subtask.IdentityId.HasValue)
-        {
-            await _db.Entry(subtask).Reference(t => t.Identity).LoadAsync();
-        }
+        if (subtask.IdentityId.HasValue) await _db.Entry(subtask).Reference(t => t.Identity).LoadAsync();
 
         return CreatedAtAction(nameof(GetTask), new { id = subtask.Id }, MapToResponse(subtask));
     }
@@ -166,13 +148,10 @@ public class TasksController : ApiControllerBase
             .Include(t => t.Goal)
             .Include(t => t.Identity)
             .Include(t => t.Subtasks)
-                .ThenInclude(s => s.Identity)
+            .ThenInclude(s => s.Identity)
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);
 
-        if (task == null)
-        {
-            return NotFound();
-        }
+        if (task == null) return NotFound();
 
         task.Title = request.Title;
         task.Description = request.Description;
@@ -184,13 +163,9 @@ public class TasksController : ApiControllerBase
 
         // Reload identity if changed
         if (task.IdentityId.HasValue)
-        {
             await _db.Entry(task).Reference(t => t.Identity).LoadAsync();
-        }
         else
-        {
             task.Identity = null;
-        }
 
         return Ok(MapToResponse(task));
     }
@@ -204,10 +179,7 @@ public class TasksController : ApiControllerBase
             .Include(t => t.Goal)
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);
 
-        if (task == null)
-        {
-            return NotFound();
-        }
+        if (task == null) return NotFound();
 
         _db.TaskItems.Remove(task);
         await _db.SaveChangesAsync();
@@ -216,7 +188,7 @@ public class TasksController : ApiControllerBase
     }
 
     /// <summary>
-    /// Toggle completion for a task on a specific date (defaults to client's current date if not provided).
+    ///     Toggle completion for a task on a specific date (defaults to client's current date if not provided).
     /// </summary>
     [HttpPatch("api/tasks/{id:guid}/complete")]
     public async Task<ActionResult<TaskResponse>> CompleteTask(Guid id, [FromQuery] DateOnly? date = null)
@@ -229,13 +201,10 @@ public class TasksController : ApiControllerBase
             .Include(t => t.Identity)
             .Include(t => t.Subtasks)
             .Include(t => t.Subtasks)
-                .ThenInclude(s => s.Identity)
+            .ThenInclude(s => s.Identity)
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);
 
-        if (task == null)
-        {
-            return NotFound();
-        }
+        if (task == null) return NotFound();
 
         var wasCompleted = task.Status == TaskItemStatus.Completed;
 
@@ -250,7 +219,6 @@ public class TasksController : ApiControllerBase
             // Complete
             task.Status = TaskItemStatus.Completed;
             task.CompletedAt = targetDate;
-
         }
 
         task.UpdatedAt = DateTime.UtcNow;
@@ -267,10 +235,11 @@ public class TasksController : ApiControllerBase
     }
 
     /// <summary>
-    /// Complete multiple tasks at once on a specific date (defaults to client's current date if not provided).
+    ///     Complete multiple tasks at once on a specific date (defaults to client's current date if not provided).
     /// </summary>
     [HttpPost("api/tasks/complete-multiple")]
-    public async Task<ActionResult<CompleteMultipleTasksResponse>> CompleteMultipleTasks([FromBody] CompleteMultipleTasksRequest request)
+    public async Task<ActionResult<CompleteMultipleTasksResponse>> CompleteMultipleTasks(
+        [FromBody] CompleteMultipleTasksRequest request)
     {
         var userId = GetUserId();
         var targetDate = request.Date ?? DateOnly.FromDateTime(DateTime.UtcNow);
@@ -283,7 +252,6 @@ public class TasksController : ApiControllerBase
         var completedCount = 0;
 
         foreach (var task in tasks)
-        {
             if (task.Status != TaskItemStatus.Completed)
             {
                 task.Status = TaskItemStatus.Completed;
@@ -292,15 +260,11 @@ public class TasksController : ApiControllerBase
 
                 completedCount++;
             }
-        }
 
         await _db.SaveChangesAsync();
 
         // Record milestone events for each completed task
-        for (var i = 0; i < completedCount; i++)
-        {
-            await _milestoneService.RecordEventAsync(userId, "TaskCompleted");
-        }
+        for (var i = 0; i < completedCount; i++) await _milestoneService.RecordEventAsync(userId, "TaskCompleted");
 
         return Ok(new CompleteMultipleTasksResponse(completedCount, tasks.Count));
     }
@@ -315,13 +279,10 @@ public class TasksController : ApiControllerBase
             .Include(t => t.Identity)
             .Include(t => t.Subtasks)
             .Include(t => t.Subtasks)
-                .ThenInclude(s => s.Identity)
+            .ThenInclude(s => s.Identity)
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);
 
-        if (task == null)
-        {
-            return NotFound();
-        }
+        if (task == null) return NotFound();
 
         task.DueDate = request.NewDueDate;
         task.UpdatedAt = DateTime.UtcNow;
@@ -344,10 +305,7 @@ public class TasksController : ApiControllerBase
         for (var i = 0; i < taskIds.Count; i++)
         {
             var task = tasks.FirstOrDefault(t => t.Id == taskIds[i]);
-            if (task != null)
-            {
-                task.SortOrder = i;
-            }
+            if (task != null) task.SortOrder = i;
         }
 
         await _db.SaveChangesAsync();
@@ -364,19 +322,13 @@ public class TasksController : ApiControllerBase
             .Include(t => t.Goal)
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);
 
-        if (task == null)
-        {
-            return NotFound();
-        }
+        if (task == null) return NotFound();
 
         // Check if tiny version already exists
         var existingTiny = await _db.TaskItems
             .AnyAsync(t => t.FullVersionTaskId == id);
 
-        if (existingTiny)
-        {
-            return BadRequest(new { message = "A tiny version already exists for this task" });
-        }
+        if (existingTiny) return BadRequest(new { message = "A tiny version already exists for this task" });
 
         // Get next sort order
         var maxSortOrder = await _db.TaskItems

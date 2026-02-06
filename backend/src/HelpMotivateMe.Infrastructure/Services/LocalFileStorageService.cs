@@ -13,10 +13,10 @@ public class LocalFileStorageService : IStorageService
     public LocalFileStorageService(IConfiguration configuration, ILogger<LocalFileStorageService> logger)
     {
         _basePath = configuration["LocalStorage:BasePath"]
-            ?? throw new InvalidOperationException("LocalStorage:BasePath not configured");
+                    ?? throw new InvalidOperationException("LocalStorage:BasePath not configured");
 
         _baseUrl = configuration["LocalStorage:BaseUrl"]
-            ?? throw new InvalidOperationException("LocalStorage:BaseUrl not configured");
+                   ?? throw new InvalidOperationException("LocalStorage:BaseUrl not configured");
 
         _logger = logger;
 
@@ -28,19 +28,18 @@ public class LocalFileStorageService : IStorageService
         }
     }
 
-    public async Task<string> UploadAsync(Stream stream, string key, string contentType, CancellationToken cancellationToken = default)
+    public async Task<string> UploadAsync(Stream stream, string key, string contentType,
+        CancellationToken cancellationToken = default)
     {
         var filePath = GetFullPath(key);
         var directory = Path.GetDirectoryName(filePath);
 
-        if (directory != null && !Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
+        if (directory != null && !Directory.Exists(directory)) Directory.CreateDirectory(directory);
 
         try
         {
-            await using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, useAsync: true);
+            await using var fileStream =
+                new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true);
             await stream.CopyToAsync(fileStream, cancellationToken);
 
             _logger.LogInformation("Uploaded file: {Key} to {FilePath}", key, filePath);
@@ -86,26 +85,18 @@ public class LocalFileStorageService : IStorageService
         var errors = new List<Exception>();
 
         foreach (var key in keyList)
-        {
             try
             {
                 var filePath = GetFullPath(key);
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
+                if (File.Exists(filePath)) File.Delete(filePath);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to delete file: {Key}", key);
                 errors.Add(ex);
             }
-        }
 
-        if (errors.Count > 0)
-        {
-            throw new AggregateException("Failed to delete one or more files", errors);
-        }
+        if (errors.Count > 0) throw new AggregateException("Failed to delete one or more files", errors);
 
         _logger.LogInformation("Deleted {Count} files", keyList.Count);
         return Task.CompletedTask;
@@ -120,10 +111,7 @@ public class LocalFileStorageService : IStorageService
         // If baseUrl already ends with /api/files, don't add it again
         // Otherwise, append /api/files to the base URL
         var baseUrl = _baseUrl.TrimEnd('/');
-        if (baseUrl.EndsWith("/api/files"))
-        {
-            return $"{baseUrl}/{cleanKey}";
-        }
+        if (baseUrl.EndsWith("/api/files")) return $"{baseUrl}/{cleanKey}";
         return $"{baseUrl}/api/files/{cleanKey}";
     }
 

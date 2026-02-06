@@ -22,15 +22,10 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         if (!Request.Headers.TryGetValue(UserIdHeader, out var userIdValues))
-        {
             return Task.FromResult(AuthenticateResult.NoResult());
-        }
 
         var userId = userIdValues.FirstOrDefault();
-        if (string.IsNullOrEmpty(userId))
-        {
-            return Task.FromResult(AuthenticateResult.NoResult());
-        }
+        if (string.IsNullOrEmpty(userId)) return Task.FromResult(AuthenticateResult.NoResult());
 
         var email = Request.Headers.TryGetValue(EmailHeader, out var emailValues)
             ? emailValues.FirstOrDefault() ?? "test@example.com"

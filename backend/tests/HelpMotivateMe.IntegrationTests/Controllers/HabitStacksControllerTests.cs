@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Http.Json;
 using HelpMotivateMe.IntegrationTests.Helpers;
 using HelpMotivateMe.IntegrationTests.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 
 namespace HelpMotivateMe.IntegrationTests.Controllers;
 
@@ -40,7 +39,7 @@ public class HabitStacksControllerTests : IntegrationTestBase
         // Arrange
         var user = await DataBuilder.CreateUserAsync();
         var stack = await DataBuilder.CreateHabitStackAsync(user.Id, "Morning Routine");
-        await DataBuilder.CreateHabitStackItemAsync(stack.Id, "wake up", "drink water", 0);
+        await DataBuilder.CreateHabitStackItemAsync(stack.Id, "wake up", "drink water");
         await DataBuilder.CreateHabitStackItemAsync(stack.Id, "drink water", "stretch", 1);
 
         // Act
@@ -62,7 +61,8 @@ public class HabitStacksControllerTests : IntegrationTestBase
         var user = await DataBuilder.CreateUserAsync();
         await DataBuilder.CreateHabitStackAsync(user.Id, "Existing Stack", sortOrder: 5);
 
-        var request = new { Name = "New Stack", Items = new[] { new { CueDescription = "wake", HabitDescription = "coffee" } } };
+        var request = new
+            { Name = "New Stack", Items = new[] { new { CueDescription = "wake", HabitDescription = "coffee" } } };
 
         // Act
         Client.AuthenticateAs(user.Id);
@@ -117,7 +117,6 @@ public class HabitStacksControllerTests : IntegrationTestBase
     }
 
 
-
     [Fact]
     public async Task ReorderHabitStacks_UpdatesSortOrder()
     {
@@ -149,7 +148,7 @@ public class HabitStacksControllerTests : IntegrationTestBase
         // Arrange
         var user = await DataBuilder.CreateUserAsync();
         var stack = await DataBuilder.CreateHabitStackAsync(user.Id, "Stack");
-        var item1 = await DataBuilder.CreateHabitStackItemAsync(stack.Id, "cue1", "habit1", 0);
+        var item1 = await DataBuilder.CreateHabitStackItemAsync(stack.Id, "cue1", "habit1");
         var item2 = await DataBuilder.CreateHabitStackItemAsync(stack.Id, "cue2", "habit2", 1);
         var item3 = await DataBuilder.CreateHabitStackItemAsync(stack.Id, "cue3", "habit3", 2);
 
@@ -168,7 +167,6 @@ public class HabitStacksControllerTests : IntegrationTestBase
         updatedStack.Items[1].HabitDescription.Should().Be("habit1");
         updatedStack.Items[2].HabitDescription.Should().Be("habit2");
     }
-
 
 
     [Fact]
@@ -191,7 +189,8 @@ public class HabitStacksControllerTests : IntegrationTestBase
 
         // Act - Complete today
         Client.AuthenticateAs(user.Id);
-        var response = await Client.PatchAsync($"/api/habit-stacks/items/{item.Id}/complete?date={today:yyyy-MM-dd}", user.Id);
+        var response = await Client.PatchAsync($"/api/habit-stacks/items/{item.Id}/complete?date={today:yyyy-MM-dd}",
+            user.Id);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -219,7 +218,8 @@ public class HabitStacksControllerTests : IntegrationTestBase
 
         // Act - Complete today (should reset streak to 1)
         Client.AuthenticateAs(user.Id);
-        var response = await Client.PatchAsync($"/api/habit-stacks/items/{item.Id}/complete?date={today:yyyy-MM-dd}", user.Id);
+        var response = await Client.PatchAsync($"/api/habit-stacks/items/{item.Id}/complete?date={today:yyyy-MM-dd}",
+            user.Id);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -249,7 +249,8 @@ public class HabitStacksControllerTests : IntegrationTestBase
 
         // Act - Uncomplete yesterday (should break the streak)
         Client.AuthenticateAs(user.Id);
-        var response = await Client.PatchAsync($"/api/habit-stacks/items/{item.Id}/complete?date={yesterday:yyyy-MM-dd}", user.Id);
+        var response =
+            await Client.PatchAsync($"/api/habit-stacks/items/{item.Id}/complete?date={yesterday:yyyy-MM-dd}", user.Id);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -278,14 +279,14 @@ public class HabitStacksControllerTests : IntegrationTestBase
 
         // Act - Complete today
         Client.AuthenticateAs(user.Id);
-        var response = await Client.PatchAsync($"/api/habit-stacks/items/{item.Id}/complete?date={today:yyyy-MM-dd}", user.Id);
+        var response = await Client.PatchAsync($"/api/habit-stacks/items/{item.Id}/complete?date={today:yyyy-MM-dd}",
+            user.Id);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var result = await response.Content.ReadFromJsonAsync<HabitStackItemCompletionResponse>();
         result!.LongestStreak.Should().Be(2);
     }
-
 
 
     [Fact]
@@ -304,7 +305,8 @@ public class HabitStacksControllerTests : IntegrationTestBase
 
         // Act
         Client.AuthenticateAs(user.Id);
-        var response = await Client.PatchAsync($"/api/habit-stacks/{stack.Id}/complete-all?date={today:yyyy-MM-dd}", user.Id);
+        var response = await Client.PatchAsync($"/api/habit-stacks/{stack.Id}/complete-all?date={today:yyyy-MM-dd}",
+            user.Id);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -329,7 +331,8 @@ public class HabitStacksControllerTests : IntegrationTestBase
 
         // Act
         Client.AuthenticateAs(user.Id);
-        var response = await Client.PatchAsync($"/api/habit-stacks/{stack.Id}/complete-all?date={today:yyyy-MM-dd}", user.Id);
+        var response = await Client.PatchAsync($"/api/habit-stacks/{stack.Id}/complete-all?date={today:yyyy-MM-dd}",
+            user.Id);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -337,7 +340,6 @@ public class HabitStacksControllerTests : IntegrationTestBase
         result!.CompletedCount.Should().Be(0);
         result.TotalCount.Should().Be(2);
     }
-
 
 
     [Fact]
@@ -371,7 +373,6 @@ public class HabitStacksControllerTests : IntegrationTestBase
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
-
 }
 
 // Response DTOs for deserialization

@@ -10,6 +10,8 @@ public static class PushNotificationMessageProvider
         { Language.Danish, new DanishPushNotificationMessages() }
     };
 
-    public static IPushNotificationMessages GetMessages(Language language) =>
-        Messages.GetValueOrDefault(language, Messages[Language.English]);
+    public static IPushNotificationMessages GetMessages(Language language)
+    {
+        return Messages.GetValueOrDefault(language, Messages[Language.English]);
+    }
 }

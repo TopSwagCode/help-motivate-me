@@ -102,7 +102,7 @@ public class TodayControllerTests : IntegrationTestBase
         await DataBuilder.CreateTaskAsync(
             goal.Id,
             "Task completed today",
-            status: TaskItemStatus.Completed,
+            TaskItemStatus.Completed,
             completedAt: today);
 
         // Act
@@ -125,7 +125,7 @@ public class TodayControllerTests : IntegrationTestBase
         await DataBuilder.CreateTaskAsync(
             goal.Id,
             "Task completed yesterday",
-            status: TaskItemStatus.Completed,
+            TaskItemStatus.Completed,
             completedAt: yesterday);
 
         // Act
@@ -148,7 +148,7 @@ public class TodayControllerTests : IntegrationTestBase
         await DataBuilder.CreateTaskAsync(
             goal.Id,
             "Task completed 3 days ago",
-            status: TaskItemStatus.Completed,
+            TaskItemStatus.Completed,
             completedAt: targetDate);
 
         // Act
@@ -172,9 +172,9 @@ public class TodayControllerTests : IntegrationTestBase
         await DataBuilder.CreateTaskAsync(
             goal.Id,
             "Already completed task",
-            status: TaskItemStatus.Completed,
-            dueDate: today,
-            completedAt: today);
+            TaskItemStatus.Completed,
+            today,
+            today);
 
         // Act
         Client.AuthenticateAs(user.Id);
@@ -187,14 +187,13 @@ public class TodayControllerTests : IntegrationTestBase
     }
 
 
-
     [Fact]
     public async Task GetToday_HabitStack_OnlyActiveStacks_ShouldAppear()
     {
         // Arrange
         var user = await DataBuilder.CreateUserAsync();
-        var activeStack = await DataBuilder.CreateHabitStackAsync(user.Id, "Active Stack", isActive: true);
-        var inactiveStack = await DataBuilder.CreateHabitStackAsync(user.Id, "Inactive Stack", isActive: false);
+        var activeStack = await DataBuilder.CreateHabitStackAsync(user.Id, "Active Stack", true);
+        var inactiveStack = await DataBuilder.CreateHabitStackAsync(user.Id, "Inactive Stack", false);
 
         await DataBuilder.CreateHabitStackItemAsync(activeStack.Id, "wake up", "drink water");
         await DataBuilder.CreateHabitStackItemAsync(inactiveStack.Id, "sleep", "dream");
@@ -254,7 +253,6 @@ public class TodayControllerTests : IntegrationTestBase
     }
 
 
-
     [Fact]
     public async Task GetToday_IdentityFeedback_OnlyShowsIdentitiesWithCompletions()
     {
@@ -268,7 +266,7 @@ public class TodayControllerTests : IntegrationTestBase
         await DataBuilder.CreateTaskAsync(
             goal.Id,
             "Writing task",
-            status: TaskItemStatus.Completed,
+            TaskItemStatus.Completed,
             completedAt: today,
             identityId: identityWithCompletion.Id);
 
@@ -297,7 +295,7 @@ public class TodayControllerTests : IntegrationTestBase
         await DataBuilder.CreateTaskAsync(
             goal.Id,
             "Health task",
-            status: TaskItemStatus.Completed,
+            TaskItemStatus.Completed,
             completedAt: today,
             identityId: identity.Id);
 
@@ -317,7 +315,6 @@ public class TodayControllerTests : IntegrationTestBase
         feedback.StackBonusVotes.Should().Be(2);
         feedback.TaskVotes.Should().Be(2);
     }
-
 
 
     [Fact]
@@ -360,7 +357,6 @@ public class TodayControllerTests : IntegrationTestBase
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
-
 }
 
 // Response DTOs for deserialization

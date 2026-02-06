@@ -43,7 +43,7 @@ public record CommitmentOptionsResponse(
 
 public record ActionSuggestion(
     string Description,
-    string Type,  // "habit" or "task"
+    string Type, // "habit" or "task"
     Guid? HabitStackItemId,
     Guid? TaskId
 );

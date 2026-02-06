@@ -1,7 +1,5 @@
 using System.Security.Cryptography;
 using HelpMotivateMe.Core.DTOs.Buddies;
-using HelpMotivateMe.Core.DTOs.HabitStacks;
-using HelpMotivateMe.Core.DTOs.Today;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
@@ -11,16 +9,16 @@ using Microsoft.Extensions.Configuration;
 namespace HelpMotivateMe.Infrastructure.Services;
 
 /// <summary>
-/// Service for managing accountability buddy relationships and buddy-related operations.
+///     Service for managing accountability buddy relationships and buddy-related operations.
 /// </summary>
 public class AccountabilityBuddyService : IAccountabilityBuddyService
 {
-    private readonly AppDbContext _db;
     private readonly IQueryInterface<AccountabilityBuddy> _buddies;
+    private readonly IConfiguration _configuration;
+    private readonly AppDbContext _db;
+    private readonly IEmailService _emailService;
     private readonly IQueryInterface<JournalEntry> _journalEntries;
     private readonly IStorageService _storage;
-    private readonly IEmailService _emailService;
-    private readonly IConfiguration _configuration;
     private readonly ITodayViewService _todayViewService;
 
     public AccountabilityBuddyService(
@@ -43,7 +41,7 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
 
 
     /// <summary>
-    /// Get all buddies for a user (people they've added as buddies).
+    ///     Get all buddies for a user (people they've added as buddies).
     /// </summary>
     public async Task<List<BuddyInfo>> GetMyBuddiesAsync(Guid userId)
     {
@@ -61,7 +59,7 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
     }
 
     /// <summary>
-    /// Get all users this person is a buddy for.
+    ///     Get all users this person is a buddy for.
     /// </summary>
     public async Task<List<BuddyForInfo>> GetBuddyingForAsync(Guid userId)
     {
@@ -79,7 +77,7 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
     }
 
     /// <summary>
-    /// Check if a user is a buddy for another user.
+    ///     Check if a user is a buddy for another user.
     /// </summary>
     public async Task<bool> IsBuddyForAsync(Guid buddyUserId, Guid targetUserId)
     {
@@ -87,7 +85,7 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
     }
 
     /// <summary>
-    /// Invite a new accountability buddy by email.
+    ///     Invite a new accountability buddy by email.
     /// </summary>
     public async Task<InviteBuddyResult> InviteBuddyAsync(Guid inviterUserId, string email)
     {
@@ -96,9 +94,7 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
 
         // Check if user is trying to add themselves
         if (inviter.Email.ToLowerInvariant() == normalizedEmail)
-        {
             return new InviteBuddyResult(false, "You cannot add yourself as an accountability buddy", null);
-        }
 
         // Find or create the buddy user
         var buddyUser = await _db.Users.FirstOrDefaultAsync(u => u.Email == normalizedEmail);
@@ -118,9 +114,7 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
             .FirstOrDefaultAsync(ab => ab.UserId == inviterUserId && ab.BuddyUserId == buddyUser.Id);
 
         if (existingBuddy != null)
-        {
             return new InviteBuddyResult(false, "This person is already your accountability buddy", null);
-        }
 
         // Create buddy relationship
         var accountabilityBuddy = new AccountabilityBuddy
@@ -150,7 +144,8 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
         await _db.SaveChangesAsync();
 
         // Build invite URL and send email
-        var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
+        var frontendUrl = _configuration["FrontendUrl"] ??
+                          _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
         var inviteUrl = $"{frontendUrl}/auth/buddy-invite?token={token}";
         var inviterName = inviter.DisplayName ?? inviter.Email;
         await _emailService.SendBuddyInviteAsync(normalizedEmail, inviterName, inviteUrl, inviter.PreferredLanguage);
@@ -167,17 +162,14 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
     }
 
     /// <summary>
-    /// Remove a buddy relationship (user removes their buddy).
+    ///     Remove a buddy relationship (user removes their buddy).
     /// </summary>
     public async Task<bool> RemoveBuddyAsync(Guid userId, Guid buddyRelationshipId)
     {
         var buddy = await _db.AccountabilityBuddies
             .FirstOrDefaultAsync(ab => ab.Id == buddyRelationshipId && ab.UserId == userId);
 
-        if (buddy == null)
-        {
-            return false;
-        }
+        if (buddy == null) return false;
 
         _db.AccountabilityBuddies.Remove(buddy);
         await _db.SaveChangesAsync();
@@ -185,17 +177,14 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
     }
 
     /// <summary>
-    /// Leave as someone's buddy (buddy removes themselves).
+    ///     Leave as someone's buddy (buddy removes themselves).
     /// </summary>
     public async Task<bool> LeaveBuddyAsync(Guid buddyUserId, Guid ownerUserId)
     {
         var buddy = await _db.AccountabilityBuddies
             .FirstOrDefaultAsync(ab => ab.UserId == ownerUserId && ab.BuddyUserId == buddyUserId);
 
-        if (buddy == null)
-        {
-            return false;
-        }
+        if (buddy == null) return false;
 
         _db.AccountabilityBuddies.Remove(buddy);
         await _db.SaveChangesAsync();
@@ -203,9 +192,8 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
     }
 
 
-
     /// <summary>
-    /// Get the today view for a buddy.
+    ///     Get the today view for a buddy.
     /// </summary>
     public async Task<BuddyTodayViewData> GetBuddyTodayViewAsync(Guid targetUserId, DateOnly targetDate)
     {
@@ -228,9 +216,8 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
     }
 
 
-
     /// <summary>
-    /// Get journal entries for a buddy.
+    ///     Get journal entries for a buddy.
     /// </summary>
     public async Task<List<BuddyJournalEntryData>> GetBuddyJournalAsync(Guid targetUserId)
     {
@@ -238,7 +225,7 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
             .Include(j => j.Author)
             .Include(j => j.Images.OrderBy(i => i.SortOrder))
             .Include(j => j.Reactions)
-                .ThenInclude(r => r.User)
+            .ThenInclude(r => r.User)
             .Where(j => j.UserId == targetUserId)
             .OrderByDescending(j => j.EntryDate)
             .ThenByDescending(j => j.CreatedAt)
@@ -251,14 +238,18 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
             j.EntryDate.ToString("yyyy-MM-dd"),
             j.AuthorUserId,
             j.Author != null ? j.Author.DisplayName ?? j.Author.Email : null,
-            j.Images.Select(i => new BuddyJournalImageData(i.Id, i.FileName, _storage.GetPresignedUrl(i.S3Key), i.SortOrder)).ToList(),
-            j.Reactions.Select(r => new BuddyJournalReactionData(r.Id, r.Emoji, r.UserId, r.User.DisplayName ?? r.User.Email, r.CreatedAt)).ToList(),
+            j.Images.Select(i =>
+                new BuddyJournalImageData(i.Id, i.FileName, _storage.GetPresignedUrl(i.S3Key), i.SortOrder)).ToList(),
+            j.Reactions.Select(r =>
+                    new BuddyJournalReactionData(r.Id, r.Emoji, r.UserId, r.User.DisplayName ?? r.User.Email,
+                        r.CreatedAt))
+                .ToList(),
             j.CreatedAt
         )).ToList();
     }
 
     /// <summary>
-    /// Create a journal entry for a buddy.
+    ///     Create a journal entry for a buddy.
     /// </summary>
     public async Task<BuddyJournalEntryData> CreateBuddyJournalEntryAsync(
         Guid authorUserId,
@@ -285,7 +276,8 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
         await _db.SaveChangesAsync();
 
         // Send notification email
-        var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
+        var frontendUrl = _configuration["FrontendUrl"] ??
+                          _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
         var journalUrl = $"{frontendUrl}/journal";
         var authorName = author.DisplayName ?? author.Email;
 
@@ -311,7 +303,7 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
     }
 
     /// <summary>
-    /// Upload an image to a buddy's journal entry.
+    ///     Upload an image to a buddy's journal entry.
     /// </summary>
     public async Task<UploadImageResult> UploadBuddyJournalImageAsync(
         Guid authorUserId,
@@ -326,20 +318,11 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
             .Include(j => j.Images)
             .FirstOrDefaultAsync(j => j.Id == entryId && j.UserId == targetUserId);
 
-        if (entry == null)
-        {
-            return new UploadImageResult(false, "Journal entry not found", null);
-        }
+        if (entry == null) return new UploadImageResult(false, "Journal entry not found", null);
 
-        if (entry.AuthorUserId != authorUserId)
-        {
-            return new UploadImageResult(false, "Forbidden", null);
-        }
+        if (entry.AuthorUserId != authorUserId) return new UploadImageResult(false, "Forbidden", null);
 
-        if (entry.Images.Count >= 5)
-        {
-            return new UploadImageResult(false, "Maximum of 5 images per entry allowed", null);
-        }
+        if (entry.Images.Count >= 5) return new UploadImageResult(false, "Maximum of 5 images per entry allowed", null);
 
         var extension = Path.GetExtension(fileName);
         var s3Key = $"journal/{targetUserId}/{entryId}/{Guid.NewGuid()}{extension}";
@@ -370,7 +353,7 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
     }
 
     /// <summary>
-    /// Add a reaction to a buddy's journal entry.
+    ///     Add a reaction to a buddy's journal entry.
     /// </summary>
     public async Task<AddReactionResult> AddBuddyJournalReactionAsync(
         Guid userId,
@@ -381,18 +364,12 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
         var entry = await _db.JournalEntries
             .FirstOrDefaultAsync(j => j.Id == entryId && j.UserId == targetUserId);
 
-        if (entry == null)
-        {
-            return new AddReactionResult(false, "Journal entry not found", null);
-        }
+        if (entry == null) return new AddReactionResult(false, "Journal entry not found", null);
 
         var existingReaction = await _db.JournalReactions
             .FirstOrDefaultAsync(r => r.JournalEntryId == entryId && r.UserId == userId && r.Emoji == emoji);
 
-        if (existingReaction != null)
-        {
-            return new AddReactionResult(false, "You have already added this reaction", null);
-        }
+        if (existingReaction != null) return new AddReactionResult(false, "You have already added this reaction", null);
 
         var user = await _db.Users.FindAsync(userId);
 
@@ -418,17 +395,14 @@ public class AccountabilityBuddyService : IAccountabilityBuddyService
     }
 
     /// <summary>
-    /// Remove a reaction from a buddy's journal entry.
+    ///     Remove a reaction from a buddy's journal entry.
     /// </summary>
     public async Task<bool> RemoveBuddyJournalReactionAsync(Guid userId, Guid entryId, Guid reactionId)
     {
         var reaction = await _db.JournalReactions
             .FirstOrDefaultAsync(r => r.Id == reactionId && r.JournalEntryId == entryId && r.UserId == userId);
 
-        if (reaction == null)
-        {
-            return false;
-        }
+        if (reaction == null) return false;
 
         _db.JournalReactions.Remove(reaction);
         await _db.SaveChangesAsync();

@@ -1,6 +1,5 @@
 using HelpMotivateMe.Core.DTOs.IdentityProofs;
 using HelpMotivateMe.Core.Entities;
-using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +10,8 @@ public class IdentityProofService : IIdentityProofService
 {
     private readonly AppDbContext _context;
     private readonly IQueryInterface<Identity> _identities;
-    private readonly IQueryInterface<IdentityProof> _proofs;
     private readonly IQueryInterface<NotificationPreferences> _notificationPreferences;
+    private readonly IQueryInterface<IdentityProof> _proofs;
 
     public IdentityProofService(
         AppDbContext context,
@@ -27,16 +26,13 @@ public class IdentityProofService : IIdentityProofService
     }
 
     /// <summary>
-    /// Create a new identity proof.
+    ///     Create a new identity proof.
     /// </summary>
     public async Task<IdentityProofResponse> CreateProofAsync(Guid userId, CreateIdentityProofRequest request)
     {
         // Verify identity belongs to user
         var identity = await _identities.FirstOrDefaultAsync(i => i.Id == request.IdentityId && i.UserId == userId);
-        if (identity == null)
-        {
-            throw new InvalidOperationException("Invalid identity.");
-        }
+        if (identity == null) throw new InvalidOperationException("Invalid identity.");
 
         var today = await GetUserLocalDateAsync(userId);
 
@@ -59,23 +55,18 @@ public class IdentityProofService : IIdentityProofService
     }
 
     /// <summary>
-    /// Get proofs for a date range.
+    ///     Get proofs for a date range.
     /// </summary>
-    public async Task<IEnumerable<IdentityProofResponse>> GetProofsAsync(Guid userId, DateOnly? startDate, DateOnly? endDate)
+    public async Task<IEnumerable<IdentityProofResponse>> GetProofsAsync(Guid userId, DateOnly? startDate,
+        DateOnly? endDate)
     {
         var query = _proofs
             .Include(p => p.Identity)
             .Where(p => p.UserId == userId);
 
-        if (startDate.HasValue)
-        {
-            query = query.Where(p => p.ProofDate >= startDate.Value);
-        }
+        if (startDate.HasValue) query = query.Where(p => p.ProofDate >= startDate.Value);
 
-        if (endDate.HasValue)
-        {
-            query = query.Where(p => p.ProofDate <= endDate.Value);
-        }
+        if (endDate.HasValue) query = query.Where(p => p.ProofDate <= endDate.Value);
 
         var proofs = await query
             .OrderByDescending(p => p.CreatedAt)
@@ -85,17 +76,14 @@ public class IdentityProofService : IIdentityProofService
     }
 
     /// <summary>
-    /// Delete a proof.
+    ///     Delete a proof.
     /// </summary>
     public async Task<bool> DeleteProofAsync(Guid userId, Guid proofId)
     {
         var proof = await _context.IdentityProofs
             .FirstOrDefaultAsync(p => p.Id == proofId && p.UserId == userId);
 
-        if (proof == null)
-        {
-            return false;
-        }
+        if (proof == null) return false;
 
         _context.IdentityProofs.Remove(proof);
         await _context.SaveChangesAsync();
@@ -120,7 +108,7 @@ public class IdentityProofService : IIdentityProofService
     }
 
     /// <summary>
-    /// Resolves the user's current local date based on their timezone settings.
+    ///     Resolves the user's current local date based on their timezone settings.
     /// </summary>
     private async Task<DateOnly> GetUserLocalDateAsync(Guid userId)
     {
@@ -128,17 +116,15 @@ public class IdentityProofService : IIdentityProofService
             .FirstOrDefaultAsync(np => np.UserId == userId);
 
         if (preferences == null)
-        {
             // Fallback to UTC if no preferences set
             return DateOnly.FromDateTime(DateTime.UtcNow);
-        }
 
         var localDateTime = ResolveLocalTime(DateTime.UtcNow, preferences.TimezoneId, preferences.UtcOffsetMinutes);
         return DateOnly.FromDateTime(localDateTime);
     }
 
     /// <summary>
-    /// Resolves the user's local time from UTC using their timezone settings.
+    ///     Resolves the user's local time from UTC using their timezone settings.
     /// </summary>
     private static DateTime ResolveLocalTime(DateTime utcNow, string timezoneId, int utcOffsetMinutes)
     {

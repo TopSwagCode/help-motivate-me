@@ -1,3 +1,4 @@
+using System.Text.Json;
 using HelpMotivateMe.Core.Enums;
 
 namespace HelpMotivateMe.Core.Localization;
@@ -10,39 +11,46 @@ public static class LocalizedPrompts
         { Language.Danish, new DanishPromptProvider() }
     };
 
-    public static string GetIdentityPrompt(Language language) =>
-        GetProvider(language).IdentitySystemPrompt;
+    public static string GetIdentityPrompt(Language language)
+    {
+        return GetProvider(language).IdentitySystemPrompt;
+    }
 
-    public static string GetHabitStackPrompt(Language language) =>
-        GetProvider(language).HabitStackSystemPrompt;
+    public static string GetHabitStackPrompt(Language language)
+    {
+        return GetProvider(language).HabitStackSystemPrompt;
+    }
 
-    public static string GetGoalsPrompt(Language language) =>
-        GetProvider(language).GoalsSystemPrompt;
+    public static string GetGoalsPrompt(Language language)
+    {
+        return GetProvider(language).GoalsSystemPrompt;
+    }
 
-    public static string GetGeneralTaskCreationPrompt(Language language) =>
-        GetProvider(language).GeneralTaskCreationPrompt;
+    public static string GetGeneralTaskCreationPrompt(Language language)
+    {
+        return GetProvider(language).GeneralTaskCreationPrompt;
+    }
 
-    public static string GetPromptForStep(string step, Language language) =>
-        step.ToLowerInvariant() switch
+    public static string GetPromptForStep(string step, Language language)
+    {
+        return step.ToLowerInvariant() switch
         {
             "identity" => GetIdentityPrompt(language),
             "habitstack" => GetHabitStackPrompt(language),
             "goal" => GetGoalsPrompt(language),
             _ => throw new ArgumentException($"Unknown step: {step}")
         };
+    }
 
     /// <summary>
-    /// Builds the full system prompt with contextual information like current date.
-    /// This helps the AI understand temporal references like "next week", "tomorrow", etc.
+    ///     Builds the full system prompt with contextual information like current date.
+    ///     This helps the AI understand temporal references like "next week", "tomorrow", etc.
     /// </summary>
     public static string BuildSystemPrompt(string step, Language language, Dictionary<string, object>? context)
     {
         var basePrompt = GetPromptForStep(step, language);
 
-        if (context == null || context.Count == 0)
-        {
-            return basePrompt;
-        }
+        if (context == null || context.Count == 0) return basePrompt;
 
         // Build context section - use language-appropriate labels
         var contextLines = new List<string>
@@ -114,7 +122,7 @@ public static class LocalizedPrompts
                 ? "BRUGERENS IDENTITETER (link vaner og mål til disse når relevant):"
                 : "USER'S IDENTITIES (link habits and goals to these when relevant):");
 
-            var identitiesJson = System.Text.Json.JsonSerializer.Serialize(userIdentities);
+            var identitiesJson = JsonSerializer.Serialize(userIdentities);
             contextLines.Add(identitiesJson);
 
             contextLines.Add("");
@@ -127,7 +135,7 @@ public static class LocalizedPrompts
     }
 
     /// <summary>
-    /// Builds the general task creation prompt with user identities and date context.
+    ///     Builds the general task creation prompt with user identities and date context.
     /// </summary>
     public static string BuildGeneralCreationPrompt(Language language, Dictionary<string, object>? context)
     {
@@ -136,7 +144,7 @@ public static class LocalizedPrompts
         // Replace {identities} placeholder with actual user identities
         if (context?.TryGetValue("identities", out var identitiesObj) == true)
         {
-            var identitiesJson = System.Text.Json.JsonSerializer.Serialize(identitiesObj);
+            var identitiesJson = JsonSerializer.Serialize(identitiesObj);
             basePrompt = basePrompt.Replace("{identities}", identitiesJson);
         }
         else
@@ -145,10 +153,7 @@ public static class LocalizedPrompts
         }
 
         // Build context section for date/time references
-        if (context == null || context.Count == 0)
-        {
-            return basePrompt;
-        }
+        if (context == null || context.Count == 0) return basePrompt;
 
         var contextLines = new List<string>
         {
@@ -214,6 +219,8 @@ public static class LocalizedPrompts
         return basePrompt + string.Join("\n", contextLines);
     }
 
-    private static IPromptProvider GetProvider(Language language) =>
-        Providers.GetValueOrDefault(language, Providers[Language.English]);
+    private static IPromptProvider GetProvider(Language language)
+    {
+        return Providers.GetValueOrDefault(language, Providers[Language.English]);
+    }
 }

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.IntegrationTests.Helpers;
 using HelpMotivateMe.IntegrationTests.Infrastructure;
 
@@ -39,7 +40,7 @@ public class GoalsControllerTests : IntegrationTestBase
         // Arrange
         var user = await DataBuilder.CreateUserAsync();
         var goal = await DataBuilder.CreateGoalAsync(user.Id, "Test Goal");
-        await DataBuilder.CreateTaskAsync(goal.Id, "Completed Task", status: Core.Enums.TaskItemStatus.Completed);
+        await DataBuilder.CreateTaskAsync(goal.Id, "Completed Task", TaskItemStatus.Completed);
         await DataBuilder.CreateTaskAsync(goal.Id, "Pending Task 1");
         await DataBuilder.CreateTaskAsync(goal.Id, "Pending Task 2");
 
@@ -139,7 +140,6 @@ public class GoalsControllerTests : IntegrationTestBase
     }
 
 
-
     [Fact]
     public async Task CompleteGoal_TogglesIsCompleted_FromFalseToTrue()
     {
@@ -163,7 +163,7 @@ public class GoalsControllerTests : IntegrationTestBase
     {
         // Arrange
         var user = await DataBuilder.CreateUserAsync();
-        var goal = await DataBuilder.CreateGoalAsync(user.Id, "Completed Goal", isCompleted: true);
+        var goal = await DataBuilder.CreateGoalAsync(user.Id, "Completed Goal", true);
 
         // Act
         Client.AuthenticateAs(user.Id);
@@ -175,7 +175,6 @@ public class GoalsControllerTests : IntegrationTestBase
         uncompleted!.IsCompleted.Should().BeFalse();
         uncompleted.CompletedAt.Should().BeNull();
     }
-
 
 
     [Fact]
@@ -228,7 +227,6 @@ public class GoalsControllerTests : IntegrationTestBase
         var user2Goals = await Client.GetFromJsonAsync<List<GoalResponse>>("/api/goals");
         user2Goals![0].SortOrder.Should().Be(0);
     }
-
 
 
     [Fact]
@@ -298,7 +296,6 @@ public class GoalsControllerTests : IntegrationTestBase
     }
 
 
-
     [Fact]
     public async Task CompleteGoal_WithClientDate_UsesProvidedDate()
     {
@@ -345,7 +342,6 @@ public class GoalsControllerTests : IntegrationTestBase
         var completedDate = DateOnly.FromDateTime(completed.CompletedAt!.Value);
         completedDate.Should().Be(expectedDate);
     }
-
 }
 
 // Response DTOs for deserialization
@@ -362,4 +358,3 @@ public record GoalResponse(
     DateTime CreatedAt,
     DateTime? UpdatedAt
 );
-

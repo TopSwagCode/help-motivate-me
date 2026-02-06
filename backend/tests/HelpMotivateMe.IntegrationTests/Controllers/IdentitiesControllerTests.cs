@@ -3,7 +3,6 @@ using System.Net.Http.Json;
 using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.IntegrationTests.Helpers;
 using HelpMotivateMe.IntegrationTests.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 
 namespace HelpMotivateMe.IntegrationTests.Controllers;
 
@@ -45,8 +44,9 @@ public class IdentitiesControllerTests : IntegrationTestBase
 
         // Create tasks associated with this identity
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
-        await DataBuilder.CreateTaskAsync(goal.Id, "Task 1", TaskItemStatus.Completed, completedAt: today, identityId: identity.Id);
-        await DataBuilder.CreateTaskAsync(goal.Id, "Task 2", TaskItemStatus.Pending, identityId: identity.Id);
+        await DataBuilder.CreateTaskAsync(goal.Id, "Task 1", TaskItemStatus.Completed, completedAt: today,
+            identityId: identity.Id);
+        await DataBuilder.CreateTaskAsync(goal.Id, "Task 2", identityId: identity.Id);
 
         // Act
         Client.AuthenticateAs(user.Id);
@@ -149,7 +149,6 @@ public class IdentitiesControllerTests : IntegrationTestBase
     }
 
 
-
     [Fact]
     public async Task GetStats_ReturnsCorrectCompletionCount()
     {
@@ -160,12 +159,15 @@ public class IdentitiesControllerTests : IntegrationTestBase
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
         // Create 3 completed tasks with identity
-        await DataBuilder.CreateTaskAsync(goal.Id, "Task 1", TaskItemStatus.Completed, completedAt: today, identityId: identity.Id);
-        await DataBuilder.CreateTaskAsync(goal.Id, "Task 2", TaskItemStatus.Completed, completedAt: today, identityId: identity.Id);
-        await DataBuilder.CreateTaskAsync(goal.Id, "Task 3", TaskItemStatus.Completed, completedAt: today, identityId: identity.Id);
+        await DataBuilder.CreateTaskAsync(goal.Id, "Task 1", TaskItemStatus.Completed, completedAt: today,
+            identityId: identity.Id);
+        await DataBuilder.CreateTaskAsync(goal.Id, "Task 2", TaskItemStatus.Completed, completedAt: today,
+            identityId: identity.Id);
+        await DataBuilder.CreateTaskAsync(goal.Id, "Task 3", TaskItemStatus.Completed, completedAt: today,
+            identityId: identity.Id);
         // Create 2 pending tasks with identity
-        await DataBuilder.CreateTaskAsync(goal.Id, "Pending 1", TaskItemStatus.Pending, identityId: identity.Id);
-        await DataBuilder.CreateTaskAsync(goal.Id, "Pending 2", TaskItemStatus.Pending, identityId: identity.Id);
+        await DataBuilder.CreateTaskAsync(goal.Id, "Pending 1", identityId: identity.Id);
+        await DataBuilder.CreateTaskAsync(goal.Id, "Pending 2", identityId: identity.Id);
 
         // Act
         Client.AuthenticateAs(user.Id);
@@ -185,7 +187,8 @@ public class IdentitiesControllerTests : IntegrationTestBase
         var goal = await DataBuilder.CreateGoalAsync(user.Id);
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
-        await DataBuilder.CreateTaskAsync(goal.Id, "Write article", TaskItemStatus.Completed, completedAt: today, identityId: identity.Id);
+        await DataBuilder.CreateTaskAsync(goal.Id, "Write article", TaskItemStatus.Completed, completedAt: today,
+            identityId: identity.Id);
 
         // Act
         Client.AuthenticateAs(user.Id);
@@ -209,10 +212,12 @@ public class IdentitiesControllerTests : IntegrationTestBase
         var twoWeeksAgo = today.AddDays(-14);
 
         // Create task completed within last 7 days
-        await DataBuilder.CreateTaskAsync(goal.Id, "Recent", TaskItemStatus.Completed, completedAt: today, identityId: identity.Id);
+        await DataBuilder.CreateTaskAsync(goal.Id, "Recent", TaskItemStatus.Completed, completedAt: today,
+            identityId: identity.Id);
 
         // Create task completed 14 days ago (outside 7 day window)
-        await DataBuilder.CreateTaskAsync(goal.Id, "Old", TaskItemStatus.Completed, completedAt: twoWeeksAgo, identityId: identity.Id);
+        await DataBuilder.CreateTaskAsync(goal.Id, "Old", TaskItemStatus.Completed, completedAt: twoWeeksAgo,
+            identityId: identity.Id);
 
         // Act
         Client.AuthenticateAs(user.Id);
@@ -221,7 +226,6 @@ public class IdentitiesControllerTests : IntegrationTestBase
         // Assert
         response!.TasksCompletedLast7Days.Should().Be(1); // Only the recent task
     }
-
 
 
     [Fact]
@@ -289,7 +293,6 @@ public class IdentitiesControllerTests : IntegrationTestBase
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
-
 }
 
 // Response DTOs for deserialization

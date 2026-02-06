@@ -1,7 +1,7 @@
 namespace HelpMotivateMe.Core.DTOs.Ai;
 
 /// <summary>
-/// Request for general AI-powered task/goal/habit creation.
+///     Request for general AI-powered task/goal/habit creation.
 /// </summary>
 public record GeneralChatRequest(
     List<ChatMessage> Messages,
@@ -9,7 +9,7 @@ public record GeneralChatRequest(
 );
 
 /// <summary>
-/// Streaming chunk for general AI chat with intent classification.
+///     Streaming chunk for general AI chat with intent classification.
 /// </summary>
 public record GeneralChatStreamChunk(
     string Content,
@@ -18,27 +18,27 @@ public record GeneralChatStreamChunk(
 );
 
 /// <summary>
-/// AI's classified intent with confidence score and preview data.
+///     AI's classified intent with confidence score and preview data.
 /// </summary>
 public record AiIntentResponse(
-    string Intent,              // "create_task", "create_goal", "create_habit_stack", "clarify", "confirmed"
-    decimal Confidence,         // 0.0 - 1.0
-    AiPreview? Preview,         // Structured preview when confidence >= 0.5
+    string Intent, // "create_task", "create_goal", "create_habit_stack", "clarify", "confirmed"
+    decimal Confidence, // 0.0 - 1.0
+    AiPreview? Preview, // Structured preview when confidence >= 0.5
     string? ClarifyingQuestion, // Question to ask when confidence < 0.85
-    List<string> Actions,       // Available actions: ["confirm", "edit", "cancel"]
-    bool CreateNow = false      // True when user confirmed and ready to create
+    List<string> Actions, // Available actions: ["confirm", "edit", "cancel"]
+    bool CreateNow = false // True when user confirmed and ready to create
 );
 
 /// <summary>
-/// Preview data for a single entity to be created.
+///     Preview data for a single entity to be created.
 /// </summary>
 public record AiPreview(
-    string Type,                // "task", "goal", "habitStack"
+    string Type, // "task", "goal", "habitStack"
     Dictionary<string, object> Data
 );
 
 /// <summary>
-/// Response containing user context for AI (identities and goals).
+///     Response containing user context for AI (identities and goals).
 /// </summary>
 public record AiContextResponse(
     List<IdentitySummary> Identities,
@@ -46,7 +46,7 @@ public record AiContextResponse(
 );
 
 /// <summary>
-/// Summary of an identity for AI context.
+///     Summary of an identity for AI context.
 /// </summary>
 public record IdentitySummary(
     Guid Id,
@@ -56,7 +56,7 @@ public record IdentitySummary(
 );
 
 /// <summary>
-/// Summary of a goal for AI context.
+///     Summary of a goal for AI context.
 /// </summary>
 public record GoalSummary(
     Guid Id,
@@ -64,7 +64,7 @@ public record GoalSummary(
 );
 
 /// <summary>
-/// Preview data for identity creation from AI recommendation.
+///     Preview data for identity creation from AI recommendation.
 /// </summary>
 public record IdentityPreviewData(
     string Name,
@@ -75,7 +75,7 @@ public record IdentityPreviewData(
 );
 
 /// <summary>
-/// Request to create an identity from AI recommendation.
+///     Request to create an identity from AI recommendation.
 /// </summary>
 public record CreateIdentityFromAiRequest(
     string Name,

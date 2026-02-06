@@ -6,8 +6,8 @@ public class HabitStackItem
     public Guid HabitStackId { get; set; }
 
     // Descriptions for the habit chain
-    public required string CueDescription { get; set; }     // "After I..."
-    public required string HabitDescription { get; set; }   // "I will..."
+    public required string CueDescription { get; set; } // "After I..."
+    public required string HabitDescription { get; set; } // "I will..."
 
     public int SortOrder { get; set; }
 

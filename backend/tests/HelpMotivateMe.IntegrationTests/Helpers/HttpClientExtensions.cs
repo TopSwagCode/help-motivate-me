@@ -31,13 +31,15 @@ public static class HttpClientExtensions
         return await client.GetFromJsonAsync<T>(requestUri);
     }
 
-    public static async Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient client, string requestUri, T value, Guid userId)
+    public static async Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient client, string requestUri, T value,
+        Guid userId)
     {
         client.AuthenticateAs(userId);
         return await client.PostAsJsonAsync(requestUri, value);
     }
 
-    public static async Task<HttpResponseMessage> PutAsJsonAsync<T>(this HttpClient client, string requestUri, T value, Guid userId)
+    public static async Task<HttpResponseMessage> PutAsJsonAsync<T>(this HttpClient client, string requestUri, T value,
+        Guid userId)
     {
         client.AuthenticateAs(userId);
         return await client.PutAsJsonAsync(requestUri, value);
@@ -49,7 +51,8 @@ public static class HttpClientExtensions
         return await client.DeleteAsync(requestUri);
     }
 
-    public static async Task<HttpResponseMessage> PatchAsync(this HttpClient client, string requestUri, Guid userId, HttpContent? content = null)
+    public static async Task<HttpResponseMessage> PatchAsync(this HttpClient client, string requestUri, Guid userId,
+        HttpContent? content = null)
     {
         client.AuthenticateAs(userId);
         return await client.PatchAsync(requestUri, content ?? new StringContent(""));

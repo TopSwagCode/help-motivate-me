@@ -1,7 +1,5 @@
-using HelpMotivateMe.Core.DTOs.Auth;
 using HelpMotivateMe.Core.DTOs.Notifications;
 using HelpMotivateMe.Core.Entities;
-using HelpMotivateMe.Core.Enums;
 
 namespace HelpMotivateMe.Core.Interfaces;
 
@@ -19,7 +17,10 @@ public interface IAuthService
     Task<User?> GetUserByIdAsync(Guid userId);
     Task<User> GetUserWithExternalLoginsAsync(Guid userId);
     Task<bool> EmailExistsAsync(string email);
-    Task<User> CreateUserAsync(string email, string? passwordHash = null, string? displayName = null, bool isEmailVerified = false);
+
+    Task<User> CreateUserAsync(string email, string? passwordHash = null, string? displayName = null,
+        bool isEmailVerified = false);
+
     Task UpdateUserAsync(User user);
 
     // Email verification
@@ -32,7 +33,10 @@ public interface IAuthService
 
     // External logins
     Task<UserExternalLogin?> GetExternalLoginAsync(string provider, string providerKey);
-    Task<UserExternalLogin> LinkExternalLoginAsync(Guid userId, string provider, string providerKey, string? displayName = null);
+
+    Task<UserExternalLogin> LinkExternalLoginAsync(Guid userId, string provider, string providerKey,
+        string? displayName = null);
+
     Task<bool> UnlinkExternalLoginAsync(Guid userId, string provider);
     Task<bool> CanRemoveLoginMethodAsync(Guid userId);
 
@@ -42,7 +46,9 @@ public interface IAuthService
 
     // Notification preferences
     Task<NotificationPreferences> GetOrCreateNotificationPreferencesAsync(Guid userId);
-    Task<NotificationPreferences> UpdateNotificationPreferencesAsync(Guid userId, UpdateNotificationPreferencesRequest request);
+
+    Task<NotificationPreferences> UpdateNotificationPreferencesAsync(Guid userId,
+        UpdateNotificationPreferencesRequest request);
 
     // Account deletion
     Task DeleteAccountAsync(Guid userId);

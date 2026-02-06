@@ -10,8 +10,8 @@ namespace HelpMotivateMe.Infrastructure.Services;
 public class AiBudgetService : IAiBudgetService
 {
     private readonly AppDbContext _db;
-    private readonly AiBudgetOptions _options;
     private readonly ILogger<AiBudgetService> _logger;
+    private readonly AiBudgetOptions _options;
 
     public AiBudgetService(
         AppDbContext db,
@@ -54,7 +54,8 @@ public class AiBudgetService : IAiBudgetService
             _logger.LogWarning(
                 "Per-user AI budget exceeded for user {UserId}. Current: ${Current:F4}, Projected: ${Projected:F4}, Limit: ${Limit:F4}",
                 userId, userCostLast30Days, projectedUserCost, _options.PerUserLimitLast30DaysUsd);
-            return new BudgetCheckResult(false, "Your personal AI usage limit has been reached. Please try again later.");
+            return new BudgetCheckResult(false,
+                "Your personal AI usage limit has been reached. Please try again later.");
         }
 
         return new BudgetCheckResult(true);
@@ -86,12 +87,12 @@ public class AiBudgetService : IAiBudgetService
             .FirstOrDefaultAsync(cancellationToken);
 
         return new AiBudgetStats(
-            TotalEstimatedAllTime: allTimeTotals?.TotalEstimated ?? 0m,
-            TotalActualAllTime: allTimeTotals?.TotalActual ?? 0m,
-            TotalEstimatedLast30Days: last30DaysTotals?.TotalEstimated ?? 0m,
-            TotalActualLast30Days: last30DaysTotals?.TotalActual ?? 0m,
-            GlobalLimitLast30DaysUsd: _options.GlobalLimitLast30DaysUsd,
-            PerUserLimitLast30DaysUsd: _options.PerUserLimitLast30DaysUsd
+            allTimeTotals?.TotalEstimated ?? 0m,
+            allTimeTotals?.TotalActual ?? 0m,
+            last30DaysTotals?.TotalEstimated ?? 0m,
+            last30DaysTotals?.TotalActual ?? 0m,
+            _options.GlobalLimitLast30DaysUsd,
+            _options.PerUserLimitLast30DaysUsd
         );
     }
 }

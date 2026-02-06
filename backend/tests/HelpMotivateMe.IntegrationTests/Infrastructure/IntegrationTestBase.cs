@@ -8,11 +8,11 @@ namespace HelpMotivateMe.IntegrationTests.Infrastructure;
 public abstract class IntegrationTestBase : IAsyncLifetime
 {
     protected readonly DatabaseFixture DbFixture;
-    protected CustomWebApplicationFactory Factory = null!;
-    protected HttpClient Client = null!;
-    protected AppDbContext Db = null!;
-    protected TestDataBuilder DataBuilder = null!;
     private IServiceScope _scope = null!;
+    protected HttpClient Client = null!;
+    protected TestDataBuilder DataBuilder = null!;
+    protected AppDbContext Db = null!;
+    protected CustomWebApplicationFactory Factory = null!;
 
     protected IntegrationTestBase(DatabaseFixture dbFixture)
     {

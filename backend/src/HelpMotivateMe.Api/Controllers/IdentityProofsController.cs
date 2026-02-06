@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.IdentityProofs;
 using HelpMotivateMe.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -10,9 +9,9 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/identity-proofs")]
 public class IdentityProofsController : ApiControllerBase
 {
-    private readonly IIdentityProofService _proofService;
     private readonly IAnalyticsService _analyticsService;
     private readonly IMilestoneService _milestoneService;
+    private readonly IIdentityProofService _proofService;
 
     public IdentityProofsController(
         IIdentityProofService proofService,
@@ -25,7 +24,7 @@ public class IdentityProofsController : ApiControllerBase
     }
 
     /// <summary>
-    /// Get identity proofs for a date range.
+    ///     Get identity proofs for a date range.
     /// </summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<IdentityProofResponse>>> GetProofs(
@@ -38,7 +37,7 @@ public class IdentityProofsController : ApiControllerBase
     }
 
     /// <summary>
-    /// Create a new identity proof.
+    ///     Create a new identity proof.
     /// </summary>
     [HttpPost]
     public async Task<ActionResult<IdentityProofResponse>> CreateProof([FromBody] CreateIdentityProofRequest request)
@@ -57,7 +56,8 @@ public class IdentityProofsController : ApiControllerBase
                 voteValue = (int)request.Intensity
             });
 
-            await _milestoneService.RecordEventAsync(userId, "IdentityProofAdded", new { identityId = request.IdentityId });
+            await _milestoneService.RecordEventAsync(userId, "IdentityProofAdded",
+                new { identityId = request.IdentityId });
 
             return CreatedAtAction(nameof(GetProofs), null, proof);
         }
@@ -68,7 +68,7 @@ public class IdentityProofsController : ApiControllerBase
     }
 
     /// <summary>
-    /// Delete an identity proof.
+    ///     Delete an identity proof.
     /// </summary>
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteProof(Guid id)
@@ -78,10 +78,7 @@ public class IdentityProofsController : ApiControllerBase
 
         var deleted = await _proofService.DeleteProofAsync(userId, id);
 
-        if (!deleted)
-        {
-            return NotFound();
-        }
+        if (!deleted) return NotFound();
 
         await _analyticsService.LogEventAsync(userId, sessionId, "IdentityProofDeleted", new
         {

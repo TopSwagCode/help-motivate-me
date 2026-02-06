@@ -1,9 +1,7 @@
-using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.Analytics;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
-using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,8 +12,8 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/analytics")]
 public class AnalyticsController : ApiControllerBase
 {
-    private readonly IQueryInterface<TaskItem> _tasks;
     private readonly IAnalyticsService _analyticsService;
+    private readonly IQueryInterface<TaskItem> _tasks;
 
     public AnalyticsController(IQueryInterface<TaskItem> tasks, IAnalyticsService analyticsService)
     {
@@ -67,10 +65,7 @@ public class AnalyticsController : ApiControllerBase
             .Where(t => t.Goal.UserId == userId)
             .ToListAsync();
 
-        if (tasks.Count == 0)
-        {
-            return Ok(new CompletionRateResponse(0, 0, 0, 0, 0));
-        }
+        if (tasks.Count == 0) return Ok(new CompletionRateResponse(0, 0, 0, 0, 0));
 
         var completedCount = tasks.Count(t => t.Status == TaskItemStatus.Completed);
         var completionRate = (double)completedCount / tasks.Count * 100;

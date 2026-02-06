@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 namespace HelpMotivateMe.Infrastructure.Data;
 
 /// <summary>
-/// A read-only query interface that wraps IQueryable with AsNoTracking() for query-only scenarios.
-/// Use this when querying data without the need for change tracking, improving performance.
+///     A read-only query interface that wraps IQueryable with AsNoTracking() for query-only scenarios.
+///     Use this when querying data without the need for change tracking, improving performance.
 /// </summary>
 public class QueryInterface<T> : IQueryInterface<T> where T : class
 {
@@ -22,6 +22,13 @@ public class QueryInterface<T> : IQueryInterface<T> where T : class
     public Expression Expression => _queryable.Expression;
     public IQueryProvider Provider => _queryable.Provider;
 
-    public IEnumerator<T> GetEnumerator() => _queryable.GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => _queryable.GetEnumerator();
+    public IEnumerator<T> GetEnumerator()
+    {
+        return _queryable.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return _queryable.GetEnumerator();
+    }
 }

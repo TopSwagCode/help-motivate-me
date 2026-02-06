@@ -14,9 +14,9 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/auth")]
 public class AuthController : ApiControllerBase
 {
+    private readonly IAnalyticsService _analyticsService;
     private readonly IAuthService _authService;
     private readonly IEmailService _emailService;
-    private readonly IAnalyticsService _analyticsService;
     private readonly IMilestoneService _milestoneService;
 
     public AuthController(
@@ -38,18 +38,18 @@ public class AuthController : ApiControllerBase
         {
             var isWhitelisted = await _authService.IsEmailWhitelistedAsync(request.Email);
             if (!isWhitelisted)
-            {
-                return StatusCode(403, new { code = "signup_disabled", message = "Signups are currently disabled. Please join the waitlist." });
-            }
+                return StatusCode(403,
+                    new
+                    {
+                        code = "signup_disabled", message = "Signups are currently disabled. Please join the waitlist."
+                    });
         }
 
         if (await _authService.EmailExistsAsync(request.Email))
-        {
             return BadRequest(new { message = "Email already exists" });
-        }
 
         var passwordHash = _authService.HashPassword(request.Password);
-        var user = await _authService.CreateUserAsync(request.Email, passwordHash, request.DisplayName, isEmailVerified: false);
+        var user = await _authService.CreateUserAsync(request.Email, passwordHash, request.DisplayName);
 
         var verificationToken = await _authService.CreateEmailVerificationTokenAsync(user.Id, request.Email);
 
@@ -67,20 +67,17 @@ public class AuthController : ApiControllerBase
     {
         var user = await _authService.GetUserByEmailAsync(request.Email);
 
-        if (user == null || user.PasswordHash == null || !_authService.VerifyPassword(request.Password, user.PasswordHash))
-        {
+        if (user == null || user.PasswordHash == null ||
+            !_authService.VerifyPassword(request.Password, user.PasswordHash))
             return Unauthorized(new { message = "Invalid email or password" });
-        }
 
-        if (!user.IsActive)
-        {
-            return Unauthorized(new { message = "Account is disabled" });
-        }
+        if (!user.IsActive) return Unauthorized(new { message = "Account is disabled" });
 
         if (!user.IsEmailVerified)
-        {
-            return Unauthorized(new { code = "email_not_verified", message = "Please verify your email before logging in.", email = user.Email });
-        }
+            return Unauthorized(new
+            {
+                code = "email_not_verified", message = "Please verify your email before logging in.", email = user.Email
+            });
 
         user = await _authService.GetUserWithExternalLoginsAsync(user.Id);
         await SignInUser(user);
@@ -127,30 +124,21 @@ public class AuthController : ApiControllerBase
     public async Task<IActionResult> ExternalCallback(string provider, string? returnUrl)
     {
         var authenticateResult = await HttpContext.AuthenticateAsync(provider);
-        if (!authenticateResult.Succeeded)
-        {
-            return Redirect($"{returnUrl ?? "/auth/login"}?error=auth_failed");
-        }
+        if (!authenticateResult.Succeeded) return Redirect($"{returnUrl ?? "/auth/login"}?error=auth_failed");
 
         var externalId = authenticateResult.Principal?.FindFirstValue(ClaimTypes.NameIdentifier);
         var email = authenticateResult.Principal?.FindFirstValue(ClaimTypes.Email);
         var name = authenticateResult.Principal?.FindFirstValue(ClaimTypes.Name)
-            ?? authenticateResult.Principal?.FindFirstValue("urn:github:login");
+                   ?? authenticateResult.Principal?.FindFirstValue("urn:github:login");
 
-        if (string.IsNullOrEmpty(externalId))
-        {
-            return Redirect($"{returnUrl ?? "/auth/login"}?error=no_id");
-        }
+        if (string.IsNullOrEmpty(externalId)) return Redirect($"{returnUrl ?? "/auth/login"}?error=no_id");
 
         var externalLogin = await _authService.GetExternalLoginAsync(provider, externalId);
-        User? user = externalLogin?.User;
+        var user = externalLogin?.User;
 
         if (externalLogin == null)
         {
-            if (email != null)
-            {
-                user = await _authService.GetUserByEmailAsync(email);
-            }
+            if (email != null) user = await _authService.GetUserByEmailAsync(email);
 
             if (user == null)
             {
@@ -161,7 +149,8 @@ public class AuthController : ApiControllerBase
                     if (!isWhitelisted)
                     {
                         var frontendUrl = _authService.GetFrontendUrl();
-                        var waitlistUrl = $"{frontendUrl}/waitlist?email={Uri.EscapeDataString(userEmail)}&name={Uri.EscapeDataString(name ?? "")}&provider={Uri.EscapeDataString(provider)}";
+                        var waitlistUrl =
+                            $"{frontendUrl}/waitlist?email={Uri.EscapeDataString(userEmail)}&name={Uri.EscapeDataString(name ?? "")}&provider={Uri.EscapeDataString(provider)}";
                         return Redirect(waitlistUrl);
                     }
                 }
@@ -200,15 +189,10 @@ public class AuthController : ApiControllerBase
         var userId = GetUserId();
 
         if (!await _authService.CanRemoveLoginMethodAsync(userId))
-        {
             return BadRequest(new { message = "Cannot remove last login method. Set a password first." });
-        }
 
         var success = await _authService.UnlinkExternalLoginAsync(userId, provider);
-        if (!success)
-        {
-            return NotFound(new { message = "External login not found" });
-        }
+        if (!success) return NotFound(new { message = "External login not found" });
 
         return NoContent();
     }
@@ -225,20 +209,20 @@ public class AuthController : ApiControllerBase
             {
                 var isWhitelisted = await _authService.IsEmailWhitelistedAsync(email);
                 if (!isWhitelisted)
-                {
-                    return StatusCode(403, new { code = "not_whitelisted", email = email, message = "You don't have an account yet. Please join the waitlist." });
-                }
+                    return StatusCode(403,
+                        new
+                        {
+                            code = "not_whitelisted", email,
+                            message = "You don't have an account yet. Please join the waitlist."
+                        });
             }
 
             user = await _authService.CreateUserAsync(email, isEmailVerified: true);
         }
 
-        if (!user.IsActive)
-        {
-            return Ok(new { message = "If an account exists, a login link has been sent." });
-        }
+        if (!user.IsActive) return Ok(new { message = "If an account exists, a login link has been sent." });
 
-        var loginToken = await _authService.CreateLoginTokenAsync(user.Id, email, 24);
+        var loginToken = await _authService.CreateLoginTokenAsync(user.Id, email);
 
         var frontendUrl = _authService.GetFrontendUrl();
         var loginUrl = $"{frontendUrl}/auth/login?token={loginToken.Token}";
@@ -252,39 +236,22 @@ public class AuthController : ApiControllerBase
     {
         var token = await _authService.GetLoginTokenAsync(request.Token);
 
-        if (token == null)
-        {
-            return Unauthorized(new { message = "Invalid or expired login link" });
-        }
+        if (token == null) return Unauthorized(new { message = "Invalid or expired login link" });
 
         if (token.IsUsed)
         {
             var gracePeriod = TimeSpan.FromMinutes(2);
             if (token.UsedAt == null || DateTime.UtcNow - token.UsedAt.Value > gracePeriod)
-            {
                 return Unauthorized(new { message = "This login link has already been used" });
-            }
         }
 
-        if (token.ExpiresAt < DateTime.UtcNow)
-        {
-            return Unauthorized(new { message = "This login link has expired" });
-        }
+        if (token.ExpiresAt < DateTime.UtcNow) return Unauthorized(new { message = "This login link has expired" });
 
-        if (!token.User.IsActive)
-        {
-            return Unauthorized(new { message = "Account is disabled" });
-        }
+        if (!token.User.IsActive) return Unauthorized(new { message = "Account is disabled" });
 
-        if (!token.IsUsed)
-        {
-            token.UsedAt = DateTime.UtcNow;
-        }
+        if (!token.IsUsed) token.UsedAt = DateTime.UtcNow;
 
-        if (!token.User.IsEmailVerified)
-        {
-            token.User.IsEmailVerified = true;
-        }
+        if (!token.User.IsEmailVerified) token.User.IsEmailVerified = true;
 
         await _authService.UpdateUserAsync(token.User);
 
@@ -299,20 +266,12 @@ public class AuthController : ApiControllerBase
     {
         var token = await _authService.GetEmailVerificationTokenAsync(request.Token);
 
-        if (token == null)
-        {
-            return BadRequest(new { message = "Invalid verification link" });
-        }
+        if (token == null) return BadRequest(new { message = "Invalid verification link" });
 
-        if (token.IsUsed)
-        {
-            return BadRequest(new { message = "This verification link has already been used" });
-        }
+        if (token.IsUsed) return BadRequest(new { message = "This verification link has already been used" });
 
         if (token.ExpiresAt < DateTime.UtcNow)
-        {
             return BadRequest(new { message = "This verification link has expired" });
-        }
 
         token.UsedAt = DateTime.UtcNow;
         token.User.IsEmailVerified = true;
@@ -332,9 +291,8 @@ public class AuthController : ApiControllerBase
         var user = await _authService.GetUserByEmailAsync(email);
 
         if (user == null || user.IsEmailVerified || !user.IsActive)
-        {
-            return Ok(new { message = "If an unverified account exists with this email, a verification link has been sent." });
-        }
+            return Ok(new
+                { message = "If an unverified account exists with this email, a verification link has been sent." });
 
         var verificationToken = await _authService.CreateEmailVerificationTokenAsync(user.Id, email);
 
@@ -342,7 +300,8 @@ public class AuthController : ApiControllerBase
         var verificationUrl = $"{frontendUrl}/auth/verify-email?token={verificationToken.Token}";
         await _emailService.SendVerificationEmailAsync(email, verificationUrl, user.PreferredLanguage);
 
-        return Ok(new { message = "If an unverified account exists with this email, a verification link has been sent." });
+        return Ok(new
+            { message = "If an unverified account exists with this email, a verification link has been sent." });
     }
 
     [HttpPatch("profile")]
@@ -371,19 +330,13 @@ public class AuthController : ApiControllerBase
         if (user == null) return NotFound();
 
         if (user.PasswordHash == null)
-        {
             return BadRequest(new { message = "Cannot change password. Account uses external authentication only." });
-        }
 
         if (!_authService.VerifyPassword(request.CurrentPassword, user.PasswordHash))
-        {
             return BadRequest(new { message = "Current password is incorrect" });
-        }
 
         if (string.IsNullOrEmpty(request.NewPassword) || request.NewPassword.Length < 8)
-        {
             return BadRequest(new { message = "New password must be at least 8 characters" });
-        }
 
         user.PasswordHash = _authService.HashPassword(request.NewPassword);
         await _authService.UpdateUserAsync(user);
@@ -400,9 +353,7 @@ public class AuthController : ApiControllerBase
         var user = await _authService.GetUserWithExternalLoginsAsync(userId);
 
         if (!Enum.TryParse<MembershipTier>(request.Tier, true, out var tier))
-        {
             return BadRequest(new { message = "Invalid membership tier. Must be Free, Plus, or Pro." });
-        }
 
         user.MembershipTier = tier;
         await _authService.UpdateUserAsync(user);
@@ -447,9 +398,7 @@ public class AuthController : ApiControllerBase
         var user = await _authService.GetUserWithExternalLoginsAsync(userId);
 
         if (!Enum.TryParse<Language>(request.Language, true, out var language))
-        {
             return BadRequest(new { message = "Invalid language. Must be English or Danish." });
-        }
 
         user.PreferredLanguage = language;
         await _authService.UpdateUserAsync(user);
@@ -483,25 +432,13 @@ public class AuthController : ApiControllerBase
     {
         var token = await _authService.GetBuddyInviteTokenAsync(request.Token);
 
-        if (token == null)
-        {
-            return Unauthorized(new { message = "Invalid or expired invite link" });
-        }
+        if (token == null) return Unauthorized(new { message = "Invalid or expired invite link" });
 
-        if (token.UsedAt.HasValue)
-        {
-            return Unauthorized(new { message = "This invite link has already been used" });
-        }
+        if (token.UsedAt.HasValue) return Unauthorized(new { message = "This invite link has already been used" });
 
-        if (token.ExpiresAt < DateTime.UtcNow)
-        {
-            return Unauthorized(new { message = "This invite link has expired" });
-        }
+        if (token.ExpiresAt < DateTime.UtcNow) return Unauthorized(new { message = "This invite link has expired" });
 
-        if (!token.BuddyUser.IsActive)
-        {
-            return Unauthorized(new { message = "Account is disabled" });
-        }
+        if (!token.BuddyUser.IsActive) return Unauthorized(new { message = "Account is disabled" });
 
         token.UsedAt = DateTime.UtcNow;
         token.BuddyUser.HasCompletedOnboarding = true;
@@ -528,14 +465,10 @@ public class AuthController : ApiControllerBase
         if (user.PasswordHash != null)
         {
             if (string.IsNullOrEmpty(request.Password))
-            {
                 return BadRequest(new { message = "Password is required to delete your account" });
-            }
 
             if (!_authService.VerifyPassword(request.Password, user.PasswordHash))
-            {
                 return BadRequest(new { message = "Incorrect password" });
-            }
         }
 
         await _authService.DeleteAccountAsync(userId);

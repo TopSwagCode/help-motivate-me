@@ -1,6 +1,6 @@
-using System.Security.Claims;
 using System.Text.Json;
 using HelpMotivateMe.Core.DTOs.Ai;
+using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Core.Localization;
@@ -15,9 +15,9 @@ namespace HelpMotivateMe.Api.Controllers;
 [Authorize]
 public class AiController : ApiControllerBase
 {
-    private readonly IOpenAiService _openAiService;
-    private readonly ILogger<AiController> _logger;
     private readonly AppDbContext _db;
+    private readonly ILogger<AiController> _logger;
+    private readonly IOpenAiService _openAiService;
 
     public AiController(IOpenAiService openAiService, ILogger<AiController> logger, AppDbContext db)
     {
@@ -44,10 +44,10 @@ public class AiController : ApiControllerBase
             var systemPrompt = LocalizedPrompts.BuildSystemPrompt(request.Step, language, request.Context);
 
             await foreach (var chunk in _openAiService.StreamChatCompletionAsync(
-                request.Messages,
-                systemPrompt,
-                userId,
-                cancellationToken))
+                               request.Messages,
+                               systemPrompt,
+                               userId,
+                               cancellationToken))
             {
                 var json = JsonSerializer.Serialize(chunk);
                 await Response.WriteAsync($"data: {json}\n\n", cancellationToken);
@@ -77,16 +77,11 @@ public class AiController : ApiControllerBase
     {
         var userId = GetUserId();
 
-        if (file == null || file.Length == 0)
-        {
-            return BadRequest("No audio file provided");
-        }
+        if (file == null || file.Length == 0) return BadRequest("No audio file provided");
 
         var allowedTypes = new[] { "audio/webm", "audio/wav", "audio/mp3", "audio/mpeg", "audio/ogg", "audio/mp4" };
         if (!allowedTypes.Contains(file.ContentType.ToLower()))
-        {
             return BadRequest($"Unsupported audio format: {file.ContentType}");
-        }
 
         try
         {
@@ -107,8 +102,8 @@ public class AiController : ApiControllerBase
     }
 
     /// <summary>
-    /// Stream AI chat for general task/goal/habit creation.
-    /// Uses intent classification with confidence scores.
+    ///     Stream AI chat for general task/goal/habit creation.
+    ///     Uses intent classification with confidence scores.
     /// </summary>
     [HttpPost("general/chat")]
     public async Task StreamGeneralChat([FromBody] GeneralChatRequest request, CancellationToken cancellationToken)
@@ -140,10 +135,10 @@ public class AiController : ApiControllerBase
             var systemPrompt = LocalizedPrompts.BuildGeneralCreationPrompt(language, context);
 
             await foreach (var chunk in _openAiService.StreamChatCompletionAsync(
-                request.Messages,
-                systemPrompt,
-                userId,
-                cancellationToken))
+                               request.Messages,
+                               systemPrompt,
+                               userId,
+                               cancellationToken))
             {
                 var json = JsonSerializer.Serialize(chunk);
                 await Response.WriteAsync($"data: {json}\n\n", cancellationToken);
@@ -160,13 +155,15 @@ public class AiController : ApiControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error in general chat stream for user {UserId}", userId);
-            await Response.WriteAsync("data: {\"error\": \"An unexpected error occurred while processing the chat request.\"}\n\n", cancellationToken);
+            await Response.WriteAsync(
+                "data: {\"error\": \"An unexpected error occurred while processing the chat request.\"}\n\n",
+                cancellationToken);
             await Response.Body.FlushAsync(cancellationToken);
         }
     }
 
     /// <summary>
-    /// Get AI context data (user's identities and active goals) for enriching AI interactions.
+    ///     Get AI context data (user's identities and active goals) for enriching AI interactions.
     /// </summary>
     [HttpGet("context")]
     public async Task<ActionResult<AiContextResponse>> GetAiContext(CancellationToken cancellationToken)
@@ -187,17 +184,17 @@ public class AiController : ApiControllerBase
     }
 
     /// <summary>
-    /// Create identity from AI recommendation.
-    /// Used when AI suggests creating a new identity for a task/goal/habit.
+    ///     Create identity from AI recommendation.
+    ///     Used when AI suggests creating a new identity for a task/goal/habit.
     /// </summary>
     [HttpPost("general/create-identity")]
-    public async Task<ActionResult<Core.Entities.Identity>> CreateIdentityFromAi(
+    public async Task<ActionResult<Identity>> CreateIdentityFromAi(
         [FromBody] CreateIdentityFromAiRequest request,
         CancellationToken cancellationToken)
     {
         var userId = GetUserId();
 
-        var identity = new Core.Entities.Identity
+        var identity = new Identity
         {
             Id = Guid.NewGuid(),
             UserId = userId,

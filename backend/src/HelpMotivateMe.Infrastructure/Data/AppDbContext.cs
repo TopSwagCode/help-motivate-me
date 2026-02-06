@@ -32,7 +32,10 @@ public class AppDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<PushSubscription> PushSubscriptions => Set<PushSubscription>();
     public DbSet<AnalyticsEvent> AnalyticsEvents => Set<AnalyticsEvent>();
     public DbSet<DailyIdentityCommitment> DailyIdentityCommitments => Set<DailyIdentityCommitment>();
-    public DbSet<DailyCommitmentNotificationLog> DailyCommitmentNotificationLogs => Set<DailyCommitmentNotificationLog>();
+
+    public DbSet<DailyCommitmentNotificationLog> DailyCommitmentNotificationLogs =>
+        Set<DailyCommitmentNotificationLog>();
+
     public DbSet<IdentityProof> IdentityProofs => Set<IdentityProof>();
 
     // Milestone Engine
@@ -50,4 +53,3 @@ public class AppDbContext : DbContext, IDataProtectionKeyContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
     }
 }
-

@@ -17,13 +17,16 @@ public class DanishEmailTemplates : IEmailTemplates
         return EmailTemplateBase.WrapContent("Log ind på Help Motivate Me", content);
     }
 
-    public string GetLoginLinkTextBody(string loginUrl) => $@"Log ind på Help Motivate Me
+    public string GetLoginLinkTextBody(string loginUrl)
+    {
+        return $@"Log ind på Help Motivate Me
 
 Klik på linket nedenfor for at logge ind på din konto. Dette link udløber om 24 timer.
 
 {loginUrl}
 
 Hvis du ikke har anmodet om dette login-link, kan du trygt ignorere denne e-mail.";
+    }
 
     public string VerificationSubject => "Bekræft din e-mail - Help Motivate Me";
 
@@ -40,7 +43,9 @@ Hvis du ikke har anmodet om dette login-link, kan du trygt ignorere denne e-mail
         return EmailTemplateBase.WrapContent("Bekræft din e-mail", content);
     }
 
-    public string GetVerificationTextBody(string verificationUrl) => $@"Bekræft din e-mail
+    public string GetVerificationTextBody(string verificationUrl)
+    {
+        return $@"Bekræft din e-mail
 
 Tak fordi du oprettede en konto hos Help Motivate Me! Bekræft venligst din e-mailadresse for at fuldføre din registrering.
 
@@ -49,8 +54,12 @@ Klik på linket nedenfor for at bekræfte din e-mail:
 {verificationUrl}
 
 Dette link udløber om 24 timer. Hvis du ikke oprettede en konto, kan du trygt ignorere denne e-mail.";
+    }
 
-    public string GetBuddyInviteSubject(string inviterName) => $"{inviterName} vil have dig som deres ansvarsven!";
+    public string GetBuddyInviteSubject(string inviterName)
+    {
+        return $"{inviterName} vil have dig som deres ansvarsven!";
+    }
 
     public string GetBuddyInviteHtmlBody(string inviterName, string loginUrl)
     {
@@ -83,7 +92,9 @@ Dette link udløber om 24 timer. Hvis du ikke oprettede en konto, kan du trygt i
         return EmailTemplateBase.WrapContent("Du er blevet inviteret som ansvarsven!", content);
     }
 
-    public string GetBuddyInviteTextBody(string inviterName, string loginUrl) => $@"Du er blevet inviteret som ansvarsven!
+    public string GetBuddyInviteTextBody(string inviterName, string loginUrl)
+    {
+        return $@"Du er blevet inviteret som ansvarsven!
 
 {inviterName} har inviteret dig til at være deres ansvarsven på Help Motivate Me.
 
@@ -103,8 +114,12 @@ Klik her for at acceptere invitationen og se deres fremskridt:
 {loginUrl}
 
 Dette link udløber om 7 dage.";
+    }
 
-    public string GetBuddyJournalSubject(string buddyName) => $"{buddyName} har efterladt dig en opmuntrende note!";
+    public string GetBuddyJournalSubject(string buddyName)
+    {
+        return $"{buddyName} har efterladt dig en opmuntrende note!";
+    }
 
     public string GetBuddyJournalHtmlBody(string buddyName, string entryTitle, string journalUrl)
     {
@@ -122,7 +137,9 @@ Dette link udløber om 7 dage.";
         return EmailTemplateBase.WrapContent("Ny dagbogsindlæg fra din ven!", content);
     }
 
-    public string GetBuddyJournalTextBody(string buddyName, string entryTitle, string journalUrl) => $@"Ny dagbogsindlæg fra din ven!
+    public string GetBuddyJournalTextBody(string buddyName, string entryTitle, string journalUrl)
+    {
+        return $@"Ny dagbogsindlæg fra din ven!
 
 Din ansvarsven {buddyName} har skrevet i din dagbog:
 
@@ -132,6 +149,7 @@ Se hele indlægget her:
 {journalUrl}
 
 Bliv ved det gode arbejde! Din ven hepper på dig.";
+    }
 
     public string WaitlistSubject => "Du er på ventelisten! - Help Motivate Me";
 
@@ -160,7 +178,9 @@ Bliv ved det gode arbejde! Din ven hepper på dig.";
         return EmailTemplateBase.WrapContent("Du er på ventelisten!", content);
     }
 
-    public string GetWaitlistTextBody(string name) => $@"Du er på ventelisten!
+    public string GetWaitlistTextBody(string name)
+    {
+        return $@"Du er på ventelisten!
 
 Hej {name},
 
@@ -175,6 +195,7 @@ Vi sætter pris på din tålmodighed og glæder os til at byde dig velkommen sna
 
 Med venlig hilsen,
 Help Motivate Me-teamet";
+    }
 
     public string WhitelistSubject => "Du er blevet inviteret til Help Motivate Me!";
 
@@ -208,7 +229,9 @@ Help Motivate Me-teamet";
         return EmailTemplateBase.WrapContent("Velkommen til Help Motivate Me!", content);
     }
 
-    public string GetWhitelistTextBody(string loginUrl) => $@"Velkommen til Help Motivate Me!
+    public string GetWhitelistTextBody(string loginUrl)
+    {
+        return $@"Velkommen til Help Motivate Me!
 
 Gode nyheder! Du har fået adgang til Help Motivate Me.
 
@@ -224,4 +247,5 @@ Hvad du kan gøre med Help Motivate Me:
 
 Velkommen ombord!
 Help Motivate Me-teamet";
+    }
 }

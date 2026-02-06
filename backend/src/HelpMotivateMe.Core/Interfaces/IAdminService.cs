@@ -12,6 +12,7 @@ public interface IAdminService
     // Users
     Task<(List<AdminUserResponse> Users, int TotalCount)> GetUsersAsync(
         string? search, string? tier, bool? isActive, int page, int pageSize);
+
     Task<AdminUserResponse?> ToggleUserActiveAsync(Guid userId);
     Task<AdminUserResponse?> UpdateUserRoleAsync(Guid userId, string role);
     Task<UserActivityResponse?> GetUserActivityAsync(Guid userId);
@@ -19,14 +20,17 @@ public interface IAdminService
     // Waitlist
     Task<(List<WaitlistEntryResponse> Entries, int TotalCount)> GetWaitlistAsync(
         string? search, int page, int pageSize);
+
     Task<bool> RemoveFromWaitlistAsync(Guid id);
     Task<WhitelistEntryResponse?> ApproveWaitlistEntryAsync(Guid id, Guid? currentUserId);
 
     // Whitelist
     Task<(List<WhitelistEntryResponse> Entries, int TotalCount)> GetWhitelistAsync(
         string? search, int page, int pageSize);
+
     Task<(WhitelistEntryResponse? Entry, string? Error)> AddToWhitelistAsync(
         string email, Guid? currentUserId);
+
     Task<bool> RemoveFromWhitelistAsync(Guid id);
 
     // Analytics

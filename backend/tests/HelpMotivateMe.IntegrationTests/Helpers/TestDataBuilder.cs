@@ -89,8 +89,6 @@ public class TestDataBuilder
         int intervalValue = 1,
         DateOnly? startDate = null)
     {
-
-
         var task = new TaskItem
         {
             Id = Guid.NewGuid(),

@@ -10,8 +10,8 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/buddies")]
 public class AccountabilityBuddyController : ApiControllerBase
 {
-    private readonly IAccountabilityBuddyService _buddyService;
     private readonly IAnalyticsService _analyticsService;
+    private readonly IAccountabilityBuddyService _buddyService;
 
     public AccountabilityBuddyController(
         IAccountabilityBuddyService buddyService,
@@ -22,7 +22,7 @@ public class AccountabilityBuddyController : ApiControllerBase
     }
 
     /// <summary>
-    /// Get all buddy relationships - both my buddies and people I'm buddy for.
+    ///     Get all buddy relationships - both my buddies and people I'm buddy for.
     /// </summary>
     [HttpGet]
     public async Task<ActionResult<BuddyRelationshipsResponse>> GetBuddyRelationships()
@@ -42,7 +42,7 @@ public class AccountabilityBuddyController : ApiControllerBase
     }
 
     /// <summary>
-    /// Invite a new accountability buddy by email.
+    ///     Invite a new accountability buddy by email.
     /// </summary>
     [HttpPost("invite")]
     public async Task<ActionResult<BuddyResponse>> InviteBuddy([FromBody] InviteBuddyRequest request)
@@ -51,17 +51,14 @@ public class AccountabilityBuddyController : ApiControllerBase
 
         var result = await _buddyService.InviteBuddyAsync(userId, request.Email);
 
-        if (!result.Success)
-        {
-            return BadRequest(new { message = result.ErrorMessage });
-        }
+        if (!result.Success) return BadRequest(new { message = result.ErrorMessage });
 
         var buddy = result.Buddy!;
         return Ok(new BuddyResponse(buddy.Id, buddy.BuddyUserId, buddy.Email, buddy.DisplayName, buddy.CreatedAt));
     }
 
     /// <summary>
-    /// Remove one of my accountability buddies.
+    ///     Remove one of my accountability buddies.
     /// </summary>
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> RemoveBuddy(Guid id)
@@ -69,16 +66,13 @@ public class AccountabilityBuddyController : ApiControllerBase
         var userId = GetUserId();
 
         var success = await _buddyService.RemoveBuddyAsync(userId, id);
-        if (!success)
-        {
-            return NotFound(new { message = "Buddy relationship not found" });
-        }
+        if (!success) return NotFound(new { message = "Buddy relationship not found" });
 
         return NoContent();
     }
 
     /// <summary>
-    /// Leave as someone's accountability buddy (remove myself).
+    ///     Leave as someone's accountability buddy (remove myself).
     /// </summary>
     [HttpDelete("leave/{ownerUserId:guid}")]
     public async Task<IActionResult> LeaveBuddy(Guid ownerUserId)
@@ -86,33 +80,29 @@ public class AccountabilityBuddyController : ApiControllerBase
         var userId = GetUserId();
 
         var success = await _buddyService.LeaveBuddyAsync(userId, ownerUserId);
-        if (!success)
-        {
-            return NotFound(new { message = "Buddy relationship not found" });
-        }
+        if (!success) return NotFound(new { message = "Buddy relationship not found" });
 
         return NoContent();
     }
 
     /// <summary>
-    /// Get another user's Today view (as their accountability buddy).
+    ///     Get another user's Today view (as their accountability buddy).
     /// </summary>
     [HttpGet("{targetUserId:guid}/today")]
-    public async Task<ActionResult<BuddyTodayViewResponse>> GetBuddyTodayView(Guid targetUserId, [FromQuery] DateOnly? date = null)
+    public async Task<ActionResult<BuddyTodayViewResponse>> GetBuddyTodayView(Guid targetUserId,
+        [FromQuery] DateOnly? date = null)
     {
         var userId = GetUserId();
 
         // Verify buddy relationship exists
         var isBuddy = await _buddyService.IsBuddyForAsync(userId, targetUserId);
-        if (!isBuddy)
-        {
-            return Forbid();
-        }
+        if (!isBuddy) return Forbid();
 
         var targetDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
 
         var sessionId = GetSessionId();
-        await _analyticsService.LogEventAsync(userId, sessionId, "BuddyDetailLoaded", new { buddyUserId = targetUserId });
+        await _analyticsService.LogEventAsync(userId, sessionId, "BuddyDetailLoaded",
+            new { buddyUserId = targetUserId });
 
         var data = await _buddyService.GetBuddyTodayViewAsync(targetUserId, targetDate);
 
@@ -128,7 +118,7 @@ public class AccountabilityBuddyController : ApiControllerBase
     }
 
     /// <summary>
-    /// Get another user's journal entries (as their accountability buddy).
+    ///     Get another user's journal entries (as their accountability buddy).
     /// </summary>
     [HttpGet("{targetUserId:guid}/journal")]
     public async Task<ActionResult<List<BuddyJournalEntryResponse>>> GetBuddyJournal(Guid targetUserId)
@@ -136,10 +126,7 @@ public class AccountabilityBuddyController : ApiControllerBase
         var userId = GetUserId();
 
         var isBuddy = await _buddyService.IsBuddyForAsync(userId, targetUserId);
-        if (!isBuddy)
-        {
-            return Forbid();
-        }
+        if (!isBuddy) return Forbid();
 
         var entries = await _buddyService.GetBuddyJournalAsync(targetUserId);
 
@@ -151,7 +138,8 @@ public class AccountabilityBuddyController : ApiControllerBase
             j.AuthorUserId,
             j.AuthorDisplayName,
             j.Images.Select(i => new BuddyJournalImageResponse(i.Id, i.FileName, i.Url, i.SortOrder)).ToList(),
-            j.Reactions.Select(r => new BuddyJournalReactionResponse(r.Id, r.Emoji, r.UserId, r.UserDisplayName, r.CreatedAt)).ToList(),
+            j.Reactions.Select(r =>
+                new BuddyJournalReactionResponse(r.Id, r.Emoji, r.UserId, r.UserDisplayName, r.CreatedAt)).ToList(),
             j.CreatedAt
         )).ToList();
 
@@ -159,7 +147,7 @@ public class AccountabilityBuddyController : ApiControllerBase
     }
 
     /// <summary>
-    /// Write a journal entry for another user (as their accountability buddy).
+    ///     Write a journal entry for another user (as their accountability buddy).
     /// </summary>
     [HttpPost("{targetUserId:guid}/journal")]
     public async Task<ActionResult<BuddyJournalEntryResponse>> CreateBuddyJournalEntry(
@@ -169,10 +157,7 @@ public class AccountabilityBuddyController : ApiControllerBase
         var userId = GetUserId();
 
         var isBuddy = await _buddyService.IsBuddyForAsync(userId, targetUserId);
-        if (!isBuddy)
-        {
-            return Forbid();
-        }
+        if (!isBuddy) return Forbid();
 
         var entry = await _buddyService.CreateBuddyJournalEntryAsync(
             userId, targetUserId, request.Title, request.Description, request.EntryDate);
@@ -185,13 +170,14 @@ public class AccountabilityBuddyController : ApiControllerBase
             entry.AuthorUserId,
             entry.AuthorDisplayName,
             entry.Images.Select(i => new BuddyJournalImageResponse(i.Id, i.FileName, i.Url, i.SortOrder)).ToList(),
-            entry.Reactions.Select(r => new BuddyJournalReactionResponse(r.Id, r.Emoji, r.UserId, r.UserDisplayName, r.CreatedAt)).ToList(),
+            entry.Reactions.Select(r =>
+                new BuddyJournalReactionResponse(r.Id, r.Emoji, r.UserId, r.UserDisplayName, r.CreatedAt)).ToList(),
             entry.CreatedAt
         ));
     }
 
     /// <summary>
-    /// Upload an image to a buddy's journal entry (only if you authored the entry).
+    ///     Upload an image to a buddy's journal entry (only if you authored the entry).
     /// </summary>
     [HttpPost("{targetUserId:guid}/journal/{entryId:guid}/images")]
     public async Task<ActionResult<BuddyJournalImageResponse>> UploadBuddyJournalImage(
@@ -202,28 +188,17 @@ public class AccountabilityBuddyController : ApiControllerBase
         var userId = GetUserId();
 
         var isBuddy = await _buddyService.IsBuddyForAsync(userId, targetUserId);
-        if (!isBuddy)
-        {
-            return Forbid();
-        }
+        if (!isBuddy) return Forbid();
 
         // Validate file
-        if (file == null || file.Length == 0)
-        {
-            return BadRequest(new { message = "No file provided or file is empty" });
-        }
+        if (file == null || file.Length == 0) return BadRequest(new { message = "No file provided or file is empty" });
 
         const long maxFileSize = 5 * 1024 * 1024; // 5MB
-        if (file.Length > maxFileSize)
-        {
-            return BadRequest(new { message = $"File too large. Maximum size: 5MB" });
-        }
+        if (file.Length > maxFileSize) return BadRequest(new { message = "File too large. Maximum size: 5MB" });
 
         var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
         if (!allowedTypes.Contains(file.ContentType))
-        {
             return BadRequest(new { message = "Invalid file type. Allowed: JPEG, PNG, GIF, WebP" });
-        }
 
         using var stream = file.OpenReadStream();
         var result = await _buddyService.UploadBuddyJournalImageAsync(
@@ -243,7 +218,7 @@ public class AccountabilityBuddyController : ApiControllerBase
     }
 
     /// <summary>
-    /// Add a reaction to a buddy's journal entry.
+    ///     Add a reaction to a buddy's journal entry.
     /// </summary>
     [HttpPost("{targetUserId:guid}/journal/{entryId:guid}/reactions")]
     public async Task<ActionResult<BuddyJournalReactionResponse>> AddBuddyJournalReaction(
@@ -254,10 +229,7 @@ public class AccountabilityBuddyController : ApiControllerBase
         var userId = GetUserId();
 
         var isBuddy = await _buddyService.IsBuddyForAsync(userId, targetUserId);
-        if (!isBuddy)
-        {
-            return Forbid();
-        }
+        if (!isBuddy) return Forbid();
 
         var result = await _buddyService.AddBuddyJournalReactionAsync(userId, targetUserId, entryId, request.Emoji);
 
@@ -269,11 +241,12 @@ public class AccountabilityBuddyController : ApiControllerBase
         }
 
         var reaction = result.Reaction!;
-        return Ok(new BuddyJournalReactionResponse(reaction.Id, reaction.Emoji, reaction.UserId, reaction.UserDisplayName, reaction.CreatedAt));
+        return Ok(new BuddyJournalReactionResponse(reaction.Id, reaction.Emoji, reaction.UserId,
+            reaction.UserDisplayName, reaction.CreatedAt));
     }
 
     /// <summary>
-    /// Remove a reaction from a buddy's journal entry (only own reactions).
+    ///     Remove a reaction from a buddy's journal entry (only own reactions).
     /// </summary>
     [HttpDelete("{targetUserId:guid}/journal/{entryId:guid}/reactions/{reactionId:guid}")]
     public async Task<IActionResult> RemoveBuddyJournalReaction(
@@ -284,16 +257,10 @@ public class AccountabilityBuddyController : ApiControllerBase
         var userId = GetUserId();
 
         var isBuddy = await _buddyService.IsBuddyForAsync(userId, targetUserId);
-        if (!isBuddy)
-        {
-            return Forbid();
-        }
+        if (!isBuddy) return Forbid();
 
         var success = await _buddyService.RemoveBuddyJournalReactionAsync(userId, entryId, reactionId);
-        if (!success)
-        {
-            return NotFound();
-        }
+        if (!success) return NotFound();
 
         return NoContent();
     }

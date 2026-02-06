@@ -8,9 +8,13 @@ public class EnglishPushNotificationMessages : IPushNotificationMessages
 
     // Daily Identity Commitment - Afternoon (Gentle reminder)
     public string AfternoonReminderTitle => "One small action proves who you are";
-    public string AfternoonReminderBody => "You haven't completed your daily commitment yet. Still time to show up as who you want to be.";
+
+    public string AfternoonReminderBody =>
+        "You haven't completed your daily commitment yet. Still time to show up as who you want to be.";
 
     // Daily Identity Commitment - Evening (Reflection prompt)
     public string EveningReflectionTitle => "Did you show up as who you wanted to be?";
-    public string EveningReflectionBody => "Take a moment to reflect on your day and celebrate any progress, no matter how small.";
+
+    public string EveningReflectionBody =>
+        "Take a moment to reflect on your day and celebrate any progress, no matter how small.";
 }

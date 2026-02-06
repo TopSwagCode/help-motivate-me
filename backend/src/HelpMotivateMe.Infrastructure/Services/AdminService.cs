@@ -10,26 +10,26 @@ using Microsoft.Extensions.Configuration;
 namespace HelpMotivateMe.Infrastructure.Services;
 
 /// <summary>
-/// Service for admin operations including user management, waitlist/whitelist,
-/// analytics, and AI usage tracking.
+///     Service for admin operations including user management, waitlist/whitelist,
+///     analytics, and AI usage tracking.
 /// </summary>
 public class AdminService : IAdminService
 {
-    private readonly AppDbContext _db;
-    private readonly IQueryInterface<User> _users;
-    private readonly IQueryInterface<TaskItem> _taskItems;
+    private readonly IAiBudgetService _aiBudgetService;
     private readonly IQueryInterface<AiUsageLog> _aiUsageLogs;
+    private readonly IQueryInterface<AnalyticsEvent> _analyticsEvents;
+    private readonly IConfiguration _configuration;
+    private readonly AppDbContext _db;
+    private readonly IEmailService _emailService;
+    private readonly IQueryInterface<Goal> _goals;
+    private readonly IQueryInterface<HabitStackItemCompletion> _habitCompletions;
+    private readonly IQueryInterface<HabitStack> _habitStacks;
+    private readonly IQueryInterface<Identity> _identitiesQuery;
+    private readonly IQueryInterface<JournalEntry> _journalEntries;
+    private readonly IQueryInterface<TaskItem> _taskItems;
+    private readonly IQueryInterface<User> _users;
     private readonly IQueryInterface<WaitlistEntry> _waitlistEntries;
     private readonly IQueryInterface<WhitelistEntry> _whitelistEntries;
-    private readonly IQueryInterface<AnalyticsEvent> _analyticsEvents;
-    private readonly IQueryInterface<Goal> _goals;
-    private readonly IQueryInterface<Identity> _identitiesQuery;
-    private readonly IQueryInterface<HabitStack> _habitStacks;
-    private readonly IQueryInterface<HabitStackItemCompletion> _habitCompletions;
-    private readonly IQueryInterface<JournalEntry> _journalEntries;
-    private readonly IConfiguration _configuration;
-    private readonly IEmailService _emailService;
-    private readonly IAiBudgetService _aiBudgetService;
 
     public AdminService(
         AppDbContext db,
@@ -78,25 +78,25 @@ public class AdminService : IAdminService
             .CountAsync(u => u.UpdatedAt >= today && u.UpdatedAt < tomorrow);
 
         var membershipStats = new MembershipStats(
-            FreeUsers: await _users.CountAsync(u => u.MembershipTier == MembershipTier.Free),
-            PlusUsers: await _users.CountAsync(u => u.MembershipTier == MembershipTier.Plus),
-            ProUsers: await _users.CountAsync(u => u.MembershipTier == MembershipTier.Pro)
+            await _users.CountAsync(u => u.MembershipTier == MembershipTier.Free),
+            await _users.CountAsync(u => u.MembershipTier == MembershipTier.Plus),
+            await _users.CountAsync(u => u.MembershipTier == MembershipTier.Pro)
         );
 
         var totalTasksCreated = await _taskItems.CountAsync();
         var totalTasksCompleted = await _taskItems.CountAsync(t => t.CompletedAt != null);
 
         var taskTotals = new TaskTotals(
-            TotalTasksCreated: totalTasksCreated,
-            TotalTasksCompleted: totalTasksCompleted
+            totalTasksCreated,
+            totalTasksCompleted
         );
 
         return new AdminStatsResponse(
-            TotalUsers: totalUsers,
-            ActiveUsers: activeUsers,
-            UsersLoggedInToday: usersLoggedInToday,
-            MembershipStats: membershipStats,
-            TaskTotals: taskTotals
+            totalUsers,
+            activeUsers,
+            usersLoggedInToday,
+            membershipStats,
+            taskTotals
         );
     }
 
@@ -113,10 +113,10 @@ public class AdminService : IAdminService
             .CountAsync(t => t.DueDate == targetDate);
 
         return new DailyStatsResponse(
-            Date: targetDate.ToString("yyyy-MM-dd"),
-            TasksCreated: tasksCreated,
-            TasksCompleted: tasksCompleted,
-            TasksDue: tasksDue
+            targetDate.ToString("yyyy-MM-dd"),
+            tasksCreated,
+            tasksCompleted,
+            tasksDue
         );
     }
 
@@ -136,14 +136,9 @@ public class AdminService : IAdminService
         }
 
         if (!string.IsNullOrWhiteSpace(tier) && Enum.TryParse<MembershipTier>(tier, true, out var membershipTier))
-        {
             query = query.Where(u => u.MembershipTier == membershipTier);
-        }
 
-        if (isActive.HasValue)
-        {
-            query = query.Where(u => u.IsActive == isActive.Value);
-        }
+        if (isActive.HasValue) query = query.Where(u => u.IsActive == isActive.Value);
 
         var totalCount = await query.CountAsync();
 
@@ -238,11 +233,14 @@ public class AdminService : IAdminService
         var tasksCompletedLastWeek = await _taskItems
             .Where(t => t.Goal.UserId == userId && t.CompletedAt >= lastWeekStartDate).CountAsync();
         var goalsCreatedLastWeek = await _goals.CountAsync(g => g.UserId == userId && g.CreatedAt >= lastWeekStart);
-        var identitiesCreatedLastWeek = await _identitiesQuery.CountAsync(i => i.UserId == userId && i.CreatedAt >= lastWeekStart);
-        var habitStacksCreatedLastWeek = await _habitStacks.CountAsync(hs => hs.UserId == userId && hs.CreatedAt >= lastWeekStart);
+        var identitiesCreatedLastWeek =
+            await _identitiesQuery.CountAsync(i => i.UserId == userId && i.CreatedAt >= lastWeekStart);
+        var habitStacksCreatedLastWeek =
+            await _habitStacks.CountAsync(hs => hs.UserId == userId && hs.CreatedAt >= lastWeekStart);
         var habitCompletionsLastWeek = await _habitCompletions
             .Where(hc => hc.HabitStackItem.HabitStack.UserId == userId && hc.CompletedAt >= lastWeekStart).CountAsync();
-        var journalEntriesLastWeek = await _journalEntries.CountAsync(j => j.UserId == userId && j.CreatedAt >= lastWeekStart);
+        var journalEntriesLastWeek =
+            await _journalEntries.CountAsync(j => j.UserId == userId && j.CreatedAt >= lastWeekStart);
         var aiStatsLastWeek = await _aiUsageLogs
             .Where(a => a.UserId == userId && a.CreatedAt >= lastWeekStart)
             .GroupBy(a => a.UserId)
@@ -251,11 +249,13 @@ public class AdminService : IAdminService
 
         // Total (all time) stats
         var tasksCreatedTotal = await _taskItems.Where(t => t.Goal.UserId == userId).CountAsync();
-        var tasksCompletedTotal = await _taskItems.Where(t => t.Goal.UserId == userId && t.CompletedAt != null).CountAsync();
+        var tasksCompletedTotal =
+            await _taskItems.Where(t => t.Goal.UserId == userId && t.CompletedAt != null).CountAsync();
         var goalsCreatedTotal = await _goals.CountAsync(g => g.UserId == userId);
         var identitiesCreatedTotal = await _identitiesQuery.CountAsync(i => i.UserId == userId);
         var habitStacksCreatedTotal = await _habitStacks.CountAsync(hs => hs.UserId == userId);
-        var habitCompletionsTotal = await _habitCompletions.Where(hc => hc.HabitStackItem.HabitStack.UserId == userId).CountAsync();
+        var habitCompletionsTotal =
+            await _habitCompletions.Where(hc => hc.HabitStackItem.HabitStack.UserId == userId).CountAsync();
         var journalEntriesTotal = await _journalEntries.CountAsync(j => j.UserId == userId);
         var aiStatsTotal = await _aiUsageLogs
             .Where(a => a.UserId == userId)
@@ -265,12 +265,12 @@ public class AdminService : IAdminService
 
         return new UserActivityResponse(
             user.Id, user.Email,
-            LastWeek: new UserActivityPeriod(
+            new UserActivityPeriod(
                 tasksCreatedLastWeek, tasksCompletedLastWeek, goalsCreatedLastWeek,
                 identitiesCreatedLastWeek, habitStacksCreatedLastWeek, habitCompletionsLastWeek,
                 journalEntriesLastWeek, aiStatsLastWeek?.CallsCount ?? 0, aiStatsLastWeek?.TotalCost ?? 0m
             ),
-            Total: new UserActivityPeriod(
+            new UserActivityPeriod(
                 tasksCreatedTotal, tasksCompletedTotal, goalsCreatedTotal,
                 identitiesCreatedTotal, habitStacksCreatedTotal, habitCompletionsTotal,
                 journalEntriesTotal, aiStatsTotal?.CallsCount ?? 0, aiStatsTotal?.TotalCost ?? 0m
@@ -358,7 +358,8 @@ public class AdminService : IAdminService
         await _db.SaveChangesAsync();
 
         // Send invite email
-        var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
+        var frontendUrl = _configuration["FrontendUrl"] ??
+                          _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
         var loginUrl = $"{frontendUrl}/auth/login";
         await _emailService.SendWhitelistInviteAsync(waitlistEntry.Email, loginUrl, Language.English);
 
@@ -424,7 +425,8 @@ public class AdminService : IAdminService
         await _db.SaveChangesAsync();
 
         // Send invite email
-        var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
+        var frontendUrl = _configuration["FrontendUrl"] ??
+                          _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
         var loginUrl = $"{frontendUrl}/auth/login";
         await _emailService.SendWhitelistInviteAsync(email, loginUrl, Language.English);
 
@@ -487,7 +489,8 @@ public class AdminService : IAdminService
             .OrderBy(x => x.Date)
             .ToListAsync();
 
-        var dailyEvents = dailyEventCounts.Select(x => new DailyEventCount(x.Date.ToString("yyyy-MM-dd"), x.Count)).ToList();
+        var dailyEvents = dailyEventCounts.Select(x => new DailyEventCount(x.Date.ToString("yyyy-MM-dd"), x.Count))
+            .ToList();
 
         var recentSessionsRaw = await _analyticsEvents
             .Where(e => e.CreatedAt >= startDate)

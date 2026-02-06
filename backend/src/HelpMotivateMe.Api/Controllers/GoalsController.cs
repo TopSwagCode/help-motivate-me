@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.Goals;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
@@ -14,9 +13,9 @@ namespace HelpMotivateMe.Api.Controllers;
 [Authorize]
 public class GoalsController : ApiControllerBase
 {
+    private readonly IAnalyticsService _analyticsService;
     private readonly AppDbContext _db;
     private readonly IQueryInterface<Goal> _goalsQuery;
-    private readonly IAnalyticsService _analyticsService;
 
     public GoalsController(AppDbContext db, IQueryInterface<Goal> goalsQuery, IAnalyticsService analyticsService)
     {
@@ -57,10 +56,7 @@ public class GoalsController : ApiControllerBase
             .Include(g => g.Identity)
             .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
 
-        if (goal == null)
-        {
-            return NotFound();
-        }
+        if (goal == null) return NotFound();
 
         return Ok(MapToResponse(goal));
     }
@@ -92,10 +88,7 @@ public class GoalsController : ApiControllerBase
         await _analyticsService.LogEventAsync(userId, sessionId, "GoalCreated", new { goalId = goal.Id });
 
         // Load identity for response
-        if (goal.IdentityId.HasValue)
-        {
-            await _db.Entry(goal).Reference(g => g.Identity).LoadAsync();
-        }
+        if (goal.IdentityId.HasValue) await _db.Entry(goal).Reference(g => g.Identity).LoadAsync();
 
         return CreatedAtAction(nameof(GetGoal), new { id = goal.Id }, MapToResponse(goal));
     }
@@ -110,10 +103,7 @@ public class GoalsController : ApiControllerBase
             .Include(g => g.Identity)
             .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
 
-        if (goal == null)
-        {
-            return NotFound();
-        }
+        if (goal == null) return NotFound();
 
         goal.Title = request.Title;
         goal.Description = request.Description;
@@ -124,10 +114,7 @@ public class GoalsController : ApiControllerBase
         await _db.SaveChangesAsync();
 
         // Reload identity if changed
-        if (goal.IdentityId.HasValue)
-        {
-            await _db.Entry(goal).Reference(g => g.Identity).LoadAsync();
-        }
+        if (goal.IdentityId.HasValue) await _db.Entry(goal).Reference(g => g.Identity).LoadAsync();
 
         return Ok(MapToResponse(goal));
     }
@@ -140,10 +127,7 @@ public class GoalsController : ApiControllerBase
         var goal = await _db.Goals
             .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
 
-        if (goal == null)
-        {
-            return NotFound();
-        }
+        if (goal == null) return NotFound();
 
         _db.Goals.Remove(goal);
         await _db.SaveChangesAsync();
@@ -152,7 +136,7 @@ public class GoalsController : ApiControllerBase
     }
 
     /// <summary>
-    /// Toggle completion for a goal on a specific date (defaults to client's current date if not provided).
+    ///     Toggle completion for a goal on a specific date (defaults to client's current date if not provided).
     /// </summary>
     [HttpPatch("{id:guid}/complete")]
     public async Task<ActionResult<GoalResponse>> CompleteGoal(Guid id, [FromQuery] DateOnly? date = null)
@@ -165,13 +149,12 @@ public class GoalsController : ApiControllerBase
             .Include(g => g.Identity)
             .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
 
-        if (goal == null)
-        {
-            return NotFound();
-        }
+        if (goal == null) return NotFound();
 
         goal.IsCompleted = !goal.IsCompleted;
-        goal.CompletedAt = goal.IsCompleted ? DateTime.SpecifyKind(targetDate.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc) : null;
+        goal.CompletedAt = goal.IsCompleted
+            ? DateTime.SpecifyKind(targetDate.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc)
+            : null;
         goal.UpdatedAt = DateTime.UtcNow;
 
         await _db.SaveChangesAsync();
@@ -197,10 +180,7 @@ public class GoalsController : ApiControllerBase
         for (var i = 0; i < goalIds.Count; i++)
         {
             var goal = goals.FirstOrDefault(g => g.Id == goalIds[i]);
-            if (goal != null)
-            {
-                goal.SortOrder = i;
-            }
+            if (goal != null) goal.SortOrder = i;
         }
 
         await _db.SaveChangesAsync();

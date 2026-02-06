@@ -6,8 +6,6 @@ public class DatabaseFixture : IAsyncLifetime
 {
     private readonly PostgreSqlContainer _postgresContainer;
 
-    public string ConnectionString => _postgresContainer.GetConnectionString();
-
     public DatabaseFixture()
     {
         _postgresContainer = new PostgreSqlBuilder()
@@ -17,6 +15,8 @@ public class DatabaseFixture : IAsyncLifetime
             .WithPassword("testpassword")
             .Build();
     }
+
+    public string ConnectionString => _postgresContainer.GetConnectionString();
 
     public async Task InitializeAsync()
     {

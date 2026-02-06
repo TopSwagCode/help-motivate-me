@@ -1,7 +1,7 @@
 namespace HelpMotivateMe.Core.Entities;
 
 /// <summary>
-/// Tracks awarded milestones for users. Once awarded, never revoked.
+///     Tracks awarded milestones for users. Once awarded, never revoked.
 /// </summary>
 public class UserMilestone
 {

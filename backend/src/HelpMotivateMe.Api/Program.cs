@@ -1,15 +1,11 @@
 using System.Security.Claims;
-using AspNet.Security.OAuth.GitHub;
-using AspNet.Security.OAuth.LinkedIn;
-using Microsoft.AspNetCore.Authentication.Facebook;
-using Microsoft.AspNetCore.Authentication.Google;
+using System.Text.Json.Serialization;
+using HelpMotivateMe.Api.Services;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Core.Localization.EmailTemplates;
 using HelpMotivateMe.Core.Options;
 using HelpMotivateMe.Infrastructure.Data;
-using HelpMotivateMe.Api.Services;
 using HelpMotivateMe.Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -119,12 +115,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
-            ?? ["http://localhost:5173"];
+                             ?? ["http://localhost:5173"];
 
         policy.WithOrigins(allowedOrigins)
-              .AllowCredentials()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+            .AllowCredentials()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 
@@ -202,10 +198,7 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
-    });
+    .AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -222,17 +215,12 @@ app.Use(async (context, next) =>
     // If not localhost and not already HTTPS, force HTTPS scheme
     if (!context.Request.Host.Host.Contains("localhost") &&
         context.Request.Scheme != "https")
-    {
         context.Request.Scheme = "https";
-    }
     await next();
 });
 
 // Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+if (app.Environment.IsDevelopment()) app.MapOpenApi();
 
 // Don't use HTTPS redirection when behind a proxy (Traefik/ngrok handles HTTPS)
 // app.UseHttpsRedirection();
@@ -266,17 +254,18 @@ app.RunPeriodicBackgroundWorker(TimeSpan.FromMinutes(5), async (ILogger<Program>
 
 // Background Worker - Daily Identity Commitment Notifications
 app.RunPeriodicBackgroundWorker(TimeSpan.FromMinutes(5),
-    async (CancellationToken ct, IDailyCommitmentNotificationService service, ILogger<Program> logger) =>
-{
-    logger.LogInformation("Daily commitment notification worker executing at {Time}", DateTime.UtcNow);
-    var sentCount = await service.ProcessEligibleUsersAsync(ct);
-    logger.LogInformation("Daily commitment notification worker completed. Sent {SentCount} notifications", sentCount);
-})
-.WithName("daily-commitment-notifications")
-.WithErrorHandler(ex =>
-{
-    var logger = app.Services.GetRequiredService<ILogger<Program>>();
-    logger.LogError(ex, "Error in daily commitment notification worker");
-});
+        async (CancellationToken ct, IDailyCommitmentNotificationService service, ILogger<Program> logger) =>
+        {
+            logger.LogInformation("Daily commitment notification worker executing at {Time}", DateTime.UtcNow);
+            var sentCount = await service.ProcessEligibleUsersAsync(ct);
+            logger.LogInformation("Daily commitment notification worker completed. Sent {SentCount} notifications",
+                sentCount);
+        })
+    .WithName("daily-commitment-notifications")
+    .WithErrorHandler(ex =>
+    {
+        var logger = app.Services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Error in daily commitment notification worker");
+    });
 
 app.Run();

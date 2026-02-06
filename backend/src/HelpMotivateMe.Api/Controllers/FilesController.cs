@@ -8,13 +8,13 @@ namespace HelpMotivateMe.Api.Controllers;
 public class FilesController : ControllerBase
 {
     private readonly string _basePath;
-    private readonly ILogger<FilesController> _logger;
     private readonly FileExtensionContentTypeProvider _contentTypeProvider;
+    private readonly ILogger<FilesController> _logger;
 
     public FilesController(IConfiguration configuration, ILogger<FilesController> logger)
     {
         _basePath = configuration["LocalStorage:BasePath"]
-            ?? throw new InvalidOperationException("LocalStorage:BasePath not configured");
+                    ?? throw new InvalidOperationException("LocalStorage:BasePath not configured");
         _logger = logger;
         _contentTypeProvider = new FileExtensionContentTypeProvider();
     }
@@ -22,10 +22,7 @@ public class FilesController : ControllerBase
     [HttpGet("{*filepath}")]
     public IActionResult GetFile(string filepath)
     {
-        if (string.IsNullOrWhiteSpace(filepath))
-        {
-            return BadRequest("File path is required");
-        }
+        if (string.IsNullOrWhiteSpace(filepath)) return BadRequest("File path is required");
 
         // Strip any existing api/files/ prefix to handle legacy data with bad keys
         var cleanPath = filepath.StartsWith("api/files/") ? filepath.Substring("api/files/".Length) : filepath;
@@ -53,11 +50,9 @@ public class FilesController : ControllerBase
         {
             // Determine content type
             if (!_contentTypeProvider.TryGetContentType(fullPath, out var contentType))
-            {
                 contentType = "application/octet-stream";
-            }
 
-            return PhysicalFile(fullPath, contentType, enableRangeProcessing: true);
+            return PhysicalFile(fullPath, contentType, true);
         }
         catch (Exception ex)
         {

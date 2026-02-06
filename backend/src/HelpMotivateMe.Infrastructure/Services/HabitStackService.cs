@@ -15,17 +15,15 @@ public class HabitStackService : IHabitStackService
         _db = db;
     }
 
-    public async Task<HabitStackItemCompletionResult?> ToggleItemCompletionAsync(Guid itemId, Guid userId, DateOnly targetDate)
+    public async Task<HabitStackItemCompletionResult?> ToggleItemCompletionAsync(Guid itemId, Guid userId,
+        DateOnly targetDate)
     {
         var item = await _db.HabitStackItems
             .Include(i => i.HabitStack)
             .Include(i => i.Completions)
             .FirstOrDefaultAsync(i => i.Id == itemId && i.HabitStack.UserId == userId);
 
-        if (item == null)
-        {
-            return null;
-        }
+        if (item == null) return null;
 
         var existingCompletion = item.Completions.FirstOrDefault(c => c.CompletedDate == targetDate);
         var wasNewlyCompleted = existingCompletion == null;
@@ -73,13 +71,10 @@ public class HabitStackService : IHabitStackService
     {
         var stack = await _db.HabitStacks
             .Include(hs => hs.Items)
-                .ThenInclude(i => i.Completions)
+            .ThenInclude(i => i.Completions)
             .FirstOrDefaultAsync(hs => hs.Id == stackId && hs.UserId == userId);
 
-        if (stack == null)
-        {
-            return null;
-        }
+        if (stack == null) return null;
 
         var completedCount = 0;
 
@@ -121,19 +116,12 @@ public class HabitStackService : IHabitStackService
         var hadCompletionYesterday = item.Completions.Any(c => c.CompletedDate == yesterday);
 
         if (hadCompletionYesterday || item.CurrentStreak == 0)
-        {
             item.CurrentStreak++;
-        }
         else
-        {
             // Gap in streak, reset to 1
             item.CurrentStreak = 1;
-        }
 
-        if (item.CurrentStreak > item.LongestStreak)
-        {
-            item.LongestStreak = item.CurrentStreak;
-        }
+        if (item.CurrentStreak > item.LongestStreak) item.LongestStreak = item.CurrentStreak;
     }
 
     public void RecalculateStreak(HabitStackItem item, DateOnly removedDate)

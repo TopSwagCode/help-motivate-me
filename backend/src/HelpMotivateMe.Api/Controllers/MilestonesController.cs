@@ -17,7 +17,7 @@ public class MilestonesController : ApiControllerBase
     }
 
     /// <summary>
-    /// Get all milestones awarded to the current user.
+    ///     Get all milestones awarded to the current user.
     /// </summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UserMilestoneResponse>>> GetMilestones()
@@ -28,7 +28,7 @@ public class MilestonesController : ApiControllerBase
     }
 
     /// <summary>
-    /// Get unseen milestones for the current user.
+    ///     Get unseen milestones for the current user.
     /// </summary>
     [HttpGet("unseen")]
     public async Task<ActionResult<IEnumerable<UserMilestoneResponse>>> GetUnseenMilestones()
@@ -39,7 +39,7 @@ public class MilestonesController : ApiControllerBase
     }
 
     /// <summary>
-    /// Mark milestones as seen.
+    ///     Mark milestones as seen.
     /// </summary>
     [HttpPost("mark-seen")]
     public async Task<IActionResult> MarkSeen([FromBody] MarkSeenRequest request)
@@ -50,7 +50,7 @@ public class MilestonesController : ApiControllerBase
     }
 
     /// <summary>
-    /// Get user stats.
+    ///     Get user stats.
     /// </summary>
     [HttpGet("stats")]
     public async Task<ActionResult<UserStatsResponse>> GetStats()
@@ -61,7 +61,7 @@ public class MilestonesController : ApiControllerBase
     }
 
     /// <summary>
-    /// Get all milestone definitions (admin only).
+    ///     Get all milestone definitions (admin only).
     /// </summary>
     [HttpGet("definitions")]
     [Authorize(Roles = "Admin")]
@@ -72,60 +72,53 @@ public class MilestonesController : ApiControllerBase
     }
 
     /// <summary>
-    /// Create a new milestone definition (admin only).
+    ///     Create a new milestone definition (admin only).
     /// </summary>
     [HttpPost("definitions")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<MilestoneDefinitionResponse>> CreateDefinition([FromBody] CreateMilestoneRequest request)
+    public async Task<ActionResult<MilestoneDefinitionResponse>> CreateDefinition(
+        [FromBody] CreateMilestoneRequest request)
     {
         var definition = await _milestoneService.CreateDefinitionAsync(request);
         return CreatedAtAction(nameof(GetDefinitions), new { id = definition.Id }, definition);
     }
 
     /// <summary>
-    /// Update a milestone definition (admin only).
+    ///     Update a milestone definition (admin only).
     /// </summary>
     [HttpPut("definitions/{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<MilestoneDefinitionResponse>> UpdateDefinition(Guid id, [FromBody] UpdateMilestoneRequest request)
+    public async Task<ActionResult<MilestoneDefinitionResponse>> UpdateDefinition(Guid id,
+        [FromBody] UpdateMilestoneRequest request)
     {
         var definition = await _milestoneService.UpdateDefinitionAsync(id, request);
-        if (definition == null)
-        {
-            return NotFound();
-        }
+        if (definition == null) return NotFound();
 
         return Ok(definition);
     }
 
     /// <summary>
-    /// Toggle milestone active status (admin only).
+    ///     Toggle milestone active status (admin only).
     /// </summary>
     [HttpPatch("definitions/{id}/toggle")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> ToggleDefinition(Guid id, [FromBody] ToggleMilestoneRequest request)
     {
         var success = await _milestoneService.ToggleDefinitionAsync(id, request.IsActive);
-        if (!success)
-        {
-            return NotFound();
-        }
+        if (!success) return NotFound();
 
         return NoContent();
     }
 
     /// <summary>
-    /// Delete a milestone definition (admin only).
+    ///     Delete a milestone definition (admin only).
     /// </summary>
     [HttpDelete("definitions/{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteDefinition(Guid id)
     {
         var success = await _milestoneService.DeleteDefinitionAsync(id);
-        if (!success)
-        {
-            return NotFound();
-        }
+        if (!success) return NotFound();
 
         return NoContent();
     }

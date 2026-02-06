@@ -2,7 +2,9 @@ namespace HelpMotivateMe.Core.Interfaces;
 
 public interface IAiBudgetService
 {
-    Task<BudgetCheckResult> CheckBudgetAsync(Guid userId, decimal estimatedCost, CancellationToken cancellationToken = default);
+    Task<BudgetCheckResult> CheckBudgetAsync(Guid userId, decimal estimatedCost,
+        CancellationToken cancellationToken = default);
+
     Task<AiBudgetStats> GetBudgetStatsAsync(CancellationToken cancellationToken = default);
 }
 

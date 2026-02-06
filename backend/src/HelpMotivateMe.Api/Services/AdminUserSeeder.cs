@@ -7,8 +7,8 @@ namespace HelpMotivateMe.Api.Services;
 
 public class AdminUserSeeder : IHostedService
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<AdminUserSeeder> _logger;
+    private readonly IServiceProvider _serviceProvider;
 
     public AdminUserSeeder(IServiceProvider serviceProvider, ILogger<AdminUserSeeder> logger)
     {
@@ -57,5 +57,8 @@ public class AdminUserSeeder : IHostedService
         }
     }
 
-    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
 }

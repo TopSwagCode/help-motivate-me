@@ -92,7 +92,7 @@ public record HabitStackItemCompletionResponse(
 );
 
 /// <summary>
-/// Extended result from the service layer, includes extra data for analytics tracking.
+///     Extended result from the service layer, includes extra data for analytics tracking.
 /// </summary>
 public record HabitStackItemCompletionResult(
     Guid ItemId,
@@ -104,9 +104,12 @@ public record HabitStackItemCompletionResult(
     bool WasNewlyCompleted
 )
 {
-    public HabitStackItemCompletionResponse ToResponse() => new(
-        ItemId, HabitDescription, CurrentStreak, LongestStreak, IsCompleted
-    );
+    public HabitStackItemCompletionResponse ToResponse()
+    {
+        return new HabitStackItemCompletionResponse(
+            ItemId, HabitDescription, CurrentStreak, LongestStreak, IsCompleted
+        );
+    }
 }
 
 public record CompleteAllResponse(

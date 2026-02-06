@@ -4,16 +4,16 @@ using ImageMagick;
 namespace HelpMotivateMe.Core.Localization.EmailTemplates;
 
 /// <summary>
-/// Provides email assets like the mailman mascot image as base64 encoded data URIs.
-/// Images are compressed and cached on first access.
+///     Provides email assets like the mailman mascot image as base64 encoded data URIs.
+///     Images are compressed and cached on first access.
 /// </summary>
 public static class EmailAssets
 {
     private static readonly Lazy<string> _mailmanBase64 = new(LoadAndCompressMailman);
 
     /// <summary>
-    /// Gets the mailman mascot image as a base64 data URI string.
-    /// The image is compressed to ~150px width and optimized for email.
+    ///     Gets the mailman mascot image as a base64 data URI string.
+    ///     The image is compressed to ~150px width and optimized for email.
     /// </summary>
     public static string MailmanDataUri => _mailmanBase64.Value;
 
@@ -24,10 +24,8 @@ public static class EmailAssets
 
         using var stream = assembly.GetManifestResourceStream(resourceName);
         if (stream == null)
-        {
             // Return empty string if resource not found - emails will still work without image
             return string.Empty;
-        }
 
         using var image = new MagickImage(stream);
 

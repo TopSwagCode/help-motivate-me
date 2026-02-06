@@ -1,7 +1,7 @@
 namespace HelpMotivateMe.Core.Localization.PushNotifications;
 
 /// <summary>
-/// Interface for localized push notification messages.
+///     Interface for localized push notification messages.
 /// </summary>
 public interface IPushNotificationMessages
 {

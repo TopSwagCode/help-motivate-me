@@ -12,12 +12,36 @@ namespace HelpMotivateMe.IntegrationTests.Infrastructure;
 
 public class MockEmailService : IEmailService
 {
-    public Task SendLoginLinkAsync(string email, string loginUrl, Language language) => Task.CompletedTask;
-    public Task SendVerificationEmailAsync(string email, string verificationUrl, Language language) => Task.CompletedTask;
-    public Task SendBuddyInviteAsync(string email, string inviterName, string loginUrl, Language language) => Task.CompletedTask;
-    public Task SendBuddyJournalNotificationAsync(string email, string buddyName, string entryTitle, string journalUrl, Language language) => Task.CompletedTask;
-    public Task SendWaitlistConfirmationAsync(string email, string name, Language language) => Task.CompletedTask;
-    public Task SendWhitelistInviteAsync(string email, string loginUrl, Language language) => Task.CompletedTask;
+    public Task SendLoginLinkAsync(string email, string loginUrl, Language language)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task SendVerificationEmailAsync(string email, string verificationUrl, Language language)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task SendBuddyInviteAsync(string email, string inviterName, string loginUrl, Language language)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task SendBuddyJournalNotificationAsync(string email, string buddyName, string entryTitle, string journalUrl,
+        Language language)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task SendWaitlistConfirmationAsync(string email, string name, Language language)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task SendWhitelistInviteAsync(string email, string loginUrl, Language language)
+    {
+        return Task.CompletedTask;
+    }
 }
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
@@ -50,12 +74,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         builder.ConfigureServices(services =>
         {
             // Remove existing DbContext registration
-            var descriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
-            if (descriptor != null)
-            {
-                services.Remove(descriptor);
-            }
+            var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
+            if (descriptor != null) services.Remove(descriptor);
 
             // Add DbContext with test connection string
             services.AddDbContext<AppDbContext>(options =>
@@ -74,12 +94,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                     TestAuthHandler.AuthenticationScheme, _ => { });
 
             // Replace email service with mock to avoid SMTP connection issues
-            var emailServiceDescriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof(IEmailService));
-            if (emailServiceDescriptor != null)
-            {
-                services.Remove(emailServiceDescriptor);
-            }
+            var emailServiceDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IEmailService));
+            if (emailServiceDescriptor != null) services.Remove(emailServiceDescriptor);
             services.AddSingleton<IEmailService, MockEmailService>();
 
             // Build the service provider

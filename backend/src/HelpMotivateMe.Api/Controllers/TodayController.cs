@@ -11,10 +11,10 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/today")]
 public class TodayController : ApiControllerBase
 {
-    private readonly ITodayViewService _todayViewService;
-    private readonly IIdentityScoreService _identityScoreService;
-    private readonly IDailyCommitmentService _commitmentService;
     private readonly IAnalyticsService _analyticsService;
+    private readonly IDailyCommitmentService _commitmentService;
+    private readonly IIdentityScoreService _identityScoreService;
+    private readonly ITodayViewService _todayViewService;
 
     public TodayController(
         ITodayViewService todayViewService,
@@ -29,7 +29,7 @@ public class TodayController : ApiControllerBase
     }
 
     /// <summary>
-    /// Get the today view for a specific date (defaults to today).
+    ///     Get the today view for a specific date (defaults to today).
     /// </summary>
     [HttpGet]
     public async Task<ActionResult<TodayViewResponse>> GetTodayView([FromQuery] DateOnly? date = null)

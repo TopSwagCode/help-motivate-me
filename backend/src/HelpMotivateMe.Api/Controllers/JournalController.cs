@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.Journal;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
@@ -14,17 +13,17 @@ namespace HelpMotivateMe.Api.Controllers;
 [Authorize]
 public class JournalController : ApiControllerBase
 {
-    private readonly AppDbContext _db;
-    private readonly IQueryInterface<JournalEntry> _journalEntriesQuery;
-    private readonly IQueryInterface<HabitStack> _habitStacksQuery;
-    private readonly IQueryInterface<TaskItem> _taskItemsQuery;
-    private readonly IStorageService _storage;
-    private readonly IAnalyticsService _analyticsService;
-    private static readonly string[] AllowedContentTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
     private const int MaxImageSizeBytes = 5 * 1024 * 1024; // 5MB
     private const int MaxImagesPerEntry = 5;
+    private static readonly string[] AllowedContentTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+    private readonly IAnalyticsService _analyticsService;
+    private readonly AppDbContext _db;
+    private readonly IQueryInterface<HabitStack> _habitStacksQuery;
+    private readonly IQueryInterface<JournalEntry> _journalEntriesQuery;
 
     private readonly IMilestoneService _milestoneService;
+    private readonly IStorageService _storage;
+    private readonly IQueryInterface<TaskItem> _taskItemsQuery;
 
     public JournalController(
         AppDbContext db,
@@ -59,20 +58,16 @@ public class JournalController : ApiControllerBase
             .Include(j => j.Author)
             .Include(j => j.Images.OrderBy(i => i.SortOrder))
             .Include(j => j.Reactions)
-                .ThenInclude(r => r.User)
+            .ThenInclude(r => r.User)
             .Where(j => j.UserId == userId);
 
         // Apply filter based on who authored the entry
         if (filter == "own")
-        {
             // Only entries written by the user themselves (AuthorUserId is null for legacy or equals userId)
             query = query.Where(j => j.AuthorUserId == null || j.AuthorUserId == userId);
-        }
         else if (filter == "buddies")
-        {
             // Only entries written by buddies (AuthorUserId is set and not equal to userId)
             query = query.Where(j => j.AuthorUserId != null && j.AuthorUserId != userId);
-        }
         // "all" or no filter = return everything
 
         var entries = await query
@@ -94,7 +89,7 @@ public class JournalController : ApiControllerBase
             .Include(j => j.Author)
             .Include(j => j.Images.OrderBy(i => i.SortOrder))
             .Include(j => j.Reactions)
-                .ThenInclude(r => r.User)
+            .ThenInclude(r => r.User)
             .FirstOrDefaultAsync(j => j.Id == id && j.UserId == userId);
 
         if (entry == null) return NotFound();
@@ -109,9 +104,7 @@ public class JournalController : ApiControllerBase
 
         // Validate linking constraint
         if (request.HabitStackId.HasValue && request.TaskItemId.HasValue)
-        {
             return BadRequest(new { message = "Cannot link to both a habit stack and a task" });
-        }
 
         // Validate linked entities belong to user
         if (request.HabitStackId.HasValue)
@@ -136,7 +129,7 @@ public class JournalController : ApiControllerBase
             EntryDate = request.EntryDate,
             HabitStackId = request.HabitStackId,
             TaskItemId = request.TaskItemId,
-            AuthorUserId = userId  // Owner is the author of their own entries
+            AuthorUserId = userId // Owner is the author of their own entries
         };
 
         _db.JournalEntries.Add(entry);
@@ -148,16 +141,14 @@ public class JournalController : ApiControllerBase
 
         // Reload with navigation properties
         await _db.Entry(entry).Reference(e => e.HabitStack).LoadAsync();
-        if (entry.TaskItemId.HasValue)
-        {
-            await _db.Entry(entry).Reference(e => e.TaskItem).LoadAsync();
-        }
+        if (entry.TaskItemId.HasValue) await _db.Entry(entry).Reference(e => e.TaskItem).LoadAsync();
 
         return CreatedAtAction(nameof(GetEntry), new { id = entry.Id }, MapToResponse(entry));
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<ActionResult<JournalEntryResponse>> UpdateEntry(Guid id, [FromBody] UpdateJournalEntryRequest request)
+    public async Task<ActionResult<JournalEntryResponse>> UpdateEntry(Guid id,
+        [FromBody] UpdateJournalEntryRequest request)
     {
         var userId = GetUserId();
 
@@ -169,9 +160,7 @@ public class JournalController : ApiControllerBase
 
         // Validate linking constraint
         if (request.HabitStackId.HasValue && request.TaskItemId.HasValue)
-        {
             return BadRequest(new { message = "Cannot link to both a habit stack and a task" });
-        }
 
         // Validate linked entities
         if (request.HabitStackId.HasValue)
@@ -199,10 +188,7 @@ public class JournalController : ApiControllerBase
 
         // Reload navigation properties
         await _db.Entry(entry).Reference(e => e.HabitStack).LoadAsync();
-        if (entry.TaskItemId.HasValue)
-        {
-            await _db.Entry(entry).Reference(e => e.TaskItem).LoadAsync();
-        }
+        if (entry.TaskItemId.HasValue) await _db.Entry(entry).Reference(e => e.TaskItem).LoadAsync();
 
         return Ok(MapToResponse(entry));
     }
@@ -219,10 +205,7 @@ public class JournalController : ApiControllerBase
         if (entry == null) return NotFound();
 
         // Delete images from S3
-        if (entry.Images.Count > 0)
-        {
-            await _storage.DeleteManyAsync(entry.Images.Select(i => i.S3Key));
-        }
+        if (entry.Images.Count > 0) await _storage.DeleteManyAsync(entry.Images.Select(i => i.S3Key));
 
         _db.JournalEntries.Remove(entry);
         await _db.SaveChangesAsync();
@@ -243,27 +226,22 @@ public class JournalController : ApiControllerBase
         if (entry == null) return NotFound();
 
         if (entry.Images.Count >= MaxImagesPerEntry)
-        {
             return BadRequest(new { message = $"Maximum {MaxImagesPerEntry} images allowed per entry" });
-        }
 
         // Validate file exists and has content
-        if (file == null || file.Length == 0)
-        {
-            return BadRequest(new { message = "No file provided or file is empty" });
-        }
+        if (file == null || file.Length == 0) return BadRequest(new { message = "No file provided or file is empty" });
 
         // Validate file size first (strict check)
         if (file.Length > MaxImageSizeBytes)
-        {
-            return BadRequest(new { message = $"File too large ({file.Length / 1024 / 1024:F2}MB). Maximum size: {MaxImageSizeBytes / 1024 / 1024}MB. Please compress the image before uploading." });
-        }
+            return BadRequest(new
+            {
+                message =
+                    $"File too large ({file.Length / 1024 / 1024:F2}MB). Maximum size: {MaxImageSizeBytes / 1024 / 1024}MB. Please compress the image before uploading."
+            });
 
         // Validate content type
         if (!AllowedContentTypes.Contains(file.ContentType))
-        {
             return BadRequest(new { message = "Invalid file type. Allowed: JPEG, PNG, GIF, WebP" });
-        }
 
         var fileExtension = Path.GetExtension(file.FileName);
         var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
@@ -302,7 +280,8 @@ public class JournalController : ApiControllerBase
 
         var image = await _db.JournalImages
             .Include(i => i.JournalEntry)
-            .FirstOrDefaultAsync(i => i.Id == imageId && i.JournalEntryId == entryId && i.JournalEntry.UserId == userId);
+            .FirstOrDefaultAsync(i =>
+                i.Id == imageId && i.JournalEntryId == entryId && i.JournalEntry.UserId == userId);
 
         if (image == null) return NotFound();
 
@@ -315,7 +294,8 @@ public class JournalController : ApiControllerBase
 
     // Reaction endpoints
     [HttpPost("{entryId:guid}/reactions")]
-    public async Task<ActionResult<JournalReactionResponse>> AddReaction(Guid entryId, [FromBody] AddJournalReactionRequest request)
+    public async Task<ActionResult<JournalReactionResponse>> AddReaction(Guid entryId,
+        [FromBody] AddJournalReactionRequest request)
     {
         var userId = GetUserId();
 
@@ -325,13 +305,11 @@ public class JournalController : ApiControllerBase
 
         // If not own entry, check if user is a buddy of the entry owner
         if (entry == null)
-        {
             entry = await _db.JournalEntries
                 .Where(j => j.Id == entryId)
                 .Where(j => _db.AccountabilityBuddies.Any(b =>
                     b.UserId == j.UserId && b.BuddyUserId == userId))
                 .FirstOrDefaultAsync();
-        }
 
         if (entry == null) return NotFound();
 
@@ -339,10 +317,7 @@ public class JournalController : ApiControllerBase
         var existingReaction = await _db.JournalReactions
             .FirstOrDefaultAsync(r => r.JournalEntryId == entryId && r.UserId == userId && r.Emoji == request.Emoji);
 
-        if (existingReaction != null)
-        {
-            return BadRequest(new { message = "You have already added this reaction" });
-        }
+        if (existingReaction != null) return BadRequest(new { message = "You have already added this reaction" });
 
         var user = await _db.Users.FindAsync(userId);
 

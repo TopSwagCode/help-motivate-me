@@ -14,9 +14,9 @@ namespace HelpMotivateMe.Api.Controllers;
 public class WaitlistController : ControllerBase
 {
     private readonly AppDbContext _db;
-    private readonly IQueryInterface<WhitelistEntry> _whitelistEntriesQuery;
-    private readonly IQueryInterface<WaitlistEntry> _waitlistEntriesQuery;
     private readonly IEmailService _emailService;
+    private readonly IQueryInterface<WaitlistEntry> _waitlistEntriesQuery;
+    private readonly IQueryInterface<WhitelistEntry> _whitelistEntriesQuery;
 
     public WaitlistController(
         AppDbContext db,
@@ -34,14 +34,9 @@ public class WaitlistController : ControllerBase
     public async Task<IActionResult> SignupForWaitlist([FromBody] WaitlistSignupRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Email) || !new EmailAddressAttribute().IsValid(request.Email))
-        {
             return BadRequest(new { message = "Please provide a valid email address" });
-        }
 
-        if (string.IsNullOrWhiteSpace(request.Name))
-        {
-            return BadRequest(new { message = "Please provide your name" });
-        }
+        if (string.IsNullOrWhiteSpace(request.Name)) return BadRequest(new { message = "Please provide your name" });
 
         var email = request.Email.ToLowerInvariant().Trim();
         var name = request.Name.Trim();
@@ -49,17 +44,14 @@ public class WaitlistController : ControllerBase
         // Check if already on whitelist
         var isWhitelisted = await _whitelistEntriesQuery.AnyAsync(w => w.Email.ToLower() == email);
         if (isWhitelisted)
-        {
-            return Ok(new { message = "Great news! You already have access. You can sign up or log in now.", canSignup = true });
-        }
+            return Ok(new
+                { message = "Great news! You already have access. You can sign up or log in now.", canSignup = true });
 
         // Check if already on waitlist
         var existingEntry = await _waitlistEntriesQuery.FirstOrDefaultAsync(w => w.Email.ToLower() == email);
         if (existingEntry != null)
-        {
             // Don't leak that they're already on the list - just return success
             return Ok(new { message = "Thank you for your interest! We'll notify you when a spot opens up." });
-        }
 
         // Add to waitlist
         var entry = new WaitlistEntry
@@ -80,10 +72,7 @@ public class WaitlistController : ControllerBase
     [HttpGet("check")]
     public async Task<ActionResult<WhitelistCheckResponse>> CheckWhitelistStatus([FromQuery] string email)
     {
-        if (string.IsNullOrWhiteSpace(email))
-        {
-            return BadRequest(new { message = "Email is required" });
-        }
+        if (string.IsNullOrWhiteSpace(email)) return BadRequest(new { message = "Email is required" });
 
         var normalizedEmail = email.ToLowerInvariant().Trim();
         var isWhitelisted = await _whitelistEntriesQuery.AnyAsync(w => w.Email.ToLower() == normalizedEmail);

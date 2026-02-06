@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.Admin;
 using HelpMotivateMe.Core.DTOs.Waitlist;
-using static HelpMotivateMe.Core.DTOs.Admin.AnalyticsOverviewResponse;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
@@ -17,22 +16,22 @@ namespace HelpMotivateMe.Api.Controllers;
 [Authorize(Roles = "Admin")]
 public class AdminController : ControllerBase
 {
-    private readonly AppDbContext _db;
-    private readonly IQueryInterface<User> _users;
-    private readonly IQueryInterface<TaskItem> _taskItems;
+    private readonly IAiBudgetService _aiBudgetService;
     private readonly IQueryInterface<AiUsageLog> _aiUsageLogs;
+    private readonly IQueryInterface<AnalyticsEvent> _analyticsEvents;
+    private readonly IConfiguration _configuration;
+    private readonly AppDbContext _db;
+    private readonly IEmailService _emailService;
+    private readonly IQueryInterface<Goal> _goals;
+    private readonly IQueryInterface<HabitStackItemCompletion> _habitCompletions;
+    private readonly IQueryInterface<HabitStack> _habitStacks;
+    private readonly IQueryInterface<Identity> _identitiesQuery;
+    private readonly IQueryInterface<JournalEntry> _journalEntries;
+    private readonly IQueryInterface<PushSubscription> _pushSubscriptions;
+    private readonly IQueryInterface<TaskItem> _taskItems;
+    private readonly IQueryInterface<User> _users;
     private readonly IQueryInterface<WaitlistEntry> _waitlistEntries;
     private readonly IQueryInterface<WhitelistEntry> _whitelistEntries;
-    private readonly IQueryInterface<AnalyticsEvent> _analyticsEvents;
-    private readonly IQueryInterface<PushSubscription> _pushSubscriptions;
-    private readonly IQueryInterface<Goal> _goals;
-    private readonly IQueryInterface<Identity> _identitiesQuery;
-    private readonly IQueryInterface<HabitStack> _habitStacks;
-    private readonly IQueryInterface<HabitStackItemCompletion> _habitCompletions;
-    private readonly IQueryInterface<JournalEntry> _journalEntries;
-    private readonly IConfiguration _configuration;
-    private readonly IEmailService _emailService;
-    private readonly IAiBudgetService _aiBudgetService;
 
     public AdminController(
         AppDbContext db,
@@ -86,9 +85,9 @@ public class AdminController : ControllerBase
 
         // Membership tier breakdown
         var membershipStats = new MembershipStats(
-            FreeUsers: await _users.CountAsync(u => u.MembershipTier == MembershipTier.Free),
-            PlusUsers: await _users.CountAsync(u => u.MembershipTier == MembershipTier.Plus),
-            ProUsers: await _users.CountAsync(u => u.MembershipTier == MembershipTier.Pro)
+            await _users.CountAsync(u => u.MembershipTier == MembershipTier.Free),
+            await _users.CountAsync(u => u.MembershipTier == MembershipTier.Plus),
+            await _users.CountAsync(u => u.MembershipTier == MembershipTier.Pro)
         );
 
         // Total task stats (all time)
@@ -97,16 +96,16 @@ public class AdminController : ControllerBase
             .CountAsync(t => t.CompletedAt != null);
 
         var taskTotals = new TaskTotals(
-            TotalTasksCreated: totalTasksCreated,
-            TotalTasksCompleted: totalTasksCompleted
+            totalTasksCreated,
+            totalTasksCompleted
         );
 
         return Ok(new AdminStatsResponse(
-            TotalUsers: totalUsers,
-            ActiveUsers: activeUsers,
-            UsersLoggedInToday: usersLoggedInToday,
-            MembershipStats: membershipStats,
-            TaskTotals: taskTotals
+            totalUsers,
+            activeUsers,
+            usersLoggedInToday,
+            membershipStats,
+            taskTotals
         ));
     }
 
@@ -115,13 +114,9 @@ public class AdminController : ControllerBase
     {
         DateOnly targetDate;
         if (!string.IsNullOrEmpty(date) && DateOnly.TryParse(date, out var parsedDate))
-        {
             targetDate = parsedDate;
-        }
         else
-        {
             targetDate = DateOnly.FromDateTime(DateTime.UtcNow);
-        }
 
         var targetDateTime = targetDate.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
         var nextDay = targetDateTime.AddDays(1);
@@ -139,10 +134,10 @@ public class AdminController : ControllerBase
             .CountAsync(t => t.DueDate == targetDate);
 
         return Ok(new DailyStatsResponse(
-            Date: targetDate.ToString("yyyy-MM-dd"),
-            TasksCreated: tasksCreated,
-            TasksCompleted: tasksCompleted,
-            TasksDue: tasksDue
+            targetDate.ToString("yyyy-MM-dd"),
+            tasksCreated,
+            tasksCompleted,
+            tasksDue
         ));
     }
 
@@ -166,14 +161,9 @@ public class AdminController : ControllerBase
         }
 
         if (!string.IsNullOrWhiteSpace(tier) && Enum.TryParse<MembershipTier>(tier, true, out var membershipTier))
-        {
             query = query.Where(u => u.MembershipTier == membershipTier);
-        }
 
-        if (isActive.HasValue)
-        {
-            query = query.Where(u => u.IsActive == isActive.Value);
-        }
+        if (isActive.HasValue) query = query.Where(u => u.IsActive == isActive.Value);
 
         // Get total count for pagination info
         var totalCount = await query.CountAsync();
@@ -221,10 +211,7 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<AdminUserResponse>> ToggleUserActive(Guid userId)
     {
         var user = await _db.Users.FindAsync(userId);
-        if (user == null)
-        {
-            return NotFound(new { message = "User not found" });
-        }
+        if (user == null) return NotFound(new { message = "User not found" });
 
         user.IsActive = !user.IsActive;
         user.UpdatedAt = DateTime.UtcNow;
@@ -254,15 +241,10 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<AdminUserResponse>> UpdateUserRole(Guid userId, [FromBody] UpdateRoleRequest request)
     {
         var user = await _db.Users.FindAsync(userId);
-        if (user == null)
-        {
-            return NotFound(new { message = "User not found" });
-        }
+        if (user == null) return NotFound(new { message = "User not found" });
 
         if (!Enum.TryParse<UserRole>(request.Role, true, out var role))
-        {
             return BadRequest(new { message = "Invalid role. Must be User or Admin." });
-        }
 
         user.Role = role;
         user.UpdatedAt = DateTime.UtcNow;
@@ -292,10 +274,7 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<UserActivityResponse>> GetUserActivity(Guid userId)
     {
         var user = await _db.Users.FindAsync(userId);
-        if (user == null)
-        {
-            return NotFound(new { message = "User not found" });
-        }
+        if (user == null) return NotFound(new { message = "User not found" });
 
         var now = DateTime.UtcNow;
         var lastWeekStart = now.AddDays(-7);
@@ -309,12 +288,15 @@ public class AdminController : ControllerBase
             .Where(t => t.Goal.UserId == userId && t.CompletedAt >= lastWeekStartDate)
             .CountAsync();
         var goalsCreatedLastWeek = await _goals.CountAsync(g => g.UserId == userId && g.CreatedAt >= lastWeekStart);
-        var identitiesCreatedLastWeek = await _identitiesQuery.CountAsync(i => i.UserId == userId && i.CreatedAt >= lastWeekStart);
-        var habitStacksCreatedLastWeek = await _habitStacks.CountAsync(hs => hs.UserId == userId && hs.CreatedAt >= lastWeekStart);
+        var identitiesCreatedLastWeek =
+            await _identitiesQuery.CountAsync(i => i.UserId == userId && i.CreatedAt >= lastWeekStart);
+        var habitStacksCreatedLastWeek =
+            await _habitStacks.CountAsync(hs => hs.UserId == userId && hs.CreatedAt >= lastWeekStart);
         var habitCompletionsLastWeek = await _habitCompletions
             .Where(hc => hc.HabitStackItem.HabitStack.UserId == userId && hc.CompletedAt >= lastWeekStart)
             .CountAsync();
-        var journalEntriesLastWeek = await _journalEntries.CountAsync(j => j.UserId == userId && j.CreatedAt >= lastWeekStart);
+        var journalEntriesLastWeek =
+            await _journalEntries.CountAsync(j => j.UserId == userId && j.CreatedAt >= lastWeekStart);
 
         var aiStatsLastWeek = await _aiUsageLogs
             .Where(a => a.UserId == userId && a.CreatedAt >= lastWeekStart)
@@ -346,7 +328,7 @@ public class AdminController : ControllerBase
         return Ok(new UserActivityResponse(
             user.Id,
             user.Email,
-            LastWeek: new UserActivityPeriod(
+            new UserActivityPeriod(
                 tasksCreatedLastWeek,
                 tasksCompletedLastWeek,
                 goalsCreatedLastWeek,
@@ -357,7 +339,7 @@ public class AdminController : ControllerBase
                 aiStatsLastWeek?.CallsCount ?? 0,
                 aiStatsLastWeek?.TotalCost ?? 0m
             ),
-            Total: new UserActivityPeriod(
+            new UserActivityPeriod(
                 tasksCreatedTotal,
                 tasksCompletedTotal,
                 goalsCreatedTotal,
@@ -418,10 +400,7 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> RemoveFromWaitlist(Guid id)
     {
         var entry = await _db.WaitlistEntries.FindAsync(id);
-        if (entry == null)
-        {
-            return NotFound(new { message = "Waitlist entry not found" });
-        }
+        if (entry == null) return NotFound(new { message = "Waitlist entry not found" });
 
         _db.WaitlistEntries.Remove(entry);
         await _db.SaveChangesAsync();
@@ -433,10 +412,7 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<WhitelistEntryResponse>> ApproveWaitlistEntry(Guid id)
     {
         var waitlistEntry = await _db.WaitlistEntries.FindAsync(id);
-        if (waitlistEntry == null)
-        {
-            return NotFound(new { message = "Waitlist entry not found" });
-        }
+        if (waitlistEntry == null) return NotFound(new { message = "Waitlist entry not found" });
 
         // Check if already on whitelist
         var existingWhitelist = await _db.WhitelistEntries
@@ -476,7 +452,8 @@ public class AdminController : ControllerBase
         await _db.SaveChangesAsync();
 
         // Send invite email (default to English for non-registered users)
-        var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
+        var frontendUrl = _configuration["FrontendUrl"] ??
+                          _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
         var loginUrl = $"{frontendUrl}/auth/login";
         await _emailService.SendWhitelistInviteAsync(waitlistEntry.Email, loginUrl, Language.English);
 
@@ -536,19 +513,13 @@ public class AdminController : ControllerBase
     [HttpPost("whitelist")]
     public async Task<ActionResult<WhitelistEntryResponse>> AddToWhitelist([FromBody] InviteUserRequest request)
     {
-        if (string.IsNullOrWhiteSpace(request.Email))
-        {
-            return BadRequest(new { message = "Email is required" });
-        }
+        if (string.IsNullOrWhiteSpace(request.Email)) return BadRequest(new { message = "Email is required" });
 
         var email = request.Email.ToLowerInvariant().Trim();
 
         // Check if already on whitelist
         var existingEntry = await _db.WhitelistEntries.FirstOrDefaultAsync(w => w.Email.ToLower() == email);
-        if (existingEntry != null)
-        {
-            return BadRequest(new { message = "Email is already on the whitelist" });
-        }
+        if (existingEntry != null) return BadRequest(new { message = "Email is already on the whitelist" });
 
         var currentUserId = GetUserId();
 
@@ -563,7 +534,8 @@ public class AdminController : ControllerBase
         await _db.SaveChangesAsync();
 
         // Send invite email (default to English for non-registered users)
-        var frontendUrl = _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
+        var frontendUrl = _configuration["FrontendUrl"] ??
+                          _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
         var loginUrl = $"{frontendUrl}/auth/login";
         await _emailService.SendWhitelistInviteAsync(email, loginUrl, Language.English);
 
@@ -592,10 +564,7 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> RemoveFromWhitelist(Guid id)
     {
         var entry = await _db.WhitelistEntries.FindAsync(id);
-        if (entry == null)
-        {
-            return NotFound(new { message = "Whitelist entry not found" });
-        }
+        if (entry == null) return NotFound(new { message = "Whitelist entry not found" });
 
         _db.WhitelistEntries.Remove(entry);
         await _db.SaveChangesAsync();

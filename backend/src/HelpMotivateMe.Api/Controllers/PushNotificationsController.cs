@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.Notifications;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Interfaces;
@@ -14,9 +13,9 @@ namespace HelpMotivateMe.Api.Controllers;
 public class PushNotificationsController : ApiControllerBase
 {
     private readonly AppDbContext _db;
+    private readonly IPushNotificationService _pushService;
     private readonly IQueryInterface<PushSubscription> _pushSubscriptionsQuery;
     private readonly IQueryInterface<User> _usersQuery;
-    private readonly IPushNotificationService _pushService;
 
     public PushNotificationsController(
         AppDbContext db,
@@ -31,7 +30,7 @@ public class PushNotificationsController : ApiControllerBase
     }
 
     /// <summary>
-    /// Subscribe to push notifications
+    ///     Subscribe to push notifications
     /// </summary>
     [HttpPost("subscribe")]
     public async Task<ActionResult> Subscribe([FromBody] PushSubscriptionRequest request)
@@ -69,7 +68,7 @@ public class PushNotificationsController : ApiControllerBase
     }
 
     /// <summary>
-    /// Unsubscribe from push notifications
+    ///     Unsubscribe from push notifications
     /// </summary>
     [HttpDelete("unsubscribe")]
     public async Task<ActionResult> Unsubscribe([FromQuery] string? endpoint = null)
@@ -82,10 +81,7 @@ public class PushNotificationsController : ApiControllerBase
             var subscription = await _db.PushSubscriptions
                 .FirstOrDefaultAsync(s => s.UserId == userId && s.Endpoint == endpoint);
 
-            if (subscription != null)
-            {
-                _db.PushSubscriptions.Remove(subscription);
-            }
+            if (subscription != null) _db.PushSubscriptions.Remove(subscription);
         }
         else
         {
@@ -102,7 +98,7 @@ public class PushNotificationsController : ApiControllerBase
     }
 
     /// <summary>
-    /// Get current user's push subscription status
+    ///     Get current user's push subscription status
     /// </summary>
     [HttpGet("status")]
     public async Task<ActionResult<PushSubscriptionsStatusResponse>> GetStatus()
@@ -130,7 +126,7 @@ public class PushNotificationsController : ApiControllerBase
     // ==================== Admin Endpoints ====================
 
     /// <summary>
-    /// Send push notification to a specific user (Admin only)
+    ///     Send push notification to a specific user (Admin only)
     /// </summary>
     [HttpPost("admin/send-to-user")]
     [Authorize(Roles = "Admin")]
@@ -141,7 +137,7 @@ public class PushNotificationsController : ApiControllerBase
     }
 
     /// <summary>
-    /// Send push notification to all subscribed users (Admin only)
+    ///     Send push notification to all subscribed users (Admin only)
     /// </summary>
     [HttpPost("admin/send-to-all")]
     [Authorize(Roles = "Admin")]
@@ -152,7 +148,7 @@ public class PushNotificationsController : ApiControllerBase
     }
 
     /// <summary>
-    /// Get list of users with push notification status (Admin only)
+    ///     Get list of users with push notification status (Admin only)
     /// </summary>
     [HttpGet("admin/users")]
     [Authorize(Roles = "Admin")]
@@ -172,11 +168,9 @@ public class PushNotificationsController : ApiControllerBase
         }
 
         if (hasPush.HasValue)
-        {
             query = hasPush.Value
                 ? query.Where(u => u.PushSubscriptions.Any())
                 : query.Where(u => !u.PushSubscriptions.Any());
-        }
 
         var users = await query
             .Select(u => new UserPushStatus(
@@ -192,7 +186,7 @@ public class PushNotificationsController : ApiControllerBase
     }
 
     /// <summary>
-    /// Get push notification stats (Admin only)
+    ///     Get push notification stats (Admin only)
     /// </summary>
     [HttpGet("admin/stats")]
     [Authorize(Roles = "Admin")]

@@ -88,7 +88,8 @@ public class SmtpEmailService : IEmailService
         await SendMessageAsync(message);
     }
 
-    public async Task SendBuddyJournalNotificationAsync(string email, string buddyName, string entryTitle, string journalUrl, Language language)
+    public async Task SendBuddyJournalNotificationAsync(string email, string buddyName, string entryTitle,
+        string journalUrl, Language language)
     {
         var templates = EmailTemplateProvider.GetTemplates(language);
 

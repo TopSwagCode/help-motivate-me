@@ -46,7 +46,7 @@ public record UserPushStatus(
 );
 
 /// <summary>
-/// Response DTO for user's push subscription status - excludes sensitive endpoint/key data
+///     Response DTO for user's push subscription status - excludes sensitive endpoint/key data
 /// </summary>
 public record PushSubscriptionStatusResponse(
     Guid Id,
@@ -56,7 +56,7 @@ public record PushSubscriptionStatusResponse(
 );
 
 /// <summary>
-/// Response DTO for push subscription list status
+///     Response DTO for push subscription list status
 /// </summary>
 public record PushSubscriptionsStatusResponse(
     bool HasSubscriptions,
@@ -65,7 +65,7 @@ public record PushSubscriptionsStatusResponse(
 );
 
 /// <summary>
-/// Response DTO for push notification statistics
+///     Response DTO for push notification statistics
 /// </summary>
 public record PushNotificationStatsResponse(
     int TotalSubscriptions,

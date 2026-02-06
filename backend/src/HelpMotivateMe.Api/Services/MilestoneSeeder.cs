@@ -7,8 +7,8 @@ namespace HelpMotivateMe.Api.Services;
 
 public class MilestoneSeeder : IHostedService
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<MilestoneSeeder> _logger;
+    private readonly IServiceProvider _serviceProvider;
 
     public MilestoneSeeder(IServiceProvider serviceProvider, ILogger<MilestoneSeeder> logger)
     {
@@ -40,7 +40,10 @@ public class MilestoneSeeder : IHostedService
         }
     }
 
-    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
 
     private static List<MilestoneDefinition> GetMilestoneDefinitions()
     {

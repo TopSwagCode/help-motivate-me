@@ -1,5 +1,4 @@
 using System.Security.Cryptography;
-using HelpMotivateMe.Core.DTOs.Auth;
 using HelpMotivateMe.Core.DTOs.Notifications;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
@@ -12,8 +11,8 @@ namespace HelpMotivateMe.Infrastructure.Services;
 
 public class AuthService : IAuthService
 {
-    private readonly AppDbContext _db;
     private readonly IConfiguration _configuration;
+    private readonly AppDbContext _db;
 
     public AuthService(AppDbContext db, IConfiguration configuration)
     {
@@ -32,10 +31,7 @@ public class AuthService : IAuthService
     public bool VerifyPassword(string password, string storedHash)
     {
         var parts = storedHash.Split(':');
-        if (parts.Length != 2)
-        {
-            return false;
-        }
+        if (parts.Length != 2) return false;
 
         var salt = Convert.FromBase64String(parts[0]);
         var hash = Convert.FromBase64String(parts[1]);
@@ -75,7 +71,8 @@ public class AuthService : IAuthService
         return await _db.Users.AnyAsync(u => u.Email.ToLower() == email.ToLower());
     }
 
-    public async Task<User> CreateUserAsync(string email, string? passwordHash = null, string? displayName = null, bool isEmailVerified = false)
+    public async Task<User> CreateUserAsync(string email, string? passwordHash = null, string? displayName = null,
+        bool isEmailVerified = false)
     {
         var user = new User
         {
@@ -117,7 +114,7 @@ public class AuthService : IAuthService
     {
         return await _db.EmailVerificationTokens
             .Include(t => t.User)
-                .ThenInclude(u => u.ExternalLogins)
+            .ThenInclude(u => u.ExternalLogins)
             .FirstOrDefaultAsync(t => t.Token == token);
     }
 
@@ -142,7 +139,7 @@ public class AuthService : IAuthService
     {
         return await _db.EmailLoginTokens
             .Include(t => t.User)
-                .ThenInclude(u => u.ExternalLogins)
+            .ThenInclude(u => u.ExternalLogins)
             .FirstOrDefaultAsync(t => t.Token == token);
     }
 
@@ -153,7 +150,8 @@ public class AuthService : IAuthService
             .FirstOrDefaultAsync(e => e.Provider == provider && e.ProviderKey == providerKey);
     }
 
-    public async Task<UserExternalLogin> LinkExternalLoginAsync(Guid userId, string provider, string providerKey, string? displayName = null)
+    public async Task<UserExternalLogin> LinkExternalLoginAsync(Guid userId, string provider, string providerKey,
+        string? displayName = null)
     {
         var externalLogin = new UserExternalLogin
         {
@@ -173,10 +171,7 @@ public class AuthService : IAuthService
         var externalLogin = await _db.UserExternalLogins
             .FirstOrDefaultAsync(e => e.UserId == userId && e.Provider == provider);
 
-        if (externalLogin == null)
-        {
-            return false;
-        }
+        if (externalLogin == null) return false;
 
         _db.UserExternalLogins.Remove(externalLogin);
         await _db.SaveChangesAsync();
@@ -220,7 +215,8 @@ public class AuthService : IAuthService
         return prefs;
     }
 
-    public async Task<NotificationPreferences> UpdateNotificationPreferencesAsync(Guid userId, UpdateNotificationPreferencesRequest request)
+    public async Task<NotificationPreferences> UpdateNotificationPreferencesAsync(Guid userId,
+        UpdateNotificationPreferencesRequest request)
     {
         var prefs = await GetOrCreateNotificationPreferencesAsync(userId);
 
@@ -251,7 +247,8 @@ public class AuthService : IAuthService
             prefs.CommitmentDefaultMode = request.CommitmentDefaultMode;
         if (request.SelectedDays.HasValue)
             prefs.SelectedDays = (NotificationDays)request.SelectedDays.Value;
-        if (request.PreferredTimeSlot != null && Enum.TryParse<TimeSlot>(request.PreferredTimeSlot, true, out var timeSlot))
+        if (request.PreferredTimeSlot != null &&
+            Enum.TryParse<TimeSlot>(request.PreferredTimeSlot, true, out var timeSlot))
             prefs.PreferredTimeSlot = timeSlot;
         if (request.CustomTimeStart != null)
             prefs.CustomTimeStart = TimeOnly.TryParse(request.CustomTimeStart, out var startTime) ? startTime : null;
@@ -307,9 +304,8 @@ public class AuthService : IAuthService
     {
         return await _db.BuddyInviteTokens
             .Include(t => t.BuddyUser)
-                .ThenInclude(u => u.ExternalLogins)
+            .ThenInclude(u => u.ExternalLogins)
             .Include(t => t.InviterUser)
             .FirstOrDefaultAsync(t => t.Token == token);
     }
-
 }

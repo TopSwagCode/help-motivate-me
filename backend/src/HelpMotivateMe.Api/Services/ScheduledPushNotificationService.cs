@@ -4,8 +4,8 @@ namespace HelpMotivateMe.Api.Services;
 
 public class ScheduledPushNotificationService
 {
-    private readonly IPushNotificationService _pushNotificationService;
     private readonly ILogger<ScheduledPushNotificationService> _logger;
+    private readonly IPushNotificationService _pushNotificationService;
 
     public ScheduledPushNotificationService(
         IPushNotificationService pushNotificationService,

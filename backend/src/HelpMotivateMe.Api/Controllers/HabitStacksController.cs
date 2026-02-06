@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.HabitStacks;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Interfaces;
@@ -13,11 +12,11 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/habit-stacks")]
 public class HabitStacksController : ApiControllerBase
 {
-    private readonly AppDbContext _db;
-    private readonly IQueryInterface<HabitStack> _habitStacksQuery;
     private readonly IAnalyticsService _analyticsService;
-    private readonly IMilestoneService _milestoneService;
+    private readonly AppDbContext _db;
     private readonly IHabitStackService _habitStackService;
+    private readonly IQueryInterface<HabitStack> _habitStacksQuery;
+    private readonly IMilestoneService _milestoneService;
 
     public HabitStacksController(
         AppDbContext db,
@@ -62,10 +61,7 @@ public class HabitStacksController : ApiControllerBase
             .Include(hs => hs.Items.OrderBy(i => i.SortOrder))
             .FirstOrDefaultAsync(hs => hs.Id == id && hs.UserId == userId);
 
-        if (stack == null)
-        {
-            return NotFound();
-        }
+        if (stack == null) return NotFound();
 
         return Ok(MapToResponse(stack));
     }
@@ -91,7 +87,6 @@ public class HabitStacksController : ApiControllerBase
         };
 
         if (request.Items != null)
-        {
             for (var i = 0; i < request.Items.Count; i++)
             {
                 var item = request.Items[i];
@@ -102,7 +97,6 @@ public class HabitStacksController : ApiControllerBase
                     SortOrder = i
                 });
             }
-        }
 
         _db.HabitStacks.Add(stack);
         await _db.SaveChangesAsync();
@@ -114,7 +108,8 @@ public class HabitStacksController : ApiControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<ActionResult<HabitStackResponse>> UpdateHabitStack(Guid id, [FromBody] UpdateHabitStackRequest request)
+    public async Task<ActionResult<HabitStackResponse>> UpdateHabitStack(Guid id,
+        [FromBody] UpdateHabitStackRequest request)
     {
         var userId = GetUserId();
 
@@ -123,10 +118,7 @@ public class HabitStacksController : ApiControllerBase
             .Include(hs => hs.Items.OrderBy(i => i.SortOrder))
             .FirstOrDefaultAsync(hs => hs.Id == id && hs.UserId == userId);
 
-        if (stack == null)
-        {
-            return NotFound();
-        }
+        if (stack == null) return NotFound();
 
         stack.Name = request.Name;
         stack.Description = request.Description;
@@ -137,10 +129,7 @@ public class HabitStacksController : ApiControllerBase
         await _db.SaveChangesAsync();
 
         // Reload identity if changed
-        if (stack.IdentityId.HasValue)
-        {
-            await _db.Entry(stack).Reference(s => s.Identity).LoadAsync();
-        }
+        if (stack.IdentityId.HasValue) await _db.Entry(stack).Reference(s => s.Identity).LoadAsync();
 
         return Ok(MapToResponse(stack));
     }
@@ -153,10 +142,7 @@ public class HabitStacksController : ApiControllerBase
         var stack = await _db.HabitStacks
             .FirstOrDefaultAsync(hs => hs.Id == id && hs.UserId == userId);
 
-        if (stack == null)
-        {
-            return NotFound();
-        }
+        if (stack == null) return NotFound();
 
         _db.HabitStacks.Remove(stack);
         await _db.SaveChangesAsync();
@@ -176,10 +162,7 @@ public class HabitStacksController : ApiControllerBase
         for (var i = 0; i < request.StackIds.Count; i++)
         {
             var stack = stacks.FirstOrDefault(s => s.Id == request.StackIds[i]);
-            if (stack != null)
-            {
-                stack.SortOrder = i;
-            }
+            if (stack != null) stack.SortOrder = i;
         }
 
         await _db.SaveChangesAsync();
@@ -197,10 +180,7 @@ public class HabitStacksController : ApiControllerBase
             .Include(hs => hs.Items)
             .FirstOrDefaultAsync(hs => hs.Id == id && hs.UserId == userId);
 
-        if (stack == null)
-        {
-            return NotFound();
-        }
+        if (stack == null) return NotFound();
 
         var maxSortOrder = stack.Items.Any() ? stack.Items.Max(i => i.SortOrder) : -1;
 
@@ -219,7 +199,8 @@ public class HabitStacksController : ApiControllerBase
     }
 
     [HttpPut("{id:guid}/items/reorder")]
-    public async Task<ActionResult<HabitStackResponse>> ReorderStackItems(Guid id, [FromBody] ReorderStackItemsRequest request)
+    public async Task<ActionResult<HabitStackResponse>> ReorderStackItems(Guid id,
+        [FromBody] ReorderStackItemsRequest request)
     {
         var userId = GetUserId();
 
@@ -228,18 +209,12 @@ public class HabitStacksController : ApiControllerBase
             .Include(hs => hs.Items)
             .FirstOrDefaultAsync(hs => hs.Id == id && hs.UserId == userId);
 
-        if (stack == null)
-        {
-            return NotFound();
-        }
+        if (stack == null) return NotFound();
 
         for (var i = 0; i < request.ItemIds.Count; i++)
         {
             var item = stack.Items.FirstOrDefault(it => it.Id == request.ItemIds[i]);
-            if (item != null)
-            {
-                item.SortOrder = i;
-            }
+            if (item != null) item.SortOrder = i;
         }
 
         await _db.SaveChangesAsync();
@@ -256,10 +231,7 @@ public class HabitStacksController : ApiControllerBase
             .Include(i => i.HabitStack)
             .FirstOrDefaultAsync(i => i.Id == itemId && i.HabitStack.UserId == userId);
 
-        if (item == null)
-        {
-            return NotFound();
-        }
+        if (item == null) return NotFound();
 
         item.CueDescription = request.CueDescription;
         item.HabitDescription = request.HabitDescription;
@@ -277,10 +249,7 @@ public class HabitStacksController : ApiControllerBase
             .Include(i => i.HabitStack)
             .FirstOrDefaultAsync(i => i.Id == itemId && i.HabitStack.UserId == userId);
 
-        if (item == null)
-        {
-            return NotFound();
-        }
+        if (item == null) return NotFound();
 
         _db.HabitStackItems.Remove(item);
         await _db.SaveChangesAsync();
@@ -289,7 +258,7 @@ public class HabitStacksController : ApiControllerBase
     }
 
     /// <summary>
-    /// Toggle completion for a habit stack item on a specific date.
+    ///     Toggle completion for a habit stack item on a specific date.
     /// </summary>
     [HttpPatch("items/{itemId:guid}/complete")]
     public async Task<ActionResult<HabitStackItemCompletionResponse>> CompleteStackItem(
@@ -302,23 +271,22 @@ public class HabitStacksController : ApiControllerBase
 
         var result = await _habitStackService.ToggleItemCompletionAsync(itemId, userId, targetDate);
 
-        if (result == null)
-        {
-            return NotFound();
-        }
+        if (result == null) return NotFound();
 
         // Log analytics if this was a new completion
         if (result.WasNewlyCompleted)
         {
-            await _analyticsService.LogEventAsync(userId, sessionId, "HabitCompleted", new { habitStackId = result.HabitStackId, itemId });
-            await _milestoneService.RecordEventAsync(userId, "HabitCompleted", new { habitStackId = result.HabitStackId, itemId });
+            await _analyticsService.LogEventAsync(userId, sessionId, "HabitCompleted",
+                new { habitStackId = result.HabitStackId, itemId });
+            await _milestoneService.RecordEventAsync(userId, "HabitCompleted",
+                new { habitStackId = result.HabitStackId, itemId });
         }
 
         return Ok(result.ToResponse());
     }
 
     /// <summary>
-    /// Complete all items in a habit stack for a specific date.
+    ///     Complete all items in a habit stack for a specific date.
     /// </summary>
     [HttpPatch("{id:guid}/complete-all")]
     public async Task<ActionResult<CompleteAllResponse>> CompleteAllStackItems(
@@ -330,16 +298,11 @@ public class HabitStacksController : ApiControllerBase
 
         var result = await _habitStackService.CompleteAllItemsAsync(id, userId, targetDate);
 
-        if (result == null)
-        {
-            return NotFound();
-        }
+        if (result == null) return NotFound();
 
         // Record milestone events for each completed habit
         for (var i = 0; i < result.CompletedCount; i++)
-        {
             await _milestoneService.RecordEventAsync(userId, "HabitCompleted", new { habitStackId = id });
-        }
 
         return Ok(result);
     }

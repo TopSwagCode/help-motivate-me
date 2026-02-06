@@ -1,7 +1,7 @@
 namespace HelpMotivateMe.Core.Entities;
 
 /// <summary>
-/// Fast aggregates for milestone evaluation (one row per user).
+///     Fast aggregates for milestone evaluation (one row per user).
 /// </summary>
 public class UserStats
 {

@@ -1,7 +1,7 @@
 namespace HelpMotivateMe.Core.Entities;
 
 /// <summary>
-/// Append-only event log for tracking user actions that can trigger milestones.
+///     Append-only event log for tracking user actions that can trigger milestones.
 /// </summary>
 public class DomainEvent
 {

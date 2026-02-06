@@ -17,13 +17,16 @@ public class EnglishEmailTemplates : IEmailTemplates
         return EmailTemplateBase.WrapContent("Login to Help Motivate Me", content);
     }
 
-    public string GetLoginLinkTextBody(string loginUrl) => $@"Login to Help Motivate Me
+    public string GetLoginLinkTextBody(string loginUrl)
+    {
+        return $@"Login to Help Motivate Me
 
 Click the link below to log in to your account. This link will expire in 24 hours.
 
 {loginUrl}
 
 If you didn't request this login link, you can safely ignore this email.";
+    }
 
     public string VerificationSubject => "Verify Your Email - Help Motivate Me";
 
@@ -40,7 +43,9 @@ If you didn't request this login link, you can safely ignore this email.";
         return EmailTemplateBase.WrapContent("Verify Your Email", content);
     }
 
-    public string GetVerificationTextBody(string verificationUrl) => $@"Verify Your Email
+    public string GetVerificationTextBody(string verificationUrl)
+    {
+        return $@"Verify Your Email
 
 Thank you for creating an account with Help Motivate Me! Please verify your email address to complete your registration.
 
@@ -49,8 +54,12 @@ Click the link below to verify your email:
 {verificationUrl}
 
 This link will expire in 24 hours. If you didn't create an account, you can safely ignore this email.";
+    }
 
-    public string GetBuddyInviteSubject(string inviterName) => $"{inviterName} wants you as their accountability buddy!";
+    public string GetBuddyInviteSubject(string inviterName)
+    {
+        return $"{inviterName} wants you as their accountability buddy!";
+    }
 
     public string GetBuddyInviteHtmlBody(string inviterName, string loginUrl)
     {
@@ -83,7 +92,9 @@ This link will expire in 24 hours. If you didn't create an account, you can safe
         return EmailTemplateBase.WrapContent("You've Been Invited as an Accountability Buddy!", content);
     }
 
-    public string GetBuddyInviteTextBody(string inviterName, string loginUrl) => $@"You've Been Invited as an Accountability Buddy!
+    public string GetBuddyInviteTextBody(string inviterName, string loginUrl)
+    {
+        return $@"You've Been Invited as an Accountability Buddy!
 
 {inviterName} has invited you to be their accountability buddy on Help Motivate Me.
 
@@ -103,8 +114,12 @@ Click here to accept the invitation and view their progress:
 {loginUrl}
 
 This link will expire in 7 days.";
+    }
 
-    public string GetBuddyJournalSubject(string buddyName) => $"{buddyName} left you an encouraging note!";
+    public string GetBuddyJournalSubject(string buddyName)
+    {
+        return $"{buddyName} left you an encouraging note!";
+    }
 
     public string GetBuddyJournalHtmlBody(string buddyName, string entryTitle, string journalUrl)
     {
@@ -122,7 +137,9 @@ This link will expire in 7 days.";
         return EmailTemplateBase.WrapContent("New Journal Entry from Your Buddy!", content);
     }
 
-    public string GetBuddyJournalTextBody(string buddyName, string entryTitle, string journalUrl) => $@"New Journal Entry from Your Buddy!
+    public string GetBuddyJournalTextBody(string buddyName, string entryTitle, string journalUrl)
+    {
+        return $@"New Journal Entry from Your Buddy!
 
 Your accountability buddy {buddyName} has written in your journal:
 
@@ -132,6 +149,7 @@ View the full entry here:
 {journalUrl}
 
 Keep up the great work! Your buddy is cheering you on.";
+    }
 
     public string WaitlistSubject => "You're on the waitlist! - Help Motivate Me";
 
@@ -160,7 +178,9 @@ Keep up the great work! Your buddy is cheering you on.";
         return EmailTemplateBase.WrapContent("You're on the Waitlist!", content);
     }
 
-    public string GetWaitlistTextBody(string name) => $@"You're on the Waitlist!
+    public string GetWaitlistTextBody(string name)
+    {
+        return $@"You're on the Waitlist!
 
 Hi {name},
 
@@ -175,6 +195,7 @@ We appreciate your patience and look forward to welcoming you soon!
 
 Best regards,
 The Help Motivate Me Team";
+    }
 
     public string WhitelistSubject => "You've been invited to Help Motivate Me!";
 
@@ -208,7 +229,9 @@ The Help Motivate Me Team";
         return EmailTemplateBase.WrapContent("Welcome to Help Motivate Me!", content);
     }
 
-    public string GetWhitelistTextBody(string loginUrl) => $@"Welcome to Help Motivate Me!
+    public string GetWhitelistTextBody(string loginUrl)
+    {
+        return $@"Welcome to Help Motivate Me!
 
 Great news! You've been granted access to Help Motivate Me.
 
@@ -224,4 +247,5 @@ What you can do with Help Motivate Me:
 
 Welcome aboard!
 The Help Motivate Me Team";
+    }
 }

@@ -1,5 +1,4 @@
 using HelpMotivateMe.Core.Entities;
-using HelpMotivateMe.Core.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

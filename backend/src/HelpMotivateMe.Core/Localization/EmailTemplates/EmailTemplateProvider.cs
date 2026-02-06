@@ -10,6 +10,8 @@ public static class EmailTemplateProvider
         { Language.Danish, new DanishEmailTemplates() }
     };
 
-    public static IEmailTemplates GetTemplates(Language language) =>
-        Templates.GetValueOrDefault(language, Templates[Language.English]);
+    public static IEmailTemplates GetTemplates(Language language)
+    {
+        return Templates.GetValueOrDefault(language, Templates[Language.English]);
+    }
 }

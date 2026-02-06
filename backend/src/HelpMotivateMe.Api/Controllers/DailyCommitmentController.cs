@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.DailyCommitment;
 using HelpMotivateMe.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -10,8 +9,8 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/daily-commitment")]
 public class DailyCommitmentController : ApiControllerBase
 {
-    private readonly IDailyCommitmentService _commitmentService;
     private readonly IAnalyticsService _analyticsService;
+    private readonly IDailyCommitmentService _commitmentService;
 
     public DailyCommitmentController(
         IDailyCommitmentService commitmentService,
@@ -22,7 +21,7 @@ public class DailyCommitmentController : ApiControllerBase
     }
 
     /// <summary>
-    /// Get the daily commitment for a specific date (defaults to today).
+    ///     Get the daily commitment for a specific date (defaults to today).
     /// </summary>
     [HttpGet]
     public async Task<ActionResult<DailyCommitmentResponse?>> GetCommitment([FromQuery] DateOnly? date = null)
@@ -36,7 +35,7 @@ public class DailyCommitmentController : ApiControllerBase
     }
 
     /// <summary>
-    /// Get identity options with scores for creating a commitment.
+    ///     Get identity options with scores for creating a commitment.
     /// </summary>
     [HttpGet("options")]
     public async Task<ActionResult<CommitmentOptionsResponse>> GetOptions()
@@ -53,7 +52,7 @@ public class DailyCommitmentController : ApiControllerBase
     }
 
     /// <summary>
-    /// Get action suggestions (habits and tasks) for a specific identity.
+    ///     Get action suggestions (habits and tasks) for a specific identity.
     /// </summary>
     [HttpGet("suggestions")]
     public async Task<ActionResult<ActionSuggestionsResponse>> GetSuggestions([FromQuery] Guid identityId)
@@ -66,7 +65,7 @@ public class DailyCommitmentController : ApiControllerBase
     }
 
     /// <summary>
-    /// Get yesterday's commitment info (for recovery message).
+    ///     Get yesterday's commitment info (for recovery message).
     /// </summary>
     [HttpGet("yesterday")]
     public async Task<ActionResult<YesterdayCommitmentResponse>> GetYesterdayCommitment()
@@ -79,10 +78,11 @@ public class DailyCommitmentController : ApiControllerBase
     }
 
     /// <summary>
-    /// Create a new daily commitment.
+    ///     Create a new daily commitment.
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<DailyCommitmentResponse>> CreateCommitment([FromBody] CreateDailyCommitmentRequest request)
+    public async Task<ActionResult<DailyCommitmentResponse>> CreateCommitment(
+        [FromBody] CreateDailyCommitmentRequest request)
     {
         var userId = GetUserId();
         var sessionId = GetSessionId();
@@ -108,7 +108,7 @@ public class DailyCommitmentController : ApiControllerBase
     }
 
     /// <summary>
-    /// Mark a commitment as completed.
+    ///     Mark a commitment as completed.
     /// </summary>
     [HttpPut("{id:guid}/complete")]
     public async Task<ActionResult<DailyCommitmentResponse>> CompleteCommitment(Guid id)
@@ -135,7 +135,7 @@ public class DailyCommitmentController : ApiControllerBase
     }
 
     /// <summary>
-    /// Dismiss a commitment for the day.
+    ///     Dismiss a commitment for the day.
     /// </summary>
     [HttpPut("{id:guid}/dismiss")]
     public async Task<ActionResult<DailyCommitmentResponse>> DismissCommitment(Guid id)

@@ -44,7 +44,7 @@ public class AuthControllerTests : IntegrationTestBase
 
         var request = new
         {
-            Email = existingUser.Email,
+            existingUser.Email,
             Password = "SecureP@ss123"
         };
 
@@ -56,7 +56,6 @@ public class AuthControllerTests : IntegrationTestBase
         var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
         error!.Message.Should().Contain("Email already exists");
     }
-
 
 
     [Fact]
@@ -151,7 +150,7 @@ public class AuthControllerTests : IntegrationTestBase
 
         var request = new
         {
-            Email = user.Email,
+            user.Email,
             Password = "AnyPassword"
         };
 
@@ -161,7 +160,6 @@ public class AuthControllerTests : IntegrationTestBase
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
-
 
 
     [Fact]
@@ -189,7 +187,6 @@ public class AuthControllerTests : IntegrationTestBase
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
-
 
 
     [Fact]
@@ -316,7 +313,6 @@ public class AuthControllerTests : IntegrationTestBase
     }
 
 
-
     [Fact]
     public async Task Logout_ReturnsNoContent()
     {
@@ -342,7 +338,6 @@ public class AuthControllerTests : IntegrationTestBase
     }
 
 
-
     private async Task<User> CreateUserWithPasswordAsync(string email, string password)
     {
         var user = new User
@@ -366,7 +361,6 @@ public class AuthControllerTests : IntegrationTestBase
         var hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, 100000, HashAlgorithmName.SHA256, 32);
         return $"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}";
     }
-
 }
 
 // Response DTOs for deserialization

@@ -97,7 +97,6 @@ public class TasksControllerTests : IntegrationTestBase
     }
 
 
-
     // [Fact] - REMOVED: Repeatable task feature has been removed
     // public async Task CompleteRepeatableTask_Daily_CalculatesNextOccurrence()
 
@@ -134,7 +133,8 @@ public class TasksControllerTests : IntegrationTestBase
         var user = await DataBuilder.CreateUserAsync();
         var goal = await DataBuilder.CreateGoalAsync(user.Id);
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
-        var task = await DataBuilder.CreateTaskAsync(goal.Id, "Toggle Task", status: TaskItemStatus.Completed, completedAt: today);
+        var task = await DataBuilder.CreateTaskAsync(goal.Id, "Toggle Task", TaskItemStatus.Completed,
+            completedAt: today);
 
         // Act
         Client.AuthenticateAs(user.Id);
@@ -147,7 +147,6 @@ public class TasksControllerTests : IntegrationTestBase
         toggled!.Status.Should().Be("Pending");
         toggled.CompletedAt.Should().BeNull();
     }
-
 
 
     [Fact]
@@ -189,7 +188,6 @@ public class TasksControllerTests : IntegrationTestBase
         // Assert - API returns BadRequest (400), not Conflict (409)
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
-
 
 
     [Fact]
@@ -245,7 +243,6 @@ public class TasksControllerTests : IntegrationTestBase
     }
 
 
-
     [Fact]
     public async Task ReorderTasks_UpdatesSortOrder()
     {
@@ -273,7 +270,6 @@ public class TasksControllerTests : IntegrationTestBase
     }
 
 
-
     [Fact]
     public async Task PostponeTask_UpdatesDueDate()
     {
@@ -284,7 +280,7 @@ public class TasksControllerTests : IntegrationTestBase
         var task = await DataBuilder.CreateTaskAsync(goal.Id, "Task to postpone", dueDate: today);
 
         var newDueDate = today.AddDays(7);
-        var request = new { NewDueDate = newDueDate };  // API expects NewDueDate, not DueDate
+        var request = new { NewDueDate = newDueDate }; // API expects NewDueDate, not DueDate
 
         // Act
         Client.AuthenticateAs(user.Id);
@@ -295,7 +291,6 @@ public class TasksControllerTests : IntegrationTestBase
         var updated = await response.Content.ReadFromJsonAsync<TaskResponse>();
         updated!.DueDate.Should().Be(newDueDate);
     }
-
 
 
     [Fact]
@@ -333,7 +328,6 @@ public class TasksControllerTests : IntegrationTestBase
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
-
 
 
     [Fact]
@@ -412,7 +406,6 @@ public class TasksControllerTests : IntegrationTestBase
 
     // [Fact] - REMOVED: Repeatable task feature has been removed
     // public async Task CompleteRepeatableTask_WithClientDate_CalculatesNextFromProvidedDate()
-
 }
 
 // Response DTOs for deserialization - matching the actual API response structure

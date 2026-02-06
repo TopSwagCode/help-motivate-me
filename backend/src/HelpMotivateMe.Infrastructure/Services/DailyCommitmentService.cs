@@ -9,13 +9,13 @@ namespace HelpMotivateMe.Infrastructure.Services;
 
 public class DailyCommitmentService : IDailyCommitmentService
 {
-    private readonly AppDbContext _context;
     private readonly IQueryInterface<DailyIdentityCommitment> _commitments;
-    private readonly IQueryInterface<Identity> _identities;
+    private readonly AppDbContext _context;
     private readonly IQueryInterface<HabitStackItem> _habitStackItems;
-    private readonly IQueryInterface<TaskItem> _tasks;
-    private readonly IQueryInterface<NotificationPreferences> _notificationPreferences;
+    private readonly IQueryInterface<Identity> _identities;
     private readonly IIdentityScoreService _identityScoreService;
+    private readonly IQueryInterface<NotificationPreferences> _notificationPreferences;
+    private readonly IQueryInterface<TaskItem> _tasks;
 
     public DailyCommitmentService(
         AppDbContext context,
@@ -36,7 +36,7 @@ public class DailyCommitmentService : IDailyCommitmentService
     }
 
     /// <summary>
-    /// Get the commitment for a specific date. Returns null if none exists.
+    ///     Get the commitment for a specific date. Returns null if none exists.
     /// </summary>
     public async Task<DailyCommitmentResponse?> GetCommitmentAsync(Guid userId, DateOnly date)
     {
@@ -48,7 +48,7 @@ public class DailyCommitmentService : IDailyCommitmentService
     }
 
     /// <summary>
-    /// Get identity options with scores for the commitment flow.
+    ///     Get identity options with scores for the commitment flow.
     /// </summary>
     public async Task<CommitmentOptionsResponse> GetIdentityOptionsAsync(Guid userId, DateOnly date)
     {
@@ -63,11 +63,9 @@ public class DailyCommitmentService : IDailyCommitmentService
         // Determine recommended identity based on mode
         Guid? recommendedIdentityId = null;
         if (scores.Any())
-        {
             recommendedIdentityId = defaultMode == "weakest"
                 ? scores.OrderBy(s => s.Score).First().Id
                 : scores.OrderByDescending(s => s.Score).First().Id;
-        }
 
         var identityOptions = scores.Select(s => new IdentityOptionResponse(
             s.Id,
@@ -82,7 +80,7 @@ public class DailyCommitmentService : IDailyCommitmentService
     }
 
     /// <summary>
-    /// Get action suggestions (habits and tasks) for a specific identity.
+    ///     Get action suggestions (habits and tasks) for a specific identity.
     /// </summary>
     public async Task<ActionSuggestionsResponse> GetActionSuggestionsAsync(Guid userId, Guid identityId)
     {
@@ -92,49 +90,45 @@ public class DailyCommitmentService : IDailyCommitmentService
         var habitItems = await _habitStackItems
             .Include(hsi => hsi.HabitStack)
             .Where(hsi => hsi.HabitStack.UserId == userId &&
-                         hsi.HabitStack.IdentityId == identityId &&
-                         hsi.HabitStack.IsActive)
+                          hsi.HabitStack.IdentityId == identityId &&
+                          hsi.HabitStack.IsActive)
             .OrderBy(hsi => hsi.HabitStack.SortOrder)
             .ThenBy(hsi => hsi.SortOrder)
             .Take(5)
             .ToListAsync();
 
         foreach (var item in habitItems)
-        {
             suggestions.Add(new ActionSuggestion(
                 item.HabitDescription,
                 "habit",
                 item.Id,
                 null
             ));
-        }
 
         // Get tasks linked to this identity
         var tasks = await _tasks
             .Include(t => t.Goal)
             .Where(t => t.Goal.UserId == userId &&
-                       t.IdentityId == identityId &&
-                       t.Status != TaskItemStatus.Completed &&
-                       !t.Goal.IsCompleted)
+                        t.IdentityId == identityId &&
+                        t.Status != TaskItemStatus.Completed &&
+                        !t.Goal.IsCompleted)
             .OrderBy(t => t.DueDate)
             .Take(5)
             .ToListAsync();
 
         foreach (var task in tasks)
-        {
             suggestions.Add(new ActionSuggestion(
                 task.Title,
                 "task",
                 null,
                 task.Id
             ));
-        }
 
         return new ActionSuggestionsResponse(suggestions);
     }
 
     /// <summary>
-    /// Create a new daily commitment.
+    ///     Create a new daily commitment.
     /// </summary>
     public async Task<DailyCommitmentResponse> CreateCommitmentAsync(Guid userId, CreateDailyCommitmentRequest request)
     {
@@ -144,17 +138,11 @@ public class DailyCommitmentService : IDailyCommitmentService
         var existing = await _context.DailyIdentityCommitments
             .FirstOrDefaultAsync(c => c.UserId == userId && c.CommitmentDate == today);
 
-        if (existing != null)
-        {
-            throw new InvalidOperationException("A commitment already exists for today.");
-        }
+        if (existing != null) throw new InvalidOperationException("A commitment already exists for today.");
 
         // Verify identity belongs to user
         var identity = await _identities.FirstOrDefaultAsync(i => i.Id == request.IdentityId && i.UserId == userId);
-        if (identity == null)
-        {
-            throw new InvalidOperationException("Invalid identity.");
-        }
+        if (identity == null) throw new InvalidOperationException("Invalid identity.");
 
         var commitment = new DailyIdentityCommitment
         {
@@ -177,7 +165,7 @@ public class DailyCommitmentService : IDailyCommitmentService
     }
 
     /// <summary>
-    /// Mark a commitment as completed. Awards +1 bonus vote to the identity score.
+    ///     Mark a commitment as completed. Awards +1 bonus vote to the identity score.
     /// </summary>
     public async Task<DailyCommitmentResponse> CompleteCommitmentAsync(Guid userId, Guid commitmentId)
     {
@@ -185,15 +173,10 @@ public class DailyCommitmentService : IDailyCommitmentService
             .Include(c => c.Identity)
             .FirstOrDefaultAsync(c => c.Id == commitmentId && c.UserId == userId);
 
-        if (commitment == null)
-        {
-            throw new InvalidOperationException("Commitment not found.");
-        }
+        if (commitment == null) throw new InvalidOperationException("Commitment not found.");
 
         if (commitment.Status != DailyCommitmentStatus.Committed)
-        {
             throw new InvalidOperationException("Commitment cannot be completed in its current state.");
-        }
 
         commitment.Status = DailyCommitmentStatus.Completed;
         commitment.CompletedAt = DateTime.UtcNow;
@@ -204,7 +187,7 @@ public class DailyCommitmentService : IDailyCommitmentService
     }
 
     /// <summary>
-    /// Dismiss a commitment for the day.
+    ///     Dismiss a commitment for the day.
     /// </summary>
     public async Task<DailyCommitmentResponse> DismissCommitmentAsync(Guid userId, Guid commitmentId)
     {
@@ -212,15 +195,10 @@ public class DailyCommitmentService : IDailyCommitmentService
             .Include(c => c.Identity)
             .FirstOrDefaultAsync(c => c.Id == commitmentId && c.UserId == userId);
 
-        if (commitment == null)
-        {
-            throw new InvalidOperationException("Commitment not found.");
-        }
+        if (commitment == null) throw new InvalidOperationException("Commitment not found.");
 
         if (commitment.Status != DailyCommitmentStatus.Committed)
-        {
             throw new InvalidOperationException("Commitment cannot be dismissed in its current state.");
-        }
 
         commitment.Status = DailyCommitmentStatus.Dismissed;
         commitment.DismissedAt = DateTime.UtcNow;
@@ -231,7 +209,7 @@ public class DailyCommitmentService : IDailyCommitmentService
     }
 
     /// <summary>
-    /// Get yesterday's commitment info (for recovery message display).
+    ///     Get yesterday's commitment info (for recovery message display).
     /// </summary>
     public async Task<YesterdayCommitmentResponse> GetYesterdayCommitmentAsync(Guid userId)
     {
@@ -242,10 +220,7 @@ public class DailyCommitmentService : IDailyCommitmentService
             .Include(c => c.Identity)
             .FirstOrDefaultAsync(c => c.UserId == userId && c.CommitmentDate == yesterday);
 
-        if (commitment == null)
-        {
-            return new YesterdayCommitmentResponse(false, null, null);
-        }
+        if (commitment == null) return new YesterdayCommitmentResponse(false, null, null);
 
         // Check if it was missed (Committed status means it was never completed)
         var wasMissed = commitment.Status == DailyCommitmentStatus.Committed;
@@ -267,7 +242,7 @@ public class DailyCommitmentService : IDailyCommitmentService
     }
 
     /// <summary>
-    /// Check if a habit stack item completion should auto-complete the daily commitment.
+    ///     Check if a habit stack item completion should auto-complete the daily commitment.
     /// </summary>
     public async Task<bool> CheckAndAutoCompleteForHabitAsync(Guid userId, Guid habitStackItemId)
     {
@@ -275,9 +250,9 @@ public class DailyCommitmentService : IDailyCommitmentService
 
         var commitment = await _context.DailyIdentityCommitments
             .FirstOrDefaultAsync(c => c.UserId == userId &&
-                                     c.CommitmentDate == today &&
-                                     c.Status == DailyCommitmentStatus.Committed &&
-                                     c.LinkedHabitStackItemId == habitStackItemId);
+                                      c.CommitmentDate == today &&
+                                      c.Status == DailyCommitmentStatus.Committed &&
+                                      c.LinkedHabitStackItemId == habitStackItemId);
 
         if (commitment != null)
         {
@@ -291,7 +266,7 @@ public class DailyCommitmentService : IDailyCommitmentService
     }
 
     /// <summary>
-    /// Check if a task completion should auto-complete the daily commitment.
+    ///     Check if a task completion should auto-complete the daily commitment.
     /// </summary>
     public async Task<bool> CheckAndAutoCompleteForTaskAsync(Guid userId, Guid taskId)
     {
@@ -299,9 +274,9 @@ public class DailyCommitmentService : IDailyCommitmentService
 
         var commitment = await _context.DailyIdentityCommitments
             .FirstOrDefaultAsync(c => c.UserId == userId &&
-                                     c.CommitmentDate == today &&
-                                     c.Status == DailyCommitmentStatus.Committed &&
-                                     c.LinkedTaskId == taskId);
+                                      c.CommitmentDate == today &&
+                                      c.Status == DailyCommitmentStatus.Committed &&
+                                      c.LinkedTaskId == taskId);
 
         if (commitment != null)
         {
@@ -333,7 +308,7 @@ public class DailyCommitmentService : IDailyCommitmentService
     }
 
     /// <summary>
-    /// Resolves the user's current local date based on their timezone settings.
+    ///     Resolves the user's current local date based on their timezone settings.
     /// </summary>
     private async Task<DateOnly> GetUserLocalDateAsync(Guid userId)
     {
@@ -341,17 +316,15 @@ public class DailyCommitmentService : IDailyCommitmentService
             .FirstOrDefaultAsync(np => np.UserId == userId);
 
         if (preferences == null)
-        {
             // Fallback to UTC if no preferences set
             return DateOnly.FromDateTime(DateTime.UtcNow);
-        }
 
         var localDateTime = ResolveLocalTime(DateTime.UtcNow, preferences.TimezoneId, preferences.UtcOffsetMinutes);
         return DateOnly.FromDateTime(localDateTime);
     }
 
     /// <summary>
-    /// Resolves the user's local time from UTC using their timezone settings.
+    ///     Resolves the user's local time from UTC using their timezone settings.
     /// </summary>
     private static DateTime ResolveLocalTime(DateTime utcNow, string timezoneId, int utcOffsetMinutes)
     {

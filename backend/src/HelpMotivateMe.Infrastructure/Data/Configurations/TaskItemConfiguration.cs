@@ -1,4 +1,5 @@
 using HelpMotivateMe.Core.Entities;
+using HelpMotivateMe.Core.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,7 +19,7 @@ public class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
         builder.Property(t => t.Status)
             .HasConversion<string>()
             .HasMaxLength(20)
-            .HasDefaultValue(Core.Enums.TaskItemStatus.Pending);
+            .HasDefaultValue(TaskItemStatus.Pending);
         builder.Property(t => t.SortOrder).HasDefaultValue(0);
         builder.Property(t => t.CreatedAt).HasDefaultValueSql("NOW()");
         builder.Property(t => t.UpdatedAt).HasDefaultValueSql("NOW()");

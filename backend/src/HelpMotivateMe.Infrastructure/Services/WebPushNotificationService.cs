@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text.Json;
 using HelpMotivateMe.Core.DTOs.Notifications;
 using HelpMotivateMe.Core.Interfaces;
@@ -12,11 +13,11 @@ namespace HelpMotivateMe.Infrastructure.Services;
 
 public class WebPushNotificationService : IPushNotificationService
 {
-    private readonly AppDbContext _db;
     private readonly IConfiguration _configuration;
+    private readonly AppDbContext _db;
     private readonly ILogger<WebPushNotificationService> _logger;
-    private readonly WebPushClient _webPushClient;
     private readonly VapidDetails _vapidDetails;
+    private readonly WebPushClient _webPushClient;
 
     public WebPushNotificationService(
         AppDbContext db,
@@ -30,14 +31,15 @@ public class WebPushNotificationService : IPushNotificationService
 
         var vapidSubject = _configuration["Vapid:Subject"] ?? "mailto:admin@helpmotivateme.app";
         var vapidPublicKey = _configuration["Vapid:PublicKey"]
-            ?? throw new InvalidOperationException("Vapid:PublicKey is not configured");
+                             ?? throw new InvalidOperationException("Vapid:PublicKey is not configured");
         var vapidPrivateKey = _configuration["Vapid:PrivateKey"]
-            ?? throw new InvalidOperationException("Vapid:PrivateKey is not configured");
+                              ?? throw new InvalidOperationException("Vapid:PrivateKey is not configured");
 
         _vapidDetails = new VapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey);
     }
 
-    public async Task<PushNotificationResult> SendToUserAsync(Guid userId, string title, string body, string? url = null)
+    public async Task<PushNotificationResult> SendToUserAsync(Guid userId, string title, string body,
+        string? url = null)
     {
         var subscriptions = await _db.PushSubscriptions
             .Where(s => s.UserId == userId)
@@ -46,7 +48,8 @@ public class WebPushNotificationService : IPushNotificationService
         return await SendToSubscriptionsAsync(subscriptions, title, body, url);
     }
 
-    public async Task<PushNotificationResult> SendToUsersAsync(IEnumerable<Guid> userIds, string title, string body, string? url = null)
+    public async Task<PushNotificationResult> SendToUsersAsync(IEnumerable<Guid> userIds, string title, string body,
+        string? url = null)
     {
         var userIdList = userIds.ToList();
         var subscriptions = await _db.PushSubscriptions
@@ -62,12 +65,13 @@ public class WebPushNotificationService : IPushNotificationService
         return await SendToSubscriptionsAsync(subscriptions, title, body, url);
     }
 
-    public async Task<bool> SendToSubscriptionAsync(PushSubscriptionEntity subscription, string title, string body, string? url = null)
+    public async Task<bool> SendToSubscriptionAsync(PushSubscriptionEntity subscription, string title, string body,
+        string? url = null)
     {
         try
         {
             var payload = CreatePayload(title, body, url);
-            var pushSubscription = new WebPush.PushSubscription(
+            var pushSubscription = new PushSubscription(
                 subscription.Endpoint,
                 subscription.P256dh,
                 subscription.Auth);
@@ -80,8 +84,8 @@ public class WebPushNotificationService : IPushNotificationService
 
             return true;
         }
-        catch (WebPushException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Gone ||
-                                           ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        catch (WebPushException ex) when (ex.StatusCode == HttpStatusCode.Gone ||
+                                          ex.StatusCode == HttpStatusCode.NotFound)
         {
             // Subscription is no longer valid, remove it
             _logger.LogInformation("Removing expired push subscription {SubscriptionId}", subscription.Id);
@@ -110,20 +114,16 @@ public class WebPushNotificationService : IPushNotificationService
         {
             var success = await SendToSubscriptionAsync(subscription, title, body, url);
             if (success)
-            {
                 successCount++;
-            }
             else
-            {
                 failureCount++;
-            }
         }
 
         return new PushNotificationResult(
-            TotalSubscriptions: subscriptions.Count,
-            SuccessCount: successCount,
-            FailureCount: failureCount,
-            Errors: errors
+            subscriptions.Count,
+            successCount,
+            failureCount,
+            errors
         );
     }
 

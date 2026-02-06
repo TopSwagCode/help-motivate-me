@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.Identities;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
@@ -14,10 +13,8 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/identities")]
 public class IdentitiesController : ApiControllerBase
 {
-    private readonly AppDbContext _db;
-    private readonly IQueryInterface<Identity> _identitiesQuery;
-    private readonly IAnalyticsService _analyticsService;
-    private static readonly string[] ReinforcementTemplates = [
+    private static readonly string[] ReinforcementTemplates =
+    [
         "That's what a {0} does!",
         "You're becoming a {0}!",
         "Another vote for being a {0}!",
@@ -25,7 +22,12 @@ public class IdentitiesController : ApiControllerBase
         "A true {0} moment!"
     ];
 
-    public IdentitiesController(AppDbContext db, IQueryInterface<Identity> identitiesQuery, IAnalyticsService analyticsService)
+    private readonly IAnalyticsService _analyticsService;
+    private readonly AppDbContext _db;
+    private readonly IQueryInterface<Identity> _identitiesQuery;
+
+    public IdentitiesController(AppDbContext db, IQueryInterface<Identity> identitiesQuery,
+        IAnalyticsService analyticsService)
     {
         _db = db;
         _identitiesQuery = identitiesQuery;
@@ -64,10 +66,7 @@ public class IdentitiesController : ApiControllerBase
             .Include(i => i.DailyCommitments)
             .FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
 
-        if (identity == null)
-        {
-            return NotFound();
-        }
+        if (identity == null) return NotFound();
 
         return Ok(MapToResponse(identity));
     }
@@ -104,10 +103,7 @@ public class IdentitiesController : ApiControllerBase
             .Include(i => i.DailyCommitments)
             .FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
 
-        if (identity == null)
-        {
-            return NotFound();
-        }
+        if (identity == null) return NotFound();
 
         identity.Name = request.Name;
         identity.Description = request.Description;
@@ -127,10 +123,7 @@ public class IdentitiesController : ApiControllerBase
         var identity = await _db.Identities
             .FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
 
-        if (identity == null)
-        {
-            return NotFound();
-        }
+        if (identity == null) return NotFound();
 
         _db.Identities.Remove(identity);
         await _db.SaveChangesAsync();
@@ -147,10 +140,7 @@ public class IdentitiesController : ApiControllerBase
             .Include(i => i.Tasks)
             .FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
 
-        if (identity == null)
-        {
-            return NotFound();
-        }
+        if (identity == null) return NotFound();
 
         var completedTasks = identity.Tasks.Count(t => t.Status == TaskItemStatus.Completed);
         var reinforcementMessage = GenerateReinforcementMessage(identity.Name, completedTasks);
@@ -186,7 +176,8 @@ public class IdentitiesController : ApiControllerBase
 
         // Daily commitments stats
         var totalDailyCommitments = identity.DailyCommitments.Count;
-        var completedDailyCommitments = identity.DailyCommitments.Count(dc => dc.Status == DailyCommitmentStatus.Completed);
+        var completedDailyCommitments =
+            identity.DailyCommitments.Count(dc => dc.Status == DailyCommitmentStatus.Completed);
 
         return new IdentityResponse(
             identity.Id,
