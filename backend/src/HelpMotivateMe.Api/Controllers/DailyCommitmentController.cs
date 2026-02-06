@@ -7,12 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HelpMotivateMe.Api.Controllers;
 
-[ApiController]
 [Authorize]
 [Route("api/daily-commitment")]
-public class DailyCommitmentController : ControllerBase
+public class DailyCommitmentController : ApiControllerBase
 {
-    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly DailyCommitmentService _commitmentService;
     private readonly IAnalyticsService _analyticsService;
 
@@ -162,24 +160,5 @@ public class DailyCommitmentController : ControllerBase
         {
             return BadRequest(new { message = ex.Message });
         }
-    }
-
-    private Guid GetUserId()
-    {
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return Guid.Parse(userIdClaim!);
-    }
-
-    private Guid GetSessionId()
-    {
-        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
-        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
-        {
-            return sessionId;
-        }
-
-        var newSessionId = Guid.NewGuid();
-        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
-        return newSessionId;
     }
 }

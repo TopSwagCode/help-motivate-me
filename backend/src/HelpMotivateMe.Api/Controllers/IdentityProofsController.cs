@@ -7,12 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HelpMotivateMe.Api.Controllers;
 
-[ApiController]
 [Authorize]
 [Route("api/identity-proofs")]
-public class IdentityProofsController : ControllerBase
+public class IdentityProofsController : ApiControllerBase
 {
-    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly IdentityProofService _proofService;
     private readonly IAnalyticsService _analyticsService;
     private readonly IMilestoneService _milestoneService;
@@ -92,24 +90,5 @@ public class IdentityProofsController : ControllerBase
         });
 
         return NoContent();
-    }
-
-    private Guid GetUserId()
-    {
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return Guid.Parse(userIdClaim!);
-    }
-
-    private Guid GetSessionId()
-    {
-        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
-        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
-        {
-            return sessionId;
-        }
-
-        var newSessionId = Guid.NewGuid();
-        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
-        return newSessionId;
     }
 }

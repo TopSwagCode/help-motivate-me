@@ -9,10 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HelpMotivateMe.Api.Controllers;
 
-[ApiController]
 [Route("api/notifications/push")]
 [Authorize]
-public class PushNotificationsController : ControllerBase
+public class PushNotificationsController : ApiControllerBase
 {
     private readonly AppDbContext _db;
     private readonly IQueryInterface<PushSubscription> _pushSubscriptionsQuery;
@@ -29,12 +28,6 @@ public class PushNotificationsController : ControllerBase
         _pushSubscriptionsQuery = pushSubscriptionsQuery;
         _usersQuery = usersQuery;
         _pushService = pushService;
-    }
-
-    private Guid GetUserId()
-    {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        return Guid.Parse(userIdClaim!);
     }
 
     /// <summary>

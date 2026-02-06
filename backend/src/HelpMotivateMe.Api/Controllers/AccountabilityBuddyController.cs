@@ -11,12 +11,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HelpMotivateMe.Api.Controllers;
 
-[ApiController]
 [Authorize]
 [Route("api/buddies")]
-public class AccountabilityBuddyController : ControllerBase
+public class AccountabilityBuddyController : ApiControllerBase
 {
-    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
     private readonly IQueryInterface<AccountabilityBuddy> _buddies;
     private readonly IQueryInterface<HabitStack> _habitStacks;
@@ -711,24 +709,6 @@ public class AccountabilityBuddyController : ControllerBase
             _ => $"Keep building {identityName}!"
         };
 
-    private Guid GetUserId()
-    {
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return Guid.Parse(userIdClaim!);
-    }
-
-    private Guid GetSessionId()
-    {
-        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
-        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
-        {
-            return sessionId;
-        }
-
-        var newSessionId = Guid.NewGuid();
-        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
-        return newSessionId;
-    }
 }
 
 // DTOs for Accountability Buddy

@@ -10,12 +10,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HelpMotivateMe.Api.Controllers;
 
-[ApiController]
 [Authorize]
 [Route("api/analytics")]
-public class AnalyticsController : ControllerBase
+public class AnalyticsController : ApiControllerBase
 {
-    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly IQueryInterface<TaskItem> _tasks;
     private readonly IAnalyticsService _analyticsService;
 
@@ -106,24 +104,5 @@ public class AnalyticsController : ControllerBase
             .ToListAsync();
 
         return Ok(heatmapData);
-    }
-
-    private Guid GetUserId()
-    {
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return Guid.Parse(userIdClaim!);
-    }
-
-    private Guid GetSessionId()
-    {
-        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
-        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
-        {
-            return sessionId;
-        }
-
-        var newSessionId = Guid.NewGuid();
-        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
-        return newSessionId;
     }
 }

@@ -10,12 +10,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HelpMotivateMe.Api.Controllers;
 
-[ApiController]
 [Route("api/journal")]
 [Authorize]
-public class JournalController : ControllerBase
+public class JournalController : ApiControllerBase
 {
-    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
     private readonly IQueryInterface<JournalEntry> _journalEntriesQuery;
     private readonly IQueryInterface<HabitStack> _habitStacksQuery;
@@ -413,25 +411,6 @@ public class JournalController : ControllerBase
             .ToListAsync();
 
         return Ok(tasks);
-    }
-
-    private Guid GetUserId()
-    {
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return Guid.Parse(userIdClaim!);
-    }
-
-    private Guid GetSessionId()
-    {
-        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
-        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
-        {
-            return sessionId;
-        }
-
-        var newSessionId = Guid.NewGuid();
-        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
-        return newSessionId;
     }
 
     private JournalEntryResponse MapToResponse(JournalEntry entry)

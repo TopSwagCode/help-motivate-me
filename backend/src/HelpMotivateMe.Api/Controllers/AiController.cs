@@ -11,10 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HelpMotivateMe.Api.Controllers;
 
-[ApiController]
 [Route("api/ai")]
 [Authorize]
-public class AiController : ControllerBase
+public class AiController : ApiControllerBase
 {
     private readonly IOpenAiService _openAiService;
     private readonly ILogger<AiController> _logger;
@@ -213,11 +212,5 @@ public class AiController : ControllerBase
         await _db.SaveChangesAsync(cancellationToken);
 
         return Ok(identity);
-    }
-
-    private Guid GetUserId()
-    {
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return Guid.Parse(userIdClaim!);
     }
 }

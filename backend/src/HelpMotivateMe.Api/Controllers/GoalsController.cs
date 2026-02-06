@@ -10,12 +10,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HelpMotivateMe.Api.Controllers;
 
-[ApiController]
 [Route("api/goals")]
 [Authorize]
-public class GoalsController : ControllerBase
+public class GoalsController : ApiControllerBase
 {
-    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
     private readonly IQueryInterface<Goal> _goalsQuery;
     private readonly IAnalyticsService _analyticsService;
@@ -208,25 +206,6 @@ public class GoalsController : ControllerBase
         await _db.SaveChangesAsync();
 
         return NoContent();
-    }
-
-    private Guid GetUserId()
-    {
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return Guid.Parse(userIdClaim!);
-    }
-
-    private Guid GetSessionId()
-    {
-        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
-        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
-        {
-            return sessionId;
-        }
-
-        var newSessionId = Guid.NewGuid();
-        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
-        return newSessionId;
     }
 
     private static GoalResponse MapToResponse(Goal goal)

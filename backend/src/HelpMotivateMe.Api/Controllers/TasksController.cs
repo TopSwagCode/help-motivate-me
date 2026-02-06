@@ -10,11 +10,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HelpMotivateMe.Api.Controllers;
 
-[ApiController]
 [Authorize]
-public class TasksController : ControllerBase
+[Route("api")]
+public class TasksController : ApiControllerBase
 {
-    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
     private readonly IQueryInterface<TaskItem> _taskItemsQuery;
     private readonly IQueryInterface<Goal> _goalsQuery;
@@ -402,25 +401,6 @@ public class TasksController : ControllerBase
         await _db.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetTask), new { id = tinyTask.Id }, MapToResponse(tinyTask));
-    }
-
-    private Guid GetUserId()
-    {
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return Guid.Parse(userIdClaim!);
-    }
-
-    private Guid GetSessionId()
-    {
-        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
-        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
-        {
-            return sessionId;
-        }
-
-        var newSessionId = Guid.NewGuid();
-        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
-        return newSessionId;
     }
 
     private static TaskResponse MapToResponse(TaskItem task)

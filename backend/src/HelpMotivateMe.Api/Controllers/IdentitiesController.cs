@@ -10,12 +10,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HelpMotivateMe.Api.Controllers;
 
-[ApiController]
 [Authorize]
 [Route("api/identities")]
-public class IdentitiesController : ControllerBase
+public class IdentitiesController : ApiControllerBase
 {
-    private const string SessionIdKey = "AnalyticsSessionId";
     private readonly AppDbContext _db;
     private readonly IQueryInterface<Identity> _identitiesQuery;
     private readonly IAnalyticsService _analyticsService;
@@ -165,25 +163,6 @@ public class IdentitiesController : ControllerBase
             completedTasks,
             reinforcementMessage
         ));
-    }
-
-    private Guid GetUserId()
-    {
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return Guid.Parse(userIdClaim!);
-    }
-
-    private Guid GetSessionId()
-    {
-        var sessionIdString = HttpContext.Session.GetString(SessionIdKey);
-        if (sessionIdString != null && Guid.TryParse(sessionIdString, out var sessionId))
-        {
-            return sessionId;
-        }
-
-        var newSessionId = Guid.NewGuid();
-        HttpContext.Session.SetString(SessionIdKey, newSessionId.ToString());
-        return newSessionId;
     }
 
     private static IdentityResponse MapToResponse(Identity identity)
