@@ -17,13 +17,20 @@ public class HabitStacksController : ApiControllerBase
     private readonly IQueryInterface<HabitStack> _habitStacksQuery;
     private readonly IAnalyticsService _analyticsService;
     private readonly IMilestoneService _milestoneService;
+    private readonly IHabitStackService _habitStackService;
 
-    public HabitStacksController(AppDbContext db, IQueryInterface<HabitStack> habitStacksQuery, IAnalyticsService analyticsService, IMilestoneService milestoneService)
+    public HabitStacksController(
+        AppDbContext db,
+        IQueryInterface<HabitStack> habitStacksQuery,
+        IAnalyticsService analyticsService,
+        IMilestoneService milestoneService,
+        IHabitStackService habitStackService)
     {
         _db = db;
         _habitStacksQuery = habitStacksQuery;
         _analyticsService = analyticsService;
         _milestoneService = milestoneService;
+        _habitStackService = habitStackService;
     }
 
     [HttpGet]
@@ -290,64 +297,24 @@ public class HabitStacksController : ApiControllerBase
         [FromQuery] DateOnly? date = null)
     {
         var userId = GetUserId();
+        var sessionId = GetSessionId();
         var targetDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
 
-        var item = await _db.HabitStackItems
-            .Include(i => i.HabitStack)
-            .Include(i => i.Completions)
-            .FirstOrDefaultAsync(i => i.Id == itemId && i.HabitStack.UserId == userId);
+        var result = await _habitStackService.ToggleItemCompletionAsync(itemId, userId, targetDate);
 
-        if (item == null)
+        if (result == null)
         {
             return NotFound();
         }
 
-        var existingCompletion = item.Completions.FirstOrDefault(c => c.CompletedDate == targetDate);
-
-        var wasCompleted = existingCompletion != null;
-
-        if (existingCompletion != null)
+        // Log analytics if this was a new completion
+        if (result.WasNewlyCompleted)
         {
-            // Toggle off - remove completion
-            _db.HabitStackItemCompletions.Remove(existingCompletion);
-            item.Completions.Remove(existingCompletion);
-
-            // Recalculate streak
-            RecalculateStreak(item, targetDate);
-        }
-        else
-        {
-            // Complete for this date
-            var completion = new HabitStackItemCompletion
-            {
-                HabitStackItemId = itemId,
-                CompletedDate = targetDate,
-                CompletedAt = DateTime.UtcNow
-            };
-            _db.HabitStackItemCompletions.Add(completion);
-            item.Completions.Add(completion);
-            item.LastCompletedDate = targetDate;
-
-            // Update streak
-            UpdateStreak(item, targetDate);
+            await _analyticsService.LogEventAsync(userId, sessionId, "HabitCompleted", new { habitStackId = result.HabitStackId, itemId });
+            await _milestoneService.RecordEventAsync(userId, "HabitCompleted", new { habitStackId = result.HabitStackId, itemId });
         }
 
-        await _db.SaveChangesAsync();
-
-        if (!wasCompleted)
-        {
-            var sessionId = GetSessionId();
-            await _analyticsService.LogEventAsync(userId, sessionId, "HabitCompleted", new { habitStackId = item.HabitStackId, itemId });
-            await _milestoneService.RecordEventAsync(userId, "HabitCompleted", new { habitStackId = item.HabitStackId, itemId });
-        }
-
-        return Ok(new HabitStackItemCompletionResponse(
-            item.Id,
-            item.HabitDescription,
-            item.CurrentStreak,
-            item.LongestStreak,
-            existingCompletion == null // isCompleted - true if we just added completion
-        ));
+        return Ok(result.ToResponse());
     }
 
     /// <summary>
@@ -361,113 +328,20 @@ public class HabitStacksController : ApiControllerBase
         var userId = GetUserId();
         var targetDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
 
-        var stack = await _db.HabitStacks
-            .Include(hs => hs.Items)
-                .ThenInclude(i => i.Completions)
-            .FirstOrDefaultAsync(hs => hs.Id == id && hs.UserId == userId);
+        var result = await _habitStackService.CompleteAllItemsAsync(id, userId, targetDate);
 
-        if (stack == null)
+        if (result == null)
         {
             return NotFound();
         }
 
-        var completedCount = 0;
-
-        foreach (var item in stack.Items)
-        {
-            var existingCompletion = item.Completions.FirstOrDefault(c => c.CompletedDate == targetDate);
-
-            if (existingCompletion == null)
-            {
-                // Complete for this date
-                var completion = new HabitStackItemCompletion
-                {
-                    HabitStackItemId = item.Id,
-                    CompletedDate = targetDate,
-                    CompletedAt = DateTime.UtcNow
-                };
-                _db.HabitStackItemCompletions.Add(completion);
-                item.Completions.Add(completion);
-                item.LastCompletedDate = targetDate;
-
-                // Update streak
-                UpdateStreak(item, targetDate);
-                completedCount++;
-            }
-        }
-
-        await _db.SaveChangesAsync();
-
         // Record milestone events for each completed habit
-        for (var i = 0; i < completedCount; i++)
+        for (var i = 0; i < result.CompletedCount; i++)
         {
-            await _milestoneService.RecordEventAsync(userId, "HabitCompleted", new { habitStackId = stack.Id });
+            await _milestoneService.RecordEventAsync(userId, "HabitCompleted", new { habitStackId = id });
         }
 
-        return Ok(new CompleteAllResponse(
-            stack.Id,
-            completedCount,
-            stack.Items.Count
-        ));
-    }
-
-    private void UpdateStreak(HabitStackItem item, DateOnly completedDate)
-    {
-        var yesterday = completedDate.AddDays(-1);
-        var hadCompletionYesterday = item.Completions.Any(c => c.CompletedDate == yesterday);
-
-        if (hadCompletionYesterday || item.CurrentStreak == 0)
-        {
-            item.CurrentStreak++;
-        }
-        else
-        {
-            // Gap in streak, reset to 1
-            item.CurrentStreak = 1;
-        }
-
-        if (item.CurrentStreak > item.LongestStreak)
-        {
-            item.LongestStreak = item.CurrentStreak;
-        }
-    }
-
-    private void RecalculateStreak(HabitStackItem item, DateOnly removedDate)
-    {
-        // Recalculate streak from scratch based on remaining completions
-        var sortedCompletions = item.Completions
-            .Where(c => c.CompletedDate != removedDate)
-            .OrderByDescending(c => c.CompletedDate)
-            .ToList();
-
-        if (!sortedCompletions.Any())
-        {
-            item.CurrentStreak = 0;
-            item.LastCompletedDate = null;
-            return;
-        }
-
-        item.LastCompletedDate = sortedCompletions.First().CompletedDate;
-
-        // Calculate current streak from most recent completion
-        var streak = 1;
-        var currentDate = sortedCompletions[0].CompletedDate;
-
-        for (var i = 1; i < sortedCompletions.Count; i++)
-        {
-            var expectedPrevious = currentDate.AddDays(-1);
-            if (sortedCompletions[i].CompletedDate == expectedPrevious)
-            {
-                streak++;
-                currentDate = sortedCompletions[i].CompletedDate;
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        item.CurrentStreak = streak;
+        return Ok(result);
     }
 
     private static HabitStackResponse MapToResponse(HabitStack stack)
@@ -493,17 +367,3 @@ public class HabitStacksController : ApiControllerBase
         );
     }
 }
-
-public record HabitStackItemCompletionResponse(
-    Guid ItemId,
-    string HabitDescription,
-    int CurrentStreak,
-    int LongestStreak,
-    bool IsCompleted
-);
-
-public record CompleteAllResponse(
-    Guid StackId,
-    int CompletedCount,
-    int TotalCount
-);

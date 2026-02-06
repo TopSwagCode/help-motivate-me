@@ -104,11 +104,9 @@ public class AuthController : ApiControllerBase
     public async Task<ActionResult<UserResponse>> GetCurrentUser()
     {
         var userId = GetUserId();
-        if (userId == null) return Unauthorized();
+        var user = await _authService.GetUserWithExternalLoginsAsync(userId);
 
-        var user = await _authService.GetUserWithExternalLoginsAsync(userId.Value);
-
-        await _analyticsService.LogEventAsync(userId.Value, GetSessionId(), "SettingsPageLoaded");
+        await _analyticsService.LogEventAsync(userId, GetSessionId(), "SettingsPageLoaded");
 
         return Ok(MapToResponse(user));
     }
@@ -200,14 +198,13 @@ public class AuthController : ApiControllerBase
     public async Task<IActionResult> UnlinkExternalLogin(string provider)
     {
         var userId = GetUserId();
-        if (userId == null) return Unauthorized();
 
-        if (!await _authService.CanRemoveLoginMethodAsync(userId.Value))
+        if (!await _authService.CanRemoveLoginMethodAsync(userId))
         {
             return BadRequest(new { message = "Cannot remove last login method. Set a password first." });
         }
 
-        var success = await _authService.UnlinkExternalLoginAsync(userId.Value, provider);
+        var success = await _authService.UnlinkExternalLoginAsync(userId, provider);
         if (!success)
         {
             return NotFound(new { message = "External login not found" });
@@ -353,9 +350,8 @@ public class AuthController : ApiControllerBase
     public async Task<ActionResult<UserResponse>> UpdateProfile([FromBody] UpdateProfileRequest request)
     {
         var userId = GetUserId();
-        if (userId == null) return Unauthorized();
 
-        var user = await _authService.GetUserWithExternalLoginsAsync(userId.Value);
+        var user = await _authService.GetUserWithExternalLoginsAsync(userId);
 
         user.DisplayName = string.IsNullOrWhiteSpace(request.DisplayName)
             ? null
@@ -370,9 +366,8 @@ public class AuthController : ApiControllerBase
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
     {
         var userId = GetUserId();
-        if (userId == null) return Unauthorized();
 
-        var user = await _authService.GetUserByIdAsync(userId.Value);
+        var user = await _authService.GetUserByIdAsync(userId);
         if (user == null) return NotFound();
 
         if (user.PasswordHash == null)
@@ -401,9 +396,8 @@ public class AuthController : ApiControllerBase
     public async Task<ActionResult<UserResponse>> UpdateMembership([FromBody] UpdateMembershipRequest request)
     {
         var userId = GetUserId();
-        if (userId == null) return Unauthorized();
 
-        var user = await _authService.GetUserWithExternalLoginsAsync(userId.Value);
+        var user = await _authService.GetUserWithExternalLoginsAsync(userId);
 
         if (!Enum.TryParse<MembershipTier>(request.Tier, true, out var tier))
         {
@@ -421,9 +415,8 @@ public class AuthController : ApiControllerBase
     public async Task<ActionResult<UserResponse>> CompleteOnboarding()
     {
         var userId = GetUserId();
-        if (userId == null) return Unauthorized();
 
-        var user = await _authService.GetUserWithExternalLoginsAsync(userId.Value);
+        var user = await _authService.GetUserWithExternalLoginsAsync(userId);
 
         user.HasCompletedOnboarding = true;
         await _authService.UpdateUserAsync(user);
@@ -436,9 +429,8 @@ public class AuthController : ApiControllerBase
     public async Task<ActionResult<UserResponse>> ResetOnboarding()
     {
         var userId = GetUserId();
-        if (userId == null) return Unauthorized();
 
-        var user = await _authService.GetUserWithExternalLoginsAsync(userId.Value);
+        var user = await _authService.GetUserWithExternalLoginsAsync(userId);
 
         user.HasCompletedOnboarding = false;
         await _authService.UpdateUserAsync(user);
@@ -451,9 +443,8 @@ public class AuthController : ApiControllerBase
     public async Task<ActionResult<UserResponse>> UpdateLanguage([FromBody] UpdateLanguageRequest request)
     {
         var userId = GetUserId();
-        if (userId == null) return Unauthorized();
 
-        var user = await _authService.GetUserWithExternalLoginsAsync(userId.Value);
+        var user = await _authService.GetUserWithExternalLoginsAsync(userId);
 
         if (!Enum.TryParse<Language>(request.Language, true, out var language))
         {
@@ -471,9 +462,8 @@ public class AuthController : ApiControllerBase
     public async Task<ActionResult<NotificationPreferencesResponse>> GetNotificationPreferences()
     {
         var userId = GetUserId();
-        if (userId == null) return Unauthorized();
 
-        var prefs = await _authService.GetOrCreateNotificationPreferencesAsync(userId.Value);
+        var prefs = await _authService.GetOrCreateNotificationPreferencesAsync(userId);
         return Ok(MapToNotificationPreferencesResponse(prefs));
     }
 
@@ -483,9 +473,8 @@ public class AuthController : ApiControllerBase
         [FromBody] UpdateNotificationPreferencesRequest request)
     {
         var userId = GetUserId();
-        if (userId == null) return Unauthorized();
 
-        var prefs = await _authService.UpdateNotificationPreferencesAsync(userId.Value, request);
+        var prefs = await _authService.UpdateNotificationPreferencesAsync(userId, request);
         return Ok(MapToNotificationPreferencesResponse(prefs));
     }
 
@@ -533,9 +522,8 @@ public class AuthController : ApiControllerBase
     public async Task<IActionResult> DeleteAccount([FromBody] DeleteAccountRequest request)
     {
         var userId = GetUserId();
-        if (userId == null) return Unauthorized();
 
-        var user = await _authService.GetUserWithExternalLoginsAsync(userId.Value);
+        var user = await _authService.GetUserWithExternalLoginsAsync(userId);
 
         if (user.PasswordHash != null)
         {
@@ -550,7 +538,7 @@ public class AuthController : ApiControllerBase
             }
         }
 
-        await _authService.DeleteAccountAsync(userId.Value);
+        await _authService.DeleteAccountAsync(userId);
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
         return NoContent();

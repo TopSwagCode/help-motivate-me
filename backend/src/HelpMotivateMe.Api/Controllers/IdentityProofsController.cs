@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.IdentityProofs;
 using HelpMotivateMe.Core.Interfaces;
-using HelpMotivateMe.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,12 +10,12 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/identity-proofs")]
 public class IdentityProofsController : ApiControllerBase
 {
-    private readonly IdentityProofService _proofService;
+    private readonly IIdentityProofService _proofService;
     private readonly IAnalyticsService _analyticsService;
     private readonly IMilestoneService _milestoneService;
 
     public IdentityProofsController(
-        IdentityProofService proofService,
+        IIdentityProofService proofService,
         IAnalyticsService analyticsService,
         IMilestoneService milestoneService)
     {

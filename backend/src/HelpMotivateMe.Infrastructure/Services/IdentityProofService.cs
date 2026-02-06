@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HelpMotivateMe.Infrastructure.Services;
 
-public class IdentityProofService
+public class IdentityProofService : IIdentityProofService
 {
     private readonly AppDbContext _context;
     private readonly IQueryInterface<Identity> _identities;

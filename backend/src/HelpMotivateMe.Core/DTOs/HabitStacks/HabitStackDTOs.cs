@@ -81,3 +81,36 @@ public record TodayHabitStackItemResponse(
     bool IsCompletedToday,
     int CurrentStreak
 );
+
+// Response DTOs for habit completion
+public record HabitStackItemCompletionResponse(
+    Guid ItemId,
+    string HabitDescription,
+    int CurrentStreak,
+    int LongestStreak,
+    bool IsCompleted
+);
+
+/// <summary>
+/// Extended result from the service layer, includes extra data for analytics tracking.
+/// </summary>
+public record HabitStackItemCompletionResult(
+    Guid ItemId,
+    Guid HabitStackId,
+    string HabitDescription,
+    int CurrentStreak,
+    int LongestStreak,
+    bool IsCompleted,
+    bool WasNewlyCompleted
+)
+{
+    public HabitStackItemCompletionResponse ToResponse() => new(
+        ItemId, HabitDescription, CurrentStreak, LongestStreak, IsCompleted
+    );
+}
+
+public record CompleteAllResponse(
+    Guid StackId,
+    int CompletedCount,
+    int TotalCount
+);

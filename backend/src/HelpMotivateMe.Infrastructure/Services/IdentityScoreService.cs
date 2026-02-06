@@ -11,7 +11,7 @@ namespace HelpMotivateMe.Infrastructure.Services;
 /// The scoring system measures identity strength and momentum, designed to be
 /// forgiving, anti-shame, and motivating.
 /// </summary>
-public class IdentityScoreService
+public class IdentityScoreService : IIdentityScoreService
 {
     private readonly IQueryInterface<Identity> _identities;
     private readonly IQueryInterface<HabitStackItemCompletion> _completions;
@@ -332,43 +332,4 @@ public class IdentityScoreService
         >= 25 => IdentityStatus.Forming,
         _ => IdentityStatus.Dormant
     };
-}
-
-/// <summary>
-/// Result of identity score calculation.
-/// </summary>
-public record IdentityScoreResult(
-    Guid Id,
-    string Name,
-    string? Color,
-    string? Icon,
-    int Score,
-    IdentityStatus Status,
-    TrendDirection Trend,
-    int AccountAgeDays,
-    bool ShowNumericScore,
-    int TodayVotes
-);
-
-/// <summary>
-/// Identity status labels based on score.
-/// </summary>
-public enum IdentityStatus
-{
-    Dormant,      // 0-24
-    Forming,      // 25-39
-    Emerging,     // 40-59
-    Stabilizing,  // 60-74
-    Strong,       // 75-89
-    Automatic     // 90-100
-}
-
-/// <summary>
-/// Trend direction for identity momentum.
-/// </summary>
-public enum TrendDirection
-{
-    Up,
-    Down,
-    Neutral
 }

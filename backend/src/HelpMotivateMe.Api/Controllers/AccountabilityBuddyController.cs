@@ -1,7 +1,6 @@
 using HelpMotivateMe.Core.DTOs.HabitStacks;
 using HelpMotivateMe.Core.DTOs.Today;
 using HelpMotivateMe.Core.Interfaces;
-using HelpMotivateMe.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,11 +10,11 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/buddies")]
 public class AccountabilityBuddyController : ApiControllerBase
 {
-    private readonly AccountabilityBuddyService _buddyService;
+    private readonly IAccountabilityBuddyService _buddyService;
     private readonly IAnalyticsService _analyticsService;
 
     public AccountabilityBuddyController(
-        AccountabilityBuddyService buddyService,
+        IAccountabilityBuddyService buddyService,
         IAnalyticsService analyticsService)
     {
         _buddyService = buddyService;

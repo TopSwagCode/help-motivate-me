@@ -58,22 +58,28 @@ builder.Services.Configure<AiBudgetOptions>(builder.Configuration.GetSection(AiB
 builder.Services.AddScoped<IAiBudgetService, AiBudgetService>();
 
 // Identity Score Service
-builder.Services.AddScoped<IdentityScoreService>();
+builder.Services.AddScoped<IIdentityScoreService, IdentityScoreService>();
 
 // Today View Service
-builder.Services.AddScoped<TodayViewService>();
+builder.Services.AddScoped<ITodayViewService, TodayViewService>();
 
 // Daily Commitment Service
-builder.Services.AddScoped<DailyCommitmentService>();
+builder.Services.AddScoped<IDailyCommitmentService, DailyCommitmentService>();
 
 // Identity Proof Service
-builder.Services.AddScoped<IdentityProofService>();
+builder.Services.AddScoped<IIdentityProofService, IdentityProofService>();
 
 // Auth Service
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Accountability Buddy Service
-builder.Services.AddScoped<AccountabilityBuddyService>();
+builder.Services.AddScoped<IAccountabilityBuddyService, AccountabilityBuddyService>();
+
+// Habit Stack Service
+builder.Services.AddScoped<IHabitStackService, HabitStackService>();
+
+// Admin Service
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 // Daily Commitment Notification Service
 builder.Services.AddScoped<IDailyCommitmentNotificationService, DailyCommitmentNotificationService>();

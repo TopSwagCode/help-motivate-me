@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using HelpMotivateMe.Core.DTOs.Buddies;
 using HelpMotivateMe.Core.DTOs.HabitStacks;
 using HelpMotivateMe.Core.DTOs.Today;
 using HelpMotivateMe.Core.Entities;
@@ -12,7 +13,7 @@ namespace HelpMotivateMe.Infrastructure.Services;
 /// <summary>
 /// Service for managing accountability buddy relationships and buddy-related operations.
 /// </summary>
-public class AccountabilityBuddyService
+public class AccountabilityBuddyService : IAccountabilityBuddyService
 {
     private readonly AppDbContext _db;
     private readonly IQueryInterface<AccountabilityBuddy> _buddies;
@@ -20,7 +21,7 @@ public class AccountabilityBuddyService
     private readonly IStorageService _storage;
     private readonly IEmailService _emailService;
     private readonly IConfiguration _configuration;
-    private readonly TodayViewService _todayViewService;
+    private readonly ITodayViewService _todayViewService;
 
     public AccountabilityBuddyService(
         AppDbContext db,
@@ -29,7 +30,7 @@ public class AccountabilityBuddyService
         IStorageService storage,
         IEmailService emailService,
         IConfiguration configuration,
-        TodayViewService todayViewService)
+        ITodayViewService todayViewService)
     {
         _db = db;
         _buddies = buddies;
@@ -433,36 +434,4 @@ public class AccountabilityBuddyService
         await _db.SaveChangesAsync();
         return true;
     }
-
 }
-
-// Result types
-public record InviteBuddyResult(bool Success, string? ErrorMessage, BuddyInfo? Buddy);
-public record UploadImageResult(bool Success, string? ErrorMessage, BuddyJournalImageData? Image);
-public record AddReactionResult(bool Success, string? ErrorMessage, BuddyJournalReactionData? Reaction);
-
-// Data types for service layer
-public record BuddyInfo(Guid Id, Guid BuddyUserId, string Email, string DisplayName, DateTime CreatedAt);
-public record BuddyForInfo(Guid Id, Guid UserId, string Email, string DisplayName, DateTime CreatedAt);
-public record BuddyTodayViewData(
-    Guid UserId,
-    string UserDisplayName,
-    DateOnly Date,
-    List<TodayHabitStackResponse> HabitStacks,
-    List<TodayTaskResponse> UpcomingTasks,
-    List<TodayTaskResponse> CompletedTasks,
-    List<TodayIdentityFeedbackResponse> IdentityFeedback
-);
-public record BuddyJournalEntryData(
-    Guid Id,
-    string Title,
-    string? Description,
-    string EntryDate,
-    Guid? AuthorUserId,
-    string? AuthorDisplayName,
-    List<BuddyJournalImageData> Images,
-    List<BuddyJournalReactionData> Reactions,
-    DateTime CreatedAt
-);
-public record BuddyJournalImageData(Guid Id, string FileName, string Url, int SortOrder);
-public record BuddyJournalReactionData(Guid Id, string Emoji, Guid UserId, string UserDisplayName, DateTime CreatedAt);

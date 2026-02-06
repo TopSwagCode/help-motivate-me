@@ -2,7 +2,6 @@ using HelpMotivateMe.Core.DTOs.DailyCommitment;
 using HelpMotivateMe.Core.DTOs.HabitStacks;
 using HelpMotivateMe.Core.DTOs.Today;
 using HelpMotivateMe.Core.Interfaces;
-using HelpMotivateMe.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,15 +11,15 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/today")]
 public class TodayController : ApiControllerBase
 {
-    private readonly TodayViewService _todayViewService;
-    private readonly IdentityScoreService _identityScoreService;
-    private readonly DailyCommitmentService _commitmentService;
+    private readonly ITodayViewService _todayViewService;
+    private readonly IIdentityScoreService _identityScoreService;
+    private readonly IDailyCommitmentService _commitmentService;
     private readonly IAnalyticsService _analyticsService;
 
     public TodayController(
-        TodayViewService todayViewService,
-        IdentityScoreService identityScoreService,
-        DailyCommitmentService commitmentService,
+        ITodayViewService todayViewService,
+        IIdentityScoreService identityScoreService,
+        IDailyCommitmentService commitmentService,
         IAnalyticsService analyticsService)
     {
         _todayViewService = todayViewService;

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HelpMotivateMe.Infrastructure.Services;
 
-public class DailyCommitmentService
+public class DailyCommitmentService : IDailyCommitmentService
 {
     private readonly AppDbContext _context;
     private readonly IQueryInterface<DailyIdentityCommitment> _commitments;
@@ -15,7 +15,7 @@ public class DailyCommitmentService
     private readonly IQueryInterface<HabitStackItem> _habitStackItems;
     private readonly IQueryInterface<TaskItem> _tasks;
     private readonly IQueryInterface<NotificationPreferences> _notificationPreferences;
-    private readonly IdentityScoreService _identityScoreService;
+    private readonly IIdentityScoreService _identityScoreService;
 
     public DailyCommitmentService(
         AppDbContext context,
@@ -24,7 +24,7 @@ public class DailyCommitmentService
         IQueryInterface<HabitStackItem> habitStackItems,
         IQueryInterface<TaskItem> tasks,
         IQueryInterface<NotificationPreferences> notificationPreferences,
-        IdentityScoreService identityScoreService)
+        IIdentityScoreService identityScoreService)
     {
         _context = context;
         _commitments = commitments;

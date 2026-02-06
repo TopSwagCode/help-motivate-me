@@ -11,7 +11,7 @@ namespace HelpMotivateMe.Infrastructure.Services;
 /// Service for building the "Today" view data including habit stacks, tasks, and identity feedback.
 /// Used by both TodayController and AccountabilityBuddyController.
 /// </summary>
-public class TodayViewService
+public class TodayViewService : ITodayViewService
 {
     private readonly IQueryInterface<HabitStack> _habitStacks;
     private readonly IQueryInterface<TaskItem> _tasks;

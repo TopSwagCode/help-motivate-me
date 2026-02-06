@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.DailyCommitment;
 using HelpMotivateMe.Core.Interfaces;
-using HelpMotivateMe.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,11 +10,11 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/daily-commitment")]
 public class DailyCommitmentController : ApiControllerBase
 {
-    private readonly DailyCommitmentService _commitmentService;
+    private readonly IDailyCommitmentService _commitmentService;
     private readonly IAnalyticsService _analyticsService;
 
     public DailyCommitmentController(
-        DailyCommitmentService commitmentService,
+        IDailyCommitmentService commitmentService,
         IAnalyticsService analyticsService)
     {
         _commitmentService = commitmentService;
