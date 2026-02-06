@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 namespace HelpMotivateMe.Api.Controllers;
 
 [Authorize]
-[Route("api")]
 public class TasksController : ApiControllerBase
 {
     private readonly AppDbContext _db;

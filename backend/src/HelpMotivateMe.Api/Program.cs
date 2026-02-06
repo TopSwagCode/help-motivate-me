@@ -60,11 +60,20 @@ builder.Services.AddScoped<IAiBudgetService, AiBudgetService>();
 // Identity Score Service
 builder.Services.AddScoped<IdentityScoreService>();
 
+// Today View Service
+builder.Services.AddScoped<TodayViewService>();
+
 // Daily Commitment Service
 builder.Services.AddScoped<DailyCommitmentService>();
 
 // Identity Proof Service
 builder.Services.AddScoped<IdentityProofService>();
+
+// Auth Service
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+// Accountability Buddy Service
+builder.Services.AddScoped<AccountabilityBuddyService>();
 
 // Daily Commitment Notification Service
 builder.Services.AddScoped<IDailyCommitmentNotificationService, DailyCommitmentNotificationService>();
