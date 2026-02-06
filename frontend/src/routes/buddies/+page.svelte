@@ -1,0 +1,245 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { auth } from '$lib/stores/auth';
+	import { t, locale } from 'svelte-i18n';
+	import { get } from 'svelte/store';
+	import { getBuddyRelationships, inviteBuddy, removeBuddy, leaveBuddy } from '$lib/api/buddies';
+	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
+	import ErrorState from '$lib/components/shared/ErrorState.svelte';
+	import type { BuddyRelationshipsResponse } from '$lib/types';
+
+	let relationships = $state<BuddyRelationshipsResponse | null>(null);
+	let loading = $state(true);
+	let error = $state('');
+
+	// Invite form
+	let inviteEmail = $state('');
+	let inviting = $state(false);
+	let inviteError = $state('');
+	let inviteSuccess = $state('');
+
+	onMount(async () => {
+		if (!$auth.initialized) {
+			await auth.init();
+		}
+
+		if (!$auth.user) {
+			goto('/auth/login');
+			return;
+		}
+
+		await loadRelationships();
+	});
+
+	async function loadRelationships() {
+		loading = true;
+		error = '';
+		try {
+			relationships = await getBuddyRelationships();
+		} catch (e) {
+			error = e instanceof Error ? e.message : get(t)('buddies.errors.loadFailed');
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function handleInvite() {
+		if (!inviteEmail.trim()) {
+			inviteError = get(t)('buddies.invite.emailRequired');
+			return;
+		}
+
+		inviting = true;
+		inviteError = '';
+		inviteSuccess = '';
+
+		try {
+			const newBuddy = await inviteBuddy(inviteEmail.trim());
+			if (relationships) {
+				relationships = {
+					...relationships,
+					myBuddies: [...relationships.myBuddies, newBuddy]
+				};
+			}
+			inviteEmail = '';
+			inviteSuccess = get(t)('buddies.invite.success');
+			setTimeout(() => (inviteSuccess = ''), 3000);
+		} catch (e) {
+			inviteError = e instanceof Error ? e.message : get(t)('buddies.errors.inviteFailed');
+		} finally {
+			inviting = false;
+		}
+	}
+
+	async function handleRemoveBuddy(id: string) {
+		if (!confirm(get(t)('buddies.myBuddies.removeConfirm'))) return;
+
+		try {
+			await removeBuddy(id);
+			if (relationships) {
+				relationships = {
+					...relationships,
+					myBuddies: relationships.myBuddies.filter((b) => b.id !== id)
+				};
+			}
+		} catch (e) {
+			error = e instanceof Error ? e.message : get(t)('buddies.errors.removeFailed');
+		}
+	}
+
+	async function handleLeaveBuddy(userId: string, userName: string) {
+		const confirmMsg = get(t)('buddies.buddyingFor.leaveConfirm').replace('{name}', userName);
+		if (!confirm(confirmMsg)) return;
+
+		try {
+			await leaveBuddy(userId);
+			if (relationships) {
+				relationships = {
+					...relationships,
+					buddyingFor: relationships.buddyingFor.filter((b) => b.userId !== userId)
+				};
+			}
+		} catch (e) {
+			error = e instanceof Error ? e.message : get(t)('buddies.errors.leaveFailed');
+		}
+	}
+
+	function formatDate(dateStr: string): string {
+		return new Date(dateStr).toLocaleDateString(get(locale) === 'da' ? 'da-DK' : 'en-US', {
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric'
+		});
+	}
+</script>
+
+<div class="bg-warm-cream">
+	<main class="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-8">
+		<div class="mb-6">
+			<InfoOverlay 
+				title={$t('buddies.pageTitle')} 
+				description={$t('buddies.info.description')} 
+			/>
+		</div>
+
+		{#if loading}
+			<div class="flex justify-center py-12">
+				<div
+					class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full"
+				></div>
+			</div>
+		{:else if error}
+			<div class="card">
+				<ErrorState message={error} onRetry={loadRelationships} size="md" />
+			</div>
+		{:else if relationships}
+			<div data-tour="buddies-section">
+			<!-- Invite New Buddy Section -->
+			<div class="card p-6 mb-8">
+				<h2 class="text-lg font-semibold text-cocoa-800 mb-4">{$t('buddies.invite.title')}</h2>
+				<p class="text-sm text-cocoa-600 mb-4">
+					{$t('buddies.invite.description')}
+				</p>
+
+				<form onsubmit={(e) => { e.preventDefault(); handleInvite(); }} class="flex gap-3">
+					<input
+						type="email"
+						bind:value={inviteEmail}
+						placeholder={$t('buddies.invite.placeholder')}
+						class="input flex-1"
+						disabled={inviting}
+					/>
+					<button type="submit" class="btn-primary" disabled={inviting}>
+						{inviting ? $t('buddies.invite.sending') : $t('buddies.invite.send')}
+					</button>
+				</form>
+
+				{#if inviteError}
+					<p class="text-red-600 text-sm mt-2">{inviteError}</p>
+				{/if}
+				{#if inviteSuccess}
+					<p class="text-green-600 text-sm mt-2">{inviteSuccess}</p>
+				{/if}
+			</div>
+
+			<!-- My Accountability Buddies -->
+			<div class="card p-6 mb-8">
+				<h2 class="text-lg font-semibold text-cocoa-800 mb-4">{$t('buddies.myBuddies.title')}</h2>
+				<p class="text-sm text-cocoa-600 mb-4">
+					{$t('buddies.myBuddies.description')}
+				</p>
+
+				{#if relationships.myBuddies.length === 0}
+					<div class="text-center py-8 text-cocoa-500">
+						<p>{$t('buddies.myBuddies.empty')}</p>
+						<p class="text-sm mt-2">{$t('buddies.myBuddies.emptyHint')}</p>
+					</div>
+				{:else}
+					<div class="space-y-3">
+						{#each relationships.myBuddies as buddy (buddy.id)}
+							<div
+								class="flex items-center justify-between p-4 bg-warm-cream rounded-2xl border border-primary-100"
+							>
+								<div>
+									<p class="font-medium text-cocoa-800">{buddy.buddyDisplayName}</p>
+									<p class="text-sm text-cocoa-500">{buddy.buddyEmail}</p>
+									<p class="text-xs text-gray-400 mt-1">{$t('buddies.myBuddies.added')} {formatDate(buddy.createdAt)}</p>
+								</div>
+								<button
+									onclick={() => handleRemoveBuddy(buddy.id)}
+									class="text-red-600 hover:text-red-700 text-sm font-medium"
+								>
+									{$t('buddies.myBuddies.remove')}
+								</button>
+							</div>
+						{/each}
+					</div>
+				{/if}
+			</div>
+
+			<!-- I'm Accountability Buddy For -->
+			<div class="card p-6">
+				<h2 class="text-lg font-semibold text-cocoa-800 mb-4">{$t('buddies.buddyingFor.title')}</h2>
+				<p class="text-sm text-cocoa-600 mb-4">
+					{$t('buddies.buddyingFor.description')}
+				</p>
+
+				{#if relationships.buddyingFor.length === 0}
+					<div class="text-center py-8 text-cocoa-500">
+						<p>{$t('buddies.buddyingFor.empty')}</p>
+					</div>
+				{:else}
+					<div class="space-y-3">
+						{#each relationships.buddyingFor as buddyFor (buddyFor.id)}
+							<div
+								class="flex items-center justify-between p-4 bg-warm-cream rounded-2xl border border-primary-100"
+							>
+								<div>
+									<p class="font-medium text-cocoa-800">{buddyFor.userDisplayName}</p>
+									<p class="text-sm text-cocoa-500">{buddyFor.userEmail}</p>
+									<p class="text-xs text-gray-400 mt-1">{$t('buddies.buddyingFor.since')} {formatDate(buddyFor.createdAt)}</p>
+								</div>
+								<div class="flex gap-2">
+									<a
+										href="/buddies/{buddyFor.userId}"
+										class="btn-primary text-sm"
+									>
+										{$t('buddies.buddyingFor.visit')}
+									</a>
+									<button
+										onclick={() => handleLeaveBuddy(buddyFor.userId, buddyFor.userDisplayName)}
+										class="text-cocoa-500 hover:text-red-600 text-sm"
+									>
+										{$t('buddies.buddyingFor.leave')}
+									</button>
+								</div>
+							</div>
+						{/each}
+					</div>
+				{/if}
+			</div>
+			</div>
+		{/if}
+	</main>
+</div>

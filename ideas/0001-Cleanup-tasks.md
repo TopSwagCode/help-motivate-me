@@ -1,0 +1,7 @@
+The buddy invite token expiration is set to 7 days, but there's no mechanism to clean up expired tokens. Consider adding a background job or database cleanup task to remove expired tokens to prevent database bloat.
+
+Placeholder users are created automatically when inviting someone who doesn't have an account. However, there's no rate limiting or validation to prevent abuse. A malicious user could spam invitations to create numerous placeholder accounts. Consider adding rate limiting or requiring email verification before creating placeholder users.
+
+The file path sanitization uses StartsWith and Substring which could be error-prone. Consider using Path.Combine or more robust path manipulation methods to handle the legacy data cleanup more safely.
+
+AiBudgetExceededException is thrown from the service layer, but the API currently doesn’t appear to map this to a dedicated HTTP status (e.g., 429/403) or a consistent error payload. As-is, this is likely to surface as a generic 500 in non-streaming endpoints and an unstructured SSE error in streaming endpoints. Consider handling this exception explicitly (controller-level catch or global exception middleware) and returning a stable error contract.

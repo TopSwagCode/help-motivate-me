@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet list:*)",
+      "Bash(dotnet add:*)",
+      "Bash(dotnet build:*)",
+      "Bash(grep:*)",
+      "Bash(dotnet test:*)",
+      "Bash(./generate-migration.sh:*)",
+      "Bash(npm run check:*)",
+      "Bash(npx svelte-check:*)",
+      "Bash(git stash:*)",
+      "Bash(docker compose:*)",
+      "Bash(dotnet ef migrations add:*)",
+      "Bash(npx svelte-kit sync)",
+      "Bash(npm install:*)",
+      "Bash(ls:*)",
+      "Bash(dotnet tool restore:*)",
+      "Bash(dotnet restore:*)",
+      "Bash(find:*)",
+      "Bash(npm run build:*)"
+    ]
+  }
+}

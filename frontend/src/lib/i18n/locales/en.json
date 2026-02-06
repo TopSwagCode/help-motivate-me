@@ -1,0 +1,1830 @@
+{
+	"common": {
+		"appName": "HelpMotivateMe",
+		"loading": "Loading...",
+		"saving": "Saving...",
+		"save": "Save",
+		"saveChanges": "Save Changes",
+		"cancel": "Cancel",
+		"delete": "Delete",
+		"edit": "Edit",
+		"create": "Create",
+		"update": "Update",
+		"close": "Close",
+		"back": "Back",
+		"next": "Next",
+		"skip": "Skip",
+		"continue": "Continue",
+		"done": "Done",
+		"finish": "Finish",
+		"yes": "Yes",
+		"no": "No",
+		"or": "or",
+		"and": "and",
+		"optional": "Optional",
+		"required": "Required",
+		"error": "Error",
+		"success": "Success",
+		"confirm": "Confirm",
+		"search": "Search",
+		"noResults": "No results found",
+		"tryAgain": "Try again",
+		"gotIt": "Got it",
+		"clickToEdit": "Click to edit",
+		"info": {
+			"whatIsThis": "What is this?",
+			"learnMore": "Learn how to make the most of this feature",
+			"moreQuestions": "Have more questions?",
+			"visitFaq": "Visit our FAQ page"
+		}
+	},
+	"language": {
+		"select": "Select Language",
+		"english": "English",
+		"danish": "Danish",
+		"selectDescription": "Choose your preferred language for the app"
+	},
+	"onboarding": {
+		"language": {
+			"title": "Choose Your Language",
+			"subtitle": "Select your preferred language. You can change this later in settings.",
+			"continue": "Continue"
+		},
+		"modeSelect": {
+			"title": "Welcome to HelpMotivateMe",
+			"subtitle": "Let's set up your identities, habits, and goals. Choose how you'd like to get started.",
+			"manual": {
+				"title": "Manual Setup",
+				"description": "Step-by-step forms to create your identities, habit stacks, and goals. Best if you already know what you want to set up.",
+				"cta": "Get started"
+			},
+			"ai": {
+				"title": "AI Assistant",
+				"description": "Chat with our AI to discover your identities and build personalized habits. Great for exploring possibilities and getting guidance.",
+				"cta": "Start chatting",
+				"recommended": "Recommended",
+				"voiceInput": "Voice input",
+				"instantSuggestions": "Instant suggestions"
+			}
+		},
+		"steps": {
+			"identity": "Identity",
+			"habitStacks": "Habit Stacks",
+			"goals": "Goals"
+		},
+		"identity": {
+			"title": "Define Your Identity",
+			"subtitle": "Who do you want to become? Start with the identity you want to embody.",
+			"status": "Who do you want to become?",
+			"statusCreated": "{count} {count, plural, one {identity} other {identities}} created",
+			"concept": "Instead of focusing on what to achieve, focus on who to become. For example, 'I am a healthy person' instead of 'I want to lose weight'.",
+			"initialMessage": "Hi! I'm here to help you define your identity - who you want to become.\n\nIdentity-based habits are powerful because instead of focusing on what you want to achieve, you focus on who you want to be. For example:\n• \"I am a healthy person\" instead of \"I want to lose weight\"\n• \"I am a writer\" instead of \"I want to write a book\"\n• \"I am an early riser\" instead of \"I want to wake up early\"\n\nEvery action you take is a vote for the type of person you want to become.\n\nSo tell me, who do you want to become? What kind of person do you aspire to be?",
+			"form": {
+				"name": "Identity Name",
+				"namePlaceholder": "e.g., A Healthy Person",
+				"description": "Description",
+				"descriptionPlaceholder": "Describe who you want to become...",
+				"emoji": "Choose an emoji",
+				"color": "Choose a color"
+			},
+			"created": "Identity created!",
+			"addAnother": "Add Another Identity",
+			"skipStep": "Skip this step"
+		},
+		"habitStack": {
+			"title": "Build Habit Stacks",
+			"subtitle": "Link new habits to existing routines. This is called habit stacking.",
+			"status": "Chain habits together for powerful routines",
+			"statusCreated": "{count} habit {count, plural, one {stack} other {stacks}} created",
+			"concept": "Formula: 'After I [CURRENT HABIT], I will [NEW HABIT]'. Chain multiple habits together to create powerful routines.",
+			"initialMessage": "Great! Now let's build some habit stacks.\n\nHabit stacking is one of the most effective ways to build new habits. The idea is simple: link a new habit to an existing one using this formula:\n\n\"After I [CURRENT HABIT], I will [NEW HABIT]\"\n\nFor example, a morning routine might look like:\n• After I wake up, I will make my bed\n• After I make my bed, I will do 5 minutes of stretching\n• After I stretch, I will drink a glass of water\n\nYou can chain multiple habits together to create powerful routines!\n\nWhat daily routines do you have? What new habits would you like to build into them?",
+			"form": {
+				"name": "Stack Name",
+				"namePlaceholder": "e.g., Morning Routine",
+				"description": "Description",
+				"descriptionPlaceholder": "Describe this habit stack...",
+				"trigger": "Trigger Cue",
+				"triggerPlaceholder": "After I...",
+				"habits": "Habits in this stack",
+				"addHabit": "Add Habit",
+				"habitCue": "After I...",
+				"habitAction": "I will..."
+			},
+			"created": "Habit stack created!",
+			"addAnother": "Add Another Habit Stack",
+			"skipStep": "Skip this step"
+		},
+		"goals": {
+			"title": "Identity-Driven Goals",
+			"subtitle": "Goals that serve your identity - not just outcomes to chase.",
+			"status": "What identity does this goal serve?",
+			"statusCreated": "{count} {count, plural, one {goal} other {goals}} created",
+			"concept": "Great goals answer: 'What identity does this serve?' They're sustainable because they're tied to who you're becoming.",
+			"initialMessage": "Finally, let's set some identity-driven goals.\n\n**Goals shouldn't be motivational posters** - they should serve your identity. Every goal should answer: 'What identity does this serve?'\n\n**Instead of:**\n• \"Lose 20 lbs\" (outcome-focused, easy to abandon)\n\n**Try:**\n• **Identity:** \"I treat my body with respect\"\n• **Goal:** \"Build a sustainable fitness routine\"\n• **Tasks:** Schedule gym time, track daily steps, meal prep on Sundays\n\nThis prevents goal abandonment when motivation dips - because you're not chasing an outcome, you're becoming someone.\n\nWhat identity-serving goals would you like to set? Start with the identity, then the goal.",
+			"form": {
+				"title": "Goal Title",
+				"titlePlaceholder": "What sustainable outcome serves your identity?",
+				"description": "Description",
+				"descriptionPlaceholder": "Describe your goal and which identity it serves...",
+				"targetDate": "Target Date",
+				"targetDatePlaceholder": "When do you want to achieve this?"
+			},
+			"created": "Goal created!",
+			"addAnother": "Add Another Goal",
+			"skipStep": "Skip this step",
+			"finishSetup": "Finish Setup"
+		},
+		"chat": {
+			"placeholder": "Type your message...",
+			"send": "Send",
+			"thinking": "Thinking...",
+			"voiceInput": "Voice input",
+			"stopRecording": "Stop recording",
+			"yes": "Yes",
+			"skip": "Skip",
+			"back": "Back",
+			"skipStep": "Skip this step",
+			"createdSuccess": "Created successfully!",
+			"errorSaving": "Sorry, there was an error saving. Please try again.",
+			"errorGeneric": "Sorry, something went wrong. Please try again."
+		},
+		"assistant": {
+			"accept": "Yes, create this",
+			"addMore": "Add More",
+			"done": "Done",
+			"hint": "Describe what you'd like to create...",
+			"created": "Created! Want to add more?",
+			"addMorePrompt": "Tell me about another one you'd like to create."
+		},
+		"complete": {
+			"title": "You're All Set!",
+			"subtitle": "Great job completing your setup. You're ready to start your journey!",
+			"goToDashboard": "Go to Dashboard"
+		},
+		"progress": {
+			"step": "Step {current} of {total}",
+			"stepDescription": "Step {current} of {total}: {description}"
+		},
+		"wizard": {
+			"title": "Welcome to HelpMotivateMe",
+			"skipForNow": "Skip for now",
+			"steps": {
+				"identity": {
+					"title": "Identity",
+					"description": "Define who you want to become"
+				},
+				"habitStacks": {
+					"title": "Habit Stacks",
+					"description": "Build powerful habit chains"
+				},
+				"goals": {
+					"title": "Goals",
+					"description": "Identity-driven objectives"
+				}
+			}
+		},
+		"manual": {
+			"identity": {
+				"title": "Create Your Identity",
+				"intro": "<strong>Who do you want to become?</strong> Identity-based habits are the most powerful way to change your behavior.",
+				"explanation": "Instead of focusing on <em>what</em> you want to achieve, focus on <em>who</em> you want to become. For example:",
+				"examples": {
+					"healthy": "\"I am a healthy person\" (not just \"I want to lose weight\")",
+					"writer": "\"I am a writer\" (not just \"I want to write a book\")",
+					"earlyRiser": "\"I am an early riser\" (not just \"I want to wake up early\")"
+				},
+				"everyAction": "Every action you take is a vote for the type of person you want to become.",
+				"created": "Identity \"{name}\" created!",
+				"createFirst": "Create My First Identity",
+				"createAnother": "Create Another Identity",
+				"continue": "Continue",
+				"skipContinue": "Skip & Continue"
+			},
+			"habitStack": {
+				"title": "Build Habit Stacks",
+				"intro": "<strong>Habit stacking</strong> is one of the most effective strategies for building new habits. The idea is simple: link a new habit to an existing one.",
+				"formula": "The formula is:",
+				"formulaText": "\"After I [CURRENT HABIT], I will [NEW HABIT].\"",
+				"examplesIntro": "For example:",
+				"examples": {
+					"coffee": "After I pour my morning coffee, I will meditate for 5 minutes.",
+					"lunch": "After I finish lunch, I will write in my journal.",
+					"desk": "After I sit down at my desk, I will review my goals."
+				},
+				"chainHabits": "You can chain multiple habits together to create a powerful routine!",
+				"created": "Habit stack \"{name}\" created!",
+				"createFirst": "Create My First Habit Stack",
+				"createAnother": "Create Another Habit Stack",
+				"back": "Back",
+				"continue": "Continue",
+				"skipContinue": "Skip & Continue"
+			},
+			"goals": {
+				"title": "Identity-Driven Goals",
+				"intro": "<strong>Goals should serve your identity</strong> - not just be outcomes to chase. Every goal should answer: 'What identity does this serve?'",
+				"greatGoals": "Reframe your goals:",
+				"specific": "<strong>Instead of</strong> 'Lose 20 lbs' → <strong>Try</strong> 'Build a sustainable fitness routine'",
+				"meaningful": "<strong>Link to identity</strong> - 'I treat my body with respect'",
+				"actionable": "<strong>Add tasks</strong> - gym, steps, meal prep (the small votes for your identity)",
+				"addTasks": "This prevents goal abandonment when motivation dips - because you're becoming someone, not just chasing an outcome.",
+				"created": "Goal \"{name}\" created!",
+				"createFirst": "Create My First Goal",
+				"createAnother": "Create Another Goal",
+				"back": "Back",
+				"completeSetup": "Complete Setup",
+				"skipFinish": "Skip & Finish"
+			}
+		},
+		"welcome": {
+			"title": "Welcome to HelpMotivateMe!",
+			"subtitle": "You're all set! This is your <strong>Today</strong> page - your daily command center.",
+			"hereYouCan": "Here you can:",
+			"features": {
+				"trackHabits": "Track your daily habit stacks and build streaks",
+				"completeTasks": "Complete tasks and see your progress toward goals",
+				"reinforceIdentity": "Reinforce your identity with every action you take"
+			},
+			"letsGo": "Let's Go!"
+		}
+	},
+	"landing": {
+		"hero": {
+			"title1": "Stay Focused.",
+			"title2": "Stay Motivated.",
+			"subtitle": "Set meaningful goals, break them into actionable tasks, and build the habits that lead to success. Your journey to productivity starts here.",
+			"getStarted": "Get Started",
+			"signIn": "Sign In"
+		},
+		"milo": {
+			"title": "Meet Milo",
+			"subtitle": "Your gentle motivator",
+			"clickHint": "Click Milo to see a sneak peek of the app",
+			"description": "This sloth isn't here to rush you or yell at you. It's here to remind you that showing up — even a little — counts. One habit at a time, one day at a time, you're making progress. And your sloth is right there with you."
+		},
+		"features": {
+			"identity": {
+				"title": "Shape Your Identity",
+				"description": "Focus on who you want to become, not just what you want to achieve. Every action is a vote for your future self."
+			},
+			"goals": {
+				"title": "Set Goals",
+				"description": "Define clear, meaningful goals and track your progress toward achieving them."
+			},
+			"tasks": {
+				"title": "Break Down Tasks",
+				"description": "Divide your goals into manageable subtasks that keep you moving forward."
+			},
+			"habits": {
+				"title": "Build Habits",
+				"description": "Create repeatable tasks that become daily, weekly, or monthly habits."
+			}
+		},
+		"footer": {
+			"about": "About",
+			"pricing": "Pricing",
+			"faq": "FAQ",
+			"contact": "Contact",
+			"privacy": "Privacy Policy",
+			"terms": "Terms of Service",
+			"copyright": "&copy; {year} Help Motivate Me. All rights reserved."
+		}
+	},
+	"auth": {
+		"login": {
+			"title": "Welcome Back",
+			"subtitle": "Sign in to continue your journey",
+			"heading": "Sign in to your account",
+			"noAccountLink": "Create one",
+			"email": "Email",
+			"emailPlaceholder": "Enter your email",
+			"emailAddress": "Email address",
+			"password": "Password",
+			"passwordPlaceholder": "Enter your password",
+			"submit": "Sign In",
+			"forgotPassword": "Forgot password?",
+			"noAccount": "Don't have an account?",
+			"signUp": "Sign up",
+			"orContinueWith": "Or continue with",
+			"orSignInWithPassword": "Or sign in with password",
+			"magicLink": "Send me a login link",
+			"magicLinkSent": "Check your email for a login link",
+			"invalidCredentials": "Invalid email or password",
+			"signingIn": "Signing you in...",
+			"checkEmail": "Check your email",
+			"sentLink": "We sent a login link to",
+			"linkExpiry": "The link will expire in 24 hours.",
+			"differentEmail": "Use a different email",
+			"backToOptions": "Back to other login options",
+			"sending": "Sending...",
+			"sendLoginLink": "Send login link",
+			"continueGoogle": "Continue with Google",
+			"continueLinkedIn": "Continue with LinkedIn",
+			"continueGitHub": "Continue with GitHub",
+			"continueEmail": "Continue with Email",
+			"continueFacebook": "Continue with Facebook",
+			"signingInBtn": "Signing in...",
+			"signInBtn": "Sign in",
+			"needHelp": "Need help? Check out our",
+			"faq": "FAQ"
+		},
+		"register": {
+			"title": "Create Account",
+			"subtitle": "Start your journey to better habits",
+			"heading": "Create your account",
+			"alreadyHaveAccount": "Already have an account?",
+			"signInLink": "Sign in",
+			"email": "Email",
+			"emailPlaceholder": "Enter your email",
+			"password": "Password",
+			"passwordPlaceholder": "Create a password",
+			"confirmPassword": "Confirm Password",
+			"confirmPasswordPlaceholder": "Confirm your password",
+			"displayName": "Display Name",
+			"displayNameOptional": "(optional)",
+			"displayNamePlaceholder": "How should we call you?",
+			"submit": "Create Account",
+			"hasAccount": "Already have an account?",
+			"signIn": "Sign in",
+			"passwordRequirements": "Password must be at least 8 characters",
+			"passwordHint": "Must be at least 8 characters",
+			"orContinueWith": "Or continue with",
+			"continueGoogle": "Continue with Google",
+			"continueLinkedIn": "Continue with LinkedIn",
+			"continueGitHub": "Continue with GitHub",
+			"continueFacebook": "Continue with Facebook",
+			"creatingAccount": "Creating account...",
+			"createAccountBtn": "Create account",
+			"needHelp": "Need help? Check out our",
+			"faq": "FAQ"
+		},
+		"verifyPending": {
+			"title": "Check Your Email",
+			"description": "We've sent a verification link to:",
+			"resend": "Resend Verification Email",
+			"resending": "Sending...",
+			"resent": "Verification email sent! Check your inbox.",
+			"backToLogin": "Back to Login",
+			"checkSpam": "Can't find the email? Check your spam folder."
+		},
+		"verifyEmail": {
+			"verifying": "Verifying your email...",
+			"success": "Email Verified!",
+			"redirecting": "Redirecting you to the app...",
+			"failed": "Verification Failed",
+			"createAccount": "Create New Account",
+			"backToLogin": "Back to Login"
+		},
+		"logout": "Log out",
+		"github": "GitHub"
+	},
+	"nav": {
+		"today": "Today",
+		"dashboard": "Dashboard",
+		"goals": "Goals",
+		"habitStacks": "Habit Stacks",
+		"stacks": "Stacks",
+		"identities": "Identities",
+		"journal": "Journal",
+		"analytics": "Analytics",
+		"buddies": "Buddies",
+		"settings": "Settings"
+	},
+	"userMenu": {
+		"settings": "Settings",
+		"help": "Help",
+		"signOut": "Sign out",
+		"adminDashboard": "Admin Dashboard"
+	},
+	"settings": {
+		"title": "Settings",
+		"profile": {
+			"title": "Profile",
+			"displayName": "Display Name",
+			"displayNamePlaceholder": "Enter a display name",
+			"email": "Email",
+			"save": "Save Changes",
+			"saving": "Saving...",
+			"updated": "Profile updated successfully"
+		},
+		"password": {
+			"title": "Password",
+			"current": "Current Password",
+			"new": "New Password",
+			"confirm": "Confirm New Password",
+			"change": "Change Password",
+			"changing": "Changing...",
+			"requirements": "Password must be at least 8 characters",
+			"mismatch": "Passwords do not match",
+			"success": "Password changed successfully",
+			"error": "Failed to change password"
+		},
+		"language": {
+			"title": "Language",
+			"description": "Choose your preferred language for the app",
+			"current": "Current language"
+		},
+		"membership": {
+			"title": "Membership",
+			"currentTier": "Current tier",
+			"currentPlan": "Current Plan",
+			"free": "Free",
+			"plus": "Plus",
+			"pro": "Pro",
+			"monthly": "Monthly",
+			"yearly": "Yearly",
+			"year": "year",
+			"saveMore": "Save more",
+			"popular": "Popular",
+			"earlyBird": "Early bird",
+			"foreverFree": "Forever free",
+			"perMonth": "per month",
+			"billedYearly": "${price}/mo billed yearly",
+			"upgradeTo": "Upgrade to {tier}",
+			"switchTo": "Switch to {tier}",
+			"upgrading": "Upgrading...",
+			"changing": "Changing...",
+			"comparePlans": "Compare Plans",
+			"feature": "Feature",
+			"placeholderNote": "Note: This is a placeholder. Payment integration will be added in a future update.",
+			"error": "Failed to update membership",
+			"tiers": {
+				"free": {
+					"name": "Free",
+					"bestFor": "Getting started",
+					"description": "Start becoming someone."
+				},
+				"plus": {
+					"name": "Plus",
+					"bestFor": "Building strong identities",
+					"description": "Turn consistency into identity."
+				},
+				"pro": {
+					"name": "Pro",
+					"bestFor": "Full transformation",
+					"description": "Accelerate change with AI support."
+				}
+			},
+			"features": {
+				"identities": "Identities",
+				"habitStacks": "Habit stacks",
+				"goalsAndTasks": "Goals & tasks",
+				"dailyIdentityCommitment": "Daily Identity Commitment",
+				"identityScoreHistory": "Identity Score & history",
+				"analyticsInsights": "Analytics & insights",
+				"accountabilityBuddies": "Accountability buddies",
+				"aiAssistant": "AI assistant",
+				"smartIdentityNudges": "Smart identity nudges",
+				"advancedJournaling": "Advanced journaling",
+				"priorityAccess": "Priority access & features"
+			},
+			"values": {
+				"unlimited": "Unlimited",
+				"limited": "Limited",
+				"fairUse": "Fair use",
+				"1": "1",
+				"1–2": "1–2"
+			}
+		},
+		"linkedAccounts": {
+			"title": "Linked Accounts",
+			"link": "Link",
+			"unlink": "Unlink",
+			"github": "GitHub",
+			"noAccounts": "No external accounts linked"
+		},
+		"onboarding": {
+			"title": "Onboarding",
+			"description": "Restart the setup wizard to update your identities, goals, and habit stacks.",
+			"restart": "Restart Onboarding",
+			"restarting": "Resetting...",
+			"confirmReset": "Are you sure you want to restart the onboarding process? This will take you through the setup wizard again.",
+			"failedReset": "Failed to reset onboarding"
+		},
+		"deleteAccount": {
+			"title": "Danger Zone",
+			"description": "Permanently delete your account and all associated data. This action cannot be undone.",
+			"button": "Delete Account",
+			"modalTitle": "Delete Your Account",
+			"warning": "This will permanently delete your account, including all your identities, goals, habit stacks, tasks, and journal entries. This action cannot be undone.",
+			"passwordLabel": "Enter your password to confirm",
+			"passwordPlaceholder": "Your password",
+			"confirmLabel": "Type DELETE to confirm",
+			"confirmationRequired": "Please type DELETE to confirm",
+			"confirmButton": "Delete My Account",
+			"deleting": "Deleting...",
+			"failed": "Failed to delete account"
+		},
+		"notifications": {
+			"title": "Notifications",
+			"description": "Configure when and how you receive notifications",
+			"master": {
+				"label": "Enable Notifications",
+				"description": "Turn all notifications on or off"
+			},
+			"channels": {
+				"title": "Delivery Channels",
+				"description": "Choose how you want to receive notifications",
+				"email": "Email",
+				"emailDescription": "Receive notifications via email",
+				"sms": "SMS",
+				"smsDescription": "Receive notifications via text message",
+				"push": "Push Notifications",
+				"pushDescription": "Receive instant notifications on this device",
+				"pushEnabled": "Enabled on this device",
+				"pushBlocked": "Push notifications are blocked in your browser settings",
+				"deviceCount": "{count, plural, one {# device} other {# devices}}",
+				"phone": "Phone Call",
+				"phoneDescription": "Receive notifications via phone call",
+				"comingSoon": "Coming Soon"
+			},
+			"push": {
+				"enabledTip": "💡 Push notifications are enabled on <strong>{count}</strong> {count, plural, one {device} other {devices}}. Enable on each device separately via Settings → Notifications.",
+				"notRegisteredWarning": "⚠️ This device is subscribed but not registered. Try toggling off and on again.",
+				"errors": {
+					"subscribeFailed": "Failed to enable push notifications. Please try again.",
+					"unsubscribeFailed": "Failed to disable push notifications. Please try again.",
+					"permissionDenied": "You need to allow notifications in your browser settings.",
+					"generic": "An error occurred with push notifications."
+				}
+			},
+			"types": {
+				"title": "Notification Types",
+				"description": "Choose which notifications you want to receive",
+				"habitReminders": "Habit Reminders",
+				"habitRemindersDescription": "Daily reminders for your habit stacks",
+				"goalReminders": "Goal Reminders",
+				"goalRemindersDescription": "Updates about your goals and deadlines",
+				"dailyDigest": "Daily Digest",
+				"dailyDigestDescription": "Summary of your daily tasks and progress",
+				"streakAlerts": "Streak Alerts",
+				"streakAlertsDescription": "Alerts when your streak is at risk",
+				"motivationalQuotes": "Motivational Quotes",
+				"motivationalQuotesDescription": "Inspiring quotes to keep you motivated",
+				"weeklyReview": "Weekly Review",
+				"weeklyReviewDescription": "Weekly summary of your achievements",
+				"buddyUpdates": "Buddy Updates",
+				"buddyUpdatesDescription": "Alerts when your accountability buddy makes progress"
+			},
+			"schedule": {
+				"title": "Notification Schedule",
+				"description": "Choose when you'd like to receive notifications",
+				"estimatedNote": "Note: Notification timing is estimated and may vary slightly",
+				"days": {
+					"title": "Days",
+					"monday": "Mon",
+					"tuesday": "Tue",
+					"wednesday": "Wed",
+					"thursday": "Thu",
+					"friday": "Fri",
+					"saturday": "Sat",
+					"sunday": "Sun",
+					"selectAll": "All",
+					"weekdays": "Weekdays",
+					"weekend": "Weekend"
+				},
+				"timeSlot": {
+					"title": "Preferred Time",
+					"morning": "Morning",
+					"morningTime": "6:00 AM - 12:00 PM",
+					"afternoon": "Afternoon",
+					"afternoonTime": "12:00 PM - 6:00 PM",
+					"evening": "Evening",
+					"eveningTime": "6:00 PM - 10:00 PM",
+					"custom": "Custom",
+					"customStart": "Start time",
+					"customEnd": "End time"
+				},
+				"timezone": {
+					"title": "Timezone",
+					"detected": "Detected",
+					"change": "Change"
+				}
+			},
+			"errors": {
+				"loadFailed": "Failed to load notification preferences",
+				"saveFailed": "Failed to save notification preferences"
+			}
+		},
+		"app": {
+			"title": "App",
+			"description": "Install HelpMotivateMe as an app on your device",
+			"installed": {
+				"title": "App Installed",
+				"description": "You're using HelpMotivateMe as an installed app. Enjoy the full experience!"
+			},
+			"install": {
+				"title": "Install App",
+				"description": "Add HelpMotivateMe to your home screen for quick access",
+				"button": "Install App"
+			},
+			"manual": {
+				"title": "Installation Available",
+				"description": "Follow the instructions below to install the app on your device"
+			},
+			"instructions": {
+				"title": "How to Install",
+				"ios": {
+					"title": "iPhone & iPad",
+					"step1": "Tap the Share button at the bottom of Safari",
+					"step2": "Scroll down and tap \"Add to Home Screen\"",
+					"step3": "Tap \"Add\" to confirm"
+				},
+				"android": {
+					"title": "Android",
+					"step1": "Tap the menu button (three dots) in Chrome",
+					"step2": "Tap \"Add to Home screen\" or \"Install app\"",
+					"step3": "Tap \"Add\" or \"Install\" to confirm"
+				},
+				"desktop": {
+					"title": "Desktop (Chrome, Edge)",
+					"step1": "Look for the install icon in the address bar (⊕)",
+					"step2": "Click \"Install\" in the popup dialog",
+					"step3": "The app will open in its own window"
+				}
+			},
+			"benefits": {
+				"title": "Benefits of Installing",
+				"offline": {
+					"title": "Works Offline",
+					"description": "Access your habits and goals even without internet connection"
+				},
+				"fast": {
+					"title": "Lightning Fast",
+					"description": "App loads instantly from your device, no waiting for downloads"
+				},
+				"notifications": {
+					"title": "Push Notifications",
+					"description": "Get reminders and motivation directly on your device"
+				},
+				"homescreen": {
+					"title": "One-Tap Access",
+					"description": "Launch the app instantly from your home screen or dock"
+				}
+			},
+			"chromeTip": {
+				"title": "Using Chrome or Edge?",
+				"description": "Look for the install icon (⊕) in the right side of the address bar, or use the browser menu (⋮) and select 'Install app' or 'Add to Home screen'."
+			}
+		}
+	},
+	"goals": {
+		"title": "Goals",
+		"pageTitle": "My Goals",
+		"newGoal": "New Goal",
+		"empty": "No goals yet. Create your first goal to get started!",
+		"emptyTitle": "No goals yet",
+		"emptyDescription": "Goals should serve your identity - not just be outcomes to chase. Ask yourself: 'What identity does this goal serve?' Then break it into small tasks that cast votes for who you're becoming.",
+		"emptyHowTo": "Click the button below to create your first identity-driven goal.",
+		"createFirst": "Create your first goal",
+		"create": "Create Goal",
+		"edit": "Edit Goal",
+		"delete": "Delete Goal",
+		"complete": "Mark as Complete",
+		"uncomplete": "Mark as Incomplete",
+		"reopen": "Reopen",
+		"completed": "Completed",
+		"activeGoals": "Active Goals",
+		"completedGoals": "Completed",
+		"tasks": "tasks",
+		"tasksCompleted": "tasks completed",
+		"target": "Target",
+		"targetDate": "Target date",
+		"setTargetDate": "Set target date",
+		"noDate": "No date",
+		"addTask": "Add Task",
+		"addTaskPlaceholder": "Add a new task...",
+		"adding": "Adding...",
+		"identity": "Identity",
+		"noIdentity": "No identity",
+		"noPendingTasks": "No pending tasks. Add one above!",
+		"noCompletedTasks": "No completed tasks yet",
+		"allTasksCompleted": "All tasks completed!",
+		"completedTasksSection": "Completed",
+		"pendingTasksSection": "Tasks",
+		"readonlyNotice": "This goal is completed. Reopen it to make changes to tasks.",
+		"deleteGoalConfirm": "Are you sure you want to delete this goal? All tasks will also be deleted.",
+		"deleteTaskConfirm": "Are you sure you want to delete this task?",
+		"snooze": "Snooze 1 week",
+		"editTask": "Edit Task",
+		"deleteTask": "Delete Task",
+		"markCompleted": "Mark as completed",
+		"markIncomplete": "Mark as incomplete",
+		"changeDueDate": "Change Due Date",
+		"dueDate": "Due date",
+		"addDescription": "Add a description...",
+		"info": {
+			"description": "<p><strong>Goals should serve your identity</strong> - not just be outcomes to chase.</p><p><strong>Before setting a goal, ask:</strong> 'What identity does this serve?'</p><p><strong>Instead of:</strong><br/>• \"Lose 20 lbs\" (outcome-focused, easy to abandon)</p><p><strong>Try:</strong><br/>• <strong>Identity:</strong> \"I treat my body with respect\"<br/>• <strong>Goal:</strong> \"Build a sustainable fitness routine\"<br/>• <strong>Tasks:</strong> Schedule gym, track steps, meal prep</p><p>This prevents goal abandonment when motivation dips - because you're becoming someone, not just chasing an outcome.</p>"
+		},
+		"form": {
+			"title": "Goal Title",
+			"titlePlaceholder": "What sustainable outcome serves your identity?",
+			"description": "Description",
+			"descriptionPlaceholder": "Describe your goal and which identity it serves...",
+			"targetDate": "Target Date",
+			"submit": "Save Goal",
+			"taskTitle": "Title",
+			"taskTitlePlaceholder": "Task title",
+			"taskDescription": "Description",
+			"taskDescriptionPlaceholder": "Add more details about this task...",
+			"optional": "optional",
+			"identity": "Identity",
+			"linkToIdentity": "Link to identity (optional)",
+			"identityHint": "Tasks created under this goal will inherit this identity by default",
+			"createIdentity": "Create an identity first →"
+		}
+	},
+	"identities": {
+		"title": "Identities",
+		"pageTitle": "My Identities",
+		"info": {
+			"description": "<p><strong>Identities</strong> help you focus on who you want to become rather than just what you want to achieve.</p><p>Instead of saying <em>\"I want to run more,\"</em> you become <em>\"I am a runner.\"</em> This shift from goals to identity makes habits feel natural and sustainable.</p><ul><li><strong>Define your identity:</strong> Choose who you want to be (e.g., \"A healthy person\", \"A lifelong learner\")</li><li><strong>Link habits:</strong> Every small action becomes a vote for that identity</li><li><strong>Build consistency:</strong> When your habits align with your identity, progress feels authentic</li></ul><p>Remember: You don't have to be perfect to claim an identity. Every time you act in alignment with it, you reinforce who you're becoming.</p>"
+		},
+		"newIdentity": "New Identity",
+		"empty": "No identities yet. Define who you want to become!",
+		"emptyTitle": "No identities yet",
+		"emptyDescription": "Identities help you focus on who you want to become, not just what you want to do. Instead of saying 'I want to read more', become 'I am a reader'. This mindset shift makes habits feel natural.",
+		"emptyHowTo": "Start by creating an identity that resonates with you, or use the assistant to help you define who you want to become.",
+		"createFirst": "Create Identity",
+		"create": "Create Identity",
+		"edit": "Edit Identity",
+		"delete": "Delete Identity",
+		"deleteConfirm": "Are you sure you want to delete this identity?",
+		"stats": {
+			"goals": "Goals (completed/total)",
+			"tasks": "Tasks (completed/total)",
+			"proofs": "Wins",
+			"commitments": "Daily Commitments (completed/total)"
+		},
+		"infoCard": {
+			"title": "Identity-Based Habits",
+			"description": "Identity-based habits focus on who you are becoming, not just what you're doing. Each small action is a vote for the type of person you want to be, and consistency slowly reshapes how you see yourself. When your habits align with your identity, progress feels natural instead of forced.",
+			"createTitle": "Create Your Own Identities",
+			"createDescription": "Instead of chasing outcomes, define the identities you want to live by—such as \"I am someone who learns daily\" or \"I am someone who keeps promises to myself.\" Let your habits become evidence that these identities are true."
+		},
+		"form": {
+			"name": "Identity Name",
+			"namePlaceholder": "e.g., A Healthy Person",
+			"nameHint": "Who do you want to become?",
+			"description": "Description",
+			"descriptionPlaceholder": "Describe who you want to become...",
+			"emoji": "Emoji",
+			"color": "Color",
+			"submit": "Save Identity",
+			"errors": {
+				"saveFailed": "Failed to save identity"
+			}
+		}
+	},
+	"habitStacks": {
+		"title": "Habit Stacks",
+		"pageTitle": "Habit Stacks",
+		"info": {
+			"description": "<p><strong>Habit Stacking</strong> is a powerful technique where you link a new habit to something you already do consistently.</p><p>The formula is simple: <em>\"After I [existing habit], I will [new habit].\"</em></p><ul><li><strong>Use existing cues:</strong> Anchor new behaviors to things you already do (e.g., \"After I pour my coffee, I will review my goals\")</li><li><strong>Build routines:</strong> Chain multiple small habits together to create powerful daily rituals</li><li><strong>Reduce friction:</strong> By connecting habits, you remove the need to remember or decide when to do them</li></ul><p>Start small—even a 1-minute habit stacked onto an existing routine can lead to lasting change.</p>"
+		},
+		"newStack": "New Stack",
+		"empty": "No habit stacks yet. Create your first routine!",
+		"emptyTitle": "No habit stacks yet",
+		"emptyDescription": "Habit stacking chains new habits to things you already do. The formula is simple: 'After I [existing habit], I will [new habit].' This reduces friction and makes consistency automatic.",
+		"emptyHowTo": "Create a habit stack by clicking below, or use the assistant to help you build your first routine.",
+		"createFirst": "Create Habit Stack",
+		"create": "Create Habit Stack",
+		"edit": "Edit Habit Stack",
+		"delete": "Delete Habit Stack",
+		"deleteConfirm": "Are you sure you want to delete this habit stack?",
+		"deleteItemConfirm": "Delete this habit from the stack?",
+		"inactive": "Inactive",
+		"habits": "habits",
+		"habit": "habit",
+		"noHabitsYet": "No habits in this stack yet",
+		"dayStreak": "day streak",
+		"infoCard": {
+			"title": "Habit Stacking",
+			"description": "Habit stacking works by attaching a new habit to something you already do. By anchoring small improvements to existing routines, you reduce friction and make consistency easier. Over time, these linked actions form powerful daily rhythms that run almost automatically.",
+			"createTitle": "Build Your Own Habit Stacks",
+			"createDescription": "Start with habits that already happen every day, then decide what positive action you want to follow them with. Simple rules like \"After I finish X, I will do Y\" turn ordinary moments into reliable cues for better behavior."
+		},
+		"form": {
+			"name": "Stack Name",
+			"namePlaceholder": "e.g., Morning Routine",
+			"description": "Description",
+			"descriptionPlaceholder": "Describe this routine...",
+			"trigger": "Trigger Cue",
+			"triggerPlaceholder": "After I...",
+			"habits": "Habits",
+			"addHabit": "Add Habit",
+			"submit": "Save Habit Stack",
+			"identity": "Link to Identity (Optional)",
+			"noIdentity": "No identity",
+			"identityHint": "Linking to an identity helps reinforce who you're becoming",
+			"errors": {
+				"nameRequired": "Stack name is required",
+				"habitRequired": "At least one complete habit item is required",
+				"createFailed": "Failed to create habit stack"
+			}
+		},
+		"chain": {
+			"after": "After I",
+			"iWill": "I will"
+		},
+		"createPopup": {
+			"title": "Create Habit Stack",
+			"habitChain": "Habit Chain",
+			"afterI": "After I...",
+			"iWillDo": "I will...",
+			"addAnother": "Add another habit",
+			"remove": "Remove",
+			"creating": "Creating...",
+			"createStack": "Create Stack",
+			"placeholderCue": "wake up",
+			"placeholderHabit": "drink a glass of water",
+			"placeholderPreviousHabit": "previous habit"
+		},
+		"editPopup": {
+			"title": "Edit Habit Stack",
+			"active": "Active",
+			"saveChanges": "Save Changes",
+			"saving": "Saving...",
+			"habitsInStack": "Habits in Stack",
+			"addNewHabit": "Add New Habit",
+			"adding": "Adding...",
+			"addHabit": "Add Habit",
+			"deleteStack": "Delete Habit Stack"
+		},
+		"reorderPopup": {
+			"title": "Reorder Stacks",
+			"description": "Drag items or use arrows to reorder your habit stacks.",
+			"saving": "Saving...",
+			"saveOrder": "Save Order",
+			"moveUp": "Move up",
+			"moveDown": "Move down"
+		},
+		"errors": {
+			"stackNameRequired": "Stack name is required",
+			"atLeastOneHabit": "At least one complete habit item is required"
+		}
+	},
+	"journal": {
+		"title": "Journal",
+		"pageTitle": "Journal",
+		"info": {
+			"description": "<p><strong>Journaling</strong> helps you reflect on your progress, capture insights, and stay aware of patterns in your behavior.</p><p>Use your journal to document your journey, celebrate wins, and learn from challenges.</p><ul><li><strong>Reflect daily:</strong> Write about what worked, what didn't, and how you felt</li><li><strong>Link entries:</strong> Connect journal entries to specific habit stacks or tasks for context</li><li><strong>Add images:</strong> Include photos to capture moments and make entries more memorable</li><li><strong>Track patterns:</strong> Over time, your journal reveals trends and helps you understand yourself better</li></ul><p>Your journal is a safe space to be honest, explore your thoughts, and celebrate your growth.</p>"
+		},
+		"newEntry": "New Entry",
+		"empty": "No journal entries yet. Start reflecting on your journey!",
+		"emptyTitle": "No journal entries yet",
+		"emptyDescription": "Journaling helps you reflect on your progress, capture insights, and notice patterns. Write about what worked, what didn't, and how you felt. Over time, your journal becomes a record of growth.",
+		"emptyHowTo": "Start your first entry by clicking below. You can also link entries to habit stacks or tasks for context.",
+		"createFirst": "Create Entry",
+		"create": "New Entry",
+		"edit": "Edit Entry",
+		"delete": "Delete Entry",
+		"deleteConfirm": "Are you sure you want to delete this journal entry?",
+		"deleteImageConfirm": "Delete this image?",
+		"form": {
+			"title": "Title",
+			"titlePlaceholder": "What happened today?",
+			"content": "Content",
+			"contentPlaceholder": "Write your thoughts...",
+			"date": "Date",
+			"description": "Description",
+			"descriptionPlaceholder": "Write about your experience...",
+			"submit": "Save Entry",
+			"linkTo": "Link to",
+			"linkNone": "None",
+			"linkHabitStack": "Habit Stack",
+			"linkTask": "Task",
+			"selectHabitStack": "Select a habit stack...",
+			"selectTask": "Select a task..."
+		},
+		"images": {
+			"title": "Images",
+			"add": "Add images",
+			"processing": "Processing...",
+			"uploading": "Uploading...",
+			"new": "New",
+			"hint": "Max 5 images / GIF's.",
+			"canOnlyAdd": "Can only add {count} more image(s)"
+		},
+		"modal": {
+			"createTitle": "New Entry",
+			"editTitle": "Edit Entry",
+			"titleRequired": "Title is required",
+			"saving": "Saving...",
+			"uploading": "Uploading...",
+			"saveChanges": "Save Changes",
+			"createEntry": "Create Entry"
+		},
+		"errors": {
+			"loadFailed": "Failed to load journal",
+			"titleRequired": "Title is required",
+			"deleteImageFailed": "Failed to delete image",
+			"deleteFailed": "Failed to delete entry",
+			"addReactionFailed": "Failed to add reaction",
+			"removeReactionFailed": "Failed to remove reaction"
+		},
+		"filter": {
+			"all": "All",
+			"you": "You",
+			"friends": "Friends"
+		},
+		"feed": {
+			"you": "You",
+			"anonymous": "Anonymous"
+		},
+		"reactions": {
+			"addReaction": "Add reaction",
+			"moreEmojis": "More emojis",
+			"react": "React",
+			"from": "from",
+			"clickToRemove": "Click to remove",
+			"you": "You",
+			"reacted": "reacted with",
+			"category": "Category",
+			"quickReactions": "Quick reactions",
+			"hideMore": "Back to quick reactions"
+		},
+		"emptyFriendsTitle": "No entries from friends yet",
+		"emptyFriendsDescription": "When your accountability buddies write journal entries, they'll appear here."
+	},
+	"ai": {
+		"commandBar": {
+			"placeholder": "What would you like to do? (e.g., 'Buy groceries tomorrow')",
+			"thinking": "Thinking...",
+			"hint": "Try: 'Remind me to call mom tomorrow' or 'Every morning after I wake up, I want to stretch'",
+			"examples": "Type or speak naturally - I'll understand tasks, goals, and habits"
+		},
+		"addWithAi": "Add with AI",
+		"describeTask": "Describe a task",
+		"describeGoal": "Describe a goal",
+		"describeHabit": "Describe a routine",
+		"tellMeWhatToWorkOn": "Tell me what you want to work on",
+		"preview": {
+			"task": "Task",
+			"goal": "Goal",
+			"habitStack": "Habit Stack",
+			"identity": "Identity",
+			"identityProof": "Win",
+			"targetDate": "Target",
+			"trigger": "Trigger",
+			"identityRecommendation": "AI recommends",
+			"notSet": "Not set",
+			"selectIdentity": "Select identity",
+			"selectGoal": "Select goal",
+			"none": "None",
+			"addDescription": "Add description",
+			"setDate": "Set date",
+			"clickToEdit": "Click to edit",
+			"dueDate": "Due date",
+			"parentGoal": "Parent goal",
+			"addStep": "Add step",
+			"removeStep": "Remove step",
+			"forIdentity": "For identity",
+			"whatYouDid": "What you did",
+			"effortLevel": "Effort level"
+		},
+		"actions": {
+			"confirm": "Create",
+			"edit": "Edit",
+			"cancel": "Cancel",
+			"task": "Make it a task",
+			"goal": "Make it a goal",
+			"habitStack": "Make it a habit",
+			"makeTask": "Make it a task",
+			"creating": "Creating...",
+			"createIdentity": "Create Identity"
+		},
+		"confidence": {
+			"high": "Ready to create",
+			"medium": "Please clarify",
+			"low": "Need more details"
+		},
+		"successMessages": {
+			"taskCreated": "Task created successfully!",
+			"goalCreated": "Goal created successfully!",
+			"habitStackCreated": "Habit stack created successfully!",
+			"identityCreated": "Identity created successfully!",
+			"identityProofCreated": "Win logged! 🎉"
+		},
+		"errors": {
+			"requestFailed": "Failed to process request. Please try again.",
+			"creationFailed": "Failed to create. Please try again."
+		}
+	},
+	"today": {
+		"title": "Today",
+		"info": {
+			"description": "<p><strong>Today</strong> is your daily command center—a focused view of what matters most right now.</p><p>See all your habit stacks, tasks, and journal entries in one place, organized by day.</p><ul><li><strong>7-day timeline:</strong> View a week at a glance to see what's coming and what you've completed</li><li><strong>Habit stacks:</strong> Check off each habit in your daily routines and build streaks</li><li><strong>Tasks & votes:</strong> Complete tasks and see how they contribute to your identity growth</li><li><strong>Identity proofs / Log wins:</strong> Record moments where you acted in line with your identity. Choose an intensity level (Easy, Moderate, Hard) to earn identity votes and reinforce who you're becoming</li><li><strong>Quick actions:</strong> Postpone tasks, add journal entries, or create new habits on the fly</li></ul><p>Focus on today, but always keep an eye on tomorrow. Small daily actions compound into remarkable long-term results.</p>"
+		},
+		"greeting": {
+			"morning": "Good morning",
+			"afternoon": "Good afternoon",
+			"evening": "Good evening"
+		},
+		"noTasks": "No tasks for today. Enjoy your day!",
+		"habitStacks": "Habit Stacks",
+		"wins": "Wins",
+		"noWins": "No wins logged yet today.",
+		"logFirstWin": "Log your first win",
+		"tasks": "Tasks",
+		"journal": "Journal",
+		"jumpToToday": "Jump to Today",
+		"identityVotes": "Identity Votes",
+		"identityProgress": "Identity Progress",
+		"completeAll": "Complete All",
+		"all": "All",
+		"done": "Done",
+		"tapToComplete": "Tap to complete",
+		"pending": "Pending",
+		"completed": "Completed",
+		"noPendingTasks": "No pending tasks. Only tasks due within the next 7 days appear here.",
+		"noHabitStacks": "No habit stacks yet.",
+		"noCompletedTasks": "No completed tasks yet",
+		"goToGoals": "Create tasks in Goals",
+		"orUseAssistant": "or use the assistant",
+		"allClear": "All clear!",
+		"allClearDescription": "No habit stacks or tasks for this day. Create some habit stacks to build your routine.",
+		"createHabitStack": "Create Habit Stack",
+		"postponeTask": "Postpone Task",
+		"newDueDate": "New due date",
+		"editTask": "Edit Task",
+		"taskTitle": "Title",
+		"taskTitlePlaceholder": "Task title",
+		"taskDescription": "Description",
+		"taskDescriptionPlaceholder": "Add a description...",
+		"dueDate": "Due Date",
+		"identity": "Identity",
+		"noIdentity": "No identity",
+		"snooze1Week": "Snooze 1 week",
+		"movedOutsideView": "Moved outside 7-day view",
+		"dayStreak": "day streak",
+		"trendUp": "Trending up",
+		"trendDown": "Trending down",
+		"trendStable": "Stable",
+		"scoreHiddenMessage": "Your score will be visible in {days} more days",
+		"status": {
+			"dormant": "Dormant",
+			"forming": "Forming",
+			"emerging": "Emerging",
+			"stabilizing": "Stabilizing",
+			"strong": "Strong",
+			"automatic": "Automatic"
+		},
+		"dates": {
+			"today": "Today",
+			"tomorrow": "Tomorrow",
+			"yesterday": "Yesterday",
+			"daysAgo": "{count} days ago",
+			"noDate": "No date"
+		},
+		"voteBreakdown": {
+			"votes": "votes today",
+			"habits": "Habit completions",
+			"stackBonus": "Stack bonus",
+			"tasks": "Task completions",
+			"wins": "Identity wins"
+		}
+	},
+	"dailyCommitment": {
+		"title": "Today, I Commit To...",
+		"prompt": "Make one tiny, non-negotiable commitment. It should be so easy you can't say no.",
+		"startButton": "Make My Commitment",
+		"completeButton": "Done",
+		"dismissButton": "Skip Today",
+		"completedLabel": "Done",
+		"dismissedLabel": "Skipped",
+		"reinforcement": "Every small action is a vote for who you're becoming.",
+		"recoveryTitle": "Fresh Start",
+		"recoveryMessage": "Yesterday's commitment didn't happen - and that's okay. Today is a new chance to cast a vote for being a {identity}.",
+		"rules": {
+			"title": "Ultra-Small & Non-Negotiable",
+			"easy": "Embarrassingly easy (2 minutes or less)",
+			"aligned": "Aligned with your identity",
+			"binary": "Simple: done or not done"
+		},
+		"examples": {
+			"title": "Examples",
+			"writer": "Open my writing app",
+			"athlete": "Put on my gym shoes",
+			"reader": "Read 1 paragraph",
+			"meditator": "Take 3 deep breaths",
+			"healthy": "Drink a glass of water"
+		},
+		"modal": {
+			"titleIdentity": "Who Do You Want To Be Today?",
+			"titleAction": "Today, I Commit To...",
+			"titleConfirm": "Ready to Commit?",
+			"identityPrompt": "Choose the identity you want to strengthen today",
+			"actionPrompt": "What ultra-small action will cast a vote for being a {identity}?",
+			"actionHint": "Make it embarrassingly easy - something you can't say no to",
+			"suggestions": "Quick wins",
+			"orCustom": "Or write your own",
+			"yourAction": "Your action",
+			"customPlaceholder": "I will...",
+			"recommended": "Suggested",
+			"continueButton": "Continue",
+			"commitButton": "I Commit to This",
+			"confirmPrompt": "Today you will:",
+			"asA": "as a {identity}",
+			"successTitle": "You're Committed!"
+		},
+		"settings": {
+			"title": "Daily Commitment",
+			"description": "Start each day with one ultra-small, non-negotiable action that reinforces who you're becoming",
+			"enabled": "Enable daily commitment",
+			"defaultMode": "Smart default identity",
+			"weakest": "Recovery nudge",
+			"weakestDescription": "Suggest the identity that needs the most attention",
+			"strongest": "Momentum nudge",
+			"strongestDescription": "Suggest the identity where you have the most momentum"
+		}
+	},
+	"identityProof": {
+		"title": "Log a Win",
+		"subtitle": "Capture wins that reinforce your identity",
+		"whichIdentity": "Which identity did you reinforce?",
+		"selectIdentity": "Select an identity...",
+		"howChallenging": "How challenging was it?",
+		"whatDidYouDo": "What did you do?",
+		"logProof": "Log Win",
+		"logProofButton": "Log Win",
+		"success": "Win Logged!",
+		"easy": "Easy",
+		"moderate": "Moderate",
+		"hard": "Hard",
+		"aiHint": "You can also log wins using the AI assistant:",
+		"openAiAssistant": "Open AI",
+		"intensity": {
+			"easy": "Easy",
+			"moderate": "Moderate",
+			"hard": "Hard"
+		}
+	},
+	"analytics": {
+		"title": "Analytics",
+		"pageTitle": "Analytics",
+		"streak": {
+			"current": "Current Streak",
+			"longest": "Longest Streak",
+			"days": "days"
+		},
+		"completionRate": "Completion Rate",
+		"tasksCompleted": "Tasks Completed",
+		"summary": {
+			"totalHabits": "Total Habits",
+			"activeStreaks": "Active Streaks",
+			"longestStreak": "Longest Streak"
+		},
+		"rates": {
+			"title": "Completion Rates",
+			"daily": "Daily",
+			"weekly": "Weekly",
+			"monthly": "Monthly",
+			"totalCompletions": "Total Completions",
+			"missedDays": "Missed Days"
+		},
+		"heatmap": {
+			"title": "Activity (Last 90 Days)",
+			"less": "Less",
+			"more": "More",
+			"completion": "completion",
+			"completions": "completions"
+		},
+		"streaks": {
+			"title": "Habit Streaks",
+			"longest": "Longest",
+			"last": "Last"
+		},
+		"empty": {
+			"title": "No streak data yet",
+			"description": "Complete repeating tasks to start building streaks.",
+			"goToDashboard": "Go to Dashboard"
+		},
+		"errors": {
+			"loadFailed": "Failed to load analytics"
+		}
+	},
+	"buddies": {
+		"title": "Accountability Buddies",
+		"pageTitle": "Accountability Buddies",
+		"info": {
+			"description": "<p><strong>Accountability Buddies</strong> are people who help you stay on track and provide encouragement along your journey.</p><p>Sharing your progress with others makes you more likely to follow through on your commitments.</p><ul><li><strong>Invite buddies:</strong> Send email invitations to friends, family, or mentors</li><li><strong>Share progress:</strong> Your buddies can view your daily habit completion and tasks</li><li><strong>Mutual support:</strong> You can also be someone else's accountability buddy</li><li><strong>Encouragement:</strong> Buddies can leave notes in your journal to cheer you on</li></ul><p>Remember: Accountability isn't about judgment—it's about having someone in your corner who believes in your ability to grow.</p>"
+		},
+		"empty": "No buddies yet. Invite someone to help keep you accountable!",
+		"invite": {
+			"title": "Invite a New Accountability Buddy",
+			"description": "Enter the email address of someone you'd like to help keep you accountable. They'll receive an email invitation with instructions on how to view your progress.",
+			"placeholder": "buddy@example.com",
+			"send": "Send Invite",
+			"sending": "Sending...",
+			"success": "Invitation sent successfully!",
+			"emailRequired": "Please enter an email address"
+		},
+		"myBuddies": {
+			"title": "My Accountability Buddies",
+			"description": "These people can view your daily progress and leave encouraging notes in your journal.",
+			"empty": "You haven't added any accountability buddies yet.",
+			"emptyHint": "Invite someone using the form above!",
+			"added": "Added",
+			"remove": "Remove",
+			"removeConfirm": "Are you sure you want to remove this accountability buddy?"
+		},
+		"buddyingFor": {
+			"title": "I'm Accountability Buddy For",
+			"description": "These people have added you as their accountability buddy. You can view their progress and encourage them!",
+			"empty": "No one has added you as their accountability buddy yet.",
+			"since": "Since",
+			"visit": "Visit",
+			"leave": "Leave",
+			"leaveConfirm": "Are you sure you want to stop being {name}'s accountability buddy?"
+		},
+		"email": "Email address",
+		"sendInvite": "Send Invite",
+		"pending": "Pending Invitations",
+		"viewProgress": "View Progress",
+		"journal": {
+			"infoBanner": "Write an encouraging note for {name}!",
+			"writeEncouragement": "Write Encouragement",
+			"emptyTitle": "No journal entries yet",
+			"emptyDescription": "Be the first to write an encouraging note for {name}!"
+		},
+		"errors": {
+			"loadFailed": "Failed to load buddy relationships",
+			"inviteFailed": "Failed to send invitation",
+			"removeFailed": "Failed to remove buddy",
+			"leaveFailed": "Failed to leave buddy relationship"
+		}
+	},
+	"errorState": {
+		"title": "Oops! Something went wrong",
+		"message": "We're having a little trouble loading this content.",
+		"suggestion": "Don't worry, your data is safe. Our team has been notified and is working on it. Please try again in a moment.",
+		"tryAgain": "Try Again"
+	},
+	"errors": {
+		"generic": "Something went wrong. Please try again.",
+		"network": "Network error. Please check your connection.",
+		"unauthorized": "Please sign in to continue.",
+		"notFound": "The requested resource was not found.",
+		"validation": "Please check your input and try again."
+	},
+	"errorPages": {
+		"notFound": {
+			"title": "Oops! We can't find that page",
+			"message": "It looks like this page has moved or doesn't exist anymore.",
+			"suggestion": "No worries - let's get you back on track! Head to your daily view to continue building great habits."
+		},
+		"serverError": {
+			"title": "We're taking a quick break",
+			"message": "Something unexpected happened on our end.",
+			"suggestion": "Don't worry, your data is safe! We're working on it and will be back shortly. The page will refresh automatically when we're ready."
+		},
+		"offline": {
+			"title": "No internet connection",
+			"message": "It looks like you're not connected to the internet right now.",
+			"suggestion": "Check your Wi-Fi or mobile data connection. We'll automatically reconnect when you're back online!"
+		},
+		"serverUnavailable": {
+			"title": "We'll be right back",
+			"message": "We're having a little trouble connecting to our servers.",
+			"suggestion": "This is usually temporary. Sit tight - we're checking every few seconds and will refresh automatically when everything is working again."
+		},
+		"autoRecovery": {
+			"checking": "Checking connection...",
+			"willRetry": "Automatically retrying in {seconds} seconds..."
+		},
+		"actions": {
+			"goToToday": "Go to Today",
+			"goBack": "Go Back",
+			"tryAgain": "Try Again Now"
+		},
+		"helpText": "Still having trouble?"
+	},
+	"admin": {
+		"title": "Admin Dashboard",
+		"subtitle": "System overview and user management",
+		"stats": {
+			"totalUsers": "Total Users",
+			"activeUsers": "active",
+			"membershipTiers": "Membership Tiers",
+			"usersLoggedInToday": "Users Logged In Today",
+			"activeToday": "active today",
+			"totalTasksCreated": "Total Tasks Created",
+			"totalTasksCompleted": "Total Tasks Completed",
+			"allTime": "all time",
+			"daily": {
+				"title": "Daily Statistics",
+				"tasksCreated": "Tasks Created",
+				"tasksCompleted": "Tasks Completed",
+				"tasksDue": "Tasks Due"
+			}
+		},
+		"tiers": {
+			"free": "Free",
+			"plus": "Plus",
+			"pro": "Pro"
+		},
+		"users": {
+			"title": "Users",
+			"searchPlaceholder": "Search users...",
+			"allTiers": "All Tiers",
+			"allStatus": "All Status",
+			"active": "Active",
+			"inactive": "Inactive",
+			"user": "User",
+			"email": "Email",
+			"tier": "Tier",
+			"role": "Role",
+			"status": "Status",
+			"joined": "Joined",
+			"aiCalls": "AI Calls",
+			"aiCost": "AI Cost",
+			"actions": "Actions",
+			"activate": "Activate",
+			"deactivate": "Deactivate",
+			"noUsers": "No users found",
+			"roleUser": "User",
+			"roleAdmin": "Admin",
+			"activity": {
+				"title": "User Activity",
+				"loading": "Loading activity...",
+				"lastWeek": "Last 7 Days",
+				"total": "All Time",
+				"tasksCreated": "Tasks Created",
+				"tasksCompleted": "Tasks Completed",
+				"goalsCreated": "Goals Created",
+				"identitiesCreated": "Identities Created",
+				"habitStacksCreated": "Habit Stacks Created",
+				"habitCompletions": "Habit Completions",
+				"journalEntries": "Journal Entries",
+				"aiCalls": "AI Calls",
+				"aiCost": "AI Cost",
+				"close": "Close"
+			}
+		},
+		"accessControl": {
+			"title": "Access Control",
+			"openSignups": "Open signups enabled",
+			"closedBeta": "Closed beta - whitelist required"
+		},
+		"invite": {
+			"title": "Invite User",
+			"placeholder": "Enter email address...",
+			"send": "Send Invite",
+			"sending": "Sending...",
+			"description": "Adds the email to the whitelist and sends an invite email."
+		},
+		"waitlist": {
+			"title": "Waitlist",
+			"pending": "pending",
+			"description": "Users waiting for access",
+			"email": "Email",
+			"name": "Name",
+			"date": "Date",
+			"actions": "Actions",
+			"approve": "Approve",
+			"remove": "Remove",
+			"empty": "No waitlist entries"
+		},
+		"whitelist": {
+			"title": "Whitelist",
+			"approved": "approved",
+			"description": "Emails allowed to sign up",
+			"email": "Email",
+			"added": "Added",
+			"invited": "Invited",
+			"actions": "Actions",
+			"remove": "Remove",
+			"sent": "Sent",
+			"by": "by",
+			"empty": "No whitelist entries"
+		},
+		"errors": {
+			"loadFailed": "Failed to load admin data",
+			"dailyStatsFailed": "Failed to load daily stats",
+			"searchFailed": "Failed to search users",
+			"filterFailed": "Failed to filter users",
+			"updateUserFailed": "Failed to update user",
+			"updateRoleFailed": "Failed to update user role",
+			"approveFailed": "Failed to approve waitlist entry",
+			"removeWaitlistFailed": "Failed to remove from waitlist",
+			"removeWhitelistFailed": "Failed to remove from whitelist",
+			"inviteFailed": "Failed to invite user"
+		},
+		"milestones": {
+			"title": "Milestone Definitions",
+			"definitions": "definitions",
+			"icon": "Icon",
+			"code": "Code",
+			"trigger": "Trigger",
+			"rule": "Rule",
+			"status": "Status",
+			"actions": "Actions",
+			"active": "Active",
+			"inactive": "Inactive",
+			"preview": "Preview",
+			"create": "Create Milestone",
+			"edit": "Edit Milestone",
+			"deleteConfirm": "Delete Milestone?"
+		}
+	},
+	"faq": {
+		"title": "Frequently Asked Questions",
+		"subtitle": "Everything you need to know about Help Motivate Me",
+		"getStarted": "Get Started",
+		"cta": {
+			"title": "Ready to Start Your Journey?",
+			"description": "Join thousands of users building better habits and becoming the person they want to be. Sign up free and start making progress today.",
+			"createAccount": "Create Free Account",
+			"signIn": "Sign In"
+		},
+		"footer": {
+			"stillHaveQuestions": "Still have questions?",
+			"contactSupport": "Contact Support"
+		},
+		"questions": {
+			"whatIs": {
+				"title": "What is Help Motivate Me?",
+				"content": "Help Motivate Me is a comprehensive productivity and motivation platform designed to help you build better habits, achieve your goals, and become the person you want to be. The app combines proven behavioral science principles with practical tools to make lasting change easier."
+			},
+			"identities": {
+				"title": "What are Identities and how do they work?",
+				"content": "Identities are the core of lasting behavior change. Instead of just setting goals, you define who you want to become - \"I am a writer,\" \"I am a healthy person,\" or \"I am an organized professional.\"\n\nEvery time you complete a task or habit aligned with an identity, you cast a \"vote\" for that identity. These votes accumulate as evidence of your new identity. You'll see reinforcement messages like \"That's what a writer does!\" or \"You're becoming a healthy person!\"\n\nThis approach works because behavior change is easier when it aligns with how you see yourself. Rather than forcing yourself to write because you \"should,\" you write because that's what writers do - and you're a writer."
+			},
+			"identityVotes": {
+				"title": "What are Identity Votes?",
+				"content": "Identity votes are a tracking system that shows you're becoming the person you want to be. Each completed task or habit linked to an identity counts as one vote for that identity.\n\nFor example, if you've defined \"I am a healthy person\" as an identity, then:\n- Going for a morning run = 1 vote for \"healthy person\"\n- Preparing a nutritious meal = 1 vote for \"healthy person\"\n- Getting 8 hours of sleep = 1 vote for \"healthy person\"\n\nThe app tracks your total votes, recent activity, and completion rates. These visible metrics serve as proof of your identity shift, making it psychologically easier to continue the behavior. You're not just someone trying to be healthy - you're someone who has proven it 50 times this month."
+			},
+			"identityProofs": {
+				"title": "What are Identity Wins?",
+				"content": "Identity Wins (also called proofs) are moments where you acted in alignment with one of your identities. They're a way to log evidence that you're becoming who you want to be.\n\nFor example, if your identity is \"I am a healthy person,\" a win might be:\n- Going for a run before work\n- Choosing a salad over fast food\n- Getting to bed on time\n\nWhen logging a win, you select the identity it reinforces, describe what you did, and rate how challenging it was (Easy, Moderate, or Hard). Each win counts as a vote for that identity and contributes to your streaks and analytics.\n\nUnlike tasks that are planned ahead of time, wins capture spontaneous actions and choices that reflect your identity. They're perfect for recognizing the small, everyday decisions that add up to real transformation.\n\nAs you accumulate wins, you'll unlock achievements like \"Identity Voter\" (first win), \"Identity Builder\" (10 wins), and \"Identity Champion\" (50 wins)."
+			},
+			"habitStacks": {
+				"title": "What is Habit Stacking?",
+				"content": "Habit Stacking is a powerful technique for building new habits by linking them to existing routines. The formula is simple: \"After [CURRENT HABIT], I will [NEW HABIT].\"\n\nFor example:\n- After I pour my morning coffee, I will meditate for 2 minutes\n- After I close my laptop for lunch, I will do 10 push-ups\n- After I brush my teeth at night, I will lay out tomorrow's workout clothes\n\nThe app helps you create and track these stacks. You can define a series of habits that flow naturally from one to another, leveraging the momentum of existing routines to make new habits stick.\n\nYou can also link habit stacks to identities. A \"Writer\" identity might have a morning stack: After I make coffee → I will write 250 words → Then I will save my work. Each completed stack reinforces your identity."
+			},
+			"goals": {
+				"title": "How do Goals work?",
+				"content": "Goals help you define what you want to achieve and track your progress. Unlike traditional goal-setting apps that focus solely on outcomes, this app emphasizes the process and identity behind your goals.\n\nYou can create goals with:\n- Clear descriptions of what you want to achieve\n- Target dates and milestones\n- Links to identities (e.g., \"Complete a marathon\" linked to \"I am an athlete\")\n- Associated tasks that break the goal into actionable steps\n\nThe app tracks your progress and helps you see how daily actions (tasks) connect to larger objectives (goals) and ultimately to who you're becoming (identities). This three-layer approach - identity, goals, tasks - ensures your daily efforts align with your long-term vision."
+			},
+			"tasks": {
+				"title": "What are Tasks and how do they differ from habits?",
+				"content": "Tasks are specific, actionable items you need to complete. They can be one-time actions or recurring activities that contribute to your goals and identities.\n\nKey features:\n- Set due dates and priorities\n- Link tasks to goals and identities\n- Mark as complete to earn identity votes\n- Postpone tasks when needed\n- Track completion history\n\nWhile habit stacks are routines you repeat regularly in sequence, tasks are individual items that need your attention. A task might be \"Review quarterly budget\" (one-time) or \"Call Mom\" (recurring weekly). Both types of activities can contribute to your identities and goals."
+			},
+			"today": {
+				"title": "What is the Today view?",
+				"content": "The Today view is your daily dashboard - your mission control for the day. It shows everything that needs your attention right now:\n\n- Tasks due today or overdue\n- Habit stacks scheduled for today\n- Progress on active goals\n- Quick access to log journal entries\n- Identity vote progress\n\nThis focused view helps you start each day with clarity, knowing exactly what actions will move you forward. Instead of being overwhelmed by everything on your plate, you see only what matters today."
+			},
+			"journal": {
+				"title": "How does the Journal work?",
+				"content": "The Journal feature provides a space for reflection, tracking your thoughts, wins, challenges, and insights about your progress.\n\nYou can:\n- Write daily entries about your experiences\n- Attach images or files to capture moments\n- Reflect on what's working and what isn't\n- Track patterns in your motivation and energy\n- Document your journey of identity change\n\nRegular journaling helps you maintain awareness of your progress, process challenges, and celebrate wins. It's a powerful tool for self-reflection and course correction. Looking back at journal entries from weeks or months ago can show you just how far you've come."
+			},
+			"analytics": {
+				"title": "What Analytics are available?",
+				"content": "The Analytics section gives you data-driven insights into your progress:\n\n- Task completion rates over time\n- Identity vote trends and streaks\n- Goal progress visualization\n- Habit stack adherence rates\n- Best performing times and patterns\n\nThese metrics help you understand what's working, identify obstacles, and make informed adjustments to your approach. Data removes guesswork - you can see exactly which habits are sticking and which identities are gaining momentum."
+			},
+			"loginSocial": {
+				"title": "How do I log in with Google or GitHub?",
+				"content": "We support social login to make access quick and secure:\n\n**Google Login:**\nClick \"Continue with Google\" on the login page. You'll be redirected to Google to authorize access. Once approved, you'll be automatically logged in. No password needed!\n\n**GitHub Login:**\nClick \"Continue with GitHub\" on the login page. Authorize the app through GitHub, and you're in.\n\n**Benefits:**\n- No password to remember\n- Secure authentication through trusted providers\n- Quick login process\n- You can link multiple providers to the same account\n\nIf you sign up with one provider and later want to add another, you can link additional login methods in your account settings."
+			},
+			"loginEmail": {
+				"title": "How does Email/Token login work?",
+				"content": "We offer passwordless email authentication for a secure, hassle-free experience:\n\n**How it works:**\n1. Enter your email address on the login page\n2. Click \"Send Login Link\"\n3. Check your email for a secure login link\n4. Click the link to instantly log in\n\n**Benefits:**\n- No password to create, remember, or reset\n- More secure than traditional passwords\n- Works from any device with email access\n- Automatic account creation for new users\n\nThe login link is single-use and expires after a short time for security. If you don't receive the email, check your spam folder or request a new link.\n\n**Note:** You can also set a traditional password in your account settings if you prefer that login method."
+			},
+			"multipleLogins": {
+				"title": "Can I use multiple login methods?",
+				"content": "Yes! You can link multiple authentication methods to your account for flexibility:\n\n- Start with Google, add GitHub later\n- Use email login from your phone, Google from your laptop\n- Link a traditional password as a backup\n\n**To add a login method:**\n1. Log in with your primary method\n2. Go to Settings\n3. Look for \"Connected Accounts\" or \"Login Methods\"\n4. Click \"Link\" next to the provider you want to add\n\n**To remove a method:**\nYou can unlink login methods in Settings, but the app will prevent you from removing your last login method to avoid getting locked out.\n\nThis flexibility ensures you can always access your account, even if one provider has issues or you switch devices."
+			},
+			"gettingStarted": {
+				"title": "How do I get started?",
+				"content": "Here's the recommended path to get the most out of the app:\n\n**Step 1: Define Your Identities (5 minutes)**\nThink about who you want to become. Pick 2-3 identities to start, like \"I am a healthy person\" or \"I am a focused professional.\"\n\n**Step 2: Create a Simple Habit Stack (5 minutes)**\nLink a new habit to something you already do. Start small - \"After I wake up, I will drink a glass of water.\"\n\n**Step 3: Add a Few Tasks (5 minutes)**\nWhat needs to get done today? Add 3-5 tasks and link them to your identities when relevant.\n\n**Step 4: Take Action**\nComplete tasks, work through your habit stack, and watch your identity votes accumulate.\n\n**Step 5: Reflect in the Journal (2 minutes)**\nEnd your day with a quick journal entry about what went well.\n\nThe key is to start simple. You don't need everything perfect on day one. Add goals and more complex habit stacks as you get comfortable with the basics."
+			},
+			"privacy": {
+				"title": "Is my data private and secure?",
+				"content": "Yes. Your data privacy and security are top priorities:\n\n- All data is encrypted in transit (HTTPS)\n- Passwords are hashed and never stored in plain text\n- Social logins use OAuth 2.0 industry standards\n- Your data is never sold or shared with third parties\n- Regular automated backups protect against data loss\n\nYou own your data. You can export it or delete your account at any time from the settings page."
+			},
+			"support": {
+				"title": "How do I get help or report issues?",
+				"content": "We're here to help:\n\n- Check this FAQ for common questions\n- Review the in-app help tooltips and guides\n- Contact support through the Settings page\n- Report bugs or request features via GitHub (if available)\n\nWe continuously improve the app based on user feedback, so don't hesitate to share your thoughts or suggestions!"
+			}
+		}
+	},
+	"pricing": {
+		"title": "Pricing",
+		"subtitle": "Simple, transparent pricing. No tracking. No hidden fees.",
+		"backToHome": "Back to Home",
+		"privacyCallout": "No tracking cookies. No data selling. Just tools to help you grow.",
+		"billing": {
+			"monthly": "Monthly",
+			"annual": "Annual",
+			"save": "Save 20%",
+			"billedAnnually": "billed annually",
+			"billedMonthly": "per month"
+		},
+		"popularBadge": "Most Popular",
+		"getStarted": "Get Started Free",
+		"getPlan": "Get {plan}",
+		"faq": {
+			"title": "Frequently Asked Questions",
+			"changePlans": {
+				"question": "Can I change plans later?",
+				"answer": "Yes, you can upgrade or downgrade your plan at any time from your account settings."
+			},
+			"paymentMethods": {
+				"question": "What payment methods do you accept?",
+				"answer": "We accept major credit cards. Payment processing is handled securely."
+			},
+			"freeTrial": {
+				"question": "Is there a free trial for paid plans?",
+				"answer": "The Free plan lets you experience the core features. You can upgrade when you're ready for more."
+			},
+			"cancel": {
+				"question": "What happens if I cancel?",
+				"answer": "You'll retain access until the end of your billing period. Your data stays safe, and you can always resubscribe."
+			},
+			"refunds": {
+				"question": "Do you offer refunds?",
+				"answer": "Yes, we offer refunds on a case-by-case basis. Contact us within 14 days of a charge to request one."
+			}
+		},
+		"cta": {
+			"title": "Still have questions?",
+			"description": "We're happy to help you find the right plan for your needs.",
+			"contact": "Contact Us"
+		},
+		"betaNote": "Note: Payment integration will be added in a future update. Currently, all features are available during beta."
+	},
+	"contact": {
+		"title": "Contact Us",
+		"subtitle": "Get in touch with our team",
+		"form": {
+			"name": "Name",
+			"namePlaceholder": "Your name",
+			"email": "Email",
+			"emailPlaceholder": "your@email.com",
+			"message": "Message",
+			"messagePlaceholder": "How can we help you?",
+			"submit": "Send Message",
+			"sending": "Sending..."
+		},
+		"success": "Thank you! We'll get back to you soon.",
+		"error": "Failed to send message. Please try again."
+	},
+	"pushPrompt": {
+		"title": "Stay Motivated!",
+		"subtitle": "Enable notifications",
+		"description": "Get timely reminders to help you build habits and reach your goals. You can customize or disable notifications anytime in settings.",
+		"benefit1": "Daily habit reminders",
+		"benefit2": "Goal progress updates",
+		"benefit3": "Motivational messages",
+		"enable": "Enable",
+		"notNow": "Not Now"
+	},
+	"help": {
+		"title": "Help & Support",
+		"subtitle": "Learn how to use Help Motivate Me",
+		"tour": {
+			"title": "Guided Tour",
+			"description": "Take an interactive tour of all the features",
+			"button": "Start Guided Tour"
+		},
+		"sections": {
+			"today": {
+				"title": "Today View",
+				"tips": [
+					"Your daily command center showing tasks, habits, and wins",
+					"Use the 7-day timeline to plan ahead and review progress",
+					"Complete habits in order to build powerful streaks",
+					"Log wins to reinforce your identity throughout the day"
+				]
+			},
+			"identities": {
+				"title": "Identities",
+				"tips": [
+					"Define who you want to become, not just what you want to do",
+					"Every completed task and habit is a vote for your identity",
+					"Link goals and habits to identities for deeper motivation",
+					"Track your identity score to see your transformation"
+				]
+			},
+			"goals": {
+				"title": "Goals",
+				"tips": [
+					"Create goals that serve your identity, not just outcomes",
+					"Break goals into small, actionable tasks",
+					"Link goals to identities for lasting motivation",
+					"Set target dates to stay accountable"
+				]
+			},
+			"habitStacks": {
+				"title": "Habit Stacks",
+				"tips": [
+					"Chain new habits to existing routines for easier adoption",
+					"Use the formula: After I [trigger], I will [habit]",
+					"Start with small, embarrassingly easy habits",
+					"Complete stacks in order to build momentum"
+				]
+			},
+			"journal": {
+				"title": "Journal",
+				"tips": [
+					"Reflect on what worked and what didn't each day",
+					"Link entries to habit stacks or tasks for context",
+					"Add images to capture meaningful moments",
+					"Review past entries to see how far you've come"
+				]
+			},
+			"aiAssistant": {
+				"title": "AI Assistant",
+				"tips": [
+					"Create tasks, goals, and habits using natural language",
+					"Open anytime with Cmd+K (Mac) or Ctrl+K (Windows)",
+					"Describe what you want and let AI suggest the right type",
+					"Log wins quickly by telling the assistant what you did"
+				]
+			}
+		},
+		"faq": {
+			"title": "Need more help?",
+			"link": "Visit FAQ"
+		},
+		"contact": {
+			"title": "Still need help?",
+			"link": "Contact Support"
+		}
+	},
+	"milestones": {
+		"celebration": {
+			"title": "Achievement Unlocked!",
+			"awesome": "Awesome!"
+		},
+		"first_login": {
+			"title": "First Steps",
+			"description": "You've logged in for the first time. Welcome to your journey!"
+		},
+		"logins_7": {
+			"title": "Weekly Warrior",
+			"description": "You've logged in 7 times. Consistency is key!"
+		},
+		"logins_30": {
+			"title": "Monthly Master",
+			"description": "30 logins! You're building a strong habit."
+		},
+		"return_after_2_weeks": {
+			"title": "Welcome Back!",
+			"description": "You returned after 2+ weeks. Every comeback counts!"
+		},
+		"first_habit": {
+			"title": "Habit Starter",
+			"description": "You completed your first habit. The journey begins!"
+		},
+		"habits_10": {
+			"title": "Habit Builder",
+			"description": "10 habits completed! You're building momentum."
+		},
+		"habits_50": {
+			"title": "Habit Champion",
+			"description": "50 habits completed! You're unstoppable."
+		},
+		"habits_100": {
+			"title": "Habit Legend",
+			"description": "100 habits completed! True dedication."
+		},
+		"habits_5_in_week": {
+			"title": "Weekly Streak",
+			"description": "5 habits in one week! Impressive consistency."
+		},
+		"first_task": {
+			"title": "Task Tackler",
+			"description": "You completed your first task. Momentum building!"
+		},
+		"tasks_10": {
+			"title": "Task Master",
+			"description": "10 tasks done! You're making progress."
+		},
+		"tasks_50": {
+			"title": "Task Titan",
+			"description": "50 tasks completed! Remarkable productivity."
+		},
+		"first_journal": {
+			"title": "First Entry",
+			"description": "You wrote your first journal entry. Reflection is powerful!"
+		},
+		"journals_10": {
+			"title": "Thoughtful Writer",
+			"description": "10 journal entries! Your journey is well documented."
+		},
+		"first_identity_proof": {
+			"title": "Identity Voter",
+			"description": "You logged your first win. Every vote counts!"
+		},
+		"identity_proofs_10": {
+			"title": "Identity Builder",
+			"description": "10 wins logged! You're becoming who you want to be."
+		},
+		"identity_proofs_50": {
+			"title": "Identity Champion",
+			"description": "50 wins! Your identity transformation is remarkable."
+		},
+		"wins_25": {
+			"title": "Quarter Century",
+			"description": "25 total wins! Steady progress."
+		},
+		"wins_100": {
+			"title": "Century Club",
+			"description": "100 total wins! You're on fire."
+		},
+		"wins_500": {
+			"title": "Elite Achiever",
+			"description": "500 total wins! You're in a league of your own."
+		}
+	},
+	"tour": {
+		"welcome": {
+			"takeTour": "Take Guided Tour",
+			"skipTour": "Skip for now"
+		},
+		"controls": {
+			"next": "Next",
+			"previous": "Previous",
+			"skip": "Skip Tour",
+			"finish": "Finish",
+			"step": "Step {current} of {total}"
+		},
+		"today": {
+			"help": {
+				"title": "Need Help?",
+				"description": "You can find help anytime from this menu. Click your name, then select 'Help' to access guides, restart this tour, or get in touch with us."
+			},
+			"commitment": {
+				"title": "Today, I Commit To...",
+				"description": "Each day, make one ultra-small, non-negotiable commitment. It should be embarrassingly easy (like 'open my writing app' or 'put on gym shoes'). Every tiny action is a vote for who you're becoming."
+			},
+			"identityProgress": {
+				"title": "Identity Progress",
+				"description": "Track your progress towards each identity. Every completed habit, task, and daily commitment casts a vote for who you're becoming. Watch your scores grow as you take action!"
+			},
+			"habits": {
+				"title": "Habit Stacks",
+				"description": "Your habit stacks for today. Check off each habit as you complete it to build streaks and reinforce your identity."
+			},
+			"wins": {
+				"title": "Wins",
+				"description": "Log proof of your identity in action! Wins are moments where you acted according to your identity—whether it's completing a workout, finishing a chapter, or making a healthy choice. Each win reinforces who you're becoming."
+			},
+			"tasks": {
+				"title": "Tasks",
+				"description": "Tasks due today or within the next 7 days. You can snooze tasks by 7 days, postpone to a specific date, or edit them. Tasks are linked to your goals."
+			},
+			"logWin": {
+				"title": "Log a Win",
+				"description": "Use this button to quickly log a win. Record moments where you acted according to your identities—every win strengthens your identity score and builds momentum."
+			},
+			"aiAssistant": {
+				"title": "AI Assistant",
+				"description": "Your personal AI helper! Use natural language to quickly create tasks, goals, and habit stacks. Just tell it what you want to do—like 'Go running every morning' or 'Finish my book by June'—and it will suggest the right type and link it to your identities. Open it anytime with ⌘K (Mac) or Ctrl+K (Windows)."
+			}
+		},
+		"goals": {
+			"overview": {
+				"title": "Identity-Driven Goals",
+				"description": "Every goal should answer: 'What identity does this serve?' Instead of 'Lose 20 lbs', try 'Build a sustainable fitness routine' linked to 'I treat my body with respect'. Break goals into tasks - each task is a small vote for your identity."
+			}
+		},
+		"habitStacks": {
+			"overview": {
+				"title": "Habit Stacking",
+				"description": "Chain habits together using the formula: 'After I [trigger], I will [habit]'. This makes new habits easier to remember and builds powerful routines."
+			}
+		},
+		"journal": {
+			"overview": {
+				"title": "Journal",
+				"description": "Reflect on your journey by writing journal entries. Link entries to habit stacks or tasks, and add images to capture moments."
+			}
+		},
+		"identities": {
+			"overview": {
+				"title": "Your Identities",
+				"description": "Identities define who you want to become. Every completed habit and task is a vote for these identities. This is the foundation of lasting behavior change."
+			}
+		},
+		"buddies": {
+			"overview": {
+				"title": "Accountability Buddies",
+				"description": "Invite friends or family to be your accountability buddies. They can view your progress and leave encouraging notes in your journal."
+			}
+		},
+		"completion": {
+			"title": "Tour Complete!",
+			"description": "You've seen the main features. Remember, you can restart this tour anytime from Settings.",
+			"getStarted": "Get Started"
+		},
+		"settings": {
+			"title": "Guided Tour",
+			"description": "Restart the guided tour to learn about all the app features.",
+			"restart": "Restart Guided Tour",
+			"completed": "Tour completed",
+			"notCompleted": "Tour not completed"
+		}
+	}
+}

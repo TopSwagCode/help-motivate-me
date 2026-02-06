@@ -1,0 +1,249 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	html {
+		@apply antialiased;
+		height: 100%;
+		scroll-behavior: smooth;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	body {
+		@apply bg-warm-cream text-cocoa-800;
+		min-height: 100%;
+		/* Ensure body is scrollable and respects safe areas */
+		padding-bottom: env(safe-area-inset-bottom);
+	}
+}
+
+@layer components {
+	.btn {
+		@apply inline-flex items-center justify-center px-4 py-2 border border-transparent
+			text-sm font-medium rounded-2xl shadow-sm transition-all duration-300
+			focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed
+			touch-manipulation min-h-[44px];
+	}
+
+	.btn-primary {
+		@apply btn bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500;
+	}
+
+	.btn-secondary {
+		@apply btn bg-warm-paper text-cocoa-700 border-primary-200 hover:bg-primary-50 focus:ring-primary-500;
+	}
+
+	.btn-danger {
+		@apply btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+	}
+
+	.input {
+		@apply block w-full px-3 py-2 border border-primary-200 rounded-2xl shadow-sm
+			bg-warm-paper placeholder-cocoa-400 focus:outline-none focus:ring-2 focus:ring-primary-500
+			focus:border-primary-500 text-sm transition-colors duration-300
+			min-h-[44px];
+	}
+
+	/* Date input placeholder styling */
+	input[type="date"]:invalid::-webkit-datetime-edit {
+		color: #b09780; /* cocoa-400 */
+	}
+
+	input[type="date"]::-webkit-datetime-edit-text,
+	input[type="date"]::-webkit-datetime-edit-month-field,
+	input[type="date"]::-webkit-datetime-edit-day-field,
+	input[type="date"]::-webkit-datetime-edit-year-field {
+		padding: 0;
+	}
+
+	/* Show placeholder when empty */
+	input[type="date"]:not(:focus):not([value])::-webkit-datetime-edit,
+	input[type="date"]:not(:focus)[value=""]::-webkit-datetime-edit {
+		color: #b09780; /* cocoa-400 - same as placeholder */
+	}
+
+	.label {
+		@apply block text-sm font-medium text-cocoa-700 mb-1;
+	}
+
+	.card {
+		@apply bg-warm-paper rounded-3xl shadow-sm border border-primary-100/50 overflow-hidden;
+	}
+
+	.card-hover {
+		@apply card hover:shadow-md transition-shadow duration-300;
+	}
+
+	/* Page container that fills remaining viewport height */
+	.page-container {
+		min-height: calc(100vh - var(--header-height, 0px));
+	}
+
+	/* Hide scrollbar for mobile navigation */
+	.scrollbar-hide {
+		-ms-overflow-style: none;  /* IE and Edge */
+		scrollbar-width: none;  /* Firefox */
+	}
+	
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none;  /* Chrome, Safari and Opera */
+	}
+}
+
+/* Page transitions */
+.page-transition {
+	animation: fadeIn 350ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(4px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Mobile menu slide down animation */
+.animate-slide-down {
+	animation: slideDown 350ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+@keyframes slideDown {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Task entrance animations */
+.animate-slide-in-highlight {
+	animation: slideInHighlight 400ms ease-out;
+}
+
+.animate-slide-in-highlight-green {
+	animation: slideInHighlightGreen 400ms ease-out;
+}
+
+@keyframes slideInHighlight {
+	0% {
+		opacity: 0;
+		transform: translateX(-20px) scale(0.95);
+		background-color: #fdf6ed; /* primary-100 */
+	}
+	50% {
+		background-color: #fdf6ed; /* primary-100 */
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0) scale(1);
+		background-color: transparent;
+	}
+}
+
+@keyframes slideInHighlightGreen {
+	0% {
+		opacity: 0;
+		transform: translateX(-20px) scale(0.95);
+		background-color: rgb(187 247 208); /* green-200 */
+	}
+	50% {
+		background-color: rgb(187 247 208); /* green-200 */
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0) scale(1);
+		background-color: rgb(240 253 244); /* green-50 */
+	}
+}
+
+/* Snooze animations */
+.animate-snooze-pulse {
+	animation: snoozePulse 800ms ease-in-out;
+}
+
+@keyframes snoozePulse {
+	0% {
+		opacity: 0;
+		transform: scale(0.9);
+	}
+	20% {
+		opacity: 1;
+		transform: scale(1.02);
+	}
+	80% {
+		opacity: 1;
+		transform: scale(1);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+.animate-snooze-remove {
+	animation: snoozeRemove 1500ms ease-in-out forwards;
+}
+
+@keyframes snoozeRemove {
+	0% {
+		opacity: 1;
+		transform: translateX(0) scale(1);
+		max-height: 100px;
+	}
+	/* Hold visible for reading */
+	60% {
+		opacity: 1;
+		transform: translateX(0) scale(1);
+		max-height: 100px;
+	}
+	80% {
+		opacity: 0.5;
+		transform: translateX(20px) scale(0.98);
+	}
+	100% {
+		opacity: 0;
+		transform: translateX(40px) scale(0.95);
+		max-height: 0;
+		padding-top: 0;
+		padding-bottom: 0;
+		margin: 0;
+		overflow: hidden;
+	}
+}
+
+/* Floating button animations */
+.animate-wiggle {
+	animation: wiggle 4s ease-in-out infinite;
+	animation-delay: 3s;
+}
+
+@keyframes wiggle {
+	0%, 90%, 100% {
+		transform: rotate(0deg);
+	}
+	92% {
+		transform: rotate(-6deg);
+	}
+	94% {
+		transform: rotate(6deg);
+	}
+	96% {
+		transform: rotate(-4deg);
+	}
+	98% {
+		transform: rotate(3deg);
+	}
+}
+
+/* Pause animations on hover for better UX */
+.animate-wiggle:hover {
+	animation-play-state: paused;
+}

@@ -1,0 +1,152 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import confetti from 'canvas-confetti';
+	import { t } from 'svelte-i18n';
+
+	interface Props {
+		onclose: () => void;
+		ontour?: () => void;
+	}
+
+	let { onclose, ontour }: Props = $props();
+
+	onMount(() => {
+		// Fire confetti explosion
+		const duration = 3000;
+		const end = Date.now() + duration;
+
+		const colors = ['#d4944c', '#8b5cf6', '#a855f7', '#22c55e', '#3b82f6'];
+
+		function frame() {
+			confetti({
+				particleCount: 5,
+				angle: 60,
+				spread: 55,
+				origin: { x: 0, y: 0.7 },
+				colors: colors
+			});
+			confetti({
+				particleCount: 5,
+				angle: 120,
+				spread: 55,
+				origin: { x: 1, y: 0.7 },
+				colors: colors
+			});
+
+			if (Date.now() < end) {
+				requestAnimationFrame(frame);
+			}
+		}
+
+		// Initial big burst
+		confetti({
+			particleCount: 100,
+			spread: 100,
+			origin: { y: 0.6 },
+			colors: colors
+		});
+
+		// Continuous side cannons
+		frame();
+	});
+</script>
+
+<div
+	class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4"
+	role="dialog"
+	aria-modal="true"
+>
+	<div
+		class="bg-warm-paper rounded-2xl shadow-2xl max-w-lg w-full p-8 text-center transform animate-bounce-in"
+	>
+		<!-- Celebration video -->
+		<div class="mb-6">
+			<video
+				class="w-32 h-32 mx-auto rounded-full object-cover"
+				src="/celebrate.webm"
+				autoplay
+				loop
+				playsinline
+				volume={0.2}
+				onloadedmetadata={(e) => { e.currentTarget.volume = 0.2; }}
+			></video>
+		</div>
+
+		<!-- Welcome message -->
+		<h2 class="text-2xl font-bold text-cocoa-800 mb-3">{$t('onboarding.welcome.title')}</h2>
+
+		<p class="text-cocoa-600 mb-6">
+			{@html $t('onboarding.welcome.subtitle')}
+		</p>
+
+		<!-- Feature highlights -->
+		<div class="bg-warm-cream rounded-xl p-4 mb-6 text-left">
+			<h3 class="font-medium text-cocoa-800 mb-3">{$t('onboarding.welcome.hereYouCan')}</h3>
+			<ul class="space-y-2 text-sm text-cocoa-600">
+				<li class="flex items-start gap-2">
+					<svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+						<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+					</svg>
+					<span>{$t('onboarding.welcome.features.trackHabits')}</span>
+				</li>
+				<li class="flex items-start gap-2">
+					<svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+						<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+					</svg>
+					<span>{$t('onboarding.welcome.features.completeTasks')}</span>
+				</li>
+				<li class="flex items-start gap-2">
+					<svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+						<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+					</svg>
+					<span>{$t('onboarding.welcome.features.reinforceIdentity')}</span>
+				</li>
+			</ul>
+		</div>
+
+		<!-- CTA buttons -->
+		<div class="space-y-3">
+			{#if ontour}
+				<button onclick={ontour} class="btn-primary w-full text-lg py-3">
+					{$t('tour.welcome.takeTour')}
+					<svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+					</svg>
+				</button>
+				<button onclick={onclose} class="w-full text-cocoa-500 hover:text-cocoa-700 text-sm py-2">
+					{$t('tour.welcome.skipTour')}
+				</button>
+			{:else}
+				<button onclick={onclose} class="btn-primary w-full text-lg py-3">
+					{$t('onboarding.welcome.letsGo')}
+					<svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+					</svg>
+				</button>
+			{/if}
+		</div>
+	</div>
+</div>
+
+<style>
+	@keyframes bounce-in {
+		0% {
+			opacity: 0;
+			transform: scale(0.3);
+		}
+		50% {
+			transform: scale(1.05);
+		}
+		70% {
+			transform: scale(0.9);
+		}
+		100% {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	.animate-bounce-in {
+		animation: bounce-in 0.5s ease-out;
+	}
+</style>

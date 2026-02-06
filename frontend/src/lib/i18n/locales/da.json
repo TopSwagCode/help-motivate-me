@@ -1,0 +1,1830 @@
+{
+	"common": {
+		"appName": "HelpMotivateMe",
+		"loading": "Indlæser...",
+		"saving": "Gemmer...",
+		"save": "Gem",
+		"saveChanges": "Gem ændringer",
+		"cancel": "Annuller",
+		"delete": "Slet",
+		"edit": "Rediger",
+		"create": "Opret",
+		"update": "Opdater",
+		"close": "Luk",
+		"back": "Tilbage",
+		"next": "Næste",
+		"skip": "Spring over",
+		"continue": "Fortsæt",
+		"done": "Færdig",
+		"finish": "Afslut",
+		"yes": "Ja",
+		"no": "Nej",
+		"or": "eller",
+		"and": "og",
+		"optional": "Valgfrit",
+		"required": "Påkrævet",
+		"error": "Fejl",
+		"success": "Succes",
+		"confirm": "Bekræft",
+		"search": "Søg",
+		"noResults": "Ingen resultater fundet",
+		"tryAgain": "Prøv igen",
+		"gotIt": "Forstået",
+		"clickToEdit": "Klik for at redigere",
+		"info": {
+			"whatIsThis": "Hvad er dette?",
+			"learnMore": "Lær hvordan du får mest ud af denne funktion",
+			"moreQuestions": "Har du flere spørgsmål?",
+			"visitFaq": "Besøg vores FAQ-side"
+		}
+	},
+	"language": {
+		"select": "Vælg sprog",
+		"english": "Engelsk",
+		"danish": "Dansk",
+		"selectDescription": "Vælg dit foretrukne sprog til appen"
+	},
+	"onboarding": {
+		"language": {
+			"title": "Vælg dit sprog",
+			"subtitle": "Vælg dit foretrukne sprog. Du kan ændre det senere i indstillinger.",
+			"continue": "Fortsæt"
+		},
+		"modeSelect": {
+			"title": "Velkommen til HelpMotivateMe",
+			"subtitle": "Lad os opsætte dine identiteter, vaner og mål. Vælg hvordan du vil komme i gang.",
+			"manual": {
+				"title": "Manuel opsætning",
+				"description": "Trin-for-trin formularer til at oprette dine identiteter, vanestakke og mål. Bedst hvis du allerede ved, hvad du vil opsætte.",
+				"cta": "Kom i gang"
+			},
+			"ai": {
+				"title": "AI-assistent",
+				"description": "Chat med vores AI for at opdage dine identiteter og opbygge personlige vaner. Fantastisk til at udforske muligheder og få vejledning.",
+				"cta": "Start chat",
+				"recommended": "Anbefalet",
+				"voiceInput": "Stemmeinput",
+				"instantSuggestions": "Øjeblikkelige forslag"
+			}
+		},
+		"steps": {
+			"identity": "Identitet",
+			"habitStacks": "Vanestakke",
+			"goals": "Mål"
+		},
+		"identity": {
+			"title": "Definer din identitet",
+			"subtitle": "Hvem vil du blive? Start med den identitet, du vil legemliggøre.",
+			"status": "Hvem vil du blive?",
+			"statusCreated": "{count} {count, plural, one {identitet} other {identiteter}} oprettet",
+			"concept": "I stedet for at fokusere på hvad du vil opnå, fokuser på hvem du vil blive. For eksempel 'Jeg er en sund person' i stedet for 'Jeg vil tabe mig'.",
+			"initialMessage": "Hej! Jeg er her for at hjælpe dig med at definere din identitet - hvem du vil blive.\n\nIdentitetsbaserede vaner er kraftfulde, fordi du i stedet for at fokusere på hvad du vil opnå, fokuserer på hvem du vil være. For eksempel:\n• \"Jeg er en sund person\" i stedet for \"Jeg vil tabe mig\"\n• \"Jeg er en forfatter\" i stedet for \"Jeg vil skrive en bog\"\n• \"Jeg er en morgenfugl\" i stedet for \"Jeg vil stå tidligt op\"\n\nHver handling du foretager, er en stemme for den type person, du vil blive.\n\nSå fortæl mig, hvem vil du blive? Hvilken slags person stræber du efter at være?",
+			"form": {
+				"name": "Identitetsnavn",
+				"namePlaceholder": "f.eks., En sund person",
+				"description": "Beskrivelse",
+				"descriptionPlaceholder": "Beskriv hvem du vil blive...",
+				"emoji": "Vælg en emoji",
+				"color": "Vælg en farve"
+			},
+			"created": "Identitet oprettet!",
+			"addAnother": "Tilføj endnu en identitet",
+			"skipStep": "Spring dette trin over"
+		},
+		"habitStack": {
+			"title": "Byg vanestakke",
+			"subtitle": "Knyt nye vaner til eksisterende rutiner. Dette kaldes vanestabling.",
+			"status": "Kæd vaner sammen til kraftfulde rutiner",
+			"statusCreated": "{count} {count, plural, one {vanestak} other {vanestakke}} oprettet",
+			"concept": "Formel: 'Efter jeg [NUVÆRENDE VANE], vil jeg [NY VANE]'. Kæd flere vaner sammen for at skabe kraftfulde rutiner.",
+			"initialMessage": "Fantastisk! Lad os nu bygge nogle vanestakke.\n\nVanestabling er en af de mest effektive måder at opbygge nye vaner på. Ideen er simpel: knyt en ny vane til en eksisterende ved hjælp af denne formel:\n\n\"Efter jeg [NUVÆRENDE VANE], vil jeg [NY VANE]\"\n\nFor eksempel kan en morgenrutine se sådan ud:\n• Efter jeg vågner, vil jeg rede min seng\n• Efter jeg reder min seng, vil jeg strække ud i 5 minutter\n• Efter jeg strækker ud, vil jeg drikke et glas vand\n\nDu kan kæde flere vaner sammen for at skabe kraftfulde rutiner!\n\nHvilke daglige rutiner har du? Hvilke nye vaner vil du gerne bygge ind i dem?",
+			"form": {
+				"name": "Staknavn",
+				"namePlaceholder": "f.eks., Morgenrutine",
+				"description": "Beskrivelse",
+				"descriptionPlaceholder": "Beskriv denne vanestak...",
+				"trigger": "Triggersignal",
+				"triggerPlaceholder": "Efter jeg...",
+				"habits": "Vaner i denne stak",
+				"addHabit": "Tilføj vane",
+				"habitCue": "Efter jeg...",
+				"habitAction": "Vil jeg..."
+			},
+			"created": "Vanestak oprettet!",
+			"addAnother": "Tilføj endnu en vanestak",
+			"skipStep": "Spring dette trin over"
+		},
+		"goals": {
+			"title": "Identitetsdrevne mål",
+			"subtitle": "Mål der tjener din identitet - ikke bare resultater at jagte.",
+			"status": "Hvilken identitet tjener dette mål?",
+			"statusCreated": "{count} {count, plural, one {mål} other {mål}} oprettet",
+			"concept": "Gode mål besvarer: 'Hvilken identitet tjener dette?' De er bæredygtige, fordi de er knyttet til hvem du er ved at blive.",
+			"initialMessage": "Endelig, lad os sætte nogle identitetsdrevne mål.\n\n**Mål bør ikke være motivationsplakater** - de bør tjene din identitet. Hvert mål bør besvare: 'Hvilken identitet tjener dette?'\n\n**I stedet for:**\n• \"Tab 10 kg\" (resultatfokuseret, nemt at opgive)\n\n**Prøv:**\n• **Identitet:** \"Jeg behandler min krop med respekt\"\n• **Mål:** \"Byg en bæredygtig fitness-rutine\"\n• **Opgaver:** Planlæg træning, følg daglige skridt, madlavning om søndagen\n\nDette forhindrer at du opgiver målet, når motivationen falder - fordi du ikke jagter et resultat, du er ved at blive nogen.\n\nHvilke identitetstjenende mål vil du gerne sætte? Start med identiteten, derefter målet.",
+			"form": {
+				"title": "Måltitel",
+				"titlePlaceholder": "Hvilket bæredygtigt resultat tjener din identitet?",
+				"description": "Beskrivelse",
+				"descriptionPlaceholder": "Beskriv dit mål og hvilken identitet det tjener...",
+				"targetDate": "Måldato",
+				"targetDatePlaceholder": "Hvornår vil du opnå dette?"
+			},
+			"created": "Mål oprettet!",
+			"addAnother": "Tilføj endnu et mål",
+			"skipStep": "Spring dette trin over",
+			"finishSetup": "Afslut opsætning"
+		},
+		"chat": {
+			"placeholder": "Skriv din besked...",
+			"send": "Send",
+			"thinking": "Tænker...",
+			"voiceInput": "Stemmeinput",
+			"stopRecording": "Stop optagelse",
+			"yes": "Ja",
+			"skip": "Spring over",
+			"back": "Tilbage",
+			"skipStep": "Spring dette trin over",
+			"createdSuccess": "Oprettet!",
+			"errorSaving": "Beklager, der opstod en fejl ved gemning. Prøv venligst igen.",
+			"errorGeneric": "Beklager, noget gik galt. Prøv venligst igen."
+		},
+		"assistant": {
+			"accept": "Ja, opret dette",
+			"addMore": "Tilføj flere",
+			"done": "Færdig",
+			"hint": "Beskriv hvad du gerne vil oprette...",
+			"created": "Oprettet! Vil du tilføje flere?",
+			"addMorePrompt": "Fortæl mig om en anden, du gerne vil oprette."
+		},
+		"complete": {
+			"title": "Du er klar!",
+			"subtitle": "Godt arbejde med at fuldføre din opsætning. Du er klar til at begynde din rejse!",
+			"goToDashboard": "Gå til dashboard"
+		},
+		"progress": {
+			"step": "Trin {current} af {total}",
+			"stepDescription": "Trin {current} af {total}: {description}"
+		},
+		"wizard": {
+			"title": "Velkommen til HelpMotivateMe",
+			"skipForNow": "Spring over for nu",
+			"steps": {
+				"identity": {
+					"title": "Identitet",
+					"description": "Definer hvem du vil blive"
+				},
+				"habitStacks": {
+					"title": "Vanestakke",
+					"description": "Byg kraftfulde vanekæder"
+				},
+				"goals": {
+					"title": "Mål",
+					"description": "Identitetsdrevne mål"
+				}
+			}
+		},
+		"manual": {
+			"identity": {
+				"title": "Skab din identitet",
+				"intro": "<strong>Hvem vil du blive?</strong> Identitetsbaserede vaner er den mest kraftfulde måde at ændre din adfærd på.",
+				"explanation": "I stedet for at fokusere på <em>hvad</em> du vil opnå, fokuser på <em>hvem</em> du vil blive. For eksempel:",
+				"examples": {
+					"healthy": "\"Jeg er en sund person\" (ikke bare \"Jeg vil tabe mig\")",
+					"writer": "\"Jeg er en forfatter\" (ikke bare \"Jeg vil skrive en bog\")",
+					"earlyRiser": "\"Jeg er en morgenfugl\" (ikke bare \"Jeg vil stå tidligt op\")"
+				},
+				"everyAction": "Hver handling du tager, er en stemme for den type person, du vil blive.",
+				"created": "Identitet \"{name}\" oprettet!",
+				"createFirst": "Opret min første identitet",
+				"createAnother": "Opret endnu en identitet",
+				"continue": "Fortsæt",
+				"skipContinue": "Spring over & fortsæt"
+			},
+			"habitStack": {
+				"title": "Byg vanestakke",
+				"intro": "<strong>Vanestabling</strong> er en af de mest effektive strategier til at opbygge nye vaner. Ideen er simpel: knyt en ny vane til en eksisterende.",
+				"formula": "Formlen er:",
+				"formulaText": "\"Efter jeg [NUVÆRENDE VANE], vil jeg [NY VANE].\"",
+				"examplesIntro": "For eksempel:",
+				"examples": {
+					"coffee": "Efter jeg hælder min morgenkaffe, vil jeg meditere i 5 minutter.",
+					"lunch": "Efter jeg er færdig med frokost, vil jeg skrive i min dagbog.",
+					"desk": "Efter jeg sætter mig ved mit skrivebord, vil jeg gennemgå mine mål."
+				},
+				"chainHabits": "Du kan kæde flere vaner sammen for at skabe en kraftfuld rutine!",
+				"created": "Vanestak \"{name}\" oprettet!",
+				"createFirst": "Opret min første vanestak",
+				"createAnother": "Opret endnu en vanestak",
+				"back": "Tilbage",
+				"continue": "Fortsæt",
+				"skipContinue": "Spring over & fortsæt"
+			},
+			"goals": {
+				"title": "Identitetsdrevne mål",
+				"intro": "<strong>Mål bør tjene din identitet</strong> - ikke bare være resultater at jagte. Hvert mål bør besvare: 'Hvilken identitet tjener dette?'",
+				"greatGoals": "Omformulér dine mål:",
+				"specific": "<strong>I stedet for</strong> 'Tab 10 kg' → <strong>Prøv</strong> 'Byg en bæredygtig fitness-rutine'",
+				"meaningful": "<strong>Tilknyt til identitet</strong> - 'Jeg behandler min krop med respekt'",
+				"actionable": "<strong>Tilføj opgaver</strong> - træning, skridt, madlavning (de små stemmer for din identitet)",
+				"addTasks": "Dette forhindrer at du opgiver målet, når motivationen falder - fordi du er ved at blive nogen, ikke bare jagter et resultat.",
+				"created": "Mål \"{name}\" oprettet!",
+				"createFirst": "Opret mit første mål",
+				"createAnother": "Opret endnu et mål",
+				"back": "Tilbage",
+				"completeSetup": "Fuldfør opsætning",
+				"skipFinish": "Spring over & afslut"
+			}
+		},
+		"welcome": {
+			"title": "Velkommen til HelpMotivateMe!",
+			"subtitle": "Du er klar! Dette er din <strong>I dag</strong>-side - dit daglige kontrolcenter.",
+			"hereYouCan": "Her kan du:",
+			"features": {
+				"trackHabits": "Følg dine daglige vanestakke og opbyg striber",
+				"completeTasks": "Fuldfør opgaver og se dine fremskridt mod mål",
+				"reinforceIdentity": "Forstærk din identitet med hver handling du tager"
+			},
+			"letsGo": "Lad os komme i gang!"
+		}
+	},
+	"landing": {
+		"hero": {
+			"title1": "Hold fokus.",
+			"title2": "Hold motivationen.",
+			"subtitle": "Sæt meningsfulde mål, opdel dem i konkrete opgaver, og byg de vaner der fører til succes. Din rejse mod produktivitet starter her.",
+			"getStarted": "Kom i gang",
+			"signIn": "Log ind"
+		},
+		"milo": {
+			"title": "Mød Milo",
+			"subtitle": "Din blide motivator",
+			"clickHint": "Klik på Milo for at se et smugkig af appen",
+			"description": "Denne dovendyr er ikke her for at skynde på dig eller råbe af dig. Den er her for at minde dig om, at det tæller bare at møde op — selv bare en lille smule. Én vane ad gangen, én dag ad gangen, gør du fremskridt. Og dit dovendyr er lige der ved din side."
+		},
+		"features": {
+			"identity": {
+				"title": "Form din identitet",
+				"description": "Fokuser på hvem du vil blive, ikke bare hvad du vil opnå. Hver handling er en stemme for dit fremtidige jeg."
+			},
+			"goals": {
+				"title": "Sæt mål",
+				"description": "Definer klare, meningsfulde mål og følg dine fremskridt mod at nå dem."
+			},
+			"tasks": {
+				"title": "Opdel opgaver",
+				"description": "Del dine mål op i overskuelige delopgaver, der holder dig i bevægelse fremad."
+			},
+			"habits": {
+				"title": "Byg vaner",
+				"description": "Opret gentagelige opgaver der bliver til daglige, ugentlige eller månedlige vaner."
+			}
+		},
+		"footer": {
+			"about": "Om os",
+			"pricing": "Priser",
+			"faq": "FAQ",
+			"contact": "Kontakt",
+			"privacy": "Privatlivspolitik",
+			"terms": "Servicevilkår",
+			"copyright": "&copy; {year} Help Motivate Me. Alle rettigheder forbeholdes."
+		}
+	},
+	"auth": {
+		"login": {
+			"title": "Velkommen tilbage",
+			"subtitle": "Log ind for at fortsætte din rejse",
+			"heading": "Log ind på din konto",
+			"noAccountLink": "Opret en",
+			"email": "E-mail",
+			"emailPlaceholder": "Indtast din e-mail",
+			"emailAddress": "E-mailadresse",
+			"password": "Adgangskode",
+			"passwordPlaceholder": "Indtast din adgangskode",
+			"submit": "Log ind",
+			"forgotPassword": "Glemt adgangskode?",
+			"noAccount": "Har du ikke en konto?",
+			"signUp": "Opret konto",
+			"orContinueWith": "Eller fortsæt med",
+			"orSignInWithPassword": "Eller log ind med adgangskode",
+			"magicLink": "Send mig et login-link",
+			"magicLinkSent": "Tjek din e-mail for et login-link",
+			"invalidCredentials": "Ugyldig e-mail eller adgangskode",
+			"signingIn": "Logger dig ind...",
+			"checkEmail": "Tjek din e-mail",
+			"sentLink": "Vi har sendt et login-link til",
+			"linkExpiry": "Linket udløber om 24 timer.",
+			"differentEmail": "Brug en anden e-mail",
+			"backToOptions": "Tilbage til andre login-muligheder",
+			"sending": "Sender...",
+			"sendLoginLink": "Send login-link",
+			"continueGoogle": "Fortsæt med Google",
+			"continueLinkedIn": "Fortsæt med LinkedIn",
+			"continueGitHub": "Fortsæt med GitHub",
+			"continueEmail": "Fortsæt med e-mail",
+			"continueFacebook": "Fortsæt med Facebook",
+			"signingInBtn": "Logger ind...",
+			"signInBtn": "Log ind",
+			"needHelp": "Brug for hjælp? Se vores",
+			"faq": "FAQ"
+		},
+		"register": {
+			"title": "Opret konto",
+			"subtitle": "Start din rejse mod bedre vaner",
+			"heading": "Opret din konto",
+			"alreadyHaveAccount": "Har du allerede en konto?",
+			"signInLink": "Log ind",
+			"email": "E-mail",
+			"emailPlaceholder": "Indtast din e-mail",
+			"password": "Adgangskode",
+			"passwordPlaceholder": "Opret en adgangskode",
+			"confirmPassword": "Bekræft adgangskode",
+			"confirmPasswordPlaceholder": "Bekræft din adgangskode",
+			"displayName": "Visningsnavn",
+			"displayNameOptional": "(valgfrit)",
+			"displayNamePlaceholder": "Hvad skal vi kalde dig?",
+			"submit": "Opret konto",
+			"hasAccount": "Har du allerede en konto?",
+			"signIn": "Log ind",
+			"passwordRequirements": "Adgangskoden skal være mindst 8 tegn",
+			"passwordHint": "Skal være mindst 8 tegn",
+			"orContinueWith": "Eller fortsæt med",
+			"continueGoogle": "Fortsæt med Google",
+			"continueLinkedIn": "Fortsæt med LinkedIn",
+			"continueGitHub": "Fortsæt med GitHub",
+			"continueFacebook": "Fortsæt med Facebook",
+			"creatingAccount": "Opretter konto...",
+			"createAccountBtn": "Opret konto",
+			"needHelp": "Brug for hjælp? Se vores",
+			"faq": "FAQ"
+		},
+		"verifyPending": {
+			"title": "Tjek din e-mail",
+			"description": "Vi har sendt et bekræftelseslink til:",
+			"resend": "Send bekræftelsesmail igen",
+			"resending": "Sender...",
+			"resent": "Bekræftelsesmail sendt! Tjek din indbakke.",
+			"backToLogin": "Tilbage til login",
+			"checkSpam": "Kan du ikke finde e-mailen? Tjek din spam-mappe."
+		},
+		"verifyEmail": {
+			"verifying": "Bekræfter din e-mail...",
+			"success": "E-mail bekræftet!",
+			"redirecting": "Omdirigerer dig til appen...",
+			"failed": "Bekræftelse mislykkedes",
+			"createAccount": "Opret ny konto",
+			"backToLogin": "Tilbage til login"
+		},
+		"logout": "Log ud",
+		"github": "GitHub"
+	},
+	"nav": {
+		"today": "I dag",
+		"dashboard": "Dashboard",
+		"goals": "Mål",
+		"habitStacks": "Vanestakke",
+		"stacks": "Stakke",
+		"identities": "Identiteter",
+		"journal": "Dagbog",
+		"analytics": "Analyse",
+		"buddies": "Venner",
+		"settings": "Indstillinger"
+	},
+	"userMenu": {
+		"settings": "Indstillinger",
+		"help": "Hjælp",
+		"signOut": "Log ud",
+		"adminDashboard": "Admin Dashboard"
+	},
+	"settings": {
+		"title": "Indstillinger",
+		"profile": {
+			"title": "Profil",
+			"displayName": "Visningsnavn",
+			"displayNamePlaceholder": "Indtast et visningsnavn",
+			"email": "E-mail",
+			"save": "Gem ændringer",
+			"saving": "Gemmer...",
+			"updated": "Profil opdateret"
+		},
+		"password": {
+			"title": "Adgangskode",
+			"current": "Nuværende adgangskode",
+			"new": "Ny adgangskode",
+			"confirm": "Bekræft ny adgangskode",
+			"change": "Skift adgangskode",
+			"changing": "Skifter...",
+			"requirements": "Adgangskoden skal være mindst 8 tegn",
+			"mismatch": "Adgangskoderne matcher ikke",
+			"success": "Adgangskode ændret",
+			"error": "Kunne ikke ændre adgangskode"
+		},
+		"language": {
+			"title": "Sprog",
+			"description": "Vælg dit foretrukne sprog til appen",
+			"current": "Nuværende sprog"
+		},
+		"membership": {
+			"title": "Medlemskab",
+			"currentTier": "Nuværende niveau",
+			"currentPlan": "Nuværende plan",
+			"free": "Gratis",
+			"plus": "Plus",
+			"pro": "Pro",
+			"monthly": "Månedlig",
+			"yearly": "Årlig",
+			"year": "år",
+			"saveMore": "Spar mere",
+			"popular": "Populær",
+			"earlyBird": "Early bird",
+			"foreverFree": "Gratis for altid",
+			"perMonth": "per måned",
+			"billedYearly": "${price}/md. faktureret årligt",
+			"upgradeTo": "Opgrader til {tier}",
+			"switchTo": "Skift til {tier}",
+			"upgrading": "Opgraderer...",
+			"changing": "Skifter...",
+			"comparePlans": "Sammenlign planer",
+			"feature": "Funktion",
+			"placeholderNote": "Bemærk: Dette er en pladsholder. Betalingsintegration tilføjes i en fremtidig opdatering.",
+			"error": "Kunne ikke opdatere medlemskab",
+			"tiers": {
+				"free": {
+					"name": "Gratis",
+					"bestFor": "Kom i gang",
+					"description": "Begynd at blive nogen."
+				},
+				"plus": {
+					"name": "Plus",
+					"bestFor": "Byg stærke identiteter",
+					"description": "Forvandl konsistens til identitet."
+				},
+				"pro": {
+					"name": "Pro",
+					"bestFor": "Fuld transformation",
+					"description": "Accelerér forandring med AI-støtte."
+				}
+			},
+			"features": {
+				"identities": "Identiteter",
+				"habitStacks": "Vanestakke",
+				"goalsAndTasks": "Mål & opgaver",
+				"dailyIdentityCommitment": "Daglig identitetsforpligtelse",
+				"identityScoreHistory": "Identitetsscore & historik",
+				"analyticsInsights": "Analyse & indsigt",
+				"accountabilityBuddies": "Accountability-venner",
+				"aiAssistant": "AI-assistent",
+				"smartIdentityNudges": "Smarte identitetspåmindelser",
+				"advancedJournaling": "Avanceret dagbog",
+				"priorityAccess": "Prioriteret adgang & funktioner"
+			},
+			"values": {
+				"unlimited": "Ubegrænset",
+				"limited": "Begrænset",
+				"fairUse": "Fair brug",
+				"1": "1",
+				"1–2": "1–2"
+			}
+		},
+		"linkedAccounts": {
+			"title": "Tilknyttede konti",
+			"link": "Tilknyt",
+			"unlink": "Fjern tilknytning",
+			"github": "GitHub",
+			"noAccounts": "Ingen eksterne konti tilknyttet"
+		},
+		"onboarding": {
+			"title": "Onboarding",
+			"description": "Genstart opsætningsguiden for at opdatere dine identiteter, mål og vanestakke.",
+			"restart": "Genstart onboarding",
+			"restarting": "Nulstiller...",
+			"confirmReset": "Er du sikker på, at du vil genstarte onboarding-processen? Dette vil tage dig gennem opsætningsguiden igen.",
+			"failedReset": "Kunne ikke nulstille onboarding"
+		},
+		"deleteAccount": {
+			"title": "Farezone",
+			"description": "Slet permanent din konto og alle tilknyttede data. Denne handling kan ikke fortrydes.",
+			"button": "Slet konto",
+			"modalTitle": "Slet din konto",
+			"warning": "Dette vil permanent slette din konto, inklusiv alle dine identiteter, mål, vanestakke, opgaver og dagbogsindlæg. Denne handling kan ikke fortrydes.",
+			"passwordLabel": "Indtast din adgangskode for at bekræfte",
+			"passwordPlaceholder": "Din adgangskode",
+			"confirmLabel": "Skriv DELETE for at bekræfte",
+			"confirmationRequired": "Skriv venligst DELETE for at bekræfte",
+			"confirmButton": "Slet min konto",
+			"deleting": "Sletter...",
+			"failed": "Kunne ikke slette konto"
+		},
+		"notifications": {
+			"title": "Notifikationer",
+			"description": "Konfigurer hvornår og hvordan du modtager notifikationer",
+			"master": {
+				"label": "Aktiver notifikationer",
+				"description": "Slå alle notifikationer til eller fra"
+			},
+			"channels": {
+				"title": "Leveringskanaler",
+				"description": "Vælg hvordan du vil modtage notifikationer",
+				"email": "E-mail",
+				"emailDescription": "Modtag notifikationer via e-mail",
+				"sms": "SMS",
+				"smsDescription": "Modtag notifikationer via SMS",
+				"push": "Push-notifikationer",
+				"pushDescription": "Modtag øjeblikkelige notifikationer på denne enhed",
+				"pushEnabled": "Aktiveret på denne enhed",
+				"pushBlocked": "Push-notifikationer er blokeret i dine browserindstillinger",
+				"deviceCount": "{count, plural, one {# enhed} other {# enheder}}",
+				"phone": "Telefonopkald",
+				"phoneDescription": "Modtag notifikationer via telefonopkald",
+				"comingSoon": "Kommer snart"
+			},
+			"push": {
+				"enabledTip": "💡 Push-notifikationer er aktiveret på <strong>{count}</strong> {count, plural, one {enhed} other {enheder}}. Aktivér på hver enhed separat via Indstillinger → Notifikationer.",
+				"notRegisteredWarning": "⚠️ Denne enhed er tilmeldt men ikke registreret. Prøv at slå fra og til igen.",
+				"errors": {
+					"subscribeFailed": "Kunne ikke aktivere push-notifikationer. Prøv igen.",
+					"unsubscribeFailed": "Kunne ikke deaktivere push-notifikationer. Prøv igen.",
+					"permissionDenied": "Du skal tillade notifikationer i dine browserindstillinger.",
+					"generic": "Der opstod en fejl med push-notifikationer."
+				}
+			},
+			"types": {
+				"title": "Notifikationstyper",
+				"description": "Vælg hvilke notifikationer du vil modtage",
+				"habitReminders": "Vanepåmindelser",
+				"habitRemindersDescription": "Daglige påmindelser om dine vanestakke",
+				"goalReminders": "Målpåmindelser",
+				"goalRemindersDescription": "Opdateringer om dine mål og deadlines",
+				"dailyDigest": "Daglig oversigt",
+				"dailyDigestDescription": "Oversigt over dine daglige opgaver og fremskridt",
+				"streakAlerts": "Stribe-advarsler",
+				"streakAlertsDescription": "Advarsler når din stribe er i fare",
+				"motivationalQuotes": "Motiverende citater",
+				"motivationalQuotesDescription": "Inspirerende citater for at holde dig motiveret",
+				"weeklyReview": "Ugentlig gennemgang",
+				"weeklyReviewDescription": "Ugentlig oversigt over dine præstationer",
+				"buddyUpdates": "Venneopdateringer",
+				"buddyUpdatesDescription": "Advarsler når din accountability-ven gør fremskridt"
+			},
+			"schedule": {
+				"title": "Notifikationsplan",
+				"description": "Vælg hvornår du gerne vil modtage notifikationer",
+				"estimatedNote": "Bemærk: Notifikationstidspunktet er estimeret og kan variere lidt",
+				"days": {
+					"title": "Dage",
+					"monday": "Man",
+					"tuesday": "Tir",
+					"wednesday": "Ons",
+					"thursday": "Tor",
+					"friday": "Fre",
+					"saturday": "Lør",
+					"sunday": "Søn",
+					"selectAll": "Alle",
+					"weekdays": "Hverdage",
+					"weekend": "Weekend"
+				},
+				"timeSlot": {
+					"title": "Foretrukket tid",
+					"morning": "Morgen",
+					"morningTime": "6:00 - 12:00",
+					"afternoon": "Eftermiddag",
+					"afternoonTime": "12:00 - 18:00",
+					"evening": "Aften",
+					"eveningTime": "18:00 - 22:00",
+					"custom": "Brugerdefineret",
+					"customStart": "Starttid",
+					"customEnd": "Sluttid"
+				},
+				"timezone": {
+					"title": "Tidszone",
+					"detected": "Registreret",
+					"change": "Ændr"
+				}
+			},
+			"errors": {
+				"loadFailed": "Kunne ikke indlæse notifikationsindstillinger",
+				"saveFailed": "Kunne ikke gemme notifikationsindstillinger"
+			}
+		},
+		"app": {
+			"title": "App",
+			"description": "Installer HelpMotivateMe som en app på din enhed",
+			"installed": {
+				"title": "App installeret",
+				"description": "Du bruger HelpMotivateMe som en installeret app. Nyd den fulde oplevelse!"
+			},
+			"install": {
+				"title": "Installer app",
+				"description": "Tilføj HelpMotivateMe til din startskærm for hurtig adgang",
+				"button": "Installer app"
+			},
+			"manual": {
+				"title": "Installation tilgængelig",
+				"description": "Følg instruktionerne nedenfor for at installere appen på din enhed"
+			},
+			"instructions": {
+				"title": "Sådan installerer du",
+				"ios": {
+					"title": "iPhone & iPad",
+					"step1": "Tryk på Del-knappen nederst i Safari",
+					"step2": "Rul ned og tryk på \"Føj til hjemmeskærm\"",
+					"step3": "Tryk på \"Tilføj\" for at bekræfte"
+				},
+				"android": {
+					"title": "Android",
+					"step1": "Tryk på menuknappen (tre prikker) i Chrome",
+					"step2": "Tryk på \"Føj til startskærm\" eller \"Installer app\"",
+					"step3": "Tryk på \"Tilføj\" eller \"Installer\" for at bekræfte"
+				},
+				"desktop": {
+					"title": "Computer (Chrome, Edge)",
+					"step1": "Se efter installer-ikonet i adresselinjen (⊕)",
+					"step2": "Klik på \"Installer\" i popup-dialogen",
+					"step3": "Appen åbner i sit eget vindue"
+				}
+			},
+			"benefits": {
+				"title": "Fordele ved at installere",
+				"offline": {
+					"title": "Virker offline",
+					"description": "Få adgang til dine vaner og mål selv uden internetforbindelse"
+				},
+				"fast": {
+					"title": "Lynhurtig",
+					"description": "Appen indlæses øjeblikkeligt fra din enhed, ingen ventetid"
+				},
+				"notifications": {
+					"title": "Push-notifikationer",
+					"description": "Få påmindelser og motivation direkte på din enhed"
+				},
+				"homescreen": {
+					"title": "Hurtig adgang",
+					"description": "Start appen øjeblikkeligt fra din startskærm eller dock"
+				}
+			},
+			"chromeTip": {
+				"title": "Bruger du Chrome eller Edge?",
+				"description": "Se efter installer-ikonet (⊕) i højre side af adresselinjen, eller brug browsermenuen (⋮) og vælg 'Installer app' eller 'Føj til startskærm'."
+			}
+		}
+	},
+	"goals": {
+		"title": "Mål",
+		"pageTitle": "Mine mål",
+		"info": {
+			"description": "<p><strong>Mål bør tjene din identitet</strong> - ikke bare være resultater at jagte.</p><p><strong>Før du sætter et mål, spørg:</strong> 'Hvilken identitet tjener dette?'</p><p><strong>I stedet for:</strong><br/>• \"Tab 10 kg\" (resultatfokuseret, nemt at opgive)</p><p><strong>Prøv:</strong><br/>• <strong>Identitet:</strong> \"Jeg behandler min krop med respekt\"<br/>• <strong>Mål:</strong> \"Byg en bæredygtig fitness-rutine\"<br/>• <strong>Opgaver:</strong> Planlæg træning, følg skridt, madlavning</p><p>Dette forhindrer at du opgiver målet, når motivationen falder - fordi du er ved at blive nogen, ikke bare jagter et resultat.</p>"
+		},
+		"newGoal": "Nyt mål",
+		"empty": "Ingen mål endnu. Opret dit første mål for at komme i gang!",
+		"emptyTitle": "Ingen mål endnu",
+		"emptyDescription": "Mål bør tjene din identitet - ikke bare være resultater at jagte. Spørg dig selv: 'Hvilken identitet tjener dette mål?' Opdel det derefter i små opgaver, der stemmer for hvem du er ved at blive.",
+		"emptyHowTo": "Klik på knappen nedenfor for at oprette dit første identitetsdrevne mål.",
+		"createFirst": "Opret dit første mål",
+		"create": "Opret mål",
+		"edit": "Rediger mål",
+		"delete": "Slet mål",
+		"complete": "Marker som fuldført",
+		"uncomplete": "Marker som ufuldført",
+		"reopen": "Genåbn",
+		"completed": "Fuldført",
+		"activeGoals": "Aktive mål",
+		"completedGoals": "Fuldførte",
+		"tasks": "opgaver",
+		"tasksCompleted": "opgaver fuldført",
+		"target": "Mål",
+		"targetDate": "Måldato",
+		"setTargetDate": "Angiv måldato",
+		"noDate": "Ingen dato",
+		"addTask": "Tilføj opgave",
+		"addTaskPlaceholder": "Tilføj en ny opgave...",
+		"adding": "Tilføjer...",
+		"identity": "Identitet",
+		"noIdentity": "Ingen identitet",
+		"noPendingTasks": "Ingen ventende opgaver. Tilføj en ovenfor!",
+		"noCompletedTasks": "Ingen fuldførte opgaver endnu",
+		"allTasksCompleted": "Alle opgaver fuldført!",
+		"completedTasksSection": "Fuldførte",
+		"pendingTasksSection": "Opgaver",
+		"readonlyNotice": "Dette mål er fuldført. Genåbn det for at foretage ændringer i opgaver.",
+		"deleteGoalConfirm": "Er du sikker på, at du vil slette dette mål? Alle opgaver vil også blive slettet.",
+		"deleteTaskConfirm": "Er du sikker på, at du vil slette denne opgave?",
+		"snooze": "Udskyd 1 uge",
+		"editTask": "Rediger opgave",
+		"deleteTask": "Slet opgave",
+		"markCompleted": "Marker som fuldført",
+		"markIncomplete": "Marker som ufuldført",
+		"changeDueDate": "Skift forfaldsdato",
+		"dueDate": "Forfaldsdato",
+		"addDescription": "Tilføj en beskrivelse...",
+		"form": {
+			"title": "Måltitel",
+			"titlePlaceholder": "Hvilket bæredygtigt resultat tjener din identitet?",
+			"description": "Beskrivelse",
+			"descriptionPlaceholder": "Beskriv dit mål og hvilken identitet det tjener...",
+			"targetDate": "Måldato",
+			"submit": "Gem mål",
+			"taskTitle": "Titel",
+			"taskTitlePlaceholder": "Opgavetitel",
+			"taskDescription": "Beskrivelse",
+			"taskDescriptionPlaceholder": "Tilføj flere detaljer om denne opgave...",
+			"optional": "valgfri",
+			"identity": "Identitet",
+			"linkToIdentity": "Tilknyt til identitet (valgfri)",
+			"identityHint": "Opgaver oprettet under dette mål vil arve denne identitet som standard",
+			"createIdentity": "Opret en identitet først →"
+		}
+	},
+	"identities": {
+		"title": "Identiteter",
+		"pageTitle": "Mine identiteter",
+		"info": {
+			"description": "<p><strong>Identiteter</strong> hjælper dig med at fokusere på hvem du vil blive snarere end kun hvad du vil opnå.</p><p>I stedet for at sige <em>\"Jeg vil løbe mere,\"</em> bliver du <em>\"Jeg er en løber.\"</em> Dette skift fra mål til identitet får vaner til at føles naturlige og bæredygtige.</p><ul><li><strong>Definer din identitet:</strong> Vælg hvem du vil være (f.eks. \"En sund person\", \"En livslang lærende\")</li><li><strong>Forbind vaner:</strong> Hver lille handling bliver en stemme for den identitet</li><li><strong>Byg konsistens:</strong> Når dine vaner stemmer overens med din identitet, føles fremskridt autentisk</li></ul><p>Husk: Du behøver ikke være perfekt for at påberåbe dig en identitet. Hver gang du handler i overensstemmelse med den, forstærker du hvem du er ved at blive.</p>"
+		},
+		"newIdentity": "Ny identitet",
+		"empty": "Ingen identiteter endnu. Definer hvem du vil blive!",
+		"emptyTitle": "Ingen identiteter endnu",
+		"emptyDescription": "Identiteter hjælper dig med at fokusere på hvem du vil blive, ikke bare hvad du vil gøre. I stedet for at sige 'Jeg vil læse mere', bliv 'Jeg er en læser'. Dette tankeskift får vaner til at føles naturlige.",
+		"emptyHowTo": "Start med at oprette en identitet, der resonerer med dig, eller brug assistenten til at hjælpe dig med at definere hvem du vil blive.",
+		"createFirst": "Opret identitet",
+		"create": "Opret identitet",
+		"edit": "Rediger identitet",
+		"delete": "Slet identitet",
+		"deleteConfirm": "Er du sikker på, at du vil slette denne identitet?",
+		"stats": {
+			"goals": "Mål (fuldført/total)",
+			"tasks": "Opgaver (fuldført/total)",
+			"proofs": "Sejre",
+			"commitments": "Daglige forpligtelser (fuldført/total)"
+		},
+		"infoCard": {
+			"title": "Identitetsbaserede vaner",
+			"description": "Identitetsbaserede vaner fokuserer på hvem du bliver, ikke bare hvad du gør. Hver lille handling er en stemme for den type person, du vil være, og konsistens omformer langsomt, hvordan du ser dig selv. Når dine vaner stemmer overens med din identitet, føles fremskridt naturligt i stedet for tvunget.",
+			"createTitle": "Opret dine egne identiteter",
+			"createDescription": "I stedet for at jagte resultater, definer de identiteter, du vil leve efter - såsom \"Jeg er en person, der lærer dagligt\" eller \"Jeg er en person, der holder løfter til mig selv.\" Lad dine vaner blive bevis på, at disse identiteter er sande."
+		},
+		"form": {
+			"name": "Identitetsnavn",
+			"namePlaceholder": "f.eks., En sund person",
+			"nameHint": "Hvem vil du blive?",
+			"description": "Beskrivelse",
+			"descriptionPlaceholder": "Beskriv hvem du vil blive...",
+			"emoji": "Emoji",
+			"color": "Farve",
+			"submit": "Gem identitet",
+			"errors": {
+				"saveFailed": "Kunne ikke gemme identitet"
+			}
+		}
+	},
+	"habitStacks": {
+		"title": "Vanestakke",
+		"pageTitle": "Vanestakke",
+		"info": {
+			"description": "<p><strong>Vanestabling</strong> er en kraftfuld teknik, hvor du forbinder en ny vane med noget, du allerede gør konsistent.</p><p>Formlen er simpel: <em>\"Efter jeg [eksisterende vane], vil jeg [ny vane].\"</em></p><ul><li><strong>Brug eksisterende signaler:</strong> Forankre ny adfærd til ting, du allerede gør (f.eks. \"Efter jeg hælder min kaffe, vil jeg gennemgå mine mål\")</li><li><strong>Byg rutiner:</strong> Kæd flere små vaner sammen for at skabe kraftfulde daglige ritualer</li><li><strong>Reducer friktion:</strong> Ved at forbinde vaner fjerner du behovet for at huske eller beslutte, hvornår du skal gøre dem</li></ul><p>Start småt—selv en 1-minuts vane stablet oven på en eksisterende rutine kan føre til varig forandring.</p>"
+		},
+		"newStack": "Ny stak",
+		"empty": "Ingen vanestakke endnu. Opret din første rutine!",
+		"emptyTitle": "Ingen vanestakke endnu",
+		"emptyDescription": "Vanestabling kæder nye vaner til ting, du allerede gør. Formlen er simpel: 'Efter jeg [eksisterende vane], vil jeg [ny vane].' Dette reducerer friktion og gør konsistens automatisk.",
+		"emptyHowTo": "Opret en vanestak ved at klikke nedenfor, eller brug assistenten til at hjælpe dig med at bygge din første rutine.",
+		"createFirst": "Opret vanestak",
+		"create": "Opret vanestak",
+		"edit": "Rediger vanestak",
+		"delete": "Slet vanestak",
+		"deleteConfirm": "Er du sikker på, at du vil slette denne vanestak?",
+		"deleteItemConfirm": "Slet denne vane fra stakken?",
+		"inactive": "Inaktiv",
+		"habits": "vaner",
+		"habit": "vane",
+		"noHabitsYet": "Ingen vaner i denne stak endnu",
+		"dayStreak": "dages stribe",
+		"infoCard": {
+			"title": "Vanestabling",
+			"description": "Vanestabling virker ved at knytte en ny vane til noget, du allerede gør. Ved at forankre små forbedringer til eksisterende rutiner reducerer du friktion og gør konsistens nemmere. Over tid danner disse sammenkædede handlinger kraftfulde daglige rytmer, der kører næsten automatisk.",
+			"createTitle": "Byg dine egne vanestakke",
+			"createDescription": "Start med vaner, der allerede sker hver dag, og beslut derefter hvilken positiv handling du vil følge dem med. Simple regler som \"Efter jeg afslutter X, vil jeg gøre Y\" omdanner almindelige øjeblikke til pålidelige signaler for bedre adfærd."
+		},
+		"form": {
+			"name": "Staknavn",
+			"namePlaceholder": "f.eks., Morgenrutine",
+			"description": "Beskrivelse",
+			"descriptionPlaceholder": "Beskriv denne rutine...",
+			"trigger": "Triggersignal",
+			"triggerPlaceholder": "Efter jeg...",
+			"habits": "Vaner",
+			"addHabit": "Tilføj vane",
+			"submit": "Gem vanestak",
+			"identity": "Knyt til identitet (Valgfrit)",
+			"noIdentity": "Ingen identitet",
+			"identityHint": "At knytte til en identitet hjælper med at forstærke hvem du er ved at blive",
+			"errors": {
+				"nameRequired": "Staknavn er påkrævet",
+				"habitRequired": "Mindst ét komplet vaneelement er påkrævet",
+				"createFailed": "Kunne ikke oprette vanestak"
+			}
+		},
+		"chain": {
+			"after": "Efter jeg",
+			"iWill": "Vil jeg"
+		},
+		"createPopup": {
+			"title": "Opret vanestak",
+			"habitChain": "Vanekæde",
+			"afterI": "Efter jeg...",
+			"iWillDo": "Vil jeg...",
+			"addAnother": "Tilføj endnu en vane",
+			"remove": "Fjern",
+			"creating": "Opretter...",
+			"createStack": "Opret stak",
+			"placeholderCue": "vågner",
+			"placeholderHabit": "drikke et glas vand",
+			"placeholderPreviousHabit": "forrige vane"
+		},
+		"editPopup": {
+			"title": "Rediger vanestak",
+			"active": "Aktiv",
+			"saveChanges": "Gem ændringer",
+			"saving": "Gemmer...",
+			"habitsInStack": "Vaner i stakken",
+			"addNewHabit": "Tilføj ny vane",
+			"adding": "Tilføjer...",
+			"addHabit": "Tilføj vane",
+			"deleteStack": "Slet vanestak"
+		},
+		"reorderPopup": {
+			"title": "Omarranger stakke",
+			"description": "Træk elementer eller brug pilene til at omordne dine vanestakke.",
+			"saving": "Gemmer...",
+			"saveOrder": "Gem rækkefølge",
+			"moveUp": "Flyt op",
+			"moveDown": "Flyt ned"
+		},
+		"errors": {
+			"stackNameRequired": "Staknavn er påkrævet",
+			"atLeastOneHabit": "Mindst én komplet vaneelement er påkrævet"
+		}
+	},
+	"journal": {
+		"title": "Dagbog",
+		"pageTitle": "Dagbog",
+		"info": {
+			"description": "<p><strong>Dagbog</strong> hjælper dig med at reflektere over dine fremskridt, fange indsigter og forblive opmærksom på mønstre i din adfærd.</p><p>Brug din dagbog til at dokumentere din rejse, fejre sejre og lære af udfordringer.</p><ul><li><strong>Reflekter dagligt:</strong> Skriv om hvad der virkede, hvad der ikke gjorde, og hvordan du følte dig</li><li><strong>Forbind indlæg:</strong> Forbind dagbogsindlæg med specifikke vanestakke eller opgaver for kontekst</li><li><strong>Tilføj billeder:</strong> Inkluder fotos for at fange øjeblikke og gøre indlæg mere mindeværdige</li><li><strong>Spor mønstre:</strong> Over tid afslører din dagbog tendenser og hjælper dig med at forstå dig selv bedre</li></ul><p>Din dagbog er et sikkert rum til at være ærlig, udforske dine tanker og fejre din vækst.</p>"
+		},
+		"newEntry": "Nyt indlæg",
+		"empty": "Ingen dagbogsindlæg endnu. Begynd at reflektere over din rejse!",
+		"emptyTitle": "Ingen dagbogsindlæg endnu",
+		"emptyDescription": "Dagbog hjælper dig med at reflektere over dine fremskridt, fange indsigter og bemærke mønstre. Skriv om hvad der virkede, hvad der ikke gjorde, og hvordan du følte dig. Over tid bliver din dagbog et bevis på vækst.",
+		"emptyHowTo": "Start dit første indlæg ved at klikke nedenfor. Du kan også forbinde indlæg med vanestakke eller opgaver for kontekst.",
+		"createFirst": "Opret indlæg",
+		"create": "Nyt indlæg",
+		"edit": "Rediger indlæg",
+		"delete": "Slet indlæg",
+		"deleteConfirm": "Er du sikker på, at du vil slette dette dagbogsindlæg?",
+		"deleteImageConfirm": "Slet dette billede?",
+		"form": {
+			"title": "Titel",
+			"titlePlaceholder": "Hvad skete der i dag?",
+			"content": "Indhold",
+			"contentPlaceholder": "Skriv dine tanker...",
+			"date": "Dato",
+			"description": "Beskrivelse",
+			"descriptionPlaceholder": "Skriv om din oplevelse...",
+			"submit": "Gem indlæg",
+			"linkTo": "Link til",
+			"linkNone": "Ingen",
+			"linkHabitStack": "Vanestak",
+			"linkTask": "Opgave",
+			"selectHabitStack": "Vælg en vanestak...",
+			"selectTask": "Vælg en opgave..."
+		},
+		"images": {
+			"title": "Billeder",
+			"add": "Tilføj billeder",
+			"processing": "Behandler...",
+			"uploading": "Uploader...",
+			"new": "Ny",
+			"hint": "Maks 5 billeder / GIF'er.",
+			"canOnlyAdd": "Kan kun tilføje {count} flere billede(r)"
+		},
+		"modal": {
+			"createTitle": "Nyt indlæg",
+			"editTitle": "Rediger indlæg",
+			"titleRequired": "Titel er påkrævet",
+			"saving": "Gemmer...",
+			"uploading": "Uploader...",
+			"saveChanges": "Gem ændringer",
+			"createEntry": "Opret indlæg"
+		},
+		"errors": {
+			"loadFailed": "Kunne ikke indlæse dagbog",
+			"titleRequired": "Titel er påkrævet",
+			"deleteImageFailed": "Kunne ikke slette billede",
+			"deleteFailed": "Kunne ikke slette indlæg",
+			"addReactionFailed": "Kunne ikke tilføje reaktion",
+			"removeReactionFailed": "Kunne ikke fjerne reaktion"
+		},
+		"filter": {
+			"all": "Alle",
+			"you": "Dig",
+			"friends": "Venner"
+		},
+		"feed": {
+			"you": "Dig",
+			"anonymous": "Anonym"
+		},
+		"reactions": {
+			"addReaction": "Tilføj reaktion",
+			"moreEmojis": "Flere emojis",
+			"react": "Reager",
+			"from": "fra",
+			"clickToRemove": "Klik for at fjerne",
+			"you": "Dig",
+			"reacted": "reagerede med",
+			"category": "Kategori",
+			"quickReactions": "Hurtige reaktioner",
+			"hideMore": "Tilbage til hurtige reaktioner"
+		},
+		"emptyFriendsTitle": "Ingen indlæg fra venner endnu",
+		"emptyFriendsDescription": "Når dine accountability partnere skriver dagbogsindlæg, vil de blive vist her."
+	},
+	"ai": {
+		"commandBar": {
+			"placeholder": "Hvad vil du gerne gøre? (f.eks., 'Køb ind i morgen')",
+			"thinking": "Tænker...",
+			"hint": "Prøv: 'Mind mig om at ringe til mor i morgen' eller 'Hver morgen efter jeg vågner, vil jeg strække ud'",
+			"examples": "Skriv eller tal naturligt - jeg forstår opgaver, mål og vaner"
+		},
+		"addWithAi": "Tilføj med AI",
+		"describeTask": "Beskriv en opgave",
+		"describeGoal": "Beskriv et mål",
+		"describeHabit": "Beskriv en rutine",
+		"tellMeWhatToWorkOn": "Fortæl mig hvad du vil arbejde på",
+		"preview": {
+			"task": "Opgave",
+			"goal": "Mål",
+			"habitStack": "Vanestak",
+			"identity": "Identitet",
+			"identityProof": "Sejr",
+			"targetDate": "Målsdato",
+			"trigger": "Trigger",
+			"identityRecommendation": "AI anbefaler",
+			"notSet": "Ikke angivet",
+			"selectIdentity": "Vælg identitet",
+			"selectGoal": "Vælg mål",
+			"none": "Ingen",
+			"addDescription": "Tilføj beskrivelse",
+			"setDate": "Angiv dato",
+			"clickToEdit": "Klik for at redigere",
+			"dueDate": "Forfaldsdato",
+			"parentGoal": "Overordnet mål",
+			"addStep": "Tilføj trin",
+			"removeStep": "Fjern trin",
+			"forIdentity": "For identitet",
+			"whatYouDid": "Hvad du gjorde",
+			"effortLevel": "Indsatsniveau"
+		},
+		"actions": {
+			"confirm": "Opret",
+			"edit": "Rediger",
+			"cancel": "Annuller",
+			"task": "Gør det til en opgave",
+			"goal": "Gør det til et mål",
+			"habitStack": "Gør det til en vane",
+			"makeTask": "Gør det til en opgave",
+			"creating": "Opretter...",
+			"createIdentity": "Opret identitet"
+		},
+		"confidence": {
+			"high": "Klar til at oprette",
+			"medium": "Præciser venligst",
+			"low": "Har brug for flere detaljer"
+		},
+		"successMessages": {
+			"taskCreated": "Opgave oprettet!",
+			"goalCreated": "Mål oprettet!",
+			"habitStackCreated": "Vanestak oprettet!",
+			"identityCreated": "Identitet oprettet!",
+			"identityProofCreated": "Sejr logget! 🎉"
+		},
+		"errors": {
+			"requestFailed": "Kunne ikke behandle anmodning. Prøv venligst igen.",
+			"creationFailed": "Kunne ikke oprette. Prøv venligst igen."
+		}
+	},
+	"today": {
+		"title": "I dag",
+		"info": {
+			"description": "<p><strong>I dag</strong> er dit daglige kommandocenter—en fokuseret visning af hvad der betyder mest lige nu.</p><p>Se alle dine vanestakke, opgaver og dagbogsindlæg ét sted, organiseret efter dag.</p><ul><li><strong>7-dages tidslinje:</strong> Se en uge på ét blik for at se hvad der kommer og hvad du har fuldført</li><li><strong>Vanestakke:</strong> Afkryds hver vane i dine daglige rutiner og opbyg striber</li><li><strong>Opgaver & stemmer:</strong> Fuldfør opgaver og se hvordan de bidrager til din identitetsvækst</li><li><strong>Identitetsbeviser / Log sejre:</strong> Registrer øjeblikke hvor du handlede i overensstemmelse med din identitet. Vælg et intensitetsniveau (Let, Moderat, Svær) for at optjene identitetsstemmer og forstærke hvem du er ved at blive</li><li><strong>Hurtige handlinger:</strong> Udskyd opgaver, tilføj dagbogsindlæg eller opret nye vaner på farten</li></ul><p>Fokuser på i dag, men hold altid et øje med i morgen. Små daglige handlinger sammensætter til bemærkelsesværdige langsigtede resultater.</p>"
+		},
+		"greeting": {
+			"morning": "Godmorgen",
+			"afternoon": "God eftermiddag",
+			"evening": "Godaften"
+		},
+		"noTasks": "Ingen opgaver i dag. Nyd din dag!",
+		"habitStacks": "Vanestakke",
+		"wins": "Sejre",
+		"noWins": "Ingen sejre logget endnu i dag.",
+		"logFirstWin": "Log din første sejr",
+		"tasks": "Opgaver",
+		"journal": "Dagbog",
+		"jumpToToday": "Gå til i dag",
+		"identityVotes": "Identitetsstemmer",
+		"identityProgress": "Identitetsfremskridt",
+		"completeAll": "Fuldfør alle",
+		"all": "Alle",
+		"done": "Færdig",
+		"tapToComplete": "Tryk for at fuldføre",
+		"pending": "Afventer",
+		"completed": "Fuldført",
+		"noPendingTasks": "Ingen ventende opgaver. Kun opgaver med forfald inden for de næste 7 dage vises her.",
+		"noHabitStacks": "Ingen vanestakke endnu.",
+		"noCompletedTasks": "Ingen fuldførte opgaver endnu",
+		"goToGoals": "Opret opgaver i Mål",
+		"orUseAssistant": "eller brug assistenten",
+		"allClear": "Alt klart!",
+		"allClearDescription": "Ingen vanestakke eller opgaver for denne dag. Opret nogle vanestakke for at opbygge din rutine.",
+		"createHabitStack": "Opret vanestak",
+		"postponeTask": "Udskyd opgave",
+		"newDueDate": "Ny forfaldsdato",
+		"editTask": "Rediger opgave",
+		"taskTitle": "Titel",
+		"taskTitlePlaceholder": "Opgavetitel",
+		"taskDescription": "Beskrivelse",
+		"taskDescriptionPlaceholder": "Tilføj en beskrivelse...",
+		"dueDate": "Forfaldsdato",
+		"identity": "Identitet",
+		"noIdentity": "Ingen identitet",
+		"snooze1Week": "Udskyd 1 uge",
+		"movedOutsideView": "Flyttet udenfor 7-dages visning",
+		"dayStreak": "dages stribe",
+		"trendUp": "Stigende trend",
+		"trendDown": "Faldende trend",
+		"trendStable": "Stabil",
+		"scoreHiddenMessage": "Din score vil være synlig om {days} dage",
+		"status": {
+			"dormant": "Sovende",
+			"forming": "Formende",
+			"emerging": "Fremvoksende",
+			"stabilizing": "Stabiliserende",
+			"strong": "Stærk",
+			"automatic": "Automatisk"
+		},
+		"dates": {
+			"today": "I dag",
+			"tomorrow": "I morgen",
+			"yesterday": "I går",
+			"daysAgo": "{count} dage siden",
+			"noDate": "Ingen dato"
+		},
+		"voteBreakdown": {
+			"votes": "stemmer i dag",
+			"habits": "Vanefuldførelser",
+			"stackBonus": "Stakbonus",
+			"tasks": "Opgavefuldførelser",
+			"wins": "Identitetsgevinster"
+		}
+	},
+	"dailyCommitment": {
+		"title": "I dag forpligter jeg mig til...",
+		"prompt": "Lav én lille, uforhandlelig forpligtelse. Den skal være så nem, at du ikke kan sige nej.",
+		"startButton": "Lav min forpligtelse",
+		"completeButton": "Færdig",
+		"dismissButton": "Spring over i dag",
+		"completedLabel": "Færdig",
+		"dismissedLabel": "Sprunget over",
+		"reinforcement": "Hver lille handling er en stemme for, hvem du er ved at blive.",
+		"recoveryTitle": "Ny start",
+		"recoveryMessage": "Gårsdagens forpligtelse skete ikke - og det er okay. I dag er en ny chance for at stemme for at være en {identity}.",
+		"rules": {
+			"title": "Ultra-lille & uforhandlelig",
+			"easy": "Pinligt nemt (2 minutter eller mindre)",
+			"aligned": "I tråd med din identitet",
+			"binary": "Simpelt: gjort eller ikke gjort"
+		},
+		"examples": {
+			"title": "Eksempler",
+			"writer": "Åbn min skriveapp",
+			"athlete": "Tag mine træningssko på",
+			"reader": "Læs 1 afsnit",
+			"meditator": "Tag 3 dybe åndedrag",
+			"healthy": "Drik et glas vand"
+		},
+		"modal": {
+			"titleIdentity": "Hvem vil du være i dag?",
+			"titleAction": "I dag forpligter jeg mig til...",
+			"titleConfirm": "Klar til at forpligte dig?",
+			"identityPrompt": "Vælg den identitet, du vil styrke i dag",
+			"actionPrompt": "Hvilken ultra-lille handling vil stemme for at være en {identity}?",
+			"actionHint": "Gør det pinligt nemt - noget du ikke kan sige nej til",
+			"suggestions": "Hurtige gevinster",
+			"orCustom": "Eller skriv din egen",
+			"yourAction": "Din handling",
+			"customPlaceholder": "Jeg vil...",
+			"recommended": "Foreslået",
+			"continueButton": "Fortsæt",
+			"commitButton": "Jeg forpligter mig til dette",
+			"confirmPrompt": "I dag vil du:",
+			"asA": "som en {identity}",
+			"successTitle": "Du er forpligtet!"
+		},
+		"settings": {
+			"title": "Daglig forpligtelse",
+			"description": "Start hver dag med én ultra-lille, uforhandlelig handling der forstærker hvem du er ved at blive",
+			"enabled": "Aktivér daglig forpligtelse",
+			"defaultMode": "Smart standardidentitet",
+			"weakest": "Genopretningsnudge",
+			"weakestDescription": "Foreslå den identitet, der har brug for mest opmærksomhed",
+			"strongest": "Momentumnudge",
+			"strongestDescription": "Foreslå den identitet, hvor du har mest momentum"
+		}
+	},
+	"identityProof": {
+		"title": "Log en sejr",
+		"subtitle": "Fang sejre der forstærker din identitet",
+		"whichIdentity": "Hvilken identitet forstærkede du?",
+		"selectIdentity": "Vælg en identitet...",
+		"howChallenging": "Hvor udfordrende var det?",
+		"whatDidYouDo": "Hvad gjorde du?",
+		"logProof": "Log sejr",
+		"logProofButton": "Log sejr",
+		"success": "Sejr logget!",
+		"easy": "Nemt",
+		"moderate": "Moderat",
+		"hard": "Svært",
+		"aiHint": "Du kan også logge beviser med AI-assistenten:",
+		"openAiAssistant": "Åbn AI",
+		"intensity": {
+			"easy": "Nemt",
+			"moderate": "Moderat",
+			"hard": "Svært"
+		}
+	},
+	"analytics": {
+		"title": "Analyse",
+		"pageTitle": "Analyse",
+		"streak": {
+			"current": "Nuværende stribe",
+			"longest": "Længste stribe",
+			"days": "dage"
+		},
+		"completionRate": "Fuldførelsesrate",
+		"tasksCompleted": "Opgaver fuldført",
+		"summary": {
+			"totalHabits": "Totale vaner",
+			"activeStreaks": "Aktive striber",
+			"longestStreak": "Længste stribe"
+		},
+		"rates": {
+			"title": "Fuldførelsesrater",
+			"daily": "Daglig",
+			"weekly": "Ugentlig",
+			"monthly": "Månedlig",
+			"totalCompletions": "Totale fuldførelser",
+			"missedDays": "Manglende dage"
+		},
+		"heatmap": {
+			"title": "Aktivitet (Sidste 90 dage)",
+			"less": "Mindre",
+			"more": "Mere",
+			"completion": "fuldførelse",
+			"completions": "fuldførelser"
+		},
+		"streaks": {
+			"title": "Vanestriber",
+			"longest": "Længste",
+			"last": "Sidst"
+		},
+		"empty": {
+			"title": "Ingen stribedata endnu",
+			"description": "Fuldfør gentagne opgaver for at begynde at opbygge striber.",
+			"goToDashboard": "Gå til dashboard"
+		},
+		"errors": {
+			"loadFailed": "Kunne ikke indlæse analyse"
+		}
+	},
+	"buddies": {
+		"title": "Ansvarsvenner",
+		"pageTitle": "Ansvarsvenner",
+		"info": {
+			"description": "<p><strong>Ansvarsvenner</strong> er mennesker, der hjælper dig med at holde dig på sporet og give opmuntring langs din rejse.</p><p>At dele dine fremskridt med andre gør dig mere tilbøjelig til at følge igennem med dine forpligtelser.</p><ul><li><strong>Inviter venner:</strong> Send e-mailinvitationer til venner, familie eller mentorer</li><li><strong>Del fremskridt:</strong> Dine venner kan se din daglige vanenemmelse og opgaver</li><li><strong>Gensidig støtte:</strong> Du kan også være en andens ansvarsven</li><li><strong>Opmuntring:</strong> Venner kan efterlade noter i din dagbog for at heppe på dig</li></ul><p>Husk: Ansvarlighed handler ikke om dom—det handler om at have nogen i dit hjørne, som tror på din evne til at vokse.</p>"
+		},
+		"empty": "Ingen venner endnu. Inviter nogen til at hjælpe dig med at holde dig ansvarlig!",
+		"invite": {
+			"title": "Inviter en ny ansvarsven",
+			"description": "Indtast e-mailadressen på en person, du gerne vil have til at hjælpe dig med at holde dig ansvarlig. De modtager en e-mailinvitation med instruktioner om, hvordan de kan se dine fremskridt.",
+			"placeholder": "ven@eksempel.dk",
+			"send": "Send invitation",
+			"sending": "Sender...",
+			"success": "Invitation sendt!",
+			"emailRequired": "Indtast venligst en e-mailadresse"
+		},
+		"myBuddies": {
+			"title": "Mine ansvarsvenner",
+			"description": "Disse personer kan se dine daglige fremskridt og efterlade opmuntrende noter i din dagbog.",
+			"empty": "Du har ikke tilføjet nogen ansvarsvenner endnu.",
+			"emptyHint": "Inviter nogen ved hjælp af formularen ovenfor!",
+			"added": "Tilføjet",
+			"remove": "Fjern",
+			"removeConfirm": "Er du sikker på, at du vil fjerne denne ansvarsven?"
+		},
+		"buddyingFor": {
+			"title": "Jeg er ansvarsven for",
+			"description": "Disse personer har tilføjet dig som deres ansvarsven. Du kan se deres fremskridt og opmuntre dem!",
+			"empty": "Ingen har tilføjet dig som deres ansvarsven endnu.",
+			"since": "Siden",
+			"visit": "Besøg",
+			"leave": "Forlad",
+			"leaveConfirm": "Er du sikker på, at du vil stoppe med at være {name}s ansvarsven?"
+		},
+		"email": "E-mailadresse",
+		"sendInvite": "Send invitation",
+		"pending": "Afventende invitationer",
+		"viewProgress": "Se fremskridt",
+		"journal": {
+			"infoBanner": "Skriv en opmuntrende note til {name}!",
+			"writeEncouragement": "Skriv opmuntring",
+			"emptyTitle": "Ingen dagbogsindlæg endnu",
+			"emptyDescription": "Vær den første til at skrive en opmuntrende note til {name}!"
+		},
+		"errors": {
+			"loadFailed": "Kunne ikke indlæse venskabsrelationer",
+			"inviteFailed": "Kunne ikke sende invitation",
+			"removeFailed": "Kunne ikke fjerne ven",
+			"leaveFailed": "Kunne ikke forlade venskabsrelation"
+		}
+	},
+	"errorState": {
+		"title": "Ups! Noget gik galt",
+		"message": "Vi har lidt problemer med at indlæse dette indhold.",
+		"suggestion": "Bare rolig, dine data er sikre. Vores team er blevet informeret og arbejder på det. Prøv venligst igen om et øjeblik.",
+		"tryAgain": "Prøv igen"
+	},
+	"errors": {
+		"generic": "Noget gik galt. Prøv venligst igen.",
+		"network": "Netværksfejl. Tjek venligst din forbindelse.",
+		"unauthorized": "Log venligst ind for at fortsætte.",
+		"notFound": "Den anmodede ressource blev ikke fundet.",
+		"validation": "Tjek venligst dit input og prøv igen."
+	},
+	"errorPages": {
+		"notFound": {
+			"title": "Ups! Vi kan ikke finde den side",
+			"message": "Det ser ud til, at denne side er flyttet eller ikke længere findes.",
+			"suggestion": "Ingen grund til bekymring - lad os få dig tilbage på sporet! Gå til din daglige oversigt for at fortsætte med at opbygge gode vaner."
+		},
+		"serverError": {
+			"title": "Vi holder en kort pause",
+			"message": "Der skete noget uventet på vores side.",
+			"suggestion": "Bare rolig, dine data er sikre! Vi arbejder på det og er snart tilbage. Siden opdateres automatisk, når vi er klar."
+		},
+		"offline": {
+			"title": "Ingen internetforbindelse",
+			"message": "Det ser ud til, at du ikke er forbundet til internettet lige nu.",
+			"suggestion": "Tjek din Wi-Fi eller mobildataforbindelse. Vi forbinder automatisk igen, når du er online!"
+		},
+		"serverUnavailable": {
+			"title": "Vi er straks tilbage",
+			"message": "Vi har lidt problemer med at oprette forbindelse til vores servere.",
+			"suggestion": "Dette er normalt midlertidigt. Bliv her - vi tjekker hvert par sekunder og opdaterer automatisk, når alt fungerer igen."
+		},
+		"autoRecovery": {
+			"checking": "Tjekker forbindelse...",
+			"willRetry": "Prøver automatisk igen om {seconds} sekunder..."
+		},
+		"actions": {
+			"goToToday": "Gå til I dag",
+			"goBack": "Gå tilbage",
+			"tryAgain": "Prøv igen nu"
+		},
+		"helpText": "Har du stadig problemer?"
+	},
+	"admin": {
+		"title": "Admin Dashboard",
+		"subtitle": "Systemoversigt og brugeradministration",
+		"stats": {
+			"totalUsers": "Totale brugere",
+			"activeUsers": "aktive",
+			"membershipTiers": "Medlemsniveauer",
+			"usersLoggedInToday": "Brugere logget ind i dag",
+			"activeToday": "aktive i dag",
+			"totalTasksCreated": "Totale opgaver oprettet",
+			"totalTasksCompleted": "Totale opgaver fuldført",
+			"allTime": "alt tid",
+			"daily": {
+				"title": "Daglig statistik",
+				"tasksCreated": "Opgaver oprettet",
+				"tasksCompleted": "Opgaver fuldført",
+				"tasksDue": "Opgaver forfaldne"
+			}
+		},
+		"tiers": {
+			"free": "Gratis",
+			"plus": "Plus",
+			"pro": "Pro"
+		},
+		"users": {
+			"title": "Brugere",
+			"searchPlaceholder": "Søg brugere...",
+			"allTiers": "Alle niveauer",
+			"allStatus": "Alle status",
+			"active": "Aktiv",
+			"inactive": "Inaktiv",
+			"user": "Bruger",
+			"email": "E-mail",
+			"tier": "Niveau",
+			"role": "Rolle",
+			"status": "Status",
+			"joined": "Oprettet",
+			"aiCalls": "AI-kald",
+			"aiCost": "AI-omkostning",
+			"actions": "Handlinger",
+			"activate": "Aktiver",
+			"deactivate": "Deaktiver",
+			"noUsers": "Ingen brugere fundet",
+			"roleUser": "Bruger",
+			"roleAdmin": "Admin",
+			"activity": {
+				"title": "Brugeraktivitet",
+				"loading": "Indlæser aktivitet...",
+				"lastWeek": "Sidste 7 dage",
+				"total": "Alt tid",
+				"tasksCreated": "Opgaver oprettet",
+				"tasksCompleted": "Opgaver fuldført",
+				"goalsCreated": "Mål oprettet",
+				"identitiesCreated": "Identiteter oprettet",
+				"habitStacksCreated": "Vanestakke oprettet",
+				"habitCompletions": "Vanefuldførelse",
+				"journalEntries": "Dagbogsindlæg",
+				"aiCalls": "AI-kald",
+				"aiCost": "AI-omkostning",
+				"close": "Luk"
+			}
+		},
+		"accessControl": {
+			"title": "Adgangskontrol",
+			"openSignups": "Åbne tilmeldinger aktiveret",
+			"closedBeta": "Lukket beta - whitelist påkrævet"
+		},
+		"invite": {
+			"title": "Inviter bruger",
+			"placeholder": "Indtast e-mailadresse...",
+			"send": "Send invitation",
+			"sending": "Sender...",
+			"description": "Tilføjer e-mailen til whitelisten og sender en invitations-e-mail."
+		},
+		"waitlist": {
+			"title": "Venteliste",
+			"pending": "afventer",
+			"description": "Brugere der venter på adgang",
+			"email": "E-mail",
+			"name": "Navn",
+			"date": "Dato",
+			"actions": "Handlinger",
+			"approve": "Godkend",
+			"remove": "Fjern",
+			"empty": "Ingen ventelisteposter"
+		},
+		"whitelist": {
+			"title": "Whitelist",
+			"approved": "godkendt",
+			"description": "E-mails der må tilmelde sig",
+			"email": "E-mail",
+			"added": "Tilføjet",
+			"invited": "Inviteret",
+			"actions": "Handlinger",
+			"remove": "Fjern",
+			"sent": "Sendt",
+			"by": "af",
+			"empty": "Ingen whitelistposter"
+		},
+		"errors": {
+			"loadFailed": "Kunne ikke indlæse admin-data",
+			"dailyStatsFailed": "Kunne ikke indlæse daglig statistik",
+			"searchFailed": "Kunne ikke søge brugere",
+			"filterFailed": "Kunne ikke filtrere brugere",
+			"updateUserFailed": "Kunne ikke opdatere bruger",
+			"updateRoleFailed": "Kunne ikke opdatere brugerrolle",
+			"approveFailed": "Kunne ikke godkende ventelistepost",
+			"removeWaitlistFailed": "Kunne ikke fjerne fra venteliste",
+			"removeWhitelistFailed": "Kunne ikke fjerne fra whitelist",
+			"inviteFailed": "Kunne ikke invitere bruger"
+		},
+		"milestones": {
+			"title": "Milepælsdefinitioner",
+			"definitions": "definitioner",
+			"icon": "Ikon",
+			"code": "Kode",
+			"trigger": "Udløser",
+			"rule": "Regel",
+			"status": "Status",
+			"actions": "Handlinger",
+			"active": "Aktiv",
+			"inactive": "Inaktiv",
+			"preview": "Forhåndsvisning",
+			"create": "Opret milepæl",
+			"edit": "Rediger milepæl",
+			"deleteConfirm": "Slet milepæl?"
+		}
+	},
+	"faq": {
+		"title": "Ofte stillede spørgsmål",
+		"subtitle": "Alt du behøver at vide om Help Motivate Me",
+		"getStarted": "Kom i gang",
+		"cta": {
+			"title": "Klar til at starte din rejse?",
+			"description": "Bliv en del af tusindvis af brugere, der bygger bedre vaner og bliver den person, de ønsker at være. Tilmeld dig gratis og begynd at gøre fremskridt i dag.",
+			"createAccount": "Opret gratis konto",
+			"signIn": "Log ind"
+		},
+		"footer": {
+			"stillHaveQuestions": "Har du stadig spørgsmål?",
+			"contactSupport": "Kontakt support"
+		},
+		"questions": {
+			"whatIs": {
+				"title": "Hvad er Help Motivate Me?",
+				"content": "Help Motivate Me er en omfattende produktivitets- og motivationsplatform designet til at hjælpe dig med at opbygge bedre vaner, nå dine mål og blive den person, du ønsker at være. Appen kombinerer dokumenterede adfærdsvidenskabelige principper med praktiske værktøjer for at gøre varig forandring lettere."
+			},
+			"identities": {
+				"title": "Hvad er identiteter, og hvordan fungerer de?",
+				"content": "Identiteter er kernen i varig adfærdsændring. I stedet for bare at sætte mål, definerer du hvem du ønsker at blive - \"Jeg er en forfatter,\" \"Jeg er en sund person,\" eller \"Jeg er en organiseret professionel.\"\n\nHver gang du fuldfører en opgave eller vane tilpasset en identitet, afgiver du en \"stemme\" for den identitet. Disse stemmer akkumuleres som bevis på din nye identitet. Du vil se bekræftelsesmeddelelser som \"Det er, hvad en forfatter gør!\" eller \"Du bliver en sund person!\"\n\nDenne tilgang virker, fordi adfærdsændring er lettere, når den stemmer overens med, hvordan du ser dig selv. I stedet for at tvinge dig selv til at skrive, fordi du \"bør,\" skriver du, fordi det er, hvad forfattere gør - og du er en forfatter."
+			},
+			"identityVotes": {
+				"title": "Hvad er identitetsstemmer?",
+				"content": "Identitetsstemmer er et sporingssystem, der viser, at du bliver den person, du ønsker at være. Hver fuldført opgave eller vane knyttet til en identitet tæller som én stemme for den identitet.\n\nFor eksempel, hvis du har defineret \"Jeg er en sund person\" som en identitet, så:\n- At gå en morgentur = 1 stemme for \"sund person\"\n- At tilberede et nærende måltid = 1 stemme for \"sund person\"\n- At få 8 timers søvn = 1 stemme for \"sund person\"\n\nAppen sporer dine samlede stemmer, seneste aktivitet og gennemførelsesrater. Disse synlige målinger fungerer som bevis på dit identitetsskift, hvilket gør det psykologisk lettere at fortsætte adfærden. Du er ikke bare en, der prøver at være sund - du er en, der har bevist det 50 gange denne måned."
+			},
+			"identityProofs": {
+				"title": "Hvad er identitets-sejre?",
+				"content": "Identitets-sejre (også kaldet beviser) er øjeblikke, hvor du handlede i overensstemmelse med en af dine identiteter. De er en måde at logge beviser på, at du er ved at blive den, du gerne vil være.\n\nFor eksempel, hvis din identitet er \"Jeg er en sund person\", kan en sejr være:\n- At løbe en tur inden arbejde\n- At vælge en salat frem for fastfood\n- At komme i seng til tiden\n\nNår du logger en sejr, vælger du den identitet, den styrker, beskriver hvad du gjorde, og vurderer hvor udfordrende det var (Let, Moderat eller Svært). Hver sejr tæller som en stemme for den identitet og bidrager til dine streaks og analyser.\n\nI modsætning til opgaver, der planlægges på forhånd, fanger sejre spontane handlinger og valg, der afspejler din identitet. De er perfekte til at anerkende de små, hverdagslige beslutninger, der tilsammen fører til reel forandring.\n\nEfterhånden som du samler sejre, låser du op for præstationer som \"Identitetsstemmer\" (første sejr), \"Identitetsbygger\" (10 sejre) og \"Identitetsmester\" (50 sejre)."
+			},
+			"habitStacks": {
+				"title": "Hvad er vanestak?",
+				"content": "Vanestak er en kraftfuld teknik til at opbygge nye vaner ved at knytte dem til eksisterende rutiner. Formlen er simpel: \"Efter [NUVÆRENDE VANE], vil jeg [NY VANE].\"\n\nFor eksempel:\n- Efter jeg hælder min morgenkaffe, vil jeg meditere i 2 minutter\n- Efter jeg lukker min bærbare computer til frokost, vil jeg lave 10 armstrækninger\n- Efter jeg børster tænder om aftenen, vil jeg lægge morgendagens træningstøj frem\n\nAppen hjælper dig med at oprette og spore disse stak. Du kan definere en række vaner, der flyder naturligt fra den ene til den anden, ved at udnytte momentum fra eksisterende rutiner til at få nye vaner til at sidde fast.\n\nDu kan også knytte vanestak til identiteter. En \"Forfatter\" identitet kan have en morgenstak: Efter jeg laver kaffe → Vil jeg skrive 250 ord → Derefter vil jeg gemme mit arbejde. Hver fuldført stak styrker din identitet."
+			},
+			"goals": {
+				"title": "Hvordan fungerer mål?",
+				"content": "Mål hjælper dig med at definere, hvad du ønsker at opnå, og spore dine fremskridt. I modsætning til traditionelle målsætningsapps, der udelukkende fokuserer på resultater, lægger denne app vægt på processen og identiteten bag dine mål.\n\nDu kan oprette mål med:\n- Klare beskrivelser af, hvad du ønsker at opnå\n- Måldatoer og milepæle\n- Links til identiteter (f.eks. \"Gennemfør et maraton\" knyttet til \"Jeg er en atlet\")\n- Tilknyttede opgaver, der opdeler målet i handlingsvenlige trin\n\nAppen sporer dine fremskridt og hjælper dig med at se, hvordan daglige handlinger (opgaver) forbinder til større mål (mål) og i sidste ende til hvem du bliver (identiteter). Denne trelagsmetode - identitet, mål, opgaver - sikrer, at din daglige indsats stemmer overens med din langsigtede vision."
+			},
+			"tasks": {
+				"title": "Hvad er opgaver, og hvordan adskiller de sig fra vaner?",
+				"content": "Opgaver er specifikke, handlingsvenlige elementer, du skal gennemføre. De kan være engangshændelser eller tilbagevendende aktiviteter, der bidrager til dine mål og identiteter.\n\nNøglefunktioner:\n- Indstil frister og prioriteter\n- Knyt opgaver til mål og identiteter\n- Markér som fuldført for at optjene identitetsstemmer\n- Udskyd opgaver efter behov\n- Spor gennemførelseshistorik\n\nMens vanestak er rutiner, du gentager regelmæssigt i sekvens, er opgaver individuelle elementer, der kræver din opmærksomhed. En opgave kan være \"Gennemgå kvartalsbudget\" (engangshændelse) eller \"Ring til mor\" (ugentlig tilbagevendende). Begge typer aktiviteter kan bidrage til dine identiteter og mål."
+			},
+			"today": {
+				"title": "Hvad er I dag-visningen?",
+				"content": "I dag-visningen er dit daglige dashboard - dit missionskontrolcenter for dagen. Den viser alt, der kræver din opmærksomhed lige nu:\n\n- Opgaver, der forfalder i dag eller er forfaldne\n- Vanestak planlagt til i dag\n- Fremskridt på aktive mål\n- Hurtig adgang til at logge journalindlæg\n- Fremgang på identitetsstemmer\n\nDenne fokuserede visning hjælper dig med at starte hver dag med klarhed, og vide præcis hvilke handlinger, der vil bevæge dig fremad. I stedet for at blive overvældet af alt på din tallerken, ser du kun det, der betyder noget i dag."
+			},
+			"journal": {
+				"title": "Hvordan fungerer journalen?",
+				"content": "Journalfunktionen giver et rum til refleksion, sporing af dine tanker, sejre, udfordringer og indsigter om dine fremskridt.\n\nDu kan:\n- Skrive daglige indlæg om dine oplevelser\n- Vedhæfte billeder eller filer for at fange øjeblikke\n- Reflektere over, hvad der virker, og hvad der ikke gør\n- Spore mønstre i din motivation og energi\n- Dokumentere din rejse med identitetsændring\n\nRegelmæssig journalføring hjælper dig med at opretholde bevidsthed om dine fremskridt, behandle udfordringer og fejre sejre. Det er et kraftfuldt værktøj til selvrefleksion og kurskorrektion. At se tilbage på journalindlæg fra uger eller måneder siden kan vise dig, hvor langt du er kommet."
+			},
+			"analytics": {
+				"title": "Hvilke analyser er tilgængelige?",
+				"content": "Analyseafsnittet giver dig datadrevne indsigter i dine fremskridt:\n\n- Opgavegennemførelsesrater over tid\n- Tendenser og striber for identitetsstemmer\n- Visualisering af målfremskridt\n- Overholdelsesrater for vanestak\n- Bedst præsterende tider og mønstre\n\nDisse målinger hjælper dig med at forstå, hvad der virker, identificere forhindringer og foretage informerede justeringer af din tilgang. Data fjerner gætværk - du kan se præcis hvilke vaner, der sidder fast, og hvilke identiteter, der får momentum."
+			},
+			"loginSocial": {
+				"title": "Hvordan logger jeg ind med Google eller GitHub?",
+				"content": "Vi understøtter socialt login for at gøre adgang hurtig og sikker:\n\n**Google Login:**\nKlik på \"Fortsæt med Google\" på login-siden. Du vil blive omdirigeret til Google for at godkende adgang. Når det er godkendt, bliver du automatisk logget ind. Ingen adgangskode nødvendig!\n\n**GitHub Login:**\nKlik på \"Fortsæt med GitHub\" på login-siden. Godkend appen gennem GitHub, og du er inde.\n\n**Fordele:**\n- Ingen adgangskode at huske\n- Sikker godkendelse gennem betroede udbydere\n- Hurtig login-proces\n- Du kan knytte flere udbydere til samme konto\n\nHvis du tilmelder dig med én udbyder og senere ønsker at tilføje en anden, kan du knytte yderligere login-metoder i dine kontoindstillinger."
+			},
+			"loginEmail": {
+				"title": "Hvordan fungerer e-mail/token-login?",
+				"content": "Vi tilbyder adgangskodeløs e-mail-godkendelse for en sikker, problemfri oplevelse:\n\n**Sådan fungerer det:**\n1. Indtast din e-mailadresse på login-siden\n2. Klik på \"Send login-link\"\n3. Tjek din e-mail for et sikkert login-link\n4. Klik på linket for øjeblikkeligt at logge ind\n\n**Fordele:**\n- Ingen adgangskode at oprette, huske eller nulstille\n- Mere sikkert end traditionelle adgangskoder\n- Virker fra enhver enhed med e-mailadgang\n- Automatisk kontooprettelse for nye brugere\n\nLogin-linket er til engangsbrug og udløber efter kort tid af sikkerhedsmæssige årsager. Hvis du ikke modtager e-mailen, skal du tjekke din spam-mappe eller anmode om et nyt link.\n\n**Bemærk:** Du kan også indstille en traditionel adgangskode i dine kontoindstillinger, hvis du foretrækker den login-metode."
+			},
+			"multipleLogins": {
+				"title": "Kan jeg bruge flere login-metoder?",
+				"content": "Ja! Du kan knytte flere godkendelsesmetoder til din konto for fleksibilitet:\n\n- Start med Google, tilføj GitHub senere\n- Brug e-mail-login fra din telefon, Google fra din bærbare\n- Knyt en traditionel adgangskode som backup\n\n**For at tilføje en login-metode:**\n1. Log ind med din primære metode\n2. Gå til indstillinger\n3. Se efter \"Forbundne konti\" eller \"Login-metoder\"\n4. Klik på \"Knyt\" ved siden af den udbyder, du vil tilføje\n\n**For at fjerne en metode:**\nDu kan afkoble login-metoder i indstillinger, men appen vil forhindre dig i at fjerne din sidste login-metode for at undgå at blive låst ude.\n\nDenne fleksibilitet sikrer, at du altid kan få adgang til din konto, selv hvis en udbyder har problemer, eller du skifter enheder."
+			},
+			"gettingStarted": {
+				"title": "Hvordan kommer jeg i gang?",
+				"content": "Her er den anbefalede vej til at få mest muligt ud af appen:\n\n**Trin 1: Definer dine identiteter (5 minutter)**\nTænk på, hvem du ønsker at blive. Vælg 2-3 identiteter til at starte, som \"Jeg er en sund person\" eller \"Jeg er en fokuseret professionel.\"\n\n**Trin 2: Opret en simpel vanestak (5 minutter)**\nKnyt en ny vane til noget, du allerede gør. Start småt - \"Efter jeg vågner, vil jeg drikke et glas vand.\"\n\n**Trin 3: Tilføj et par opgaver (5 minutter)**\nHvad skal gøres i dag? Tilføj 3-5 opgaver og knyt dem til dine identiteter, når det er relevant.\n\n**Trin 4: Tag handling**\nGennenfør opgaver, arbejd gennem din vanestak, og se dine identitetsstemmer akkumulere.\n\n**Trin 5: Reflekter i journalen (2 minutter)**\nAfslut din dag med et hurtigt journalindlæg om, hvad der gik godt.\n\nNøglen er at starte simpelt. Du behøver ikke alt perfekt på dag ét. Tilføj mål og mere komplekse vanestak, efterhånden som du bliver fortrolig med det grundlæggende."
+			},
+			"privacy": {
+				"title": "Er mine data private og sikre?",
+				"content": "Ja. Din databeskyttelse og sikkerhed er topprioritet:\n\n- Alle data er krypteret under transport (HTTPS)\n- Adgangskoder er hashed og gemmes aldrig i klartekst\n- Sociale logins bruger OAuth 2.0 industristandarder\n- Dine data sælges eller deles aldrig med tredjeparter\n- Regelmæssige automatiserede sikkerhedskopier beskytter mod datatab\n\nDu ejer dine data. Du kan eksportere dem eller slette din konto når som helst fra indstillingssiden."
+			},
+			"support": {
+				"title": "Hvordan får jeg hjælp eller rapporterer problemer?",
+				"content": "Vi er her for at hjælpe:\n\n- Tjek disse FAQ for almindelige spørgsmål\n- Gennemgå in-app hjælpeværktøjstip og guider\n- Kontakt support gennem indstillingssiden\n- Rapporter fejl eller anmod om funktioner via GitHub (hvis tilgængelig)\n\nVi forbedrer løbende appen baseret på brugerfeedback, så tøv ikke med at dele dine tanker eller forslag!"
+			}
+		}
+	},
+	"pricing": {
+		"title": "Priser",
+		"subtitle": "Enkel, gennemsigtig prissætning. Ingen sporing. Ingen skjulte gebyrer.",
+		"backToHome": "Tilbage til hjem",
+		"privacyCallout": "Ingen sporingscookies. Intet datasalg. Bare værktøjer til at hjælpe dig med at vokse.",
+		"billing": {
+			"monthly": "Månedlig",
+			"annual": "Årlig",
+			"save": "Spar 20%",
+			"billedAnnually": "faktureret årligt",
+			"billedMonthly": "per måned"
+		},
+		"popularBadge": "Mest populær",
+		"getStarted": "Kom i gang gratis",
+		"getPlan": "Få {plan}",
+		"faq": {
+			"title": "Ofte stillede spørgsmål",
+			"changePlans": {
+				"question": "Kan jeg skifte plan senere?",
+				"answer": "Ja, du kan opgradere eller nedgradere din plan når som helst fra dine kontoindstillinger."
+			},
+			"paymentMethods": {
+				"question": "Hvilke betalingsmetoder accepterer I?",
+				"answer": "Vi accepterer alle større kreditkort. Betalingsbehandling håndteres sikkert."
+			},
+			"freeTrial": {
+				"question": "Er der en gratis prøveperiode for betalte planer?",
+				"answer": "Den gratis plan lader dig opleve kernefunktionerne. Du kan opgradere, når du er klar til mere."
+			},
+			"cancel": {
+				"question": "Hvad sker der, hvis jeg annullerer?",
+				"answer": "Du beholder adgang indtil slutningen af din faktureringsperiode. Dine data forbliver sikre, og du kan altid genabonnere."
+			},
+			"refunds": {
+				"question": "Tilbyder I refusioner?",
+				"answer": "Ja, vi tilbyder refusioner på individuel basis. Kontakt os inden for 14 dage efter en opkrævning for at anmode om en."
+			}
+		},
+		"cta": {
+			"title": "Har du stadig spørgsmål?",
+			"description": "Vi hjælper gerne dig med at finde den rette plan til dine behov.",
+			"contact": "Kontakt os"
+		},
+		"betaNote": "Bemærk: Betalingsintegration vil blive tilføjet i en fremtidig opdatering. I øjeblikket er alle funktioner tilgængelige under beta."
+	},
+	"contact": {
+		"title": "Kontakt os",
+		"subtitle": "Kom i kontakt med vores team",
+		"form": {
+			"name": "Navn",
+			"namePlaceholder": "Dit navn",
+			"email": "E-mail",
+			"emailPlaceholder": "din@email.com",
+			"message": "Besked",
+			"messagePlaceholder": "Hvordan kan vi hjælpe dig?",
+			"submit": "Send besked",
+			"sending": "Sender..."
+		},
+		"success": "Tak! Vi vender tilbage til dig snart.",
+		"error": "Kunne ikke sende besked. Prøv venligst igen."
+	},
+	"pushPrompt": {
+		"title": "Bliv motiveret!",
+		"subtitle": "Aktivér notifikationer",
+		"description": "Få rettidige påmindelser der hjælper dig med at opbygge vaner og nå dine mål. Du kan tilpasse eller deaktivere notifikationer når som helst i indstillinger.",
+		"benefit1": "Daglige vanepåmindelser",
+		"benefit2": "Opdateringer om målfremdrift",
+		"benefit3": "Motiverende beskeder",
+		"enable": "Aktivér",
+		"notNow": "Ikke nu"
+	},
+	"help": {
+		"title": "Hjælp & Support",
+		"subtitle": "Lær hvordan du bruger Help Motivate Me",
+		"tour": {
+			"title": "Guidet rundvisning",
+			"description": "Tag en interaktiv rundvisning af alle funktionerne",
+			"button": "Start guidet rundvisning"
+		},
+		"sections": {
+			"today": {
+				"title": "I dag-visning",
+				"tips": [
+					"Dit daglige kontrolcenter der viser opgaver, vaner og sejre",
+					"Brug 7-dages tidslinjen til at planlægge og gennemgå fremskridt",
+					"Fuldfør vaner i rækkefølge for at opbygge kraftfulde striber",
+					"Log sejre for at forstærke din identitet gennem dagen"
+				]
+			},
+			"identities": {
+				"title": "Identiteter",
+				"tips": [
+					"Definer hvem du vil blive, ikke kun hvad du vil gøre",
+					"Hver fuldført opgave og vane er en stemme for din identitet",
+					"Knyt mål og vaner til identiteter for dybere motivation",
+					"Følg din identitetsscore for at se din transformation"
+				]
+			},
+			"goals": {
+				"title": "Mål",
+				"tips": [
+					"Opret mål der tjener din identitet, ikke kun resultater",
+					"Opdel mål i små, handlingsvenlige opgaver",
+					"Knyt mål til identiteter for varig motivation",
+					"Sæt måldatoer for at holde dig ansvarlig"
+				]
+			},
+			"habitStacks": {
+				"title": "Vanestakke",
+				"tips": [
+					"Kæd nye vaner til eksisterende rutiner for nemmere adoption",
+					"Brug formlen: Efter jeg [trigger], vil jeg [vane]",
+					"Start med små, pinligt nemme vaner",
+					"Fuldfør stakke i rækkefølge for at opbygge momentum"
+				]
+			},
+			"journal": {
+				"title": "Dagbog",
+				"tips": [
+					"Reflekter over hvad der virkede og hvad der ikke gjorde hver dag",
+					"Knyt indlæg til vanestakke eller opgaver for kontekst",
+					"Tilføj billeder for at fastholde meningsfulde øjeblikke",
+					"Gennemgå tidligere indlæg for at se hvor langt du er kommet"
+				]
+			},
+			"aiAssistant": {
+				"title": "AI-assistent",
+				"tips": [
+					"Opret opgaver, mål og vaner ved hjælp af naturligt sprog",
+					"Åbn når som helst med Cmd+K (Mac) eller Ctrl+K (Windows)",
+					"Beskriv hvad du ønsker og lad AI foreslå den rigtige type",
+					"Log sejre hurtigt ved at fortælle assistenten hvad du gjorde"
+				]
+			}
+		},
+		"faq": {
+			"title": "Brug for mere hjælp?",
+			"link": "Besøg FAQ"
+		},
+		"contact": {
+			"title": "Har du stadig brug for hjælp?",
+			"link": "Kontakt support"
+		}
+	},
+	"milestones": {
+		"celebration": {
+			"title": "Milepæl opnået!",
+			"awesome": "Fantastisk!"
+		},
+		"first_login": {
+			"title": "Første skridt",
+			"description": "Du har logget ind for første gang. Velkommen til din rejse!"
+		},
+		"logins_7": {
+			"title": "Ugens kriger",
+			"description": "Du har logget ind 7 gange. Konsistens er nøglen!"
+		},
+		"logins_30": {
+			"title": "Månedlig mester",
+			"description": "30 logins! Du opbygger en stærk vane."
+		},
+		"return_after_2_weeks": {
+			"title": "Velkommen tilbage!",
+			"description": "Du vendte tilbage efter 2+ uger. Hver tilbagevenden tæller!"
+		},
+		"first_habit": {
+			"title": "Vane-starter",
+			"description": "Du fuldførte din første vane. Rejsen begynder!"
+		},
+		"habits_10": {
+			"title": "Vane-bygger",
+			"description": "10 vaner fuldført! Du opbygger momentum."
+		},
+		"habits_50": {
+			"title": "Vane-mester",
+			"description": "50 vaner fuldført! Du er ustoppelig."
+		},
+		"habits_100": {
+			"title": "Vane-legende",
+			"description": "100 vaner fuldført! Sand dedikation."
+		},
+		"habits_5_in_week": {
+			"title": "Ugentlig streak",
+			"description": "5 vaner på én uge! Imponerende konsistens."
+		},
+		"first_task": {
+			"title": "Opgave-tackler",
+			"description": "Du fuldførte din første opgave. Momentum bygges!"
+		},
+		"tasks_10": {
+			"title": "Opgave-mester",
+			"description": "10 opgaver færdige! Du gør fremskridt."
+		},
+		"tasks_50": {
+			"title": "Opgave-titan",
+			"description": "50 opgaver fuldført! Bemærkelsesværdig produktivitet."
+		},
+		"first_journal": {
+			"title": "Første indgang",
+			"description": "Du skrev din første dagbogsindgang. Refleksion er kraftfuldt!"
+		},
+		"journals_10": {
+			"title": "Tankefuld forfatter",
+			"description": "10 dagbogsindgange! Din rejse er veldokumenteret."
+		},
+		"first_identity_proof": {
+			"title": "Identitets-stemmer",
+			"description": "Du loggede din første sejr. Hver stemme tæller!"
+		},
+		"identity_proofs_10": {
+			"title": "Identitets-bygger",
+			"description": "10 sejre logget! Du bliver den, du vil være."
+		},
+		"identity_proofs_50": {
+			"title": "Identitets-mester",
+			"description": "50 sejre! Din identitetstransformation er bemærkelsesværdig."
+		},
+		"wins_25": {
+			"title": "Kvart århundrede",
+			"description": "25 samlede sejre! Stabile fremskridt."
+		},
+		"wins_100": {
+			"title": "Århundrede-klub",
+			"description": "100 samlede sejre! Du er i brand."
+		},
+		"wins_500": {
+			"title": "Elite-opnår",
+			"description": "500 samlede sejre! Du er i en liga for dig selv."
+		}
+	},
+	"tour": {
+		"welcome": {
+			"takeTour": "Tag en guidet rundvisning",
+			"skipTour": "Spring over for nu"
+		},
+		"controls": {
+			"next": "Næste",
+			"previous": "Forrige",
+			"skip": "Spring rundvisning over",
+			"finish": "Afslut",
+			"step": "Trin {current} af {total}"
+		},
+		"today": {
+			"help": {
+				"title": "Brug for hjælp?",
+				"description": "Du kan altid finde hjælp fra denne menu. Klik på dit navn, og vælg derefter 'Hjælp' for at få adgang til guides, genstarte denne rundvisning eller kontakte os."
+			},
+			"commitment": {
+				"title": "I dag forpligter jeg mig til...",
+				"description": "Hver dag laver du én ultra-lille, uforhandlelig forpligtelse. Den skal være pinligt nem (som 'åbn min skriveapp' eller 'tag træningssko på'). Hver lille handling er en stemme for hvem du er ved at blive."
+			},
+			"identityProgress": {
+				"title": "Identitetsfremskridt",
+				"description": "Følg dine fremskridt mod hver identitet. Hver fuldført vane, opgave og daglig forpligtelse er en stemme for hvem du er ved at blive. Se dine scorer vokse, når du handler!"
+			},
+			"habits": {
+				"title": "Vanestakke",
+				"description": "Dine vanestakke for i dag. Afkryds hver vane, når du fuldfører den, for at opbygge rækker og forstærke din identitet."
+			},
+			"wins": {
+				"title": "Sejre",
+				"description": "Log bevis på din identitet i handling! Sejre er øjeblikke hvor du handlede i overensstemmelse med din identitet—uanset om det er at gennemføre en træning, afslutte et kapitel eller træffe et sundt valg. Hver sejr forstærker hvem du er ved at blive."
+			},
+			"tasks": {
+				"title": "Opgaver",
+				"description": "Opgaver der forfalder i dag eller inden for de næste 7 dage. Du kan udsætte opgaver med 7 dage, udskyde til en bestemt dato eller redigere dem. Opgaver er knyttet til dine mål."
+			},
+			"logWin": {
+				"title": "Log en sejr",
+				"description": "Brug denne knap til hurtigt at logge sejr. Registrer øjeblikke hvor du handlede i overensstemmelse med dine identiteter—hver sejr styrker din identitetsscore og opbygger momentum."
+			},
+			"aiAssistant": {
+				"title": "AI-assistent",
+				"description": "Din personlige AI-hjælper! Brug naturligt sprog til hurtigt at oprette opgaver, mål og vanestakke. Fortæl den bare hvad du vil—som 'Løb hver morgen' eller 'Færdiggør min bog inden juni'—og den vil foreslå den rigtige type og forbinde den med dine identiteter. Åbn den når som helst med ⌘K (Mac) eller Ctrl+K (Windows)."
+			}
+		},
+		"goals": {
+			"overview": {
+				"title": "Identitetsdrevne mål",
+				"description": "Hvert mål bør besvare: 'Hvilken identitet tjener dette?' I stedet for 'Tab 10 kg', prøv 'Byg en bæredygtig fitness-rutine' forbundet med 'Jeg behandler min krop med respekt'. Opdel mål i opgaver - hver opgave er en lille stemme for din identitet."
+			}
+		},
+		"habitStacks": {
+			"overview": {
+				"title": "Vanestabling",
+				"description": "Kæd vaner sammen ved hjælp af formlen: 'Efter jeg [trigger], vil jeg [vane]'. Dette gør nye vaner nemmere at huske og opbygger kraftfulde rutiner."
+			}
+		},
+		"journal": {
+			"overview": {
+				"title": "Dagbog",
+				"description": "Reflekter over din rejse ved at skrive dagbogsindlæg. Forbind indlæg med vanestakke eller opgaver, og tilføj billeder for at fastholde øjeblikke."
+			}
+		},
+		"identities": {
+			"overview": {
+				"title": "Dine identiteter",
+				"description": "Identiteter definerer hvem du vil blive. Hver fuldendt vane og opgave er en stemme for disse identiteter. Dette er fundamentet for varig adfærdsændring."
+			}
+		},
+		"buddies": {
+			"overview": {
+				"title": "Ansvarlighedsvenner",
+				"description": "Inviter venner eller familie til at være dine ansvarlighedsvenner. De kan se dine fremskridt og efterlade opmuntrende noter i din dagbog."
+			}
+		},
+		"completion": {
+			"title": "Rundvisning færdig!",
+			"description": "Du har set de vigtigste funktioner. Husk, du kan altid genstarte denne rundvisning fra Indstillinger.",
+			"getStarted": "Kom i gang"
+		},
+		"settings": {
+			"title": "Guidet rundvisning",
+			"description": "Genstart den guidede rundvisning for at lære om alle appens funktioner.",
+			"restart": "Genstart guidet rundvisning",
+			"completed": "Rundvisning afsluttet",
+			"notCompleted": "Rundvisning ikke afsluttet"
+		}
+	}
+}

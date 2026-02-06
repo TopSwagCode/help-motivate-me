@@ -1,0 +1,97 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { pwaStore } from '$lib/stores/pwa';
+	import { browser } from '$app/environment';
+
+	let needRefresh = $state(false);
+	let offlineReady = $state(false);
+	let updateSW: ((reloadPage?: boolean) => Promise<void>) | undefined = $state(undefined);
+
+	onMount(async () => {
+		if (!browser) return;
+
+		const { useRegisterSW } = await import('virtual:pwa-register/svelte');
+
+		const {
+			needRefresh: needRefreshStore,
+			offlineReady: offlineReadyStore,
+			updateServiceWorker
+		} = useRegisterSW({
+			immediate: true,
+			onRegisteredSW(_swUrl: string, registration: ServiceWorkerRegistration | undefined) {
+				// Check for updates every hour
+				if (registration) {
+					setInterval(
+						() => {
+							registration.update();
+						},
+						60 * 60 * 1000
+					);
+				}
+			},
+			onRegisterError(_error: Error) {
+				// Service worker registration failed
+			}
+		});
+
+		updateSW = updateServiceWorker;
+
+		// Subscribe to stores
+		needRefreshStore.subscribe((value: boolean) => {
+			needRefresh = value;
+			pwaStore.update((state) => ({ ...state, needsRefresh: value }));
+		});
+
+		offlineReadyStore.subscribe((value: boolean) => {
+			offlineReady = value;
+			pwaStore.update((state) => ({ ...state, offlineReady: value }));
+		});
+
+		// Store the update function
+		pwaStore.update((state) => ({ ...state, updateServiceWorker }));
+	});
+
+	function close() {
+		offlineReady = false;
+		needRefresh = false;
+	}
+
+	async function handleUpdate() {
+		if (updateSW) {
+			try {
+				await updateSW(true);
+			} catch {
+				// Fallback: force reload the page
+				window.location.reload();
+			}
+		} else {
+			window.location.reload();
+		}
+	}
+</script>
+
+{#if needRefresh}
+	<div class="fixed bottom-20 left-4 right-4 sm:left-auto sm:right-4 sm:bottom-20 z-[9999] rounded-2xl bg-primary-600 px-4 py-3 text-white shadow-lg pointer-events-auto">
+		<div class="flex items-center justify-between gap-4">
+			<span class="font-medium">New version available!</span>
+			<div class="flex items-center gap-2">
+				<button
+					onclick={handleUpdate}
+					class="rounded-2xl bg-warm-paper px-4 py-2 font-semibold text-primary-700 hover:bg-primary-50 active:bg-primary-100 touch-manipulation min-h-[44px] min-w-[80px] cursor-pointer select-none"
+				>
+					Update
+				</button>
+				<button onclick={close} class="p-2 text-white/80 hover:text-white touch-manipulation min-h-[44px]" aria-label="Dismiss">
+					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M6 18L18 6M6 6l12 12"
+						/>
+					</svg>
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}

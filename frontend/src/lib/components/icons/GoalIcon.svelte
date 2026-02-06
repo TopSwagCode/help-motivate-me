@@ -1,0 +1,24 @@
+<script lang="ts">
+	interface Props {
+		class?: string;
+	}
+	let { class: className = '' }: Props = $props();
+</script>
+
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	width="16"
+	height="16"
+	viewBox="0 0 20 20"
+	fill="none"
+	stroke="currentColor"
+	stroke-width="1.5"
+	stroke-linecap="round"
+	stroke-linejoin="round"
+	class={className}
+>
+	<!-- Target circles -->
+	<circle cx="10" cy="10" r="8" />
+	<circle cx="10" cy="10" r="5" />
+	<circle cx="10" cy="10" r="2" />
+</svg>

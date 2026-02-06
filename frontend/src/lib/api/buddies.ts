@@ -1,0 +1,72 @@
+import { apiGet, apiPost, apiDelete, apiUpload } from './client';
+import type {
+	BuddyRelationshipsResponse,
+	BuddyResponse,
+	BuddyTodayViewResponse,
+	BuddyJournalEntry,
+	BuddyJournalImage,
+	BuddyJournalReaction,
+	CreateBuddyJournalEntryRequest,
+	BuddyLoginResponse
+} from '$lib/types';
+
+export async function getBuddyRelationships(): Promise<BuddyRelationshipsResponse> {
+	return apiGet<BuddyRelationshipsResponse>('/buddies');
+}
+
+export async function inviteBuddy(email: string): Promise<BuddyResponse> {
+	return apiPost<BuddyResponse>('/buddies/invite', { email });
+}
+
+export async function removeBuddy(id: string): Promise<void> {
+	return apiDelete<void>(`/buddies/${id}`);
+}
+
+export async function leaveBuddy(userId: string): Promise<void> {
+	return apiDelete<void>(`/buddies/leave/${userId}`);
+}
+
+export async function getBuddyTodayView(userId: string, date?: string): Promise<BuddyTodayViewResponse> {
+	const params = date ? `?date=${date}` : '';
+	return apiGet<BuddyTodayViewResponse>(`/buddies/${userId}/today${params}`);
+}
+
+export async function getBuddyJournal(userId: string): Promise<BuddyJournalEntry[]> {
+	return apiGet<BuddyJournalEntry[]>(`/buddies/${userId}/journal`);
+}
+
+export async function createBuddyJournalEntry(
+	userId: string,
+	data: CreateBuddyJournalEntryRequest
+): Promise<BuddyJournalEntry> {
+	return apiPost<BuddyJournalEntry>(`/buddies/${userId}/journal`, data);
+}
+
+export async function loginWithBuddyToken(token: string): Promise<BuddyLoginResponse> {
+	return apiPost<BuddyLoginResponse>('/auth/login-with-buddy-token', { token });
+}
+
+export async function uploadBuddyJournalImage(
+	userId: string,
+	entryId: string,
+	file: File
+): Promise<BuddyJournalImage> {
+	return apiUpload<BuddyJournalImage>(`/buddies/${userId}/journal/${entryId}/images`, file);
+}
+
+// Buddy Journal Reaction APIs
+export async function addBuddyJournalReaction(
+	userId: string,
+	entryId: string,
+	emoji: string
+): Promise<BuddyJournalReaction> {
+	return apiPost<BuddyJournalReaction>(`/buddies/${userId}/journal/${entryId}/reactions`, { emoji });
+}
+
+export async function removeBuddyJournalReaction(
+	userId: string,
+	entryId: string,
+	reactionId: string
+): Promise<void> {
+	return apiDelete<void>(`/buddies/${userId}/journal/${entryId}/reactions/${reactionId}`);
+}
