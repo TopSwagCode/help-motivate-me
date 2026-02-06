@@ -13,7 +13,6 @@ public class TodayControllerTests : IntegrationTestBase
     {
     }
 
-    #region 7-Day Filter Tests
 
     [Fact]
     public async Task GetToday_Task_DueIn7Days_ShouldAppearInUpcoming()
@@ -187,9 +186,7 @@ public class TodayControllerTests : IntegrationTestBase
         response.CompletedTasks.Should().ContainSingle();
     }
 
-    #endregion
 
-    #region Habit Stack Tests
 
     [Fact]
     public async Task GetToday_HabitStack_OnlyActiveStacks_ShouldAppear()
@@ -256,9 +253,7 @@ public class TodayControllerTests : IntegrationTestBase
         response.HabitStacks[2].Name.Should().Be("Third Stack");
     }
 
-    #endregion
 
-    #region Identity Feedback Tests
 
     [Fact]
     public async Task GetToday_IdentityFeedback_OnlyShowsIdentitiesWithCompletions()
@@ -323,9 +318,7 @@ public class TodayControllerTests : IntegrationTestBase
         feedback.TaskVotes.Should().Be(2);
     }
 
-    #endregion
 
-    #region User Isolation Tests
 
     [Fact]
     public async Task GetToday_ReturnsOnlyCurrentUserData()
@@ -368,7 +361,6 @@ public class TodayControllerTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    #endregion
 }
 
 // Response DTOs for deserialization

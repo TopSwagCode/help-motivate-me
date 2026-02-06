@@ -14,7 +14,6 @@ public class IdentitiesControllerTests : IntegrationTestBase
     {
     }
 
-    #region CRUD Tests
 
     [Fact]
     public async Task GetIdentities_ReturnsAllUserIdentities_OrderedByName()
@@ -149,9 +148,7 @@ public class IdentitiesControllerTests : IntegrationTestBase
         taskResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-    #endregion
 
-    #region Stats Tests
 
     [Fact]
     public async Task GetStats_ReturnsCorrectCompletionCount()
@@ -225,9 +222,7 @@ public class IdentitiesControllerTests : IntegrationTestBase
         response!.TasksCompletedLast7Days.Should().Be(1); // Only the recent task
     }
 
-    #endregion
 
-    #region User Isolation Tests
 
     [Fact]
     public async Task GetIdentity_ReturnsNotFound_ForOtherUsersIdentity()
@@ -295,7 +290,6 @@ public class IdentitiesControllerTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    #endregion
 }
 
 // Response DTOs for deserialization

@@ -13,7 +13,6 @@ public class AnalyticsControllerTests : IntegrationTestBase
     {
     }
 
-    #region Streaks Endpoint Tests
 
     [Fact]
     public async Task GetStreaks_ReturnsEmptyForNewUser()
@@ -31,9 +30,7 @@ public class AnalyticsControllerTests : IntegrationTestBase
         response.Streaks.Should().BeEmpty();
     }
 
-    #endregion
 
-    #region Completion Rates Tests
 
     [Fact]
     public async Task GetCompletionRates_CalculatesCorrectPercentage()
@@ -92,9 +89,7 @@ public class AnalyticsControllerTests : IntegrationTestBase
         response!.DailyRate.Should().Be(100.0);
     }
 
-    #endregion
 
-    #region Heatmap Tests
 
     [Fact]
     public async Task GetHeatmap_ReturnsCorrectDaysRange()
@@ -222,9 +217,7 @@ public class AnalyticsControllerTests : IntegrationTestBase
         response[2].Date.Should().Be(today);
     }
 
-    #endregion
 
-    #region User Isolation Tests
 
     [Fact]
     public async Task GetCompletionRates_OnlyCountsUsersTasks()
@@ -274,7 +267,6 @@ public class AnalyticsControllerTests : IntegrationTestBase
         response![0].Count.Should().Be(1);
     }
 
-    #endregion
 }
 
 // Response DTOs for deserialization

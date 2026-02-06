@@ -14,7 +14,6 @@ public class AuthControllerTests : IntegrationTestBase
     {
     }
 
-    #region Registration Tests
 
     [Fact]
     public async Task Register_CreatesNewUser()
@@ -58,9 +57,7 @@ public class AuthControllerTests : IntegrationTestBase
         error!.Message.Should().Contain("Email already exists");
     }
 
-    #endregion
 
-    #region Login Tests
 
     [Fact]
     public async Task Login_WorksWithEmail()
@@ -165,9 +162,7 @@ public class AuthControllerTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    #endregion
 
-    #region GetCurrentUser Tests
 
     [Fact]
     public async Task GetMe_ReturnsCurrentUser()
@@ -195,9 +190,7 @@ public class AuthControllerTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    #endregion
 
-    #region Unlink External Login Tests
 
     [Fact]
     public async Task Unlink_RemovesExternalLogin()
@@ -322,9 +315,7 @@ public class AuthControllerTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
 
-    #endregion
 
-    #region Logout Tests
 
     [Fact]
     public async Task Logout_ReturnsNoContent()
@@ -350,9 +341,7 @@ public class AuthControllerTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private async Task<User> CreateUserWithPasswordAsync(string email, string password)
     {
@@ -378,7 +367,6 @@ public class AuthControllerTests : IntegrationTestBase
         return $"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}";
     }
 
-    #endregion
 }
 
 // Response DTOs for deserialization

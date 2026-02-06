@@ -40,7 +40,6 @@ public class AccountabilityBuddyService
         _todayViewService = todayViewService;
     }
 
-    #region Buddy Relationships
 
     /// <summary>
     /// Get all buddies for a user (people they've added as buddies).
@@ -202,9 +201,7 @@ public class AccountabilityBuddyService
         return true;
     }
 
-    #endregion
 
-    #region Buddy Today View
 
     /// <summary>
     /// Get the today view for a buddy.
@@ -229,9 +226,7 @@ public class AccountabilityBuddyService
         );
     }
 
-    #endregion
 
-    #region Buddy Journal
 
     /// <summary>
     /// Get journal entries for a buddy.
@@ -439,7 +434,6 @@ public class AccountabilityBuddyService
         return true;
     }
 
-    #endregion
 }
 
 // Result types

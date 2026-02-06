@@ -12,7 +12,6 @@ public class GoalsControllerTests : IntegrationTestBase
     {
     }
 
-    #region CRUD Tests
 
     [Fact]
     public async Task GetGoals_ReturnsAllUserGoals_OrderedBySortOrder()
@@ -139,9 +138,7 @@ public class GoalsControllerTests : IntegrationTestBase
         taskResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    #endregion
 
-    #region Complete Toggle Tests
 
     [Fact]
     public async Task CompleteGoal_TogglesIsCompleted_FromFalseToTrue()
@@ -179,9 +176,7 @@ public class GoalsControllerTests : IntegrationTestBase
         uncompleted.CompletedAt.Should().BeNull();
     }
 
-    #endregion
 
-    #region Reorder Tests
 
     [Fact]
     public async Task ReorderGoals_UpdatesSortOrder()
@@ -234,9 +229,7 @@ public class GoalsControllerTests : IntegrationTestBase
         user2Goals![0].SortOrder.Should().Be(0);
     }
 
-    #endregion
 
-    #region User Isolation Tests
 
     [Fact]
     public async Task GetGoal_ReturnsNotFound_ForOtherUsersGoal()
@@ -304,9 +297,7 @@ public class GoalsControllerTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    #endregion
 
-    #region Client Date Parameter Tests
 
     [Fact]
     public async Task CompleteGoal_WithClientDate_UsesProvidedDate()
@@ -355,7 +346,6 @@ public class GoalsControllerTests : IntegrationTestBase
         completedDate.Should().Be(expectedDate);
     }
 
-    #endregion
 }
 
 // Response DTOs for deserialization

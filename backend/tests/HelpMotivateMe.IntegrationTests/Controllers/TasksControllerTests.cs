@@ -13,7 +13,6 @@ public class TasksControllerTests : IntegrationTestBase
     {
     }
 
-    #region CRUD Tests
 
     [Fact]
     public async Task GetTasks_ReturnsTopLevelTasksOnly()
@@ -97,9 +96,7 @@ public class TasksControllerTests : IntegrationTestBase
         getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    #endregion
 
-    #region Repeat Scheduling Tests
 
     // [Fact] - REMOVED: Repeatable task feature has been removed
     // public async Task CompleteRepeatableTask_Daily_CalculatesNextOccurrence()
@@ -151,9 +148,7 @@ public class TasksControllerTests : IntegrationTestBase
         toggled.CompletedAt.Should().BeNull();
     }
 
-    #endregion
 
-    #region Tiny Habit Tests
 
     [Fact]
     public async Task CreateTinyVersion_CreatesMicroTask()
@@ -195,9 +190,7 @@ public class TasksControllerTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
-    #endregion
 
-    #region Bulk Operations Tests
 
     [Fact]
     public async Task CompleteMultiple_CompletesAllSpecifiedTasks()
@@ -251,9 +244,7 @@ public class TasksControllerTests : IntegrationTestBase
         result!.CompletedCount.Should().Be(1); // Only user1's task
     }
 
-    #endregion
 
-    #region Reorder Tests
 
     [Fact]
     public async Task ReorderTasks_UpdatesSortOrder()
@@ -281,9 +272,7 @@ public class TasksControllerTests : IntegrationTestBase
         tasks[2].Title.Should().Be("Second");
     }
 
-    #endregion
 
-    #region Postpone Tests
 
     [Fact]
     public async Task PostponeTask_UpdatesDueDate()
@@ -307,9 +296,7 @@ public class TasksControllerTests : IntegrationTestBase
         updated!.DueDate.Should().Be(newDueDate);
     }
 
-    #endregion
 
-    #region User Isolation Tests
 
     [Fact]
     public async Task GetTask_ReturnsNotFound_ForOtherUsersTask()
@@ -347,9 +334,7 @@ public class TasksControllerTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    #endregion
 
-    #region Client Date Parameter Tests
 
     [Fact]
     public async Task CompleteTask_WithClientDate_UsesProvidedDate()
@@ -428,7 +413,6 @@ public class TasksControllerTests : IntegrationTestBase
     // [Fact] - REMOVED: Repeatable task feature has been removed
     // public async Task CompleteRepeatableTask_WithClientDate_CalculatesNextFromProvidedDate()
 
-    #endregion
 }
 
 // Response DTOs for deserialization - matching the actual API response structure

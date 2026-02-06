@@ -21,7 +21,6 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
-    #region Password Operations
 
     public string HashPassword(string password)
     {
@@ -45,9 +44,7 @@ public class AuthService : IAuthService
         return CryptographicOperations.FixedTimeEquals(hash, computedHash);
     }
 
-    #endregion
 
-    #region Token Generation
 
     public string GenerateSecureToken()
     {
@@ -58,9 +55,7 @@ public class AuthService : IAuthService
             .TrimEnd('=');
     }
 
-    #endregion
 
-    #region User Operations
 
     public async Task<User?> GetUserByEmailAsync(string email)
     {
@@ -105,9 +100,7 @@ public class AuthService : IAuthService
         await _db.SaveChangesAsync();
     }
 
-    #endregion
 
-    #region Email Verification
 
     public async Task<EmailVerificationToken> CreateEmailVerificationTokenAsync(Guid userId, string email)
     {
@@ -134,9 +127,7 @@ public class AuthService : IAuthService
             .FirstOrDefaultAsync(t => t.Token == token);
     }
 
-    #endregion
 
-    #region Login Tokens (Magic Links)
 
     public async Task<EmailLoginToken> CreateLoginTokenAsync(Guid userId, string email, int expiryHours = 24)
     {
@@ -163,9 +154,7 @@ public class AuthService : IAuthService
             .FirstOrDefaultAsync(t => t.Token == token);
     }
 
-    #endregion
 
-    #region External Logins
 
     public async Task<UserExternalLogin?> GetExternalLoginAsync(string provider, string providerKey)
     {
@@ -215,9 +204,7 @@ public class AuthService : IAuthService
         return user.PasswordHash != null || user.ExternalLogins.Count > 1;
     }
 
-    #endregion
 
-    #region Whitelist and Signup Checks
 
     public async Task<bool> IsEmailWhitelistedAsync(string email)
     {
@@ -230,9 +217,7 @@ public class AuthService : IAuthService
         return !bool.TryParse(_configuration["Auth:AllowSignups"], out var allowed) || allowed;
     }
 
-    #endregion
 
-    #region Notification Preferences
 
     public async Task<NotificationPreferences> GetOrCreateNotificationPreferencesAsync(Guid userId)
     {
@@ -297,9 +282,7 @@ public class AuthService : IAuthService
         return prefs;
     }
 
-    #endregion
 
-    #region Account Deletion
 
     public async Task DeleteAccountAsync(Guid userId)
     {
@@ -331,14 +314,22 @@ public class AuthService : IAuthService
         await _db.SaveChangesAsync();
     }
 
-    #endregion
 
-    #region URL Building
 
     public string GetFrontendUrl()
     {
         return _configuration["FrontendUrl"] ?? _configuration["Cors:AllowedOrigins:0"] ?? "http://localhost:5173";
     }
 
-    #endregion
+
+
+    public async Task<BuddyInviteToken?> GetBuddyInviteTokenAsync(string token)
+    {
+        return await _db.BuddyInviteTokens
+            .Include(t => t.BuddyUser)
+                .ThenInclude(u => u.ExternalLogins)
+            .Include(t => t.InviterUser)
+            .FirstOrDefaultAsync(t => t.Token == token);
+    }
+
 }

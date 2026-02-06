@@ -49,4 +49,7 @@ public interface IAuthService
     
     // URL building
     string GetFrontendUrl();
+    
+    // Buddy tokens
+    Task<BuddyInviteToken?> GetBuddyInviteTokenAsync(string token);
 }

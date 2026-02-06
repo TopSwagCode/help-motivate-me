@@ -13,7 +13,6 @@ public class HabitStacksControllerTests : IntegrationTestBase
     {
     }
 
-    #region CRUD Tests
 
     [Fact]
     public async Task GetHabitStacks_ReturnsAllUserStacks_OrderedBySortOrder()
@@ -117,9 +116,7 @@ public class HabitStacksControllerTests : IntegrationTestBase
         getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    #endregion
 
-    #region Reorder Tests
 
     [Fact]
     public async Task ReorderHabitStacks_UpdatesSortOrder()
@@ -172,9 +169,7 @@ public class HabitStacksControllerTests : IntegrationTestBase
         updatedStack.Items[2].HabitDescription.Should().Be("habit2");
     }
 
-    #endregion
 
-    #region Streak Calculation Tests
 
     [Fact]
     public async Task CompleteItem_IncreasesStreak_WhenConsecutive()
@@ -291,9 +286,7 @@ public class HabitStacksControllerTests : IntegrationTestBase
         result!.LongestStreak.Should().Be(2);
     }
 
-    #endregion
 
-    #region Complete All Tests
 
     [Fact]
     public async Task CompleteAll_OnlyCompletesIncompleteItems()
@@ -345,9 +338,7 @@ public class HabitStacksControllerTests : IntegrationTestBase
         result.TotalCount.Should().Be(2);
     }
 
-    #endregion
 
-    #region User Isolation Tests
 
     [Fact]
     public async Task GetHabitStack_ReturnsNotFound_ForOtherUsersStack()
@@ -381,7 +372,6 @@ public class HabitStacksControllerTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    #endregion
 }
 
 // Response DTOs for deserialization
