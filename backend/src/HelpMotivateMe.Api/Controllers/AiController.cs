@@ -1,5 +1,6 @@
 using System.Text.Json;
 using HelpMotivateMe.Core.DTOs.Ai;
+using HelpMotivateMe.Core.DTOs.Identities;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
@@ -188,7 +189,7 @@ public class AiController : ApiControllerBase
     ///     Used when AI suggests creating a new identity for a task/goal/habit.
     /// </summary>
     [HttpPost("general/create-identity")]
-    public async Task<ActionResult<Identity>> CreateIdentityFromAi(
+    public async Task<ActionResult<IdentityResponse>> CreateIdentityFromAi(
         [FromBody] CreateIdentityFromAiRequest request,
         CancellationToken cancellationToken)
     {
@@ -208,6 +209,22 @@ public class AiController : ApiControllerBase
         _db.Identities.Add(identity);
         await _db.SaveChangesAsync(cancellationToken);
 
-        return Ok(identity);
+        return Ok(new IdentityResponse(
+            identity.Id,
+            identity.Name,
+            identity.Description,
+            identity.Color,
+            identity.Icon,
+            TotalTasks: 0,
+            CompletedTasks: 0,
+            TasksCompletedLast7Days: 0,
+            CompletionRate: 0,
+            TotalGoals: 0,
+            CompletedGoals: 0,
+            TotalProofs: 0,
+            TotalDailyCommitments: 0,
+            CompletedDailyCommitments: 0,
+            identity.CreatedAt
+        ));
     }
 }

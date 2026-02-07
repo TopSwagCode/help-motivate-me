@@ -119,8 +119,12 @@ public class LocalFileStorageService : IStorageService
     {
         // Strip any existing api/files/ prefix to handle legacy data
         var cleanKey = key.StartsWith("api/files/") ? key.Substring("api/files/".Length) : key;
-        // Normalize the key to prevent path traversal attacks
-        var normalizedKey = cleanKey.Replace("..", "").Replace("\\", "/");
-        return Path.Combine(_basePath, normalizedKey);
+        var fullPath = Path.GetFullPath(Path.Combine(_basePath, cleanKey));
+        var resolvedBasePath = Path.GetFullPath(_basePath + Path.DirectorySeparatorChar);
+
+        if (!fullPath.StartsWith(resolvedBasePath))
+            throw new InvalidOperationException("Invalid file path");
+
+        return fullPath;
     }
 }

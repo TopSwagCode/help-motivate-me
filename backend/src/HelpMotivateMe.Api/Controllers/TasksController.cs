@@ -40,7 +40,6 @@ public class TasksController : ApiControllerBase
         var tasks = await _taskItemsQuery
             .Include(t => t.Identity)
             .Include(t => t.Subtasks)
-            .Include(t => t.Subtasks)
             .ThenInclude(s => s.Identity)
             .Where(t => t.GoalId == goalId && t.ParentTaskId == null)
             .OrderBy(t => t.SortOrder)
@@ -59,7 +58,6 @@ public class TasksController : ApiControllerBase
             .Include(t => t.Goal)
             .Include(t => t.Identity)
             .Include(t => t.Subtasks)
-            .Include(t => t.Subtasks)
             .ThenInclude(s => s.Identity)
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);
 
@@ -76,6 +74,12 @@ public class TasksController : ApiControllerBase
         // Verify goal belongs to user
         var goal = await _db.Goals.FirstOrDefaultAsync(g => g.Id == goalId && g.UserId == userId);
         if (goal == null) return NotFound(new { message = "Goal not found" });
+
+        if (request.IdentityId.HasValue)
+        {
+            var identityOwned = await _db.Identities.AnyAsync(i => i.Id == request.IdentityId.Value && i.UserId == userId);
+            if (!identityOwned) return BadRequest(new { message = "Identity not found" });
+        }
 
         var task = new TaskItem
         {
@@ -112,6 +116,12 @@ public class TasksController : ApiControllerBase
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);
 
         if (parentTask == null) return NotFound(new { message = "Parent task not found" });
+
+        if (request.IdentityId.HasValue)
+        {
+            var identityOwned = await _db.Identities.AnyAsync(i => i.Id == request.IdentityId.Value && i.UserId == userId);
+            if (!identityOwned) return BadRequest(new { message = "Identity not found" });
+        }
 
         var subtask = new TaskItem
         {
@@ -152,6 +162,12 @@ public class TasksController : ApiControllerBase
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);
 
         if (task == null) return NotFound();
+
+        if (request.IdentityId.HasValue)
+        {
+            var identityOwned = await _db.Identities.AnyAsync(i => i.Id == request.IdentityId.Value && i.UserId == userId);
+            if (!identityOwned) return BadRequest(new { message = "Identity not found" });
+        }
 
         task.Title = request.Title;
         task.Description = request.Description;
@@ -199,7 +215,6 @@ public class TasksController : ApiControllerBase
         var task = await _db.TaskItems
             .Include(t => t.Goal)
             .Include(t => t.Identity)
-            .Include(t => t.Subtasks)
             .Include(t => t.Subtasks)
             .ThenInclude(s => s.Identity)
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);
@@ -277,7 +292,6 @@ public class TasksController : ApiControllerBase
         var task = await _db.TaskItems
             .Include(t => t.Goal)
             .Include(t => t.Identity)
-            .Include(t => t.Subtasks)
             .Include(t => t.Subtasks)
             .ThenInclude(s => s.Identity)
             .FirstOrDefaultAsync(t => t.Id == id && t.Goal.UserId == userId);

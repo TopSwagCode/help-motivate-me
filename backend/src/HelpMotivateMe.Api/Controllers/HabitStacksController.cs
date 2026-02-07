@@ -71,6 +71,12 @@ public class HabitStacksController : ApiControllerBase
     {
         var userId = GetUserId();
 
+        if (request.IdentityId.HasValue)
+        {
+            var identityOwned = await _db.Identities.AnyAsync(i => i.Id == request.IdentityId.Value && i.UserId == userId);
+            if (!identityOwned) return BadRequest(new { message = "Identity not found" });
+        }
+
         // Get max sort order for user's habit stacks
         var maxSortOrder = await _db.HabitStacks
             .Where(hs => hs.UserId == userId)
@@ -119,6 +125,12 @@ public class HabitStacksController : ApiControllerBase
             .FirstOrDefaultAsync(hs => hs.Id == id && hs.UserId == userId);
 
         if (stack == null) return NotFound();
+
+        if (request.IdentityId.HasValue)
+        {
+            var identityOwned = await _db.Identities.AnyAsync(i => i.Id == request.IdentityId.Value && i.UserId == userId);
+            if (!identityOwned) return BadRequest(new { message = "Identity not found" });
+        }
 
         stack.Name = request.Name;
         stack.Description = request.Description;

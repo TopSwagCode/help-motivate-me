@@ -27,66 +27,31 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.ForwardLimit = null;
 });
 
-// Database
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Data Protection - store keys in database for persistence across restarts and multiple instances
 builder.Services.AddDataProtection()
     .SetApplicationName("HelpMotivateMe")
     .PersistKeysToDbContext<AppDbContext>();
 
-// Email Service
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
-
-// Push Notification Service
 builder.Services.AddScoped<IPushNotificationService, WebPushNotificationService>();
 builder.Services.AddScoped<ScheduledPushNotificationService>();
-
-// Local File Storage Service
 builder.Services.AddSingleton<IStorageService, LocalFileStorageService>();
-
-// OpenAI Service
 builder.Services.AddHttpClient<IOpenAiService, OpenAiService>();
-
-// AI Budget Service
 builder.Services.Configure<AiBudgetOptions>(builder.Configuration.GetSection(AiBudgetOptions.SectionName));
 builder.Services.AddScoped<IAiBudgetService, AiBudgetService>();
-
-// Identity Score Service
 builder.Services.AddScoped<IIdentityScoreService, IdentityScoreService>();
-
-// Today View Service
 builder.Services.AddScoped<ITodayViewService, TodayViewService>();
-
-// Daily Commitment Service
 builder.Services.AddScoped<IDailyCommitmentService, DailyCommitmentService>();
-
-// Identity Proof Service
 builder.Services.AddScoped<IIdentityProofService, IdentityProofService>();
-
-// Auth Service
 builder.Services.AddScoped<IAuthService, AuthService>();
-
-// Accountability Buddy Service
 builder.Services.AddScoped<IAccountabilityBuddyService, AccountabilityBuddyService>();
-
-// Habit Stack Service
 builder.Services.AddScoped<IHabitStackService, HabitStackService>();
-
-// Admin Service
 builder.Services.AddScoped<IAdminService, AdminService>();
-
-// Daily Commitment Notification Service
 builder.Services.AddScoped<IDailyCommitmentNotificationService, DailyCommitmentNotificationService>();
-
-// Analytics Service
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
-
-// Milestone Service
 builder.Services.AddScoped<IMilestoneService, MilestoneService>();
-
-// Query Interface - read-only queries with AsNoTracking for better performance
 builder.Services.AddScoped(typeof(IQueryInterface<>), typeof(QueryInterface<>));
 
 // Session (for analytics session tracking)
@@ -231,20 +196,6 @@ app.UseSession();
 app.UseAuthorization();
 
 app.MapControllers();
-
-// Background Workers - Scheduled Push Notifications
-// app.RunCronBackgroundWorker("0 */6 * * *",
-//     async (CancellationToken ct, ScheduledPushNotificationService service, ILogger<Program> logger) =>
-// {
-//     logger.LogInformation("Scheduled push notification worker executing at {Time}", DateTime.UtcNow);
-//     await service.SendScheduledNotificationAsync();
-// })
-// .WithName("scheduled-push-notifications")
-// .WithErrorHandler(ex =>
-// {
-//     var logger = app.Services.GetRequiredService<ILogger<Program>>();
-//     logger.LogError(ex, "Error in scheduled push notification worker");
-// });
 
 app.RunPeriodicBackgroundWorker(TimeSpan.FromMinutes(5), async (ILogger<Program> logger) =>
 {

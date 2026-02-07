@@ -66,6 +66,12 @@ public class GoalsController : ApiControllerBase
     {
         var userId = GetUserId();
 
+        if (request.IdentityId.HasValue)
+        {
+            var identityOwned = await _db.Identities.AnyAsync(i => i.Id == request.IdentityId.Value && i.UserId == userId);
+            if (!identityOwned) return BadRequest(new { message = "Identity not found" });
+        }
+
         var goal = new Goal
         {
             UserId = userId,
@@ -104,6 +110,12 @@ public class GoalsController : ApiControllerBase
             .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
 
         if (goal == null) return NotFound();
+
+        if (request.IdentityId.HasValue)
+        {
+            var identityOwned = await _db.Identities.AnyAsync(i => i.Id == request.IdentityId.Value && i.UserId == userId);
+            if (!identityOwned) return BadRequest(new { message = "Identity not found" });
+        }
 
         goal.Title = request.Title;
         goal.Description = request.Description;

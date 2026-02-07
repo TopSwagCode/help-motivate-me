@@ -42,16 +42,33 @@ public class IdentitiesController : ApiControllerBase
 
         await _analyticsService.LogEventAsync(userId, sessionId, "IdentitiesPageLoaded");
 
+        var sevenDaysAgo = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-7);
+
         var identities = await _identitiesQuery
             .Where(i => i.UserId == userId)
-            .Include(i => i.Tasks)
-            .Include(i => i.Goals)
-            .Include(i => i.Proofs)
-            .Include(i => i.DailyCommitments)
             .OrderBy(i => i.Name)
+            .Select(i => new IdentityResponse(
+                i.Id,
+                i.Name,
+                i.Description,
+                i.Color,
+                i.Icon,
+                i.Tasks.Count,
+                i.Tasks.Count(t => t.Status == TaskItemStatus.Completed),
+                i.Tasks.Count(t => t.Status == TaskItemStatus.Completed && t.CompletedAt.HasValue && t.CompletedAt.Value >= sevenDaysAgo),
+                i.Tasks.Count > 0
+                    ? Math.Round((double)i.Tasks.Count(t => t.Status == TaskItemStatus.Completed) / i.Tasks.Count * 100, 1)
+                    : 0,
+                i.Goals.Count,
+                i.Goals.Count(g => g.IsCompleted),
+                i.Proofs.Count,
+                i.DailyCommitments.Count,
+                i.DailyCommitments.Count(dc => dc.Status == DailyCommitmentStatus.Completed),
+                i.CreatedAt
+            ))
             .ToListAsync();
 
-        return Ok(identities.Select(MapToResponse));
+        return Ok(identities);
     }
 
     [HttpGet("{id:guid}")]
@@ -59,16 +76,34 @@ public class IdentitiesController : ApiControllerBase
     {
         var userId = GetUserId();
 
+        var sevenDaysAgo = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-7);
+
         var identity = await _identitiesQuery
-            .Include(i => i.Tasks)
-            .Include(i => i.Goals)
-            .Include(i => i.Proofs)
-            .Include(i => i.DailyCommitments)
-            .FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
+            .Where(i => i.Id == id && i.UserId == userId)
+            .Select(i => new IdentityResponse(
+                i.Id,
+                i.Name,
+                i.Description,
+                i.Color,
+                i.Icon,
+                i.Tasks.Count,
+                i.Tasks.Count(t => t.Status == TaskItemStatus.Completed),
+                i.Tasks.Count(t => t.Status == TaskItemStatus.Completed && t.CompletedAt.HasValue && t.CompletedAt.Value >= sevenDaysAgo),
+                i.Tasks.Count > 0
+                    ? Math.Round((double)i.Tasks.Count(t => t.Status == TaskItemStatus.Completed) / i.Tasks.Count * 100, 1)
+                    : 0,
+                i.Goals.Count,
+                i.Goals.Count(g => g.IsCompleted),
+                i.Proofs.Count,
+                i.DailyCommitments.Count,
+                i.DailyCommitments.Count(dc => dc.Status == DailyCommitmentStatus.Completed),
+                i.CreatedAt
+            ))
+            .FirstOrDefaultAsync();
 
         if (identity == null) return NotFound();
 
-        return Ok(MapToResponse(identity));
+        return Ok(identity);
     }
 
     [HttpPost]
@@ -88,7 +123,23 @@ public class IdentitiesController : ApiControllerBase
         _db.Identities.Add(identity);
         await _db.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetIdentity), new { id = identity.Id }, MapToResponse(identity));
+        return CreatedAtAction(nameof(GetIdentity), new { id = identity.Id }, new IdentityResponse(
+            identity.Id,
+            identity.Name,
+            identity.Description,
+            identity.Color,
+            identity.Icon,
+            TotalTasks: 0,
+            CompletedTasks: 0,
+            TasksCompletedLast7Days: 0,
+            CompletionRate: 0,
+            TotalGoals: 0,
+            CompletedGoals: 0,
+            TotalProofs: 0,
+            TotalDailyCommitments: 0,
+            CompletedDailyCommitments: 0,
+            identity.CreatedAt
+        ));
     }
 
     [HttpPut("{id:guid}")]
@@ -97,10 +148,6 @@ public class IdentitiesController : ApiControllerBase
         var userId = GetUserId();
 
         var identity = await _db.Identities
-            .Include(i => i.Tasks)
-            .Include(i => i.Goals)
-            .Include(i => i.Proofs)
-            .Include(i => i.DailyCommitments)
             .FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
 
         if (identity == null) return NotFound();
@@ -112,7 +159,33 @@ public class IdentitiesController : ApiControllerBase
 
         await _db.SaveChangesAsync();
 
-        return Ok(MapToResponse(identity));
+        // Use projection for the response to avoid loading all related entities
+        var sevenDaysAgo = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-7);
+
+        var response = await _identitiesQuery
+            .Where(i => i.Id == id)
+            .Select(i => new IdentityResponse(
+                i.Id,
+                i.Name,
+                i.Description,
+                i.Color,
+                i.Icon,
+                i.Tasks.Count,
+                i.Tasks.Count(t => t.Status == TaskItemStatus.Completed),
+                i.Tasks.Count(t => t.Status == TaskItemStatus.Completed && t.CompletedAt.HasValue && t.CompletedAt.Value >= sevenDaysAgo),
+                i.Tasks.Count > 0
+                    ? Math.Round((double)i.Tasks.Count(t => t.Status == TaskItemStatus.Completed) / i.Tasks.Count * 100, 1)
+                    : 0,
+                i.Goals.Count,
+                i.Goals.Count(g => g.IsCompleted),
+                i.Proofs.Count,
+                i.DailyCommitments.Count,
+                i.DailyCommitments.Count(dc => dc.Status == DailyCommitmentStatus.Completed),
+                i.CreatedAt
+            ))
+            .FirstAsync();
+
+        return Ok(response);
     }
 
     [HttpDelete("{id:guid}")]
@@ -136,66 +209,28 @@ public class IdentitiesController : ApiControllerBase
     {
         var userId = GetUserId();
 
-        var identity = await _identitiesQuery
-            .Include(i => i.Tasks)
-            .FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
+        var stats = await _identitiesQuery
+            .Where(i => i.Id == id && i.UserId == userId)
+            .Select(i => new
+            {
+                i.Id,
+                i.Name,
+                CompletedTasks = i.Tasks.Count(t => t.Status == TaskItemStatus.Completed)
+            })
+            .FirstOrDefaultAsync();
 
-        if (identity == null) return NotFound();
+        if (stats == null) return NotFound();
 
-        var completedTasks = identity.Tasks.Count(t => t.Status == TaskItemStatus.Completed);
-        var reinforcementMessage = GenerateReinforcementMessage(identity.Name, completedTasks);
+        var reinforcementMessage = GenerateReinforcementMessage(stats.Name, stats.CompletedTasks);
 
         return Ok(new IdentityStatsResponse(
-            identity.Id,
-            identity.Name,
-            completedTasks,
+            stats.Id,
+            stats.Name,
+            stats.CompletedTasks,
             0, // Streak no longer tracked for tasks
-            completedTasks,
+            stats.CompletedTasks,
             reinforcementMessage
         ));
-    }
-
-    private static IdentityResponse MapToResponse(Identity identity)
-    {
-        var totalTasks = identity.Tasks.Count;
-        var completedTasks = identity.Tasks.Count(t => t.Status == TaskItemStatus.Completed);
-
-        // Calculate tasks completed in last 7 days
-        var sevenDaysAgo = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-7);
-        var tasksCompletedLast7Days = identity.Tasks.Count(t =>
-            t.Status == TaskItemStatus.Completed &&
-            t.CompletedAt.HasValue &&
-            t.CompletedAt.Value >= sevenDaysAgo);
-
-        // Goals stats
-        var totalGoals = identity.Goals.Count;
-        var completedGoals = identity.Goals.Count(g => g.IsCompleted);
-
-        // Identity proofs count
-        var totalProofs = identity.Proofs.Count;
-
-        // Daily commitments stats
-        var totalDailyCommitments = identity.DailyCommitments.Count;
-        var completedDailyCommitments =
-            identity.DailyCommitments.Count(dc => dc.Status == DailyCommitmentStatus.Completed);
-
-        return new IdentityResponse(
-            identity.Id,
-            identity.Name,
-            identity.Description,
-            identity.Color,
-            identity.Icon,
-            totalTasks,
-            completedTasks,
-            tasksCompletedLast7Days,
-            totalTasks > 0 ? Math.Round((double)completedTasks / totalTasks * 100, 1) : 0,
-            totalGoals,
-            completedGoals,
-            totalProofs,
-            totalDailyCommitments,
-            completedDailyCommitments,
-            identity.CreatedAt
-        );
     }
 
     private static string GenerateReinforcementMessage(string identityName, int completedTasks)
