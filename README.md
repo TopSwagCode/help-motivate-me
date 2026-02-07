@@ -23,6 +23,22 @@ A habit tracking and identity-based motivation application built with SvelteKit 
 
 ## Getting Started
 
+### Quick Start (Docker)
+
+Run the entire stack with a single command from the project root:
+
+```bash
+docker compose up --build
+```
+
+- **App**: http://localhost
+- **Mailpit** (email testing): http://localhost:8025
+- **Traefik dashboard**: http://localhost:8080
+
+This starts Traefik as a reverse proxy, PostgreSQL, Mailpit, runs database migrations, and launches both the API and frontend behind a single origin.
+
+### Manual Setup
+
 ### 1. Start Development Services
 
 ```bash

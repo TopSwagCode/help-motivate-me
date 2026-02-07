@@ -1,0 +1,123 @@
+services:
+  traefik:
+    image: traefik:v3.3
+    container_name: helpmotivateme-traefik
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: helpmotivateme-db
+    environment:
+      POSTGRES_DB: helpmotivateme
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: helpmotivateme-mailpit
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+
+  migrations:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.migrations
+    container_name: helpmotivateme-migrations
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=helpmotivateme;Username=postgres;Password=postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: helpmotivateme-api
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=helpmotivateme;Username=postgres;Password=postgres
+      - FrontendUrl=http://localhost
+      - Cors__AllowedOrigins__0=http://localhost
+      # Auth
+      - Auth__AllowSignups=false
+      # Email (points at mailpit by default)
+      - Email__SmtpHost=mailpit
+      - Email__SmtpPort=1025
+      - Email__SmtpUsername=
+      - Email__SmtpPassword=
+      - Email__FromEmail=noreply@helpmotivateme.local
+      - Email__FromName=Help Motivate Me
+      # OAuth – replace with real credentials to enable
+      - OAuth__GitHub__ClientId=YOUR_GITHUB_CLIENT_ID
+      - OAuth__GitHub__ClientSecret=YOUR_GITHUB_CLIENT_SECRET
+      - OAuth__Google__ClientId=YOUR_GOOGLE_CLIENT_ID
+      - OAuth__Google__ClientSecret=YOUR_GOOGLE_CLIENT_SECRET
+      - OAuth__LinkedIn__ClientId=YOUR_LINKEDIN_CLIENT_ID
+      - OAuth__LinkedIn__ClientSecret=YOUR_LINKEDIN_CLIENT_SECRET
+      - OAuth__Facebook__AppId=YOUR_FACEBOOK_APP_ID
+      - OAuth__Facebook__AppSecret=YOUR_FACEBOOK_APP_SECRET
+      # OpenAI – required for AI features (onboarding, command bar, voice)
+      - OpenAI__ApiKey=YOUR_OPENAI_API_KEY
+      # VAPID – required for push notifications (generate with: npx web-push generate-vapid-keys)
+      - Vapid__Subject=mailto:admin@helpmotivateme.app
+      - Vapid__PublicKey=YOUR_VAPID_PUBLIC_KEY
+      - Vapid__PrivateKey=YOUR_VAPID_PRIVATE_KEY
+      # AI budget limits
+      - AiBudget__GlobalLimitLast30DaysUsd=5.0
+      - AiBudget__PerUserLimitLast30DaysUsd=0.25
+      # File storage
+      - LocalStorage__BasePath=/app/uploads
+      - LocalStorage__BaseUrl=/api/files
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=PathPrefix(`/api`)"
+      - "traefik.http.routers.api.entrypoints=web"
+      - "traefik.http.routers.api.priority=100"
+      - "traefik.http.services.api.loadbalancer.server.port=5001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+      migrations:
+        condition: service_completed_successfully
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Leave empty so the SPA uses relative URLs through Traefik
+        VITE_API_URL: ""
+        # Must match Vapid__PublicKey on the api service (generate with: npx web-push generate-vapid-keys)
+        VITE_VAPID_PUBLIC_KEY: "YOUR_VAPID_PUBLIC_KEY"
+    container_name: helpmotivateme-frontend
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
+      - "traefik.http.routers.frontend.priority=1"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+
+volumes:
+  postgres_data:
