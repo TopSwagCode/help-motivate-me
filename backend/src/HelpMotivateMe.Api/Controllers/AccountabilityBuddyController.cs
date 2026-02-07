@@ -11,14 +11,17 @@ namespace HelpMotivateMe.Api.Controllers;
 public class AccountabilityBuddyController : ApiControllerBase
 {
     private readonly IAnalyticsService _analyticsService;
+    private readonly IResourceAuthorizationService _auth;
     private readonly IAccountabilityBuddyService _buddyService;
 
     public AccountabilityBuddyController(
         IAccountabilityBuddyService buddyService,
-        IAnalyticsService analyticsService)
+        IAnalyticsService analyticsService,
+        IResourceAuthorizationService auth)
     {
         _buddyService = buddyService;
         _analyticsService = analyticsService;
+        _auth = auth;
     }
 
     /// <summary>
@@ -27,7 +30,7 @@ public class AccountabilityBuddyController : ApiControllerBase
     [HttpGet]
     public async Task<ActionResult<BuddyRelationshipsResponse>> GetBuddyRelationships()
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var sessionId = GetSessionId();
 
         await _analyticsService.LogEventAsync(userId, sessionId, "BuddiesPageLoaded");
@@ -47,7 +50,7 @@ public class AccountabilityBuddyController : ApiControllerBase
     [HttpPost("invite")]
     public async Task<ActionResult<BuddyResponse>> InviteBuddy([FromBody] InviteBuddyRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var result = await _buddyService.InviteBuddyAsync(userId, request.Email);
 
@@ -63,7 +66,7 @@ public class AccountabilityBuddyController : ApiControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> RemoveBuddy(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var success = await _buddyService.RemoveBuddyAsync(userId, id);
         if (!success) return NotFound(new { message = "Buddy relationship not found" });
@@ -77,7 +80,7 @@ public class AccountabilityBuddyController : ApiControllerBase
     [HttpDelete("leave/{ownerUserId:guid}")]
     public async Task<IActionResult> LeaveBuddy(Guid ownerUserId)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var success = await _buddyService.LeaveBuddyAsync(userId, ownerUserId);
         if (!success) return NotFound(new { message = "Buddy relationship not found" });
@@ -92,12 +95,9 @@ public class AccountabilityBuddyController : ApiControllerBase
     public async Task<ActionResult<BuddyTodayViewResponse>> GetBuddyTodayView(Guid targetUserId,
         [FromQuery] DateOnly? date = null)
     {
-        var userId = GetUserId();
+        if (!await _auth.IsOwnerOrBuddyAsync(targetUserId)) return Forbid();
 
-        // Verify buddy relationship exists
-        var isBuddy = await _buddyService.IsBuddyForAsync(userId, targetUserId);
-        if (!isBuddy) return Forbid();
-
+        var userId = _auth.GetCurrentUserId();
         var targetDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
 
         var sessionId = GetSessionId();
@@ -123,10 +123,7 @@ public class AccountabilityBuddyController : ApiControllerBase
     [HttpGet("{targetUserId:guid}/journal")]
     public async Task<ActionResult<List<BuddyJournalEntryResponse>>> GetBuddyJournal(Guid targetUserId)
     {
-        var userId = GetUserId();
-
-        var isBuddy = await _buddyService.IsBuddyForAsync(userId, targetUserId);
-        if (!isBuddy) return Forbid();
+        if (!await _auth.IsOwnerOrBuddyAsync(targetUserId)) return Forbid();
 
         var entries = await _buddyService.GetBuddyJournalAsync(targetUserId);
 
@@ -154,11 +151,9 @@ public class AccountabilityBuddyController : ApiControllerBase
         Guid targetUserId,
         [FromBody] CreateBuddyJournalEntryRequest request)
     {
-        var userId = GetUserId();
+        if (!await _auth.IsOwnerOrBuddyAsync(targetUserId)) return Forbid();
 
-        var isBuddy = await _buddyService.IsBuddyForAsync(userId, targetUserId);
-        if (!isBuddy) return Forbid();
-
+        var userId = _auth.GetCurrentUserId();
         var entry = await _buddyService.CreateBuddyJournalEntryAsync(
             userId, targetUserId, request.Title, request.Description, request.EntryDate);
 
@@ -185,10 +180,9 @@ public class AccountabilityBuddyController : ApiControllerBase
         Guid entryId,
         IFormFile file)
     {
-        var userId = GetUserId();
+        if (!await _auth.IsOwnerOrBuddyAsync(targetUserId)) return Forbid();
 
-        var isBuddy = await _buddyService.IsBuddyForAsync(userId, targetUserId);
-        if (!isBuddy) return Forbid();
+        var userId = _auth.GetCurrentUserId();
 
         // Validate file
         if (file == null || file.Length == 0) return BadRequest(new { message = "No file provided or file is empty" });
@@ -226,11 +220,9 @@ public class AccountabilityBuddyController : ApiControllerBase
         Guid entryId,
         [FromBody] AddBuddyJournalReactionRequest request)
     {
-        var userId = GetUserId();
+        if (!await _auth.IsOwnerOrBuddyAsync(targetUserId)) return Forbid();
 
-        var isBuddy = await _buddyService.IsBuddyForAsync(userId, targetUserId);
-        if (!isBuddy) return Forbid();
-
+        var userId = _auth.GetCurrentUserId();
         var result = await _buddyService.AddBuddyJournalReactionAsync(userId, targetUserId, entryId, request.Emoji);
 
         if (!result.Success)
@@ -254,11 +246,9 @@ public class AccountabilityBuddyController : ApiControllerBase
         Guid entryId,
         Guid reactionId)
     {
-        var userId = GetUserId();
+        if (!await _auth.IsOwnerOrBuddyAsync(targetUserId)) return Forbid();
 
-        var isBuddy = await _buddyService.IsBuddyForAsync(userId, targetUserId);
-        if (!isBuddy) return Forbid();
-
+        var userId = _auth.GetCurrentUserId();
         var success = await _buddyService.RemoveBuddyJournalReactionAsync(userId, entryId, reactionId);
         if (!success) return NotFound();
 

@@ -89,6 +89,10 @@ builder.Services.AddScoped<IMilestoneService, MilestoneService>();
 // Query Interface - read-only queries with AsNoTracking for better performance
 builder.Services.AddScoped(typeof(IQueryInterface<>), typeof(QueryInterface<>));
 
+// Resource Authorization Service
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IResourceAuthorizationService, ResourceAuthorizationService>();
+
 // Session (for analytics session tracking)
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

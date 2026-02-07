@@ -14,20 +14,23 @@ namespace HelpMotivateMe.Api.Controllers;
 public class GoalsController : ApiControllerBase
 {
     private readonly IAnalyticsService _analyticsService;
+    private readonly IResourceAuthorizationService _auth;
     private readonly AppDbContext _db;
     private readonly IQueryInterface<Goal> _goalsQuery;
 
-    public GoalsController(AppDbContext db, IQueryInterface<Goal> goalsQuery, IAnalyticsService analyticsService)
+    public GoalsController(AppDbContext db, IQueryInterface<Goal> goalsQuery, IAnalyticsService analyticsService,
+        IResourceAuthorizationService auth)
     {
         _db = db;
         _goalsQuery = goalsQuery;
         _analyticsService = analyticsService;
+        _auth = auth;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<GoalResponse>>> GetGoals()
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var sessionId = GetSessionId();
 
         await _analyticsService.LogEventAsync(userId, sessionId, "GoalsPageLoaded");
@@ -46,7 +49,7 @@ public class GoalsController : ApiControllerBase
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<GoalResponse>> GetGoal(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var sessionId = GetSessionId();
 
         await _analyticsService.LogEventAsync(userId, sessionId, "GoalDetailLoaded", new { goalId = id });
@@ -64,7 +67,7 @@ public class GoalsController : ApiControllerBase
     [HttpPost]
     public async Task<ActionResult<GoalResponse>> CreateGoal([FromBody] CreateGoalRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var goal = new Goal
         {
@@ -96,7 +99,7 @@ public class GoalsController : ApiControllerBase
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<GoalResponse>> UpdateGoal(Guid id, [FromBody] UpdateGoalRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var goal = await _db.Goals
             .Include(g => g.Tasks)
@@ -122,7 +125,7 @@ public class GoalsController : ApiControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteGoal(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var goal = await _db.Goals
             .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
@@ -141,7 +144,7 @@ public class GoalsController : ApiControllerBase
     [HttpPatch("{id:guid}/complete")]
     public async Task<ActionResult<GoalResponse>> CompleteGoal(Guid id, [FromQuery] DateOnly? date = null)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var targetDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
 
         var goal = await _db.Goals
@@ -171,7 +174,7 @@ public class GoalsController : ApiControllerBase
     [HttpPut("reorder")]
     public async Task<IActionResult> ReorderGoals([FromBody] List<Guid> goalIds)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var goals = await _db.Goals
             .Where(g => g.UserId == userId && goalIds.Contains(g.Id))

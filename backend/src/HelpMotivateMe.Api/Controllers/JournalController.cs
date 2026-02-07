@@ -17,6 +17,7 @@ public class JournalController : ApiControllerBase
     private const int MaxImagesPerEntry = 5;
     private static readonly string[] AllowedContentTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
     private readonly IAnalyticsService _analyticsService;
+    private readonly IResourceAuthorizationService _auth;
     private readonly AppDbContext _db;
     private readonly IQueryInterface<HabitStack> _habitStacksQuery;
     private readonly IQueryInterface<JournalEntry> _journalEntriesQuery;
@@ -32,7 +33,8 @@ public class JournalController : ApiControllerBase
         IQueryInterface<TaskItem> taskItemsQuery,
         IStorageService storage,
         IAnalyticsService analyticsService,
-        IMilestoneService milestoneService)
+        IMilestoneService milestoneService,
+        IResourceAuthorizationService auth)
     {
         _db = db;
         _journalEntriesQuery = journalEntriesQuery;
@@ -41,12 +43,13 @@ public class JournalController : ApiControllerBase
         _storage = storage;
         _analyticsService = analyticsService;
         _milestoneService = milestoneService;
+        _auth = auth;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<JournalEntryResponse>>> GetEntries([FromQuery] string? filter = null)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var sessionId = GetSessionId();
 
         await _analyticsService.LogEventAsync(userId, sessionId, "JournalPageLoaded");
@@ -81,7 +84,7 @@ public class JournalController : ApiControllerBase
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<JournalEntryResponse>> GetEntry(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var entry = await _journalEntriesQuery
             .Include(j => j.HabitStack)
@@ -100,7 +103,7 @@ public class JournalController : ApiControllerBase
     [HttpPost]
     public async Task<ActionResult<JournalEntryResponse>> CreateEntry([FromBody] CreateJournalEntryRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         // Validate linking constraint
         if (request.HabitStackId.HasValue && request.TaskItemId.HasValue)
@@ -150,7 +153,7 @@ public class JournalController : ApiControllerBase
     public async Task<ActionResult<JournalEntryResponse>> UpdateEntry(Guid id,
         [FromBody] UpdateJournalEntryRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var entry = await _db.JournalEntries
             .Include(j => j.Images)
@@ -196,7 +199,7 @@ public class JournalController : ApiControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteEntry(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var entry = await _db.JournalEntries
             .Include(j => j.Images)
@@ -217,7 +220,7 @@ public class JournalController : ApiControllerBase
     [RequestSizeLimit(MaxImageSizeBytes)]
     public async Task<ActionResult<JournalImageResponse>> UploadImage(Guid id, IFormFile file)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var entry = await _db.JournalEntries
             .Include(j => j.Images)
@@ -276,7 +279,7 @@ public class JournalController : ApiControllerBase
     [HttpDelete("{entryId:guid}/images/{imageId:guid}")]
     public async Task<IActionResult> DeleteImage(Guid entryId, Guid imageId)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var image = await _db.JournalImages
             .Include(i => i.JournalEntry)
@@ -297,21 +300,14 @@ public class JournalController : ApiControllerBase
     public async Task<ActionResult<JournalReactionResponse>> AddReaction(Guid entryId,
         [FromBody] AddJournalReactionRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         // Verify the entry exists and user has access (either owns it or is a buddy)
         var entry = await _db.JournalEntries
-            .FirstOrDefaultAsync(j => j.Id == entryId && j.UserId == userId);
-
-        // If not own entry, check if user is a buddy of the entry owner
-        if (entry == null)
-            entry = await _db.JournalEntries
-                .Where(j => j.Id == entryId)
-                .Where(j => _db.AccountabilityBuddies.Any(b =>
-                    b.UserId == j.UserId && b.BuddyUserId == userId))
-                .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(j => j.Id == entryId);
 
         if (entry == null) return NotFound();
+        if (!await _auth.IsOwnerOrBuddyAsync(entry.UserId)) return NotFound();
 
         // Check if user already reacted with this emoji
         var existingReaction = await _db.JournalReactions
@@ -343,7 +339,7 @@ public class JournalController : ApiControllerBase
     [HttpDelete("{entryId:guid}/reactions/{reactionId:guid}")]
     public async Task<IActionResult> RemoveReaction(Guid entryId, Guid reactionId)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         // Only allow removing own reactions
         var reaction = await _db.JournalReactions
@@ -361,7 +357,7 @@ public class JournalController : ApiControllerBase
     [HttpGet("linkable/habit-stacks")]
     public async Task<ActionResult<List<LinkableHabitStackResponse>>> GetLinkableHabitStacks()
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var stacks = await _habitStacksQuery
             .Where(h => h.UserId == userId && h.IsActive)
@@ -375,7 +371,7 @@ public class JournalController : ApiControllerBase
     [HttpGet("linkable/tasks")]
     public async Task<ActionResult<List<LinkableTaskResponse>>> GetLinkableTasks()
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var tasks = await _taskItemsQuery
             .Include(t => t.Goal)

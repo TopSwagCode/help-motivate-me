@@ -15,21 +15,24 @@ namespace HelpMotivateMe.Api.Controllers;
 [Authorize]
 public class AiController : ApiControllerBase
 {
+    private readonly IResourceAuthorizationService _auth;
     private readonly AppDbContext _db;
     private readonly ILogger<AiController> _logger;
     private readonly IOpenAiService _openAiService;
 
-    public AiController(IOpenAiService openAiService, ILogger<AiController> logger, AppDbContext db)
+    public AiController(IOpenAiService openAiService, ILogger<AiController> logger, AppDbContext db,
+        IResourceAuthorizationService auth)
     {
         _openAiService = openAiService;
         _logger = logger;
         _db = db;
+        _auth = auth;
     }
 
     [HttpPost("onboarding/chat")]
     public async Task StreamChat([FromBody] ChatRequest request, CancellationToken cancellationToken)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         Response.ContentType = "text/event-stream";
         Response.Headers.CacheControl = "no-cache";
@@ -75,7 +78,7 @@ public class AiController : ApiControllerBase
         IFormFile file,
         CancellationToken cancellationToken)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         if (file == null || file.Length == 0) return BadRequest("No audio file provided");
 
@@ -108,7 +111,7 @@ public class AiController : ApiControllerBase
     [HttpPost("general/chat")]
     public async Task StreamGeneralChat([FromBody] GeneralChatRequest request, CancellationToken cancellationToken)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         Response.ContentType = "text/event-stream";
         Response.Headers.CacheControl = "no-cache";
@@ -168,7 +171,7 @@ public class AiController : ApiControllerBase
     [HttpGet("context")]
     public async Task<ActionResult<AiContextResponse>> GetAiContext(CancellationToken cancellationToken)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var identities = await _db.Identities
             .Where(i => i.UserId == userId)
@@ -192,7 +195,7 @@ public class AiController : ApiControllerBase
         [FromBody] CreateIdentityFromAiRequest request,
         CancellationToken cancellationToken)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var identity = new Identity
         {

@@ -15,6 +15,7 @@ public abstract class ApiControllerBase : ControllerBase
     /// <summary>
     ///     Gets the authenticated user's ID from claims.
     /// </summary>
+    [Obsolete("Use IResourceAuthorizationService.GetCurrentUserId() instead.")]
     protected Guid GetUserId()
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);

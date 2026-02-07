@@ -13,6 +13,7 @@ namespace HelpMotivateMe.Api.Controllers;
 public class HabitStacksController : ApiControllerBase
 {
     private readonly IAnalyticsService _analyticsService;
+    private readonly IResourceAuthorizationService _auth;
     private readonly AppDbContext _db;
     private readonly IHabitStackService _habitStackService;
     private readonly IQueryInterface<HabitStack> _habitStacksQuery;
@@ -23,19 +24,21 @@ public class HabitStacksController : ApiControllerBase
         IQueryInterface<HabitStack> habitStacksQuery,
         IAnalyticsService analyticsService,
         IMilestoneService milestoneService,
-        IHabitStackService habitStackService)
+        IHabitStackService habitStackService,
+        IResourceAuthorizationService auth)
     {
         _db = db;
         _habitStacksQuery = habitStacksQuery;
         _analyticsService = analyticsService;
         _milestoneService = milestoneService;
         _habitStackService = habitStackService;
+        _auth = auth;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<HabitStackResponse>>> GetHabitStacks()
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var sessionId = GetSessionId();
 
         await _analyticsService.LogEventAsync(userId, sessionId, "HabitStacksPageLoaded");
@@ -54,7 +57,7 @@ public class HabitStacksController : ApiControllerBase
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<HabitStackResponse>> GetHabitStack(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var stack = await _habitStacksQuery
             .Include(hs => hs.Identity)
@@ -69,7 +72,7 @@ public class HabitStacksController : ApiControllerBase
     [HttpPost]
     public async Task<ActionResult<HabitStackResponse>> CreateHabitStack([FromBody] CreateHabitStackRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         // Get max sort order for user's habit stacks
         var maxSortOrder = await _db.HabitStacks
@@ -111,7 +114,7 @@ public class HabitStacksController : ApiControllerBase
     public async Task<ActionResult<HabitStackResponse>> UpdateHabitStack(Guid id,
         [FromBody] UpdateHabitStackRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var stack = await _db.HabitStacks
             .Include(hs => hs.Identity)
@@ -137,7 +140,7 @@ public class HabitStacksController : ApiControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteHabitStack(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var stack = await _db.HabitStacks
             .FirstOrDefaultAsync(hs => hs.Id == id && hs.UserId == userId);
@@ -153,7 +156,7 @@ public class HabitStacksController : ApiControllerBase
     [HttpPut("reorder")]
     public async Task<IActionResult> ReorderHabitStacks([FromBody] ReorderHabitStacksRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var stacks = await _db.HabitStacks
             .Where(hs => hs.UserId == userId && request.StackIds.Contains(hs.Id))
@@ -173,7 +176,7 @@ public class HabitStacksController : ApiControllerBase
     [HttpPost("{id:guid}/items")]
     public async Task<ActionResult<HabitStackResponse>> AddStackItem(Guid id, [FromBody] AddStackItemRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var stack = await _db.HabitStacks
             .Include(hs => hs.Identity)
@@ -202,7 +205,7 @@ public class HabitStacksController : ApiControllerBase
     public async Task<ActionResult<HabitStackResponse>> ReorderStackItems(Guid id,
         [FromBody] ReorderStackItemsRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var stack = await _db.HabitStacks
             .Include(hs => hs.Identity)
@@ -225,7 +228,7 @@ public class HabitStacksController : ApiControllerBase
     [HttpPut("items/{itemId:guid}")]
     public async Task<IActionResult> UpdateStackItem(Guid itemId, [FromBody] UpdateStackItemRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var item = await _db.HabitStackItems
             .Include(i => i.HabitStack)
@@ -243,7 +246,7 @@ public class HabitStacksController : ApiControllerBase
     [HttpDelete("items/{itemId:guid}")]
     public async Task<IActionResult> DeleteStackItem(Guid itemId)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var item = await _db.HabitStackItems
             .Include(i => i.HabitStack)
@@ -265,7 +268,7 @@ public class HabitStacksController : ApiControllerBase
         Guid itemId,
         [FromQuery] DateOnly? date = null)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var sessionId = GetSessionId();
         var targetDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
 
@@ -293,7 +296,7 @@ public class HabitStacksController : ApiControllerBase
         Guid id,
         [FromQuery] DateOnly? date = null)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var targetDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
 
         var result = await _habitStackService.CompleteAllItemsAsync(id, userId, targetDate);

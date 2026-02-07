@@ -23,21 +23,23 @@ public class IdentitiesController : ApiControllerBase
     ];
 
     private readonly IAnalyticsService _analyticsService;
+    private readonly IResourceAuthorizationService _auth;
     private readonly AppDbContext _db;
     private readonly IQueryInterface<Identity> _identitiesQuery;
 
     public IdentitiesController(AppDbContext db, IQueryInterface<Identity> identitiesQuery,
-        IAnalyticsService analyticsService)
+        IAnalyticsService analyticsService, IResourceAuthorizationService auth)
     {
         _db = db;
         _identitiesQuery = identitiesQuery;
         _analyticsService = analyticsService;
+        _auth = auth;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<IdentityResponse>>> GetIdentities()
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var sessionId = GetSessionId();
 
         await _analyticsService.LogEventAsync(userId, sessionId, "IdentitiesPageLoaded");
@@ -57,7 +59,7 @@ public class IdentitiesController : ApiControllerBase
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<IdentityResponse>> GetIdentity(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var identity = await _identitiesQuery
             .Include(i => i.Tasks)
@@ -74,7 +76,7 @@ public class IdentitiesController : ApiControllerBase
     [HttpPost]
     public async Task<ActionResult<IdentityResponse>> CreateIdentity([FromBody] CreateIdentityRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var identity = new Identity
         {
@@ -94,7 +96,7 @@ public class IdentitiesController : ApiControllerBase
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<IdentityResponse>> UpdateIdentity(Guid id, [FromBody] UpdateIdentityRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var identity = await _db.Identities
             .Include(i => i.Tasks)
@@ -118,7 +120,7 @@ public class IdentitiesController : ApiControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteIdentity(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var identity = await _db.Identities
             .FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
@@ -134,7 +136,7 @@ public class IdentitiesController : ApiControllerBase
     [HttpGet("{id:guid}/stats")]
     public async Task<ActionResult<IdentityStatsResponse>> GetIdentityStats(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var identity = await _identitiesQuery
             .Include(i => i.Tasks)

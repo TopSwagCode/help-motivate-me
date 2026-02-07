@@ -12,6 +12,7 @@ namespace HelpMotivateMe.Api.Controllers;
 public class TodayController : ApiControllerBase
 {
     private readonly IAnalyticsService _analyticsService;
+    private readonly IResourceAuthorizationService _auth;
     private readonly IDailyCommitmentService _commitmentService;
     private readonly IIdentityScoreService _identityScoreService;
     private readonly ITodayViewService _todayViewService;
@@ -20,12 +21,14 @@ public class TodayController : ApiControllerBase
         ITodayViewService todayViewService,
         IIdentityScoreService identityScoreService,
         IDailyCommitmentService commitmentService,
-        IAnalyticsService analyticsService)
+        IAnalyticsService analyticsService,
+        IResourceAuthorizationService auth)
     {
         _todayViewService = todayViewService;
         _identityScoreService = identityScoreService;
         _commitmentService = commitmentService;
         _analyticsService = analyticsService;
+        _auth = auth;
     }
 
     /// <summary>
@@ -34,7 +37,7 @@ public class TodayController : ApiControllerBase
     [HttpGet]
     public async Task<ActionResult<TodayViewResponse>> GetTodayView([FromQuery] DateOnly? date = null)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var sessionId = GetSessionId();
         var targetDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
 

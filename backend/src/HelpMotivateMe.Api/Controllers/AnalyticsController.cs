@@ -13,18 +13,21 @@ namespace HelpMotivateMe.Api.Controllers;
 public class AnalyticsController : ApiControllerBase
 {
     private readonly IAnalyticsService _analyticsService;
+    private readonly IResourceAuthorizationService _auth;
     private readonly IQueryInterface<TaskItem> _tasks;
 
-    public AnalyticsController(IQueryInterface<TaskItem> tasks, IAnalyticsService analyticsService)
+    public AnalyticsController(IQueryInterface<TaskItem> tasks, IAnalyticsService analyticsService,
+        IResourceAuthorizationService auth)
     {
         _tasks = tasks;
         _analyticsService = analyticsService;
+        _auth = auth;
     }
 
     [HttpGet("streaks")]
     public async Task<ActionResult<StreakSummaryResponse>> GetAllStreaks()
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var sessionId = GetSessionId();
 
         await _analyticsService.LogEventAsync(userId, sessionId, "AnalyticsPageLoaded");
@@ -57,7 +60,7 @@ public class AnalyticsController : ApiControllerBase
     [HttpGet("completion-rates")]
     public async Task<ActionResult<CompletionRateResponse>> GetCompletionRates()
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         // Get all tasks for this user using read-only query interface
         var tasks = await _tasks
@@ -82,7 +85,7 @@ public class AnalyticsController : ApiControllerBase
     [HttpGet("heatmap")]
     public async Task<ActionResult<IEnumerable<object>>> GetHeatmapData([FromQuery] int days = 90)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var startDate = today.AddDays(-days);
 

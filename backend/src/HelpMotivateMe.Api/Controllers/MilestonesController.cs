@@ -9,11 +9,13 @@ namespace HelpMotivateMe.Api.Controllers;
 [Route("api/milestones")]
 public class MilestonesController : ApiControllerBase
 {
+    private readonly IResourceAuthorizationService _auth;
     private readonly IMilestoneService _milestoneService;
 
-    public MilestonesController(IMilestoneService milestoneService)
+    public MilestonesController(IMilestoneService milestoneService, IResourceAuthorizationService auth)
     {
         _milestoneService = milestoneService;
+        _auth = auth;
     }
 
     /// <summary>
@@ -22,7 +24,7 @@ public class MilestonesController : ApiControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UserMilestoneResponse>>> GetMilestones()
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var milestones = await _milestoneService.GetUserMilestonesAsync(userId);
         return Ok(milestones);
     }
@@ -33,7 +35,7 @@ public class MilestonesController : ApiControllerBase
     [HttpGet("unseen")]
     public async Task<ActionResult<IEnumerable<UserMilestoneResponse>>> GetUnseenMilestones()
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var milestones = await _milestoneService.GetUnseenMilestonesAsync(userId);
         return Ok(milestones);
     }
@@ -44,7 +46,7 @@ public class MilestonesController : ApiControllerBase
     [HttpPost("mark-seen")]
     public async Task<IActionResult> MarkSeen([FromBody] MarkSeenRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         await _milestoneService.MarkMilestonesSeenAsync(userId, request.MilestoneIds);
         return NoContent();
     }
@@ -55,7 +57,7 @@ public class MilestonesController : ApiControllerBase
     [HttpGet("stats")]
     public async Task<ActionResult<UserStatsResponse>> GetStats()
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var stats = await _milestoneService.GetUserStatsAsync(userId);
         return Ok(stats);
     }

@@ -13,25 +13,27 @@ namespace HelpMotivateMe.Api.Controllers;
 public class TasksController : ApiControllerBase
 {
     private readonly IAnalyticsService _analyticsService;
+    private readonly IResourceAuthorizationService _auth;
     private readonly AppDbContext _db;
     private readonly IQueryInterface<Goal> _goalsQuery;
     private readonly IMilestoneService _milestoneService;
     private readonly IQueryInterface<TaskItem> _taskItemsQuery;
 
     public TasksController(AppDbContext db, IQueryInterface<TaskItem> taskItemsQuery, IQueryInterface<Goal> goalsQuery,
-        IAnalyticsService analyticsService, IMilestoneService milestoneService)
+        IAnalyticsService analyticsService, IMilestoneService milestoneService, IResourceAuthorizationService auth)
     {
         _db = db;
         _taskItemsQuery = taskItemsQuery;
         _goalsQuery = goalsQuery;
         _analyticsService = analyticsService;
         _milestoneService = milestoneService;
+        _auth = auth;
     }
 
     [HttpGet("api/goals/{goalId:guid}/tasks")]
     public async Task<ActionResult<List<TaskResponse>>> GetTasks(Guid goalId)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         // Verify goal belongs to user
         var goalExists = await _goalsQuery.AnyAsync(g => g.Id == goalId && g.UserId == userId);
@@ -53,7 +55,7 @@ public class TasksController : ApiControllerBase
     [HttpGet("api/tasks/{id:guid}")]
     public async Task<ActionResult<TaskResponse>> GetTask(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var task = await _taskItemsQuery
             .Include(t => t.Goal)
@@ -71,7 +73,7 @@ public class TasksController : ApiControllerBase
     [HttpPost("api/goals/{goalId:guid}/tasks")]
     public async Task<ActionResult<TaskResponse>> CreateTask(Guid goalId, [FromBody] CreateTaskRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         // Verify goal belongs to user
         var goal = await _db.Goals.FirstOrDefaultAsync(g => g.Id == goalId && g.UserId == userId);
@@ -105,7 +107,7 @@ public class TasksController : ApiControllerBase
     [HttpPost("api/tasks/{id:guid}/subtasks")]
     public async Task<ActionResult<TaskResponse>> CreateSubtask(Guid id, [FromBody] CreateTaskRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var parentTask = await _db.TaskItems
             .Include(t => t.Goal)
@@ -142,7 +144,7 @@ public class TasksController : ApiControllerBase
     [HttpPut("api/tasks/{id:guid}")]
     public async Task<ActionResult<TaskResponse>> UpdateTask(Guid id, [FromBody] UpdateTaskRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var task = await _db.TaskItems
             .Include(t => t.Goal)
@@ -173,7 +175,7 @@ public class TasksController : ApiControllerBase
     [HttpDelete("api/tasks/{id:guid}")]
     public async Task<IActionResult> DeleteTask(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var task = await _db.TaskItems
             .Include(t => t.Goal)
@@ -193,7 +195,7 @@ public class TasksController : ApiControllerBase
     [HttpPatch("api/tasks/{id:guid}/complete")]
     public async Task<ActionResult<TaskResponse>> CompleteTask(Guid id, [FromQuery] DateOnly? date = null)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var targetDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
 
         var task = await _db.TaskItems
@@ -241,7 +243,7 @@ public class TasksController : ApiControllerBase
     public async Task<ActionResult<CompleteMultipleTasksResponse>> CompleteMultipleTasks(
         [FromBody] CompleteMultipleTasksRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var targetDate = request.Date ?? DateOnly.FromDateTime(DateTime.UtcNow);
 
         var tasks = await _db.TaskItems
@@ -272,7 +274,7 @@ public class TasksController : ApiControllerBase
     [HttpPatch("api/tasks/{id:guid}/postpone")]
     public async Task<ActionResult<TaskResponse>> PostponeTask(Guid id, [FromBody] PostponeTaskRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var task = await _db.TaskItems
             .Include(t => t.Goal)
@@ -295,7 +297,7 @@ public class TasksController : ApiControllerBase
     [HttpPut("api/tasks/reorder")]
     public async Task<IActionResult> ReorderTasks([FromBody] List<Guid> taskIds)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var tasks = await _db.TaskItems
             .Include(t => t.Goal)
@@ -316,7 +318,7 @@ public class TasksController : ApiControllerBase
     [HttpPost("api/tasks/{id:guid}/tiny-version")]
     public async Task<ActionResult<TaskResponse>> CreateTinyVersion(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var task = await _db.TaskItems
             .Include(t => t.Goal)

@@ -10,17 +10,20 @@ namespace HelpMotivateMe.Api.Controllers;
 public class IdentityProofsController : ApiControllerBase
 {
     private readonly IAnalyticsService _analyticsService;
+    private readonly IResourceAuthorizationService _auth;
     private readonly IMilestoneService _milestoneService;
     private readonly IIdentityProofService _proofService;
 
     public IdentityProofsController(
         IIdentityProofService proofService,
         IAnalyticsService analyticsService,
-        IMilestoneService milestoneService)
+        IMilestoneService milestoneService,
+        IResourceAuthorizationService auth)
     {
         _proofService = proofService;
         _analyticsService = analyticsService;
         _milestoneService = milestoneService;
+        _auth = auth;
     }
 
     /// <summary>
@@ -31,7 +34,7 @@ public class IdentityProofsController : ApiControllerBase
         [FromQuery] DateOnly? startDate = null,
         [FromQuery] DateOnly? endDate = null)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var proofs = await _proofService.GetProofsAsync(userId, startDate, endDate);
         return Ok(proofs);
     }
@@ -42,7 +45,7 @@ public class IdentityProofsController : ApiControllerBase
     [HttpPost]
     public async Task<ActionResult<IdentityProofResponse>> CreateProof([FromBody] CreateIdentityProofRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var sessionId = GetSessionId();
 
         try
@@ -73,7 +76,7 @@ public class IdentityProofsController : ApiControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteProof(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var sessionId = GetSessionId();
 
         var deleted = await _proofService.DeleteProofAsync(userId, id);

@@ -12,6 +12,7 @@ namespace HelpMotivateMe.Api.Controllers;
 [Authorize]
 public class PushNotificationsController : ApiControllerBase
 {
+    private readonly IResourceAuthorizationService _auth;
     private readonly AppDbContext _db;
     private readonly IPushNotificationService _pushService;
     private readonly IQueryInterface<PushSubscription> _pushSubscriptionsQuery;
@@ -21,12 +22,14 @@ public class PushNotificationsController : ApiControllerBase
         AppDbContext db,
         IQueryInterface<PushSubscription> pushSubscriptionsQuery,
         IQueryInterface<User> usersQuery,
-        IPushNotificationService pushService)
+        IPushNotificationService pushService,
+        IResourceAuthorizationService auth)
     {
         _db = db;
         _pushSubscriptionsQuery = pushSubscriptionsQuery;
         _usersQuery = usersQuery;
         _pushService = pushService;
+        _auth = auth;
     }
 
     /// <summary>
@@ -35,7 +38,7 @@ public class PushNotificationsController : ApiControllerBase
     [HttpPost("subscribe")]
     public async Task<ActionResult> Subscribe([FromBody] PushSubscriptionRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         // Check if this subscription already exists
         var existing = await _db.PushSubscriptions
@@ -73,7 +76,7 @@ public class PushNotificationsController : ApiControllerBase
     [HttpDelete("unsubscribe")]
     public async Task<ActionResult> Unsubscribe([FromQuery] string? endpoint = null)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         if (!string.IsNullOrEmpty(endpoint))
         {
@@ -103,7 +106,7 @@ public class PushNotificationsController : ApiControllerBase
     [HttpGet("status")]
     public async Task<ActionResult<PushSubscriptionsStatusResponse>> GetStatus()
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var subscriptions = await _pushSubscriptionsQuery
             .Where(s => s.UserId == userId)
             .Select(s => new PushSubscriptionStatusResponse(

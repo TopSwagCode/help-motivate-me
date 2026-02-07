@@ -10,14 +10,17 @@ namespace HelpMotivateMe.Api.Controllers;
 public class DailyCommitmentController : ApiControllerBase
 {
     private readonly IAnalyticsService _analyticsService;
+    private readonly IResourceAuthorizationService _auth;
     private readonly IDailyCommitmentService _commitmentService;
 
     public DailyCommitmentController(
         IDailyCommitmentService commitmentService,
-        IAnalyticsService analyticsService)
+        IAnalyticsService analyticsService,
+        IResourceAuthorizationService auth)
     {
         _commitmentService = commitmentService;
         _analyticsService = analyticsService;
+        _auth = auth;
     }
 
     /// <summary>
@@ -26,7 +29,7 @@ public class DailyCommitmentController : ApiControllerBase
     [HttpGet]
     public async Task<ActionResult<DailyCommitmentResponse?>> GetCommitment([FromQuery] DateOnly? date = null)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var targetDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
 
         var commitment = await _commitmentService.GetCommitmentAsync(userId, targetDate);
@@ -40,7 +43,7 @@ public class DailyCommitmentController : ApiControllerBase
     [HttpGet("options")]
     public async Task<ActionResult<CommitmentOptionsResponse>> GetOptions()
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var sessionId = GetSessionId();
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
@@ -57,7 +60,7 @@ public class DailyCommitmentController : ApiControllerBase
     [HttpGet("suggestions")]
     public async Task<ActionResult<ActionSuggestionsResponse>> GetSuggestions([FromQuery] Guid identityId)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var suggestions = await _commitmentService.GetActionSuggestionsAsync(userId, identityId);
 
@@ -70,7 +73,7 @@ public class DailyCommitmentController : ApiControllerBase
     [HttpGet("yesterday")]
     public async Task<ActionResult<YesterdayCommitmentResponse>> GetYesterdayCommitment()
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
 
         var yesterday = await _commitmentService.GetYesterdayCommitmentAsync(userId);
 
@@ -84,7 +87,7 @@ public class DailyCommitmentController : ApiControllerBase
     public async Task<ActionResult<DailyCommitmentResponse>> CreateCommitment(
         [FromBody] CreateDailyCommitmentRequest request)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var sessionId = GetSessionId();
 
         try
@@ -113,7 +116,7 @@ public class DailyCommitmentController : ApiControllerBase
     [HttpPut("{id:guid}/complete")]
     public async Task<ActionResult<DailyCommitmentResponse>> CompleteCommitment(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var sessionId = GetSessionId();
 
         try
@@ -140,7 +143,7 @@ public class DailyCommitmentController : ApiControllerBase
     [HttpPut("{id:guid}/dismiss")]
     public async Task<ActionResult<DailyCommitmentResponse>> DismissCommitment(Guid id)
     {
-        var userId = GetUserId();
+        var userId = _auth.GetCurrentUserId();
         var sessionId = GetSessionId();
 
         try
