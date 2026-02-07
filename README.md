@@ -376,46 +376,40 @@ dotnet publish src/HelpMotivateMe.Api -c Release -o publish
 ## Environment Configuration
 
 ### Backend (`appsettings.json`)
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Database=helpmotivateme;Username=postgres;Password=postgres"
-  },
-  "Cors": {
-    "AllowedOrigins": ["http://localhost:5173"]
-  },
-  "OAuth": {
-    "GitHub": {
-      "ClientId": "",
-      "ClientSecret": ""
-    },
-    "Google": {
-      "ClientId": "",
-      "ClientSecret": ""
-    },
-    "LinkedIn": {
-      "ClientId": "",
-      "ClientSecret": ""
-    },
-    "Facebook": {
-      "AppId": "",
-      "AppSecret": ""
-    }
-  },
-  "Smtp": {
-    "Host": "localhost",
-    "Port": 1025,
-    "FromEmail": "noreply@helpmotivateme.com",
-    "FromName": "Help Motivate Me"
-  }
-}
-```
 
-### Frontend
-Create `.env` file:
-```env
-VITE_API_URL=http://localhost:5001
-```
+All configuration sections used by the backend:
+
+| Section | Key | Default | Description |
+|---------|-----|---------|-------------|
+| **ConnectionStrings** | `DefaultConnection` | `Host=localhost;Database=helpmotivateme;...` | PostgreSQL connection string |
+| **FrontendUrl** | _(root)_ | `http://localhost:5173` | Base URL of the frontend (used in emails, invite links) |
+| **Auth** | `AllowSignups` | `true` | Enable/disable new user registration |
+| **Cors** | `AllowedOrigins` | `["http://localhost:5173"]` | Allowed CORS origins (array) |
+| **OAuth:GitHub** | `ClientId`, `ClientSecret` | `""` | GitHub OAuth credentials |
+| **OAuth:Google** | `ClientId`, `ClientSecret` | `""` | Google OAuth credentials |
+| **OAuth:LinkedIn** | `ClientId`, `ClientSecret` | `""` | LinkedIn OAuth credentials |
+| **OAuth:Facebook** | `AppId`, `AppSecret` | `""` | Facebook OAuth credentials |
+| **Email** | `SmtpHost` | `localhost` | SMTP server hostname |
+| | `SmtpPort` | `1025` | SMTP server port (465=SSL, 587=StartTLS, other=none) |
+| | `SmtpUsername` | `""` | SMTP auth username (optional, leave empty for local dev) |
+| | `SmtpPassword` | `""` | SMTP auth password (optional, leave empty for local dev) |
+| | `FromEmail` | `noreply@helpmotivateme.local` | Sender email address |
+| | `FromName` | `Help Motivate Me` | Sender display name |
+| **OpenAI** | `ApiKey` | `""` | OpenAI API key (required for AI features: onboarding, command bar, voice transcription) |
+| **LocalStorage** | `BasePath` | `/app/uploads` | Directory for uploaded files (journal images) |
+| | `BaseUrl` | `/api/files` | Public URL prefix for serving uploaded files |
+| **Vapid** | `Subject` | `mailto:admin@helpmotivateme.app` | VAPID contact URI for web push |
+| | `PublicKey` | _(placeholder)_ | VAPID public key (generate with `npx web-push generate-vapid-keys`) |
+| | `PrivateKey` | _(placeholder)_ | VAPID private key |
+| **AiBudget** | `GlobalLimitLast30DaysUsd` | `5.0` | Max AI spend across all users in 30 days (USD) |
+| | `PerUserLimitLast30DaysUsd` | `0.25` | Max AI spend per user in 30 days (USD) |
+
+### Frontend (`.env`)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `VITE_API_URL` | _(empty, uses relative URLs)_ | Backend API base URL (e.g. `http://localhost:5001`) |
+| `VITE_VAPID_PUBLIC_KEY` | _(none)_ | VAPID public key for push notifications (must match backend) |
 
 ## Development Tools
 
