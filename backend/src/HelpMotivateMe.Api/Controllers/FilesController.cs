@@ -1,11 +1,9 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 
 namespace HelpMotivateMe.Api.Controllers;
 
 [ApiController]
-[Authorize]
 [Route("api/files")]
 public class FilesController : ControllerBase
 {
@@ -28,11 +26,13 @@ public class FilesController : ControllerBase
 
         // Strip any existing api/files/ prefix to handle legacy data with bad keys
         var cleanPath = filepath.StartsWith("api/files/") ? filepath.Substring("api/files/".Length) : filepath;
-        var fullPath = Path.Combine(_basePath, cleanPath);
+        // Normalize the path to prevent directory traversal attacks
+        var normalizedPath = cleanPath.Replace("..", "").Replace("\\", "/");
+        var fullPath = Path.Combine(_basePath, normalizedPath);
 
         // Ensure the resolved path is still within the base path (security check)
         var resolvedPath = Path.GetFullPath(fullPath);
-        var resolvedBasePath = Path.GetFullPath(_basePath + Path.DirectorySeparatorChar);
+        var resolvedBasePath = Path.GetFullPath(_basePath);
 
         if (!resolvedPath.StartsWith(resolvedBasePath))
         {
