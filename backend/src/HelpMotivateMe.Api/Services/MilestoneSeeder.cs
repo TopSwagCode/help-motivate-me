@@ -58,7 +58,7 @@ public class MilestoneSeeder : IHostedService
                 Icon = "🎉",
                 TriggerEvent = "UserLoggedIn",
                 RuleType = "count",
-                RuleData = JsonSerializer.Serialize(new { field = "login_count", threshold = 1 }),
+                RuleData = JsonSerializer.Serialize(new { field = "login_count", threshold = 2 }),
                 SortOrder = 1,
                 IsActive = true
             },

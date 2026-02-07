@@ -2,16 +2,12 @@ services:
   traefik:
     image: traefik:v3.3
     container_name: helpmotivateme-traefik
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
     ports:
       - "80:80"
       - "8080:8080"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./traefik-dynamic.yml:/etc/traefik/dynamic.yml:ro
 
   postgres:
     image: postgres:16-alpine
@@ -58,7 +54,7 @@ services:
       - FrontendUrl=http://localhost
       - Cors__AllowedOrigins__0=http://localhost
       # Auth
-      - Auth__AllowSignups=false
+      - Auth__AllowSignups=true
       # Email (points at mailpit by default)
       - Email__SmtpHost=mailpit
       - Email__SmtpPort=1025
@@ -87,12 +83,6 @@ services:
       # File storage
       - LocalStorage__BasePath=/app/uploads
       - LocalStorage__BaseUrl=/api/files
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.api.rule=PathPrefix(`/api`)"
-      - "traefik.http.routers.api.entrypoints=web"
-      - "traefik.http.routers.api.priority=100"
-      - "traefik.http.services.api.loadbalancer.server.port=5001"
     depends_on:
       postgres:
         condition: service_healthy
@@ -112,12 +102,6 @@ services:
         VITE_VAPID_PUBLIC_KEY: "YOUR_VAPID_PUBLIC_KEY"
     container_name: helpmotivateme-frontend
     restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
-      - "traefik.http.routers.frontend.entrypoints=web"
-      - "traefik.http.routers.frontend.priority=1"
-      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
 
 volumes:
   postgres_data:

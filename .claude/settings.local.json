@@ -18,7 +18,10 @@
       "Bash(dotnet tool restore:*)",
       "Bash(dotnet restore:*)",
       "Bash(find:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(docker context ls:*)",
+      "Bash(docker version:*)",
+      "Bash(docker exec:*)"
     ]
   }
 }
