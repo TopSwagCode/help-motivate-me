@@ -237,7 +237,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // OpenAPI + Scalar API Docs (admin-only)
-app.MapOpenApi()
+app.MapOpenApi("/api/openapi/{documentName}.json")
     .RequireAuthorization(policy => policy.RequireRole("Admin"));
 
 var frontendUrl = builder.Configuration["FrontendUrl"] ?? "http://localhost:5173";
@@ -256,14 +256,14 @@ app.MapScalarApiReference("/api/docs", options =>
                     --scalar-background-1: #faf7f2;
                     --scalar-background-2: #f5f0e8;
                     --scalar-background-3: #fdfcfa;
-                    --scalar-color-1: #4a3830;
-                    --scalar-color-2: #735748;
+                    --scalar-color-1: #5f483d;
+                    --scalar-color-2: #8a6a54;
                     --scalar-color-3: #9a7d64;
                     --scalar-color-accent: #d4944c;
                     --scalar-border-color: rgba(212, 148, 76, 0.2);
                     --scalar-sidebar-background-1: #f5f0e8;
-                    --scalar-sidebar-color-1: #4a3830;
-                    --scalar-sidebar-color-2: #735748;
+                    --scalar-sidebar-color-1: #5f483d;
+                    --scalar-sidebar-color-2: #8a6a54;
                     --scalar-button-1: #d4944c;
                     --scalar-button-1-hover: #b87a3a;
                     --scalar-button-1-color: #ffffff;
@@ -281,7 +281,7 @@ app.MapScalarApiReference("/api/docs", options =>
                     font-family: 'Nunito', sans-serif;
                     font-size: 13px;
                     font-weight: 600;
-                    color: #735748;
+                    color: #8a6a54;
                     background: #f5f0e8;
                     border: 1px solid rgba(212, 148, 76, 0.3);
                     border-radius: 999px;
