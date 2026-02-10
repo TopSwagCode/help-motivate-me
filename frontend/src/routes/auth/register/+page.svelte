@@ -17,7 +17,7 @@
 		const result = await auth.register({
 			email,
 			password,
-			displayName: displayName || undefined
+			displayName: displayName || null
 		});
 		loading = false;
 

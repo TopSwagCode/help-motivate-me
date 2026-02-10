@@ -1,5 +1,5 @@
 import { apiGet, apiPost } from './client';
-import type { WhitelistCheckResponse, WaitlistSignupResponse } from '$lib/types/waitlist';
+import type { WhitelistCheckResponse, WaitlistSignupResponse } from '$lib/types';
 
 export interface WaitlistSignupRequest {
 	email: string;

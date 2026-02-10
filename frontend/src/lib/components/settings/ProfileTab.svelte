@@ -24,7 +24,7 @@
 
 		try {
 			const updatedUser = await updateProfile({
-				displayName: displayName.trim() || undefined
+				displayName: displayName.trim() || null
 			});
 			auth.updateUser(updatedUser);
 			success = get(t)('settings.profile.updated');

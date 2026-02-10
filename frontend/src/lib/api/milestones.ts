@@ -1,13 +1,13 @@
 import { apiGet, apiPost, apiPut, apiPatch, apiDelete } from './client';
-import type { 
-	MilestoneDefinition, 
-	UserMilestone, 
-	UserStats, 
+import type {
+	MilestoneDefinition,
+	UserMilestone,
+	UserStats,
 	MarkSeenRequest,
 	CreateMilestoneRequest,
 	UpdateMilestoneRequest,
 	ToggleMilestoneRequest
-} from '$lib/types/milestone';
+} from '$lib/types';
 
 export async function getMyMilestones(): Promise<UserMilestone[]> {
 	return apiGet<UserMilestone[]>('/milestones');

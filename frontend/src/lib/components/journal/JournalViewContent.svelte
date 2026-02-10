@@ -3,7 +3,7 @@
 	import { get } from 'svelte/store';
 	import { commandBar } from '$lib/stores/commandBar';
 	import type { JournalEntry, JournalImage, JournalReaction } from '$lib/types';
-	import type { BuddyJournalEntry, BuddyJournalImage, BuddyJournalReaction } from '$lib/types/buddy';
+	import type { BuddyJournalEntry, BuddyJournalImage, BuddyJournalReaction } from '$lib/types';
 	import JournalReactions from './JournalReactions.svelte';
 	import type { JournalFilter } from '$lib/api/journal';
 

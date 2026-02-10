@@ -8,7 +8,7 @@ public record AdminUserResponse(
     string MembershipTier,
     string Role,
     DateTime CreatedAt,
-    DateTime? LastActiveAt,
+    DateTime? UpdatedAt,
     int AiCallsCount,
     decimal AiTotalCostUsd
 );

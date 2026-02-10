@@ -21,8 +21,8 @@
 	} from '$lib/api/aiGeneral';
 	import { getIdentities } from '$lib/api/identities';
 	import { getGoals } from '$lib/api/goals';
-	import type { Identity } from '$lib/types/identity';
-	import type { Goal } from '$lib/types/goal';
+	import type { Identity } from '$lib/types';
+	import type { Goal } from '$lib/types';
 
 	interface Props {
 		isOpen: boolean;

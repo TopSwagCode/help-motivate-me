@@ -32,7 +32,7 @@
 	// Create popup state
 	let showCreatePopup = $state(false);
 	let createName = $state('');
-	let createIdentityId = $state<string | undefined>(undefined);
+	let createIdentityId = $state<string | null>(null);
 	let createItems = $state<HabitStackItemRequest[]>([{ cueDescription: '', habitDescription: '' }]);
 	let createLoading = $state(false);
 	let createError = $state('');
@@ -42,7 +42,7 @@
 	let showEditPopup = $state(false);
 	let editingStack = $state<HabitStack | null>(null);
 	let editName = $state('');
-	let editIdentityId = $state<string | undefined>(undefined);
+	let editIdentityId = $state<string | null>(null);
 	let editIsActive = $state(true);
 	let editLoading = $state(false);
 	let editError = $state('');
@@ -98,7 +98,7 @@
 	// Create popup functions
 	function openCreatePopup() {
 		createName = '';
-		createIdentityId = undefined;
+		createIdentityId = null;
 		createItems = [{ cueDescription: '', habitDescription: '' }];
 		createError = '';
 		showCreatePopup = true;
@@ -107,7 +107,7 @@
 	function closeCreatePopup() {
 		showCreatePopup = false;
 		createName = '';
-		createIdentityId = undefined;
+		createIdentityId = null;
 		createItems = [{ cueDescription: '', habitDescription: '' }];
 		createError = '';
 	}
@@ -188,10 +188,12 @@
 		createError = '';
 
 		try {
-			const stack = await createHabitStack({ 
-				name: createName.trim(), 
+			const stack = await createHabitStack({
+				name: createName.trim(),
+				description: null,
 				identityId: createIdentityId,
-				items: validItems 
+				triggerCue: null,
+				items: validItems
 			});
 			stacks = [stack, ...stacks];
 			closeCreatePopup();
@@ -206,7 +208,7 @@
 	function openEditPopup(stack: HabitStack) {
 		editingStack = stack;
 		editName = stack.name;
-		editIdentityId = stack.identityId || undefined;
+		editIdentityId = stack.identityId || null;
 		editIsActive = stack.isActive;
 		editError = '';
 		newItemCue = '';
@@ -218,7 +220,7 @@
 		showEditPopup = false;
 		editingStack = null;
 		editName = '';
-		editIdentityId = undefined;
+		editIdentityId = null;
 		editIsActive = true;
 		editError = '';
 		newItemCue = '';
@@ -237,7 +239,9 @@
 		try {
 			const updated = await updateHabitStack(editingStack.id, {
 				name: editName.trim(),
+				description: editingStack.description ?? null,
 				identityId: editIdentityId,
+				triggerCue: editingStack.triggerCue ?? null,
 				isActive: editIsActive
 			});
 			stacks = stacks.map((s) => (s.id === updated.id ? updated : s));

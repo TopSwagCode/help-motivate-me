@@ -3,7 +3,7 @@
 	import { t } from 'svelte-i18n';
 	import { browser } from '$app/environment';
 	import { milestoneStore } from '$lib/stores/milestones';
-	import type { UserMilestone } from '$lib/types/milestone';
+	import type { UserMilestone } from '$lib/types';
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D | null = null;

@@ -25,3 +25,5 @@ public record DailyStatsResponse(
     int TasksCompleted,
     int TasksDue
 );
+
+public record UpdateRoleRequest(string Role);

@@ -1,4 +1,4 @@
-import type { MembershipTier } from '$lib/types/auth';
+import type { MembershipTier } from '$lib/types';
 
 export interface TierConfig {
 	id: MembershipTier;

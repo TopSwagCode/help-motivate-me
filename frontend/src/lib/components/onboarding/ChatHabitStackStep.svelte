@@ -40,15 +40,15 @@
 	}
 
 	// Helper to resolve identity ID from name if AI provides name instead of ID
-	function resolveIdentityId(identityId?: string, identityName?: string): string | undefined {
+	function resolveIdentityId(identityId?: string, identityName?: string): string | null {
 		if (identityId) return identityId;
 		if (identityName && identities.length > 0) {
 			const match = identities.find(i =>
 				i.name.toLowerCase() === identityName.toLowerCase()
 			);
-			return match?.id;
+			return match?.id ?? null;
 		}
-		return undefined;
+		return null;
 	}
 
 	async function handleExtractedData(data: ExtractedData) {

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
-	import type { MilestoneDefinition, UserMilestone, CreateMilestoneRequest, UpdateMilestoneRequest } from '$lib/types/milestone';
+	import type { MilestoneDefinition, UserMilestone, CreateMilestoneRequest, UpdateMilestoneRequest } from '$lib/types';
 	import { 
 		getMilestoneDefinitions, 
 		createMilestoneDefinition, 

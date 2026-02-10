@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
 	import { getCommitmentOptions, getActionSuggestions, createDailyCommitment } from '$lib/api/dailyCommitment';
-	import type { IdentityOption, ActionSuggestion, CreateDailyCommitmentRequest } from '$lib/types/dailyCommitment';
+	import type { IdentityOption, ActionSuggestion, CreateDailyCommitmentRequest } from '$lib/types';
 
 	interface Props {
 		isOpen: boolean;

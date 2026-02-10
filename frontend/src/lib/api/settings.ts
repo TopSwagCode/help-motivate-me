@@ -1,5 +1,5 @@
 import { apiPatch, apiPost } from './client';
-import type { User, UpdateProfileRequest, ChangePasswordRequest, UpdateMembershipRequest } from '$lib/types/auth';
+import type { User, UpdateProfileRequest, ChangePasswordRequest, UpdateMembershipRequest } from '$lib/types';
 
 export async function updateProfile(data: UpdateProfileRequest): Promise<User> {
 	return apiPatch<User>('/auth/profile', data);

@@ -1,7 +1,6 @@
 import { apiGet, apiPatch, apiPost, apiDelete } from './client';
 import type { AdminStats, AdminUser, DailyStats, UpdateRoleRequest, UserActivity } from '$lib/types';
-import type { AiUsageStats, AiUsageLog, PaginatedResponse } from '$lib/types/admin';
-import type { WaitlistEntry, WhitelistEntry, SignupSettingsResponse } from '$lib/types/waitlist';
+import type { AiUsageStats, AiUsageLog, PaginatedResponse, WaitlistEntry, WhitelistEntry, SignupSettingsResponse } from '$lib/types';
 
 export async function getAdminStats(): Promise<AdminStats> {
 	return apiGet<AdminStats>('/admin/stats');

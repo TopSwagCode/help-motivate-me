@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { tiers, featureComparison } from '$lib/config/tiers';
+	import { t } from 'svelte-i18n';
 
 	let billingPeriod = $state<'monthly' | 'yearly'>('yearly');
 
@@ -102,8 +103,8 @@
 					{/if}
 
 					<div class="text-center">
-						<h3 class="text-xl font-bold text-cocoa-800">{tier.name}</h3>
-						<p class="text-sm text-cocoa-500 mt-1">{tier.bestFor}</p>
+						<h3 class="text-xl font-bold text-cocoa-800">{$t(tier.nameKey)}</h3>
+						<p class="text-sm text-cocoa-500 mt-1">{$t(tier.bestForKey)}</p>
 						
 						<div class="mt-4">
 							<span class="text-4xl font-bold text-cocoa-800">{formatPrice(tier)}</span>
@@ -119,7 +120,7 @@
 							</p>
 						{/if}
 						
-						<p class="text-cocoa-600 mt-4 italic">"{tier.description}"</p>
+						<p class="text-cocoa-600 mt-4 italic">"{$t(tier.descriptionKey)}"</p>
 					</div>
 
 					<div class="mt-6 flex-grow">
@@ -127,7 +128,7 @@
 							href="/auth/register"
 							class="{tier.popular ? 'btn-primary' : 'btn-secondary'} w-full text-center block py-3"
 						>
-							{tier.id === 'Free' ? 'Get Started Free' : `Get ${tier.name}`}
+							{tier.id === 'Free' ? 'Get Started Free' : `Get ${$t(tier.nameKey)}`}
 						</a>
 					</div>
 				</div>
@@ -148,7 +149,7 @@
 							<th class="py-4 px-4 text-left text-sm font-semibold text-cocoa-800">Feature</th>
 							{#each tiers as tier}
 								<th class="py-4 px-4 text-center text-sm font-semibold {tier.popular ? 'text-primary-600 bg-primary-50 rounded-t-lg' : 'text-cocoa-800'}">
-									{tier.name}
+									{$t(tier.nameKey)}
 								</th>
 							{/each}
 						</tr>
@@ -156,7 +157,7 @@
 					<tbody class="divide-y divide-gray-100">
 						{#each featureComparison as feature}
 							<tr class="hover:bg-warm-cream">
-								<td class="py-4 px-4 text-sm text-cocoa-700 font-medium">{feature.name}</td>
+								<td class="py-4 px-4 text-sm text-cocoa-700 font-medium">{$t(feature.nameKey)}</td>
 								<td class="py-4 px-4 text-center">
 									{#if typeof feature.free === 'boolean'}
 										{#if feature.free}
@@ -206,7 +207,7 @@
 			<div class="md:hidden space-y-6">
 				{#each featureComparison as feature}
 					<div class="bg-warm-cream rounded-2xl p-4">
-						<h4 class="font-medium text-cocoa-800 mb-3">{feature.name}</h4>
+						<h4 class="font-medium text-cocoa-800 mb-3">{$t(feature.nameKey)}</h4>
 						<div class="grid grid-cols-3 gap-2 text-center text-sm">
 							<div>
 								<span class="text-xs text-cocoa-500 block mb-1">Free</span>
@@ -272,7 +273,7 @@
 				<tbody class="divide-y divide-gray-100">
 					{#each tiers as tier}
 						<tr class="{tier.popular ? 'bg-primary-50' : ''}">
-							<td class="py-4 px-6 font-semibold text-cocoa-800">{tier.name}</td>
+							<td class="py-4 px-6 font-semibold text-cocoa-800">{$t(tier.nameKey)}</td>
 							<td class="py-4 px-6 text-center text-cocoa-600">
 								{tier.monthlyPrice === 0 ? '$0' : `$${tier.monthlyPrice.toFixed(2)}`}
 							</td>

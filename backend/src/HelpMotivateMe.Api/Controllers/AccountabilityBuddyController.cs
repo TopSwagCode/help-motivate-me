@@ -1,5 +1,5 @@
-using HelpMotivateMe.Core.DTOs.HabitStacks;
-using HelpMotivateMe.Core.DTOs.Today;
+using HelpMotivateMe.Core.DTOs.Buddies;
+using HelpMotivateMe.Core.DTOs.Shared;
 using HelpMotivateMe.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -54,7 +54,7 @@ public class AccountabilityBuddyController : ApiControllerBase
 
         var result = await _buddyService.InviteBuddyAsync(userId, request.Email);
 
-        if (!result.Success) return BadRequest(new { message = result.ErrorMessage });
+        if (!result.Success) return BadRequest(new MessageResponse(result.ErrorMessage!));
 
         var buddy = result.Buddy!;
         return Ok(new BuddyResponse(buddy.Id, buddy.BuddyUserId, buddy.Email, buddy.DisplayName, buddy.CreatedAt));
@@ -69,7 +69,7 @@ public class AccountabilityBuddyController : ApiControllerBase
         var userId = _auth.GetCurrentUserId();
 
         var success = await _buddyService.RemoveBuddyAsync(userId, id);
-        if (!success) return NotFound(new { message = "Buddy relationship not found" });
+        if (!success) return NotFound(new MessageResponse("Buddy relationship not found"));
 
         return NoContent();
     }
@@ -83,7 +83,7 @@ public class AccountabilityBuddyController : ApiControllerBase
         var userId = _auth.GetCurrentUserId();
 
         var success = await _buddyService.LeaveBuddyAsync(userId, ownerUserId);
-        if (!success) return NotFound(new { message = "Buddy relationship not found" });
+        if (!success) return NotFound(new MessageResponse("Buddy relationship not found"));
 
         return NoContent();
     }
@@ -185,14 +185,14 @@ public class AccountabilityBuddyController : ApiControllerBase
         var userId = _auth.GetCurrentUserId();
 
         // Validate file
-        if (file == null || file.Length == 0) return BadRequest(new { message = "No file provided or file is empty" });
+        if (file == null || file.Length == 0) return BadRequest(new MessageResponse("No file provided or file is empty"));
 
         const long maxFileSize = 5 * 1024 * 1024; // 5MB
-        if (file.Length > maxFileSize) return BadRequest(new { message = "File too large. Maximum size: 5MB" });
+        if (file.Length > maxFileSize) return BadRequest(new MessageResponse("File too large. Maximum size: 5MB"));
 
         var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
         if (!allowedTypes.Contains(file.ContentType))
-            return BadRequest(new { message = "Invalid file type. Allowed: JPEG, PNG, GIF, WebP" });
+            return BadRequest(new MessageResponse("Invalid file type. Allowed: JPEG, PNG, GIF, WebP"));
 
         using var stream = file.OpenReadStream();
         var result = await _buddyService.UploadBuddyJournalImageAsync(
@@ -203,8 +203,8 @@ public class AccountabilityBuddyController : ApiControllerBase
             if (result.ErrorMessage == "Forbidden")
                 return Forbid();
             if (result.ErrorMessage == "Journal entry not found")
-                return NotFound(new { message = result.ErrorMessage });
-            return BadRequest(new { message = result.ErrorMessage });
+                return NotFound(new MessageResponse(result.ErrorMessage!));
+            return BadRequest(new MessageResponse(result.ErrorMessage!));
         }
 
         var image = result.Image!;
@@ -228,8 +228,8 @@ public class AccountabilityBuddyController : ApiControllerBase
         if (!result.Success)
         {
             if (result.ErrorMessage == "Journal entry not found")
-                return NotFound(new { message = result.ErrorMessage });
-            return BadRequest(new { message = result.ErrorMessage });
+                return NotFound(new MessageResponse(result.ErrorMessage!));
+            return BadRequest(new MessageResponse(result.ErrorMessage!));
         }
 
         var reaction = result.Reaction!;
@@ -255,75 +255,3 @@ public class AccountabilityBuddyController : ApiControllerBase
         return NoContent();
     }
 }
-
-// DTOs for Accountability Buddy
-
-public record BuddyRelationshipsResponse(
-    List<BuddyResponse> MyBuddies,
-    List<BuddyForResponse> BuddyingFor
-);
-
-public record BuddyResponse(
-    Guid Id,
-    Guid BuddyUserId,
-    string BuddyEmail,
-    string BuddyDisplayName,
-    DateTime CreatedAt
-);
-
-public record BuddyForResponse(
-    Guid Id,
-    Guid UserId,
-    string UserEmail,
-    string UserDisplayName,
-    DateTime CreatedAt
-);
-
-public record InviteBuddyRequest(string Email);
-
-public record BuddyTodayViewResponse(
-    Guid UserId,
-    string UserDisplayName,
-    DateOnly Date,
-    List<TodayHabitStackResponse> HabitStacks,
-    List<TodayTaskResponse> UpcomingTasks,
-    List<TodayTaskResponse> CompletedTasks,
-    List<TodayIdentityFeedbackResponse> IdentityFeedback
-);
-
-public record BuddyJournalEntryResponse(
-    Guid Id,
-    string Title,
-    string? Description,
-    string EntryDate,
-    Guid? AuthorUserId,
-    string? AuthorDisplayName,
-    List<BuddyJournalImageResponse> Images,
-    List<BuddyJournalReactionResponse> Reactions,
-    DateTime CreatedAt
-);
-
-public record BuddyJournalImageResponse(
-    Guid Id,
-    string FileName,
-    string Url,
-    int SortOrder
-);
-
-public record BuddyJournalReactionResponse(
-    Guid Id,
-    string Emoji,
-    Guid UserId,
-    string UserDisplayName,
-    DateTime CreatedAt
-);
-
-public record AddBuddyJournalReactionRequest(
-    string Emoji
-);
-
-public record CreateBuddyJournalEntryRequest(
-    string Title,
-    string? Description,
-    string? EntryDate
-);

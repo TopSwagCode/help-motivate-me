@@ -21,7 +21,15 @@
       "Bash(npm run build:*)",
       "Bash(docker context ls:*)",
       "Bash(docker version:*)",
-      "Bash(docker exec:*)"
+      "Bash(docker exec:*)",
+      "Bash(chmod:*)",
+      "Bash(docker ps:*)",
+      "Bash(docker rm:*)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)",
+      "Bash(npm run generate:types:*)",
+      "Bash(npx openapi-typescript:*)",
+      "Bash(python3:*)"
     ]
   }
 }

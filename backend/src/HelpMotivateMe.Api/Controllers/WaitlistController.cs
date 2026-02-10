@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using HelpMotivateMe.Core.DTOs.Shared;
 using HelpMotivateMe.Core.DTOs.Waitlist;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
@@ -34,9 +35,9 @@ public class WaitlistController : ControllerBase
     public async Task<IActionResult> SignupForWaitlist([FromBody] WaitlistSignupRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Email) || !new EmailAddressAttribute().IsValid(request.Email))
-            return BadRequest(new { message = "Please provide a valid email address" });
+            return BadRequest(new MessageResponse("Please provide a valid email address"));
 
-        if (string.IsNullOrWhiteSpace(request.Name)) return BadRequest(new { message = "Please provide your name" });
+        if (string.IsNullOrWhiteSpace(request.Name)) return BadRequest(new MessageResponse("Please provide your name"));
 
         var email = request.Email.ToLowerInvariant().Trim();
         var name = request.Name.Trim();
@@ -44,14 +45,13 @@ public class WaitlistController : ControllerBase
         // Check if already on whitelist
         var isWhitelisted = await _whitelistEntriesQuery.AnyAsync(w => w.Email.ToLower() == email);
         if (isWhitelisted)
-            return Ok(new
-                { message = "Great news! You already have access. You can sign up or log in now.", canSignup = true });
+            return Ok(new WaitlistSignupResponse("Great news! You already have access. You can sign up or log in now.", true));
 
         // Check if already on waitlist
         var existingEntry = await _waitlistEntriesQuery.FirstOrDefaultAsync(w => w.Email.ToLower() == email);
         if (existingEntry != null)
             // Don't leak that they're already on the list - just return success
-            return Ok(new { message = "Thank you for your interest! We'll notify you when a spot opens up." });
+            return Ok(new WaitlistSignupResponse("Thank you for your interest! We'll notify you when a spot opens up."));
 
         // Add to waitlist
         var entry = new WaitlistEntry
@@ -66,13 +66,13 @@ public class WaitlistController : ControllerBase
         // Send confirmation email (default to English for non-registered users)
         await _emailService.SendWaitlistConfirmationAsync(email, name, Language.English);
 
-        return Ok(new { message = "Thank you for your interest! We'll notify you when a spot opens up." });
+        return Ok(new WaitlistSignupResponse("Thank you for your interest! We'll notify you when a spot opens up."));
     }
 
     [HttpGet("check")]
     public async Task<ActionResult<WhitelistCheckResponse>> CheckWhitelistStatus([FromQuery] string email)
     {
-        if (string.IsNullOrWhiteSpace(email)) return BadRequest(new { message = "Email is required" });
+        if (string.IsNullOrWhiteSpace(email)) return BadRequest(new MessageResponse("Email is required"));
 
         var normalizedEmail = email.ToLowerInvariant().Trim();
         var isWhitelisted = await _whitelistEntriesQuery.AnyAsync(w => w.Email.ToLower() == normalizedEmail);

@@ -1,6 +1,6 @@
 import { writable, get } from 'svelte/store';
 import { browser } from '$app/environment';
-import type { UserMilestone } from '$lib/types/milestone';
+import type { UserMilestone } from '$lib/types';
 import { getUnseenMilestones, markMilestonesSeen } from '$lib/api/milestones';
 
 export interface MilestoneState {

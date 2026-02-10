@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
 	import type { IdentityProofPreviewData } from '$lib/api/aiGeneral';
-	import type { Identity } from '$lib/types/identity';
+	import type { Identity } from '$lib/types';
 
 	interface Props {
 		data: IdentityProofPreviewData;

@@ -25,15 +25,15 @@
 	const initialMessage = $derived($t('onboarding.goals.initialMessage'));
 
 	// Helper to resolve identity ID from name if AI provides name instead of ID
-	function resolveIdentityId(identityId?: string, identityName?: string): string | undefined {
+	function resolveIdentityId(identityId?: string, identityName?: string): string | null {
 		if (identityId) return identityId;
 		if (identityName && identities.length > 0) {
 			const match = identities.find(i =>
 				i.name.toLowerCase() === identityName.toLowerCase()
 			);
-			return match?.id;
+			return match?.id ?? null;
 		}
-		return undefined;
+		return null;
 	}
 
 	async function handleExtractedData(data: ExtractedData) {
@@ -53,7 +53,7 @@
 					await createGoal({
 						title: String(item.title || ''),
 						description: String(item.description || ''),
-						targetDate: item.targetDate ? String(item.targetDate) : undefined,
+						targetDate: item.targetDate ? String(item.targetDate) : null,
 						identityId
 					});
 					createdItems = [...createdItems, {
@@ -70,7 +70,7 @@
 				await createGoal({
 					title: String(goalData.title || ''),
 					description: String(goalData.description || ''),
-					targetDate: goalData.targetDate ? String(goalData.targetDate) : undefined,
+					targetDate: goalData.targetDate ? String(goalData.targetDate) : null,
 					identityId
 				});
 				createdItems = [...createdItems, {

@@ -83,7 +83,7 @@ public class AnalyticsController : ApiControllerBase
     }
 
     [HttpGet("heatmap")]
-    public async Task<ActionResult<IEnumerable<object>>> GetHeatmapData([FromQuery] int days = 90)
+    public async Task<ActionResult<IEnumerable<HeatmapDataResponse>>> GetHeatmapData([FromQuery] int days = 90)
     {
         var userId = _auth.GetCurrentUserId();
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
@@ -97,7 +97,7 @@ public class AnalyticsController : ApiControllerBase
                         t.CompletedAt.Value >= startDate &&
                         t.CompletedAt.Value <= today)
             .GroupBy(t => t.CompletedAt!.Value)
-            .Select(g => new { Date = g.Key, Count = g.Count() })
+            .Select(g => new HeatmapDataResponse(g.Key, g.Count()))
             .OrderBy(x => x.Date)
             .ToListAsync();
 

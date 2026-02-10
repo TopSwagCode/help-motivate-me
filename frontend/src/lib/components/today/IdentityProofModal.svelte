@@ -3,8 +3,7 @@
 	import { getCommitmentOptions } from '$lib/api/dailyCommitment';
 	import { createIdentityProof } from '$lib/api/identityProofs';
 	import { milestoneStore } from '$lib/stores/milestones';
-	import type { IdentityOption } from '$lib/types/dailyCommitment';
-	import type { ProofIntensity, CreateIdentityProofRequest } from '$lib/types/identityProof';
+	import type { IdentityOption, ProofIntensity, CreateIdentityProofRequest } from '$lib/types';
 
 	interface Props {
 		isOpen: boolean;

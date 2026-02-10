@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t, locale } from 'svelte-i18n';
 	import { get } from 'svelte/store';
-	import type { WaitlistEntry, WhitelistEntry, SignupSettingsResponse } from '$lib/types/waitlist';
+	import type { WaitlistEntry, WhitelistEntry, SignupSettingsResponse } from '$lib/types';
 	import {
 		getAdminSettings,
 		getWaitlist,

@@ -1,5 +1,5 @@
 import { apiGet, apiPost, apiDelete } from './client';
-import type { IdentityProof, CreateIdentityProofRequest } from '$lib/types/identityProof';
+import type { IdentityProof, CreateIdentityProofRequest } from '$lib/types';
 
 export async function getIdentityProofs(
 	startDate?: string,

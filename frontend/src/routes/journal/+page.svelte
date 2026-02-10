@@ -258,11 +258,11 @@
 		try {
 			const data = {
 				title: modalTitle.trim(),
-				description: modalDescription.trim() || undefined,
+				description: modalDescription.trim() || null,
 				entryDate: modalEntryDate,
 				habitStackId:
-					modalLinkType === 'habitStack' && modalHabitStackId ? modalHabitStackId : undefined,
-				taskItemId: modalLinkType === 'task' && modalTaskId ? modalTaskId : undefined
+					modalLinkType === 'habitStack' && modalHabitStackId ? modalHabitStackId : null,
+				taskItemId: modalLinkType === 'task' && modalTaskId ? modalTaskId : null
 			};
 
 			let savedEntry: JournalEntry;

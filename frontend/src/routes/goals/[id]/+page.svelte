@@ -99,9 +99,9 @@
 		try {
 			const task = await createTask(id, {
 				title: newTaskTitle,
-				description: newTaskDescription.trim() || undefined,
-				dueDate: newTaskDueDate || undefined,
-				identityId: newTaskIdentityId || undefined
+				description: newTaskDescription.trim() || null,
+				dueDate: newTaskDueDate || null,
+				identityId: newTaskIdentityId || null
 			});
 			// Mark as newly arrived for entrance animation
 			newlyArrivedTaskIds = [...newlyArrivedTaskIds, task.id];
@@ -206,9 +206,9 @@
 		try {
 			goal = await updateGoal(goal.id, {
 				title: newTitle.trim(),
-				description: goal.description || undefined,
-				targetDate: goal.targetDate || undefined,
-				identityId: goal.identityId || undefined
+				description: goal.description || null,
+				targetDate: goal.targetDate || null,
+				identityId: goal.identityId || null
 			});
 			editingTitle = false;
 		} catch (e) {
@@ -233,9 +233,9 @@
 		try {
 			goal = await updateGoal(goal.id, {
 				title: goal.title,
-				description: newDescription.trim() || undefined,
-				targetDate: goal.targetDate || undefined,
-				identityId: goal.identityId || undefined
+				description: newDescription.trim() || null,
+				targetDate: goal.targetDate || null,
+				identityId: goal.identityId || null
 			});
 			editingDescription = false;
 		} catch (e) {
@@ -260,9 +260,9 @@
 		try {
 			goal = await updateGoal(goal.id, {
 				title: goal.title,
-				description: goal.description || undefined,
-				targetDate: newTargetDate || undefined,
-				identityId: goal.identityId || undefined
+				description: goal.description || null,
+				targetDate: newTargetDate || null,
+				identityId: goal.identityId || null
 			});
 			editingTargetDate = false;
 		} catch (e) {
@@ -287,9 +287,9 @@
 		try {
 			goal = await updateGoal(goal.id, {
 				title: goal.title,
-				description: goal.description || undefined,
-				targetDate: goal.targetDate || undefined,
-				identityId: newGoalIdentityId || undefined
+				description: goal.description || null,
+				targetDate: goal.targetDate || null,
+				identityId: newGoalIdentityId || null
 			});
 			editingGoalIdentity = false;
 			// Update new task default identity to match new goal identity
@@ -354,9 +354,9 @@
 		try {
 			const updatedTask = await updateTask(editingTask.id, {
 				title: editTitle.trim(),
-				description: editDescription.trim() || undefined,
-				dueDate: editDueDate || undefined,
-				identityId: editIdentityId || undefined
+				description: editDescription.trim() || null,
+				dueDate: editDueDate || null,
+				identityId: editIdentityId || null
 			});
 			tasks = tasks.map((t) => (t.id === editingTask!.id ? updatedTask : t));
 			closeEditPopup();
@@ -785,14 +785,6 @@
 									<div class="flex items-center gap-3 mt-1">
 										{#if task.dueDate}
 											<span class="text-sm {getDueDateColor(task.dueDate)}">{formatDueDate(task.dueDate)}</span>
-										{/if}
-										{#if task.isRepeatable && task.repeatSchedule}
-											<span class="inline-flex items-center text-xs text-primary-600">
-												<svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-												</svg>
-												{task.repeatSchedule.frequency}
-											</span>
 										{/if}
 									</div>
 								</div>

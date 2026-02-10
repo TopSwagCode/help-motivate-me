@@ -40,3 +40,75 @@ public record BuddyJournalEntryData(
 public record BuddyJournalImageData(Guid Id, string FileName, string Url, int SortOrder);
 
 public record BuddyJournalReactionData(Guid Id, string Emoji, Guid UserId, string UserDisplayName, DateTime CreatedAt);
+
+// API Response DTOs
+
+public record BuddyRelationshipsResponse(
+    List<BuddyResponse> MyBuddies,
+    List<BuddyForResponse> BuddyingFor
+);
+
+public record BuddyResponse(
+    Guid Id,
+    Guid BuddyUserId,
+    string BuddyEmail,
+    string BuddyDisplayName,
+    DateTime CreatedAt
+);
+
+public record BuddyForResponse(
+    Guid Id,
+    Guid UserId,
+    string UserEmail,
+    string UserDisplayName,
+    DateTime CreatedAt
+);
+
+public record InviteBuddyRequest(string Email);
+
+public record BuddyTodayViewResponse(
+    Guid UserId,
+    string UserDisplayName,
+    DateOnly Date,
+    List<TodayHabitStackResponse> HabitStacks,
+    List<TodayTaskResponse> UpcomingTasks,
+    List<TodayTaskResponse> CompletedTasks,
+    List<TodayIdentityFeedbackResponse> IdentityFeedback
+);
+
+public record BuddyJournalEntryResponse(
+    Guid Id,
+    string Title,
+    string? Description,
+    string EntryDate,
+    Guid? AuthorUserId,
+    string? AuthorDisplayName,
+    List<BuddyJournalImageResponse> Images,
+    List<BuddyJournalReactionResponse> Reactions,
+    DateTime CreatedAt
+);
+
+public record BuddyJournalImageResponse(
+    Guid Id,
+    string FileName,
+    string Url,
+    int SortOrder
+);
+
+public record BuddyJournalReactionResponse(
+    Guid Id,
+    string Emoji,
+    Guid UserId,
+    string UserDisplayName,
+    DateTime CreatedAt
+);
+
+public record AddBuddyJournalReactionRequest(
+    string Emoji
+);
+
+public record CreateBuddyJournalEntryRequest(
+    string Title,
+    string? Description,
+    string? EntryDate
+);

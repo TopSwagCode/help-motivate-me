@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using HelpMotivateMe.Core.DTOs.Admin;
+using HelpMotivateMe.Core.DTOs.Shared;
 using HelpMotivateMe.Core.DTOs.Waitlist;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
@@ -211,7 +212,7 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<AdminUserResponse>> ToggleUserActive(Guid userId)
     {
         var user = await _db.Users.FindAsync(userId);
-        if (user == null) return NotFound(new { message = "User not found" });
+        if (user == null) return NotFound(new MessageResponse("User not found"));
 
         user.IsActive = !user.IsActive;
         user.UpdatedAt = DateTime.UtcNow;
@@ -241,10 +242,10 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<AdminUserResponse>> UpdateUserRole(Guid userId, [FromBody] UpdateRoleRequest request)
     {
         var user = await _db.Users.FindAsync(userId);
-        if (user == null) return NotFound(new { message = "User not found" });
+        if (user == null) return NotFound(new MessageResponse("User not found"));
 
         if (!Enum.TryParse<UserRole>(request.Role, true, out var role))
-            return BadRequest(new { message = "Invalid role. Must be User or Admin." });
+            return BadRequest(new MessageResponse("Invalid role. Must be User or Admin."));
 
         user.Role = role;
         user.UpdatedAt = DateTime.UtcNow;
@@ -274,7 +275,7 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<UserActivityResponse>> GetUserActivity(Guid userId)
     {
         var user = await _db.Users.FindAsync(userId);
-        if (user == null) return NotFound(new { message = "User not found" });
+        if (user == null) return NotFound(new MessageResponse("User not found"));
 
         var now = DateTime.UtcNow;
         var lastWeekStart = now.AddDays(-7);
@@ -400,7 +401,7 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> RemoveFromWaitlist(Guid id)
     {
         var entry = await _db.WaitlistEntries.FindAsync(id);
-        if (entry == null) return NotFound(new { message = "Waitlist entry not found" });
+        if (entry == null) return NotFound(new MessageResponse("Waitlist entry not found"));
 
         _db.WaitlistEntries.Remove(entry);
         await _db.SaveChangesAsync();
@@ -412,7 +413,7 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<WhitelistEntryResponse>> ApproveWaitlistEntry(Guid id)
     {
         var waitlistEntry = await _db.WaitlistEntries.FindAsync(id);
-        if (waitlistEntry == null) return NotFound(new { message = "Waitlist entry not found" });
+        if (waitlistEntry == null) return NotFound(new MessageResponse("Waitlist entry not found"));
 
         // Check if already on whitelist
         var existingWhitelist = await _db.WhitelistEntries
@@ -513,13 +514,13 @@ public class AdminController : ControllerBase
     [HttpPost("whitelist")]
     public async Task<ActionResult<WhitelistEntryResponse>> AddToWhitelist([FromBody] InviteUserRequest request)
     {
-        if (string.IsNullOrWhiteSpace(request.Email)) return BadRequest(new { message = "Email is required" });
+        if (string.IsNullOrWhiteSpace(request.Email)) return BadRequest(new MessageResponse("Email is required"));
 
         var email = request.Email.ToLowerInvariant().Trim();
 
         // Check if already on whitelist
         var existingEntry = await _db.WhitelistEntries.FirstOrDefaultAsync(w => w.Email.ToLower() == email);
-        if (existingEntry != null) return BadRequest(new { message = "Email is already on the whitelist" });
+        if (existingEntry != null) return BadRequest(new MessageResponse("Email is already on the whitelist"));
 
         var currentUserId = GetUserId();
 
@@ -564,7 +565,7 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> RemoveFromWhitelist(Guid id)
     {
         var entry = await _db.WhitelistEntries.FindAsync(id);
-        if (entry == null) return NotFound(new { message = "Whitelist entry not found" });
+        if (entry == null) return NotFound(new MessageResponse("Whitelist entry not found"));
 
         _db.WhitelistEntries.Remove(entry);
         await _db.SaveChangesAsync();
@@ -728,5 +729,3 @@ public class AdminController : ControllerBase
         return Guid.TryParse(userIdClaim, out var userId) ? userId : null;
     }
 }
-
-public record UpdateRoleRequest(string Role);

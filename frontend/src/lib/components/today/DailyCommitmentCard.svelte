@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
-	import type { DailyCommitment, YesterdayCommitment } from '$lib/types/dailyCommitment';
+	import type { DailyCommitment, YesterdayCommitment } from '$lib/types';
 
 	interface Props {
 		commitment: DailyCommitment | null;

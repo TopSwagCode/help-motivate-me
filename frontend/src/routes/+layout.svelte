@@ -117,7 +117,8 @@
 		// Create a new "AI Tasks" goal
 		const newGoal = await createGoal({
 			title: 'AI Tasks',
-			description: 'Tasks created via AI assistant'
+			description: 'Tasks created via AI assistant',
+			targetDate: null
 		});
 
 		return newGoal.id;
@@ -128,9 +129,9 @@
 		const goalId = await getOrCreateAiTasksGoal();
 		await createTask(goalId, {
 			title: data.title,
-			description: data.description ?? undefined,
-			dueDate: data.dueDate ?? undefined,
-			identityId: data.identityId ?? undefined
+			description: data.description ?? null,
+			dueDate: data.dueDate ?? null,
+			identityId: data.identityId ?? null
 		});
 	}
 
@@ -138,9 +139,9 @@
 	async function handleCreateGoal(data: GoalPreviewData) {
 		await createGoal({
 			title: data.title,
-			description: data.description ?? undefined,
-			targetDate: data.targetDate ?? undefined,
-			identityId: data.identityId ?? undefined
+			description: data.description ?? null,
+			targetDate: data.targetDate ?? null,
+			identityId: data.identityId ?? null
 		});
 	}
 
@@ -148,9 +149,9 @@
 	async function handleCreateHabitStack(data: HabitStackPreviewData) {
 		await createHabitStack({
 			name: data.name,
-			description: data.description ?? undefined,
+			description: data.description ?? null,
 			triggerCue: data.triggerCue,
-			identityId: data.identityId ?? undefined,
+			identityId: data.identityId ?? null,
 			items: data.habits.map((h) => ({
 				cueDescription: h.cueDescription,
 				habitDescription: h.habitDescription
@@ -169,7 +170,7 @@
 	async function handleCreateIdentityProof(data: IdentityProofPreviewData) {
 		await createIdentityProof({
 			identityId: data.identityId,
-			description: data.description ?? undefined,
+			description: data.description ?? null,
 			intensity: data.intensity
 		});
 		// Check for milestones that may have been unlocked

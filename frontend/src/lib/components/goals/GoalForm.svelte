@@ -46,9 +46,9 @@
 		try {
 			await onsubmit({
 				title: title.trim(),
-				description: description.trim() || undefined,
-				targetDate: targetDate || undefined,
-				identityId: identityId || undefined
+				description: description.trim() || null,
+				targetDate: targetDate || null,
+				identityId: identityId || null
 			});
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Failed to save goal';

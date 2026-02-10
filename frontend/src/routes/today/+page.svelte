@@ -20,8 +20,7 @@
 	import DailyCommitmentCard from '$lib/components/today/DailyCommitmentCard.svelte';
 	import CommitmentFlowModal from '$lib/components/today/CommitmentFlowModal.svelte';
 	import IdentityProofModal from '$lib/components/today/IdentityProofModal.svelte';
-	import type { TodayView, TodayTask, Identity } from '$lib/types';
-	import type { IdentityProof } from '$lib/types/identityProof';
+	import type { TodayView, TodayTask, Identity, IdentityProof } from '$lib/types';
 	import { getLocalDateString } from '$lib/utils/date';
 
 	let todayData = $state<TodayView | null>(null);
@@ -457,9 +456,9 @@
 		try {
 			const updatedTaskResponse = await updateTask(taskId, {
 				title: editTitle.trim(),
-				description: editDescription.trim() || undefined,
-				dueDate: editDueDate || undefined,
-				identityId: editIdentityId || undefined
+				description: editDescription.trim() || null,
+				dueDate: editDueDate || null,
+				identityId: editIdentityId || null
 			});
 
 			// Calculate if task should be removed (due date > 7 days out)

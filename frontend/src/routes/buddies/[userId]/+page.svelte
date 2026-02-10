@@ -15,7 +15,7 @@
 	import { getLocalDateString } from '$lib/utils/date';
 	import TodayViewContent from '$lib/components/today/TodayViewContent.svelte';
 	import JournalViewContent from '$lib/components/journal/JournalViewContent.svelte';
-	import type { BuddyTodayViewResponse, BuddyJournalEntry, BuddyJournalImage } from '$lib/types/buddy';
+	import type { BuddyTodayViewResponse, BuddyJournalEntry, BuddyJournalImage } from '$lib/types';
 
 	// Tab state
 	let activeTab = $state<'today' | 'journal'>('today');
@@ -230,7 +230,7 @@
 		try {
 			let newEntry = await createBuddyJournalEntry($page.params.userId!, {
 				title: modalTitle.trim(),
-				description: modalDescription.trim() || undefined,
+				description: modalDescription.trim() || null,
 				entryDate: getLocalDateString()
 			});
 

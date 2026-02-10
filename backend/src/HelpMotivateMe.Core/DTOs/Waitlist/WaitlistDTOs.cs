@@ -19,6 +19,8 @@ public record WhitelistEntryResponse(
 
 public record InviteUserRequest(string Email);
 
+public record WaitlistSignupResponse(string Message, bool CanSignup = false);
+
 public record WhitelistCheckResponse(bool CanSignup);
 
 public record SignupSettingsResponse(bool AllowSignups);

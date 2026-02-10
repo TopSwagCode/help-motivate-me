@@ -1,5 +1,7 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using HelpMotivateMe.Core.DTOs.Ai;
+using HelpMotivateMe.Core.DTOs.Identities;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
@@ -15,6 +17,11 @@ namespace HelpMotivateMe.Api.Controllers;
 [Authorize]
 public class AiController : ApiControllerBase
 {
+    private static readonly JsonSerializerOptions CamelCaseOptions = new(JsonSerializerDefaults.Web)
+    {
+        Converters = { new JsonStringEnumConverter() }
+    };
+
     private readonly IResourceAuthorizationService _auth;
     private readonly AppDbContext _db;
     private readonly ILogger<AiController> _logger;
@@ -52,7 +59,7 @@ public class AiController : ApiControllerBase
                                userId,
                                cancellationToken))
             {
-                var json = JsonSerializer.Serialize(chunk);
+                var json = JsonSerializer.Serialize(chunk, CamelCaseOptions);
                 await Response.WriteAsync($"data: {json}\n\n", cancellationToken);
                 await Response.Body.FlushAsync(cancellationToken);
             }
@@ -143,7 +150,7 @@ public class AiController : ApiControllerBase
                                userId,
                                cancellationToken))
             {
-                var json = JsonSerializer.Serialize(chunk);
+                var json = JsonSerializer.Serialize(chunk, CamelCaseOptions);
                 await Response.WriteAsync($"data: {json}\n\n", cancellationToken);
                 await Response.Body.FlushAsync(cancellationToken);
             }
@@ -191,7 +198,7 @@ public class AiController : ApiControllerBase
     ///     Used when AI suggests creating a new identity for a task/goal/habit.
     /// </summary>
     [HttpPost("general/create-identity")]
-    public async Task<ActionResult<Identity>> CreateIdentityFromAi(
+    public async Task<ActionResult<IdentityResponse>> CreateIdentityFromAi(
         [FromBody] CreateIdentityFromAiRequest request,
         CancellationToken cancellationToken)
     {
@@ -211,6 +218,14 @@ public class AiController : ApiControllerBase
         _db.Identities.Add(identity);
         await _db.SaveChangesAsync(cancellationToken);
 
-        return Ok(identity);
+        return Ok(new IdentityResponse(
+            identity.Id,
+            identity.Name,
+            identity.Description,
+            identity.Color,
+            identity.Icon,
+            0, 0, 0, 0, 0, 0, 0, 0, 0,
+            identity.CreatedAt
+        ));
     }
 }

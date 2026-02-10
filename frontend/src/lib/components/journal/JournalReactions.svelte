@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
 	import type { JournalReaction } from '$lib/types';
-	import type { BuddyJournalReaction } from '$lib/types/buddy';
+	import type { BuddyJournalReaction } from '$lib/types';
 	import EmojiPicker from './EmojiPicker.svelte';
 	import { activeEmojiPickerId, openEmojiPicker, closeEmojiPicker } from '$lib/stores/emojiPickerStore';
 

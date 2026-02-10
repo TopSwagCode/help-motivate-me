@@ -4,7 +4,7 @@
 	import { auth } from '$lib/stores/auth';
 	import { updateMembership } from '$lib/api/settings';
 	import { tiers, featureComparison } from '$lib/config/tiers';
-	import type { MembershipTier } from '$lib/types/auth';
+	import type { MembershipTier } from '$lib/types';
 
 	let loading = $state<MembershipTier | null>(null);
 	let error = $state('');
@@ -104,7 +104,7 @@
 	<div class="grid gap-4 md:grid-cols-3 mb-8">
 		{#each tiers as tier}
 			{@const isCurrentTier = tier.id === $auth.user?.membershipTier}
-			{@const currentIndex = getTierIndex($auth.user?.membershipTier ?? 'Free')}
+			{@const currentIndex = getTierIndex(($auth.user?.membershipTier ?? 'Free') as MembershipTier)}
 			{@const tierIndex = getTierIndex(tier.id)}
 			{@const isUpgrade = tierIndex > currentIndex}
 			{@const isDowngrade = tierIndex < currentIndex}

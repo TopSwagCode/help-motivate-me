@@ -37,9 +37,9 @@
 		try {
 			await onsubmit({
 				name: name.trim(),
-				description: description.trim() || undefined,
-				color: color || undefined,
-				icon: icon || undefined
+				description: description.trim() || null,
+				color: color || null,
+				icon: icon || null
 			});
 		} catch (e) {
 			error = e instanceof Error ? e.message : $t('identities.form.errors.saveFailed');

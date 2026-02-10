@@ -101,8 +101,10 @@
 		try {
 			await onsubmit({
 				name: name.trim(),
-				items: validItems,
-				identityId: identityId || undefined
+				description: null,
+				identityId: identityId || null,
+				triggerCue: null,
+				items: validItems
 			});
 		} catch (e) {
 			error = e instanceof Error ? e.message : $t('habitStacks.form.errors.createFailed');

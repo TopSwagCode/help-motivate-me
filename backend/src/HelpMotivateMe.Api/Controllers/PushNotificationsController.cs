@@ -1,4 +1,5 @@
 using HelpMotivateMe.Core.DTOs.Notifications;
+using HelpMotivateMe.Core.DTOs.Shared;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
@@ -67,7 +68,7 @@ public class PushNotificationsController : ApiControllerBase
         }
 
         await _db.SaveChangesAsync();
-        return Ok(new { message = "Subscribed to push notifications" });
+        return Ok(new MessageResponse("Subscribed to push notifications"));
     }
 
     /// <summary>
@@ -97,7 +98,7 @@ public class PushNotificationsController : ApiControllerBase
         }
 
         await _db.SaveChangesAsync();
-        return Ok(new { message = "Unsubscribed from push notifications" });
+        return Ok(new MessageResponse("Unsubscribed from push notifications"));
     }
 
     /// <summary>

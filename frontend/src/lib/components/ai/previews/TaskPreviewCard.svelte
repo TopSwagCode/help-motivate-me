@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
 	import type { TaskPreviewData } from '$lib/api/aiGeneral';
-	import type { Identity } from '$lib/types/identity';
-	import type { Goal } from '$lib/types/goal';
+	import type { Identity } from '$lib/types';
+	import type { Goal } from '$lib/types';
 	import IdentityRecommendationBadge from '../IdentityRecommendationBadge.svelte';
 
 	interface Props {

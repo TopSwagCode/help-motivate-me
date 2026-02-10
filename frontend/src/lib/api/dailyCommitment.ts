@@ -5,7 +5,7 @@ import type {
 	ActionSuggestionsResponse,
 	YesterdayCommitment,
 	CreateDailyCommitmentRequest
-} from '$lib/types/dailyCommitment';
+} from '$lib/types';
 
 export async function getDailyCommitment(date?: string): Promise<DailyCommitment | null> {
 	const params = date ? `?date=${date}` : '';

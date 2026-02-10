@@ -3,8 +3,7 @@
 	import { get } from 'svelte/store';
 	import { commandBar } from '$lib/stores/commandBar';
 	import type { TodayView, TodayTask, TodayHabitStack, IdentityFeedback, IdentityProgress } from '$lib/types';
-	import type { BuddyTodayViewResponse, BuddyTodayTask, BuddyTodayHabitStack } from '$lib/types/buddy';
-	import type { IdentityProof } from '$lib/types/identityProof';
+	import type { BuddyTodayViewResponse, BuddyTodayTask, BuddyTodayHabitStack, IdentityProof } from '$lib/types';
 	import VoteBreakdownPopover from './VoteBreakdownPopover.svelte';
 	import IdentityProgressIcon from '$lib/components/icons/IdentityProgressIcon.svelte';
 	import HabitStackIcon from '$lib/components/icons/HabitStackIcon.svelte';
