@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using MinimalWorker;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -224,7 +225,6 @@ app.Use(async (context, next) =>
 });
 
 // Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment()) app.MapOpenApi();
 
 // Don't use HTTPS redirection when behind a proxy (Traefik/ngrok handles HTTPS)
 // app.UseHttpsRedirection();
@@ -235,6 +235,75 @@ app.UseSession();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// OpenAPI + Scalar API Docs (admin-only)
+app.MapOpenApi()
+    .RequireAuthorization(policy => policy.RequireRole("Admin"));
+
+var frontendUrl = builder.Configuration["FrontendUrl"] ?? "http://localhost:5173";
+app.MapScalarApiReference("/api/docs", options =>
+{
+    options
+        .WithTitle("Help Motivate Me - API Reference")
+        .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient)
+        .HideDarkModeToggle()
+        .AddHeadContent($@"
+            <link rel=""preconnect"" href=""https://fonts.googleapis.com"" />
+            <link rel=""preconnect"" href=""https://fonts.gstatic.com"" crossorigin />
+            <link href=""https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"" rel=""stylesheet"" />
+            <style>
+                :root {{
+                    --scalar-background-1: #faf7f2;
+                    --scalar-background-2: #f5f0e8;
+                    --scalar-background-3: #fdfcfa;
+                    --scalar-color-1: #4a3830;
+                    --scalar-color-2: #735748;
+                    --scalar-color-3: #9a7d64;
+                    --scalar-color-accent: #d4944c;
+                    --scalar-border-color: rgba(212, 148, 76, 0.2);
+                    --scalar-sidebar-background-1: #f5f0e8;
+                    --scalar-sidebar-color-1: #4a3830;
+                    --scalar-sidebar-color-2: #735748;
+                    --scalar-button-1: #d4944c;
+                    --scalar-button-1-hover: #b87a3a;
+                    --scalar-button-1-color: #ffffff;
+                    --scalar-font: 'Nunito', 'Inter', system-ui, sans-serif;
+                }}
+                .back-to-admin {{
+                    position: fixed;
+                    top: 12px;
+                    right: 16px;
+                    z-index: 1000;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 6px 14px;
+                    font-family: 'Nunito', sans-serif;
+                    font-size: 13px;
+                    font-weight: 600;
+                    color: #735748;
+                    background: #f5f0e8;
+                    border: 1px solid rgba(212, 148, 76, 0.3);
+                    border-radius: 999px;
+                    text-decoration: none;
+                    transition: background 0.15s, color 0.15s;
+                }}
+                .back-to-admin:hover {{
+                    background: #d4944c;
+                    color: #fff;
+                }}
+            </style>
+        ")
+        .AddHeaderContent($@"
+            <a class=""back-to-admin"" href=""{frontendUrl}/admin"">
+                <svg xmlns=""http://www.w3.org/2000/svg"" width=""14"" height=""14"" viewBox=""0 0 20 20"" fill=""currentColor"">
+                    <path fill-rule=""evenodd"" d=""M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"" clip-rule=""evenodd"" />
+                </svg>
+                Admin Dashboard
+            </a>
+        ");
+})
+.RequireAuthorization(policy => policy.RequireRole("Admin"));
 
 // Background Workers - Scheduled Push Notifications
 // app.RunCronBackgroundWorker("0 */6 * * *",

@@ -66,7 +66,23 @@
 
 <div class="bg-warm-cream">
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-		<h1 class="text-xl sm:text-2xl font-bold text-cocoa-800 mb-4 sm:mb-6">{$t('admin.title')}</h1>
+		<div class="flex items-center justify-between mb-4 sm:mb-6">
+			<h1 class="text-xl sm:text-2xl font-bold text-cocoa-800">{$t('admin.title')}</h1>
+			<a
+				href="{import.meta.env.VITE_API_URL}/api/docs"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium
+					   text-cocoa-600 bg-warm-beige hover:bg-primary-100
+					   rounded-2xl border border-primary-200 transition-colors"
+			>
+				<svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+					<path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+					<path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+				</svg>
+				API Docs
+			</a>
+		</div>
 
 		{#if loading}
 			<div class="flex justify-center py-12">

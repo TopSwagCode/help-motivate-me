@@ -29,7 +29,13 @@
       "Bash(pkill:*)",
       "Bash(npm run generate:types:*)",
       "Bash(npx openapi-typescript:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:www.c-sharpcorner.com)",
+      "WebFetch(domain:scalar.com)",
+      "Bash(gh api:*)"
     ]
   }
 }
