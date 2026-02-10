@@ -244,6 +244,7 @@ var frontendUrl = builder.Configuration["FrontendUrl"] ?? "http://localhost:5173
 app.MapScalarApiReference("/api/docs", options =>
 {
     options
+        .WithOpenApiRoutePattern("/api/openapi/{documentName}.json")
         .WithTitle("Help Motivate Me - API Reference")
         .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient)
         .HideDarkModeToggle()
