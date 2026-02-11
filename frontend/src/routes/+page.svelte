@@ -75,7 +75,7 @@
 				class="video-container mb-6 rounded-2xl overflow-hidden mx-auto relative"
 				class:animate-ring={videoState === 'waiting' || videoState === 'portal'}
 				class:cursor-pointer={videoState === 'idle'}
-				style="width: 464px; aspect-ratio: 464 / 688;"
+				style="max-width: 464px; width: 100%; aspect-ratio: 464 / 688;"
 				onclick={handleVideoClick}
 			>
 				{#if videoState === 'waiting' || videoState === 'portal'}
