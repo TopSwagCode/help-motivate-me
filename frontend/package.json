@@ -13,7 +13,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "generate:types": "python3 ../scripts/fix-openapi-spec.py ../openapi/v1.json && openapi-typescript ../openapi/v1.json -o src/lib/types/generated/api.d.ts --root-types --root-types-no-schema-prefix",
-    "generate:spec": "curl -s http://localhost:5001/openapi/v1.json > ../openapi/v1.json && python3 ../scripts/fix-openapi-spec.py ../openapi/v1.json && echo 'OpenAPI spec updated'"
+    "generate:spec": "curl -s http://localhost:5001/api/openapi/v1.json > ../openapi/v1.json && python3 ../scripts/fix-openapi-spec.py ../openapi/v1.json && echo 'OpenAPI spec updated'"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

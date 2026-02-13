@@ -70,6 +70,8 @@ public record PushSubscriptionsStatusResponse(
 public record PushNotificationStatsResponse(
     int TotalSubscriptions,
     int UsersWithPush,
+    int TotalUsers,
+    double PercentageWithPush,
     DateTime? OldestSubscription,
     DateTime? NewestSubscription
 );

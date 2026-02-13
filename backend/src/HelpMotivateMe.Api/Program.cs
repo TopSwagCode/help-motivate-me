@@ -236,9 +236,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// OpenAPI + Scalar API Docs (admin-only)
-app.MapOpenApi("/api/openapi/{documentName}.json")
-    .RequireAuthorization(policy => policy.RequireRole("Admin"));
+// OpenAPI + Scalar API Docs (admin-only in production, open in development for codegen)
+var openApi = app.MapOpenApi("/api/openapi/{documentName}.json");
+if (!app.Environment.IsDevelopment())
+    openApi.RequireAuthorization(policy => policy.RequireRole("Admin"));
 
 var frontendUrl = builder.Configuration["FrontendUrl"] ?? "http://localhost:5173";
 app.MapScalarApiReference("/api/docs", options =>

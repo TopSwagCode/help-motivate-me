@@ -133,11 +133,30 @@ frontend/src/
 - **Filtered includes**: Use `.Include(x => x.Items.Where(...))` to limit loaded navigation properties
 - **Reference**: `TodayController` demonstrates the correct pattern
 
+### Frontend API Types (Generated from Backend)
+
+Frontend TypeScript types are auto-generated from the backend OpenAPI spec. **When you change a backend DTO, controller response type, or add/remove fields, you MUST regenerate the frontend types:**
+
+```bash
+# 1. Start the backend in development mode
+cd backend && docker compose up -d && dotnet run --project src/HelpMotivateMe.Api
+
+# 2. Regenerate types
+cd frontend
+npm run generate:spec    # Fetches OpenAPI spec from running backend
+npm run generate:types   # Generates TypeScript types
+npm run check            # Verify 0 type errors
+```
+
+- **Never hand-roll interfaces** in frontend API modules for types that come from the backend. Always use the generated types from `$lib/types`.
+- Type aliases live in `frontend/src/lib/types/api-types.ts` — add a re-export there for new DTOs.
+- See `docs/generating-types.md` for full documentation.
+
 ## Development URLs
 
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:5001
-- OpenAPI/Swagger: http://localhost:5001/openapi (dev mode)
+- OpenAPI/Swagger: http://localhost:5001/api/docs (dev mode, spec at /api/openapi/v1.json)
 - Mailpit (email testing): http://localhost:8025
 - PostgreSQL: localhost:5432 (database: `helpmotivateme`, user: `postgres`, password: `postgres`)
 

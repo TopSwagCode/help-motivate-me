@@ -212,9 +212,14 @@ public class PushNotificationsController : ApiControllerBase
             .Select(s => (DateTime?)s.CreatedAt)
             .FirstOrDefaultAsync();
 
+        var totalUsers = await _usersQuery.CountAsync();
+        var percentageWithPush = totalUsers > 0 ? (double)usersWithPush / totalUsers * 100 : 0;
+
         var response = new PushNotificationStatsResponse(
             totalSubscriptions,
             usersWithPush,
+            totalUsers,
+            percentageWithPush,
             oldestSubscription,
             newestSubscription
         );

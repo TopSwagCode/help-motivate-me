@@ -9,8 +9,8 @@ OUTPUT_FILE="$OUTPUT_DIR/v1.json"
 
 mkdir -p "$OUTPUT_DIR"
 
-echo "Fetching OpenAPI spec from $BASE_URL/openapi/v1.json..."
-HTTP_CODE=$(curl -s -w "%{http_code}" -o "$OUTPUT_FILE" "$BASE_URL/openapi/v1.json")
+echo "Fetching OpenAPI spec from $BASE_URL/api/openapi/v1.json..."
+HTTP_CODE=$(curl -s -w "%{http_code}" -o "$OUTPUT_FILE" "$BASE_URL/api/openapi/v1.json")
 
 if [ "$HTTP_CODE" != "200" ]; then
     echo "Error: Failed to fetch OpenAPI spec (HTTP $HTTP_CODE)"

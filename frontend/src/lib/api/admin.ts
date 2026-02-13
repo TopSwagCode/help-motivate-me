@@ -1,6 +1,10 @@
 import { apiGet, apiPatch, apiPost, apiDelete } from './client';
 import type { AdminStats, AdminUser, DailyStats, UpdateRoleRequest, UserActivity } from '$lib/types';
 import type { AiUsageStats, AiUsageLog, PaginatedResponse, WaitlistEntry, WhitelistEntry, SignupSettingsResponse } from '$lib/types';
+import type { PushStats, PushNotificationResult, UserPushStatus } from '$lib/types';
+import type { AnalyticsOverviewResponse } from '$lib/types';
+export type { PushStats, PushNotificationResult, UserPushStatus };
+export type { AnalyticsOverviewResponse, EventTypeCount, DailyEventCount, SessionSummary } from '$lib/types';
 
 export async function getAdminStats(): Promise<AdminStats> {
 	return apiGet<AdminStats>('/admin/stats');
@@ -98,28 +102,6 @@ export async function removeFromWhitelist(id: string): Promise<void> {
 }
 
 // Push Notification management
-export interface PushNotificationResult {
-	totalSubscriptions: number;
-	successCount: number;
-	failureCount: number;
-	errors: string[];
-}
-
-export interface UserPushStatus {
-	userId: string;
-	email: string;
-	hasPushEnabled: boolean;
-	subscriptionCount: number;
-	lastPushSentAt: string | null;
-}
-
-export interface PushStats {
-	totalSubscriptions: number;
-	usersWithPush: number;
-	totalUsers: number;
-	percentageWithPush: number;
-}
-
 export async function getPushStats(): Promise<PushStats> {
 	return apiGet<PushStats>('/notifications/push/admin/stats');
 }
@@ -166,36 +148,6 @@ export async function sendPushToAll(
 }
 
 // Analytics Events management
-export interface EventTypeCount {
-	eventType: string;
-	count: number;
-}
-
-export interface DailyEventCount {
-	date: string;
-	count: number;
-}
-
-export interface SessionSummary {
-	sessionId: string;
-	userId: string;
-	email: string;
-	firstEvent: string;
-	lastEvent: string;
-	eventCount: number;
-	durationMinutes: number;
-}
-
-export interface AnalyticsOverviewResponse {
-	totalEvents: number;
-	uniqueUsers: number;
-	uniqueSessions: number;
-	avgEventsPerSession: number;
-	topEventTypes: EventTypeCount[];
-	dailyEventCounts: DailyEventCount[];
-	recentSessions: SessionSummary[];
-}
-
 export async function getAnalyticsOverview(days: number = 30): Promise<AnalyticsOverviewResponse> {
 	return apiGet<AnalyticsOverviewResponse>(`/admin/analytics/overview?days=${days}`);
 }

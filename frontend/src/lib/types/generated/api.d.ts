@@ -5586,6 +5586,10 @@ export interface components {
             totalSubscriptions: number;
             /** Format: int32 */
             usersWithPush: number;
+            /** Format: int32 */
+            totalUsers: number;
+            /** Format: double */
+            percentageWithPush: number;
             /** Format: date-time */
             oldestSubscription: null | string;
             /** Format: date-time */

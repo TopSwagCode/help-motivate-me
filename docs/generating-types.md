@@ -11,7 +11,7 @@ Backend DTOs  -->  OpenAPI spec (JSON)  -->  TypeScript types  -->  Frontend
 
 The pipeline:
 
-1. The .NET backend exposes an OpenAPI spec at `/openapi/v1.json` (dev mode)
+1. The .NET backend exposes an OpenAPI spec at `/api/openapi/v1.json` (dev mode, no auth required)
 2. A Python script post-processes the spec to fix .NET 10 quirks
 3. `openapi-typescript` generates TypeScript types from the spec
 4. `api-types.ts` re-exports generated types with friendly frontend names

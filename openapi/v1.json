@@ -7814,6 +7814,8 @@
         "required": [
           "totalSubscriptions",
           "usersWithPush",
+          "totalUsers",
+          "percentageWithPush",
           "oldestSubscription",
           "newestSubscription"
         ],
@@ -7826,6 +7828,14 @@
           "usersWithPush": {
             "type": "integer",
             "format": "int32"
+          },
+          "totalUsers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "percentageWithPush": {
+            "type": "number",
+            "format": "double"
           },
           "oldestSubscription": {
             "type": [
