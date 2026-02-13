@@ -135,6 +135,10 @@ export async function sendPushToUser(
 	});
 }
 
+export async function clearAllPushSubscriptions(): Promise<{ message: string }> {
+	return apiDelete<{ message: string }>('/notifications/push/admin/clear-all');
+}
+
 export async function sendPushToAll(
 	title: string,
 	body: string,

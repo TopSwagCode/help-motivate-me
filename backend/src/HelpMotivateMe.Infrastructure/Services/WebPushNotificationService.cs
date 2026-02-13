@@ -29,13 +29,16 @@ public class WebPushNotificationService : IPushNotificationService
         _logger = logger;
         _webPushClient = new WebPushClient();
 
-        var vapidSubject = _configuration["Vapid:Subject"] ?? "mailto:admin@helpmotivateme.app";
-        var vapidPublicKey = _configuration["Vapid:PublicKey"]
+        var vapidSubject = _configuration["Vapid:Subject"]?.Trim() ?? "mailto:admin@helpmotivateme.app";
+        var vapidPublicKey = _configuration["Vapid:PublicKey"]?.Trim()
                              ?? throw new InvalidOperationException("Vapid:PublicKey is not configured");
-        var vapidPrivateKey = _configuration["Vapid:PrivateKey"]
+        var vapidPrivateKey = _configuration["Vapid:PrivateKey"]?.Trim()
                               ?? throw new InvalidOperationException("Vapid:PrivateKey is not configured");
 
-        _vapidDetails = new VapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey);
+        _vapidDetails = new VapidDetails(
+            vapidSubject,
+            ToUrlSafeBase64(vapidPublicKey),
+            ToUrlSafeBase64(vapidPrivateKey));
     }
 
     public async Task<PushNotificationResult> SendToUserAsync(Guid userId, string title, string body,
@@ -73,8 +76,8 @@ public class WebPushNotificationService : IPushNotificationService
             var payload = CreatePayload(title, body, url);
             var pushSubscription = new PushSubscription(
                 subscription.Endpoint,
-                UrlSafeBase64ToStandard(subscription.P256dh),
-                UrlSafeBase64ToStandard(subscription.Auth));
+                subscription.P256dh,
+                subscription.Auth);
 
             await _webPushClient.SendNotificationAsync(pushSubscription, payload, _vapidDetails);
 
@@ -127,15 +130,15 @@ public class WebPushNotificationService : IPushNotificationService
         );
     }
 
-    private static string UrlSafeBase64ToStandard(string urlSafeBase64)
+    /// <summary>
+    ///     Normalizes a Base64 string to URL-safe Base64 (no padding) as expected by the WebPush library.
+    /// </summary>
+    private static string ToUrlSafeBase64(string base64)
     {
-        var standard = urlSafeBase64.Replace('-', '+').Replace('_', '/');
-        switch (standard.Length % 4)
-        {
-            case 2: standard += "=="; break;
-            case 3: standard += "="; break;
-        }
-        return standard;
+        return base64
+            .Replace('+', '-')
+            .Replace('/', '_')
+            .TrimEnd('=');
     }
 
     private static string CreatePayload(string title, string body, string? url)

@@ -190,6 +190,20 @@ public class PushNotificationsController : ApiControllerBase
     }
 
     /// <summary>
+    ///     Clear all push subscriptions (Admin only)
+    /// </summary>
+    [HttpDelete("admin/clear-all")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<MessageResponse>> ClearAllSubscriptions()
+    {
+        var subscriptions = await _db.PushSubscriptions.ToListAsync();
+        var count = subscriptions.Count;
+        _db.PushSubscriptions.RemoveRange(subscriptions);
+        await _db.SaveChangesAsync();
+        return Ok(new MessageResponse($"Deleted {count} push subscriptions"));
+    }
+
+    /// <summary>
     ///     Get push notification stats (Admin only)
     /// </summary>
     [HttpGet("admin/stats")]
