@@ -73,8 +73,8 @@ public class WebPushNotificationService : IPushNotificationService
             var payload = CreatePayload(title, body, url);
             var pushSubscription = new PushSubscription(
                 subscription.Endpoint,
-                subscription.P256dh,
-                subscription.Auth);
+                UrlSafeBase64ToStandard(subscription.P256dh),
+                UrlSafeBase64ToStandard(subscription.Auth));
 
             await _webPushClient.SendNotificationAsync(pushSubscription, payload, _vapidDetails);
 
@@ -125,6 +125,17 @@ public class WebPushNotificationService : IPushNotificationService
             failureCount,
             errors
         );
+    }
+
+    private static string UrlSafeBase64ToStandard(string urlSafeBase64)
+    {
+        var standard = urlSafeBase64.Replace('-', '+').Replace('_', '/');
+        switch (standard.Length % 4)
+        {
+            case 2: standard += "=="; break;
+            case 3: standard += "="; break;
+        }
+        return standard;
     }
 
     private static string CreatePayload(string title, string body, string? url)
