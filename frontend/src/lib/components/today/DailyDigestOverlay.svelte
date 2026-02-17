@@ -9,7 +9,11 @@
 	let ctx: CanvasRenderingContext2D | null = null;
 	let animationId: number;
 	let confettiPieces: ConfettiPiece[] = [];
+	let voteParticles: VoteParticle[] = [];
 	let animationStarted = $state(false);
+	let barsAnimating: boolean[] = $state([]);
+	let barRefs: HTMLDivElement[] = $state([]);
+	let barAbsorbing: boolean[] = $state([]);
 
 	interface ConfettiPiece {
 		x: number;
@@ -20,6 +24,23 @@
 		rotation: number;
 		rotationSpeed: number;
 		size: number;
+	}
+
+	interface VoteParticle {
+		x: number;
+		y: number;
+		startX: number;
+		startY: number;
+		targetX: number;
+		targetY: number;
+		arcHeight: number;
+		progress: number;
+		speed: number;
+		color: string;
+		size: number;
+		opacity: number;
+		identityIndex: number;
+		arrived: boolean;
 	}
 
 	const COLORS = [
@@ -48,14 +69,114 @@
 			});
 		}
 
-		animateConfetti();
+		startAnimationLoop();
 	}
 
-	function animateConfetti() {
+	function spawnVoteParticles(identity: DigestIdentity, index: number) {
+		if (!browser || !canvas || !ctx) return;
+
+		const barEl = barRefs[index];
+		if (!barEl) return;
+
+		const barRect = barEl.getBoundingClientRect();
+		const canvasRect = canvas.getBoundingClientRect();
+
+		// Target: right edge of the progress bar area
+		const targetX = barRect.left - canvasRect.left + barRect.width * (Math.min(100, identity.todayScore) / 100);
+		const targetY = barRect.top - canvasRect.top + barRect.height / 2;
+
+		// Start: below the identity card
+		const startX = barRect.left - canvasRect.left + barRect.width / 2;
+		const startY = barRect.bottom - canvasRect.top + 30;
+
+		const voteCount = Math.min(identity.yesterdayVotes, 15);
+		const color = identity.color || '#8b7355';
+
+		for (let i = 0; i < voteCount; i++) {
+			voteParticles.push({
+				x: startX + (Math.random() - 0.5) * 40,
+				y: startY + Math.random() * 20,
+				startX: startX + (Math.random() - 0.5) * 40,
+				startY: startY + Math.random() * 20,
+				targetX: targetX + (Math.random() - 0.5) * 6,
+				targetY: targetY + (Math.random() - 0.5) * 4,
+				arcHeight: 40 + Math.random() * 60,
+				progress: -(i * 0.04), // stagger particle starts
+				speed: 0.015 + Math.random() * 0.01,
+				color,
+				size: 4 + Math.random() * 3,
+				opacity: 1,
+				identityIndex: index,
+				arrived: false
+			});
+		}
+
+		startAnimationLoop();
+	}
+
+	function quadraticBezier(start: number, control: number, end: number, t: number): number {
+		const inv = 1 - t;
+		return inv * inv * start + 2 * inv * t * control + t * t * end;
+	}
+
+	function startAnimationLoop() {
+		if (animationId) return; // already running
+		animateLoop();
+	}
+
+	function animateLoop() {
 		if (!ctx || !canvas) return;
 
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+		// Update and draw vote particles
+		voteParticles = voteParticles.filter((p) => {
+			p.progress += p.speed;
+
+			if (p.progress < 0) {
+				// Still waiting to start (stagger delay)
+				return true;
+			}
+
+			const t = Math.min(p.progress, 1);
+
+			const controlX = (p.startX + p.targetX) / 2;
+			const controlY = p.startY - p.arcHeight;
+
+			p.x = quadraticBezier(p.startX, controlX, p.targetX, t);
+			p.y = quadraticBezier(p.startY, controlY, p.targetY, t);
+
+			// Shrink and fade as approaching target
+			const fadeStart = 0.7;
+			if (t > fadeStart) {
+				const fadeProg = (t - fadeStart) / (1 - fadeStart);
+				p.opacity = 1 - fadeProg;
+				p.size = (4 + Math.random() * 0.5) * (1 - fadeProg * 0.8);
+			}
+
+			if (t >= 1) {
+				if (!p.arrived) {
+					p.arrived = true;
+					// Trigger bar absorb pulse on first arrival per identity
+					if (!barAbsorbing[p.identityIndex]) {
+						barAbsorbing[p.identityIndex] = true;
+					}
+				}
+				return false; // remove particle
+			}
+
+			// Draw particle as filled circle
+			ctx!.beginPath();
+			ctx!.arc(p.x, p.y, Math.max(0.5, p.size), 0, Math.PI * 2);
+			ctx!.fillStyle = p.color;
+			ctx!.globalAlpha = p.opacity;
+			ctx!.fill();
+			ctx!.globalAlpha = 1;
+
+			return true;
+		});
+
+		// Update and draw confetti
 		confettiPieces = confettiPieces.filter((piece) => {
 			piece.x += piece.vx;
 			piece.y += piece.vy;
@@ -73,8 +194,10 @@
 			return piece.y <= canvas.height + 50;
 		});
 
-		if (confettiPieces.length > 0) {
-			animationId = requestAnimationFrame(animateConfetti);
+		if (voteParticles.length > 0 || confettiPieces.length > 0) {
+			animationId = requestAnimationFrame(animateLoop);
+		} else {
+			animationId = 0;
 		}
 	}
 
@@ -87,23 +210,79 @@
 	}
 
 	function getBarWidth(score: number): string {
-		// Clamp score between 0 and 100 for display
 		return `${Math.max(0, Math.min(100, score))}%`;
 	}
 
 	let digestState = $derived($dailyDigestStore);
+	let staggerTimeouts: ReturnType<typeof setTimeout>[] = [];
+
+	function clearStaggerTimeouts() {
+		staggerTimeouts.forEach(clearTimeout);
+		staggerTimeouts = [];
+	}
+
+	function startStaggeredAnimation(identities: DigestIdentity[]) {
+		clearStaggerTimeouts();
+		barsAnimating = identities.map(() => false);
+		barAbsorbing = identities.map(() => false);
+
+		// Ensure canvas is ready
+		if (!canvas) return;
+		ctx = canvas.getContext('2d');
+		if (!ctx) return;
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+
+		const identityCount = identities.length;
+
+		identities.forEach((identity, index) => {
+			const staggerDelay = index * 400;
+
+			if (identity.yesterdayVotes === 0) {
+				// No votes: bar transitions immediately at its stagger time
+				const tid = setTimeout(() => {
+					barsAnimating[index] = true;
+				}, staggerDelay + 300); // small delay after card fade-in
+				staggerTimeouts.push(tid);
+			} else {
+				// Spawn particles, then trigger bar growth after 400ms head start
+				const tid1 = setTimeout(() => {
+					spawnVoteParticles(identity, index);
+				}, staggerDelay + 300);
+				staggerTimeouts.push(tid1);
+
+				const tid2 = setTimeout(() => {
+					barsAnimating[index] = true;
+				}, staggerDelay + 700); // 300 + 400ms head start
+				staggerTimeouts.push(tid2);
+			}
+		});
+
+		// Fire confetti after last identity's particles finish
+		if (hasPositiveActivity(identities)) {
+			const confettiDelay = (identityCount - 1) * 400 + 1200;
+			const tid = setTimeout(() => {
+				initConfetti();
+			}, confettiDelay);
+			staggerTimeouts.push(tid);
+		}
+	}
 
 	// Trigger animation when overlay becomes visible
 	$effect(() => {
 		if (digestState.visible && digestState.data && browser) {
 			animationStarted = false;
 			confettiPieces = [];
-			if (animationId) cancelAnimationFrame(animationId);
+			voteParticles = [];
+			if (animationId) {
+				cancelAnimationFrame(animationId);
+				animationId = 0;
+			}
 
 			setTimeout(() => {
 				animationStarted = true;
-				if (digestState.data && hasPositiveActivity(digestState.data.identities)) {
-					setTimeout(() => initConfetti(), 100);
+				if (digestState.data) {
+					startStaggeredAnimation(digestState.data.identities);
 				}
 			}, 300);
 		}
@@ -113,6 +292,7 @@
 		if (browser && animationId) {
 			cancelAnimationFrame(animationId);
 		}
+		clearStaggerTimeouts();
 	});
 
 	function handleDismiss() {
@@ -122,7 +302,7 @@
 
 {#if digestState.visible && digestState.data}
 	<div class="fixed inset-0 z-[300] flex items-center justify-center bg-black/60 backdrop-blur-sm">
-		<!-- Confetti canvas -->
+		<!-- Canvas for particles and confetti -->
 		<canvas bind:this={canvas} class="absolute inset-0 pointer-events-none"></canvas>
 
 		<!-- Modal -->
@@ -183,7 +363,10 @@
 								</div>
 
 								<!-- Progress bar -->
-								<div class="relative h-3 bg-gray-100 rounded-full overflow-hidden">
+								<div
+									class="relative h-3 bg-gray-100 rounded-full overflow-hidden"
+									bind:this={barRefs[index]}
+								>
 									<!-- Ghost bar (yesterday) -->
 									<div
 										class="absolute inset-y-0 left-0 rounded-full transition-none"
@@ -191,11 +374,10 @@
 									></div>
 									<!-- Animated bar (today) -->
 									<div
-										class="absolute inset-y-0 left-0 rounded-full digest-bar"
+										class="absolute inset-y-0 left-0 rounded-full digest-bar {barAbsorbing[index] ? 'bar-absorbing' : ''}"
 										style="
-											width: {animationStarted ? getBarWidth(identity.todayScore) : getBarWidth(identity.yesterdayScore)};
+											width: {barsAnimating[index] ? getBarWidth(identity.todayScore) : getBarWidth(identity.yesterdayScore)};
 											background-color: {identity.color || '#8b7355'};
-											transition-delay: {index * 200}ms;
 										"
 									>
 										<div class="shimmer-overlay"></div>
@@ -276,6 +458,18 @@
 		}
 	}
 
+	@keyframes bar-pulse {
+		0% {
+			transform: scaleY(1);
+		}
+		50% {
+			transform: scaleY(1.4);
+		}
+		100% {
+			transform: scaleY(1);
+		}
+	}
+
 	.animate-bounce-in {
 		animation: bounce-in 0.5s ease-out;
 	}
@@ -287,6 +481,11 @@
 
 	.digest-bar {
 		transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+
+	.bar-absorbing {
+		animation: bar-pulse 0.3s ease-out;
+		transform-origin: center;
 	}
 
 	.shimmer-overlay {
