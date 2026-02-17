@@ -594,21 +594,28 @@
 		<div class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">
 			<!-- Page Title with Info -->
 			<div class="flex items-center justify-between pt-4 pb-2">
-				<InfoOverlay
-					title={$t('today.title')}
-					description={$t('today.info.description')}
-				/>
-				{#if isToday()}
-					<button
-						onclick={() => dailyDigestStore.showDigest(true)}
-						class="p-2 text-cocoa-400 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-colors"
-						title={$t('dailyDigest.reshow')}
-					>
-						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-						</svg>
-					</button>
-				{/if}
+				<div class="flex items-center gap-2">
+					<InfoOverlay
+						title={$t('today.title')}
+						description={$t('today.info.description')}
+					/>
+					{#if isToday()}
+						<button
+							onclick={() => dailyDigestStore.showDigest(true)}
+							class="group relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 text-primary-500 hover:text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-full transition-all duration-300 touch-manipulation hover:scale-110 active:scale-95 shadow-sm hover:shadow-md"
+							title={$t('dailyDigest.reshow')}
+							aria-label={$t('dailyDigest.reshow')}
+						>
+							<svg class="w-5 h-5 sm:w-5.5 sm:h-5.5 transition-transform group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+							</svg>
+							<!-- Tooltip for desktop -->
+							<span class="absolute hidden sm:block -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+								{$t('dailyDigest.reshow')}
+							</span>
+						</button>
+					{/if}
+				</div>
 			</div>
 			
 			<div class="flex items-center justify-center py-3 gap-2 sm:gap-4">
