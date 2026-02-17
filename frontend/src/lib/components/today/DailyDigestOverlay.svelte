@@ -119,7 +119,7 @@
 				targetY,
 				arcHeight: 8 + Math.random() * 12,
 				progress: 0,
-				speed: 0.04 + Math.random() * 0.01, // faster — short distance from bar
+				speed: 0.4 + Math.random() * 0.1, // faster — short distance from bar
 				label: '-1',
 				color: '#ef4444',
 				baseFontSize: 12 + Math.random() * 2,
@@ -284,7 +284,7 @@
 
 			// Brief pause between identities
 			if (i < identities.length - 1) {
-				await sleep(150);
+				await sleep(50);
 			}
 		}
 	}
