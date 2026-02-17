@@ -50,7 +50,7 @@
 		const startX = barRect.left - canvasRect.left + barRect.width / 2;
 		const startY = barRect.bottom - canvasRect.top + 35;
 
-		const count = Math.min(identity.yesterdayVotes, 12);
+		const count = Math.min(identity.yesterdayVotes, 8);
 
 		for (let i = 0; i < count; i++) {
 			scoreParticles.push({
@@ -61,8 +61,8 @@
 				targetX: targetX + (Math.random() - 0.5) * 8,
 				targetY: targetY + (Math.random() - 0.5) * 6,
 				arcHeight: 30 + Math.random() * 50,
-				progress: -(i * 0.05),
-				speed: 0.014 + Math.random() * 0.008,
+				progress: -(i * 0.25),
+				speed: 0.012 + Math.random() * 0.006,
 				label: '+1',
 				color: '#22c55e',
 				fontSize: 13 + Math.random() * 3,
@@ -86,7 +86,7 @@
 		const canvasRect = canvas.getBoundingClientRect();
 
 		const delta = Math.abs(identity.todayScore - identity.yesterdayScore);
-		const count = Math.min(Math.ceil(delta), 10);
+		const count = Math.min(Math.ceil(delta), 6);
 
 		// Start: right edge of yesterday's bar (where it's shrinking from)
 		const startX = barRect.left - canvasRect.left + barRect.width * (Math.min(100, identity.yesterdayScore) / 100);
@@ -105,8 +105,8 @@
 				targetX,
 				targetY,
 				arcHeight: 10 + Math.random() * 15,
-				progress: -(i * 0.06),
-				speed: 0.012 + Math.random() * 0.006,
+				progress: -(i * 0.3),
+				speed: 0.010 + Math.random() * 0.004,
 				label: '-1',
 				color: '#ef4444',
 				fontSize: 12 + Math.random() * 2,
