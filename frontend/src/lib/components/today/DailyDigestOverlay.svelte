@@ -56,7 +56,7 @@
 
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-		confettiPieces.forEach((piece, index) => {
+		confettiPieces = confettiPieces.filter((piece) => {
 			piece.x += piece.vx;
 			piece.y += piece.vy;
 			piece.vy += 0.3;
@@ -70,9 +70,7 @@
 			ctx!.fillRect(-piece.size / 2, -piece.size / 2, piece.size, piece.size * 0.6);
 			ctx!.restore();
 
-			if (piece.y > canvas.height + 50) {
-				confettiPieces.splice(index, 1);
-			}
+			return piece.y <= canvas.height + 50;
 		});
 
 		if (confettiPieces.length > 0) {
