@@ -213,6 +213,20 @@
 		return `${Math.max(0, Math.min(100, score))}%`;
 	}
 
+	function getGainGradient(identity: DigestIdentity): string {
+		const today = Math.max(0, Math.min(100, identity.todayScore));
+		const yesterday = Math.max(0, Math.min(100, identity.yesterdayScore));
+		const color = identity.color || '#8b7355';
+
+		if (today <= yesterday || today === 0) {
+			return color;
+		}
+
+		// The portion of the bar that is "kept" vs "gained"
+		const keptRatio = (yesterday / today) * 100;
+		return `linear-gradient(90deg, ${color} ${keptRatio}%, color-mix(in srgb, ${color}, white 30%) ${keptRatio}%, color-mix(in srgb, ${color}, white 30%) 100%)`;
+	}
+
 	let digestState = $derived($dailyDigestStore);
 	let staggerTimeouts: ReturnType<typeof setTimeout>[] = [];
 
@@ -377,7 +391,7 @@
 										class="absolute inset-y-0 left-0 rounded-full digest-bar {barAbsorbing[index] ? 'bar-absorbing' : ''}"
 										style="
 											width: {barsAnimating[index] ? getBarWidth(identity.todayScore) : getBarWidth(identity.yesterdayScore)};
-											background-color: {identity.color || '#8b7355'};
+											background: {barsAnimating[index] ? getGainGradient(identity) : (identity.color || '#8b7355')};
 										"
 									>
 										<div class="shimmer-overlay"></div>
