@@ -309,8 +309,8 @@
 
 {#if digestState.visible && digestState.data}
 	<div class="fixed inset-0 z-[300] flex items-center justify-center bg-black/60 backdrop-blur-sm">
-		<!-- Canvas for score particles -->
-		<canvas bind:this={canvas} class="absolute inset-0 pointer-events-none"></canvas>
+		<!-- Canvas for score particles (z-10 to render above modal, pointer-events-none for click-through) -->
+		<canvas bind:this={canvas} class="absolute inset-0 z-10 pointer-events-none"></canvas>
 
 		<!-- Modal -->
 		<div class="relative w-full max-w-md mx-4 bg-warm-paper rounded-3xl shadow-2xl overflow-hidden animate-bounce-in">
