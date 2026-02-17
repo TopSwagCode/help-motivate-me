@@ -224,7 +224,7 @@
 
 		// The portion of the bar that is "kept" vs "gained"
 		const keptRatio = (yesterday / today) * 100;
-		return `linear-gradient(90deg, ${color} ${keptRatio}%, color-mix(in srgb, ${color}, white 30%) ${keptRatio}%, color-mix(in srgb, ${color}, white 30%) 100%)`;
+		return `linear-gradient(90deg, ${color} ${keptRatio}%, color-mix(in srgb, ${color}, #4ade80 40%) ${keptRatio}%, color-mix(in srgb, ${color}, #4ade80 40%) 100%)`;
 	}
 
 	let digestState = $derived($dailyDigestStore);
