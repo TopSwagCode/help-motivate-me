@@ -50,7 +50,8 @@
 		const startX = barRect.left - canvasRect.left + barRect.width / 2;
 		const startY = barRect.bottom - canvasRect.top + 35;
 
-		const count = Math.min(identity.yesterdayVotes, 8);
+		const delta = identity.todayScore - identity.yesterdayScore;
+		const count = Math.max(0, Math.min(delta, 8));
 
 		for (let i = 0; i < count; i++) {
 			scoreParticles.push({
@@ -86,7 +87,7 @@
 		const canvasRect = canvas.getBoundingClientRect();
 
 		const delta = Math.abs(identity.todayScore - identity.yesterdayScore);
-		const count = Math.min(Math.ceil(delta), 6);
+		const count = Math.max(0, Math.min(delta, 6));
 
 		// Start: right edge of yesterday's bar (where it's shrinking from)
 		const startX = barRect.left - canvasRect.left + barRect.width * (Math.min(100, identity.yesterdayScore) / 100);
