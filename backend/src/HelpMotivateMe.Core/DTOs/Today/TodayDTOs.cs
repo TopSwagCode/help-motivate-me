@@ -53,3 +53,26 @@ public record TodayIdentityFeedbackResponse(
     int ProofVotes,
     string ReinforcementMessage
 );
+
+public record DailyDigestResponse(
+    DateOnly Date,
+    List<DailyDigestIdentityResponse> Identities,
+    int TotalYesterdayVotes
+);
+
+public record DailyDigestIdentityResponse(
+    Guid Id,
+    string Name,
+    string? Color,
+    string? Icon,
+    int YesterdayScore,
+    int TodayScore,
+    string YesterdayStatus,
+    string TodayStatus,
+    string Trend,
+    int YesterdayVotes,
+    int HabitVotes,
+    int StackBonusVotes,
+    int TaskVotes,
+    int ProofVotes
+);

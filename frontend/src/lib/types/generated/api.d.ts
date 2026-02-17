@@ -5747,6 +5747,37 @@ export interface components {
             /** Format: int32 */
             totalCount: number;
         };
+        DailyDigestResponse: {
+            /** Format: date */
+            date: string;
+            identities: components["schemas"]["DailyDigestIdentityResponse"][];
+            /** Format: int32 */
+            totalYesterdayVotes: number;
+        };
+        DailyDigestIdentityResponse: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            color: null | string;
+            icon: null | string;
+            /** Format: int32 */
+            yesterdayScore: number;
+            /** Format: int32 */
+            todayScore: number;
+            yesterdayStatus: string;
+            todayStatus: string;
+            trend: string;
+            /** Format: int32 */
+            yesterdayVotes: number;
+            /** Format: int32 */
+            habitVotes: number;
+            /** Format: int32 */
+            stackBonusVotes: number;
+            /** Format: int32 */
+            taskVotes: number;
+            /** Format: int32 */
+            proofVotes: number;
+        };
         TodayIdentityFeedbackResponse: {
             /** Format: uuid */
             id: string;
@@ -6056,6 +6087,8 @@ export type CreateMilestoneRequest = components['schemas']['CreateMilestoneReque
 export type CreateTaskRequest = components['schemas']['CreateTaskRequest'];
 export type DailyCommitmentResponse = components['schemas']['DailyCommitmentResponse'];
 export type DailyCommitmentStatus = components['schemas']['DailyCommitmentStatus'];
+export type DailyDigestIdentityResponse = components['schemas']['DailyDigestIdentityResponse'];
+export type DailyDigestResponse = components['schemas']['DailyDigestResponse'];
 export type DailyEventCount = components['schemas']['DailyEventCount'];
 export type DailyStatsResponse = components['schemas']['DailyStatsResponse'];
 export type DeleteAccountRequest = components['schemas']['DeleteAccountRequest'];

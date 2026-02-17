@@ -1826,5 +1826,16 @@
 			"completed": "Rundvisning afsluttet",
 			"notCompleted": "Rundvisning ikke afsluttet"
 		}
+	},
+	"dailyDigest": {
+		"title": "Din daglige fremgang",
+		"subtitle": "Sådan formede gårsdagen dine identiteter",
+		"noActivity": "I går var en hviledag. I dag er en frisk start!",
+		"letsGo": "Lad os komme i gang!",
+		"reshow": "Vis daglig oversigt",
+		"habits": "Vaner",
+		"tasks": "Opgaver",
+		"proofs": "Beviser",
+		"bonus": "Bonus"
 	}
 }

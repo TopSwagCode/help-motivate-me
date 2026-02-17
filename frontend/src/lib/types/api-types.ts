@@ -71,6 +71,9 @@ export type { TodayHabitStackItemResponse as TodayHabitStackItem } from './gener
 export type { TodayIdentityFeedbackResponse as IdentityFeedback } from './generated/api';
 export type { IdentityProgressResponse as IdentityProgress } from './generated/api';
 
+export type { DailyDigestResponse as DailyDigest } from './generated/api';
+export type { DailyDigestIdentityResponse as DigestIdentity } from './generated/api';
+
 // Today enums (frontend-only string literals)
 export type IdentityStatus = 'Dormant' | 'Forming' | 'Emerging' | 'Stabilizing' | 'Strong' | 'Automatic';
 export type TrendDirection = 'Up' | 'Down' | 'Neutral';
