@@ -10,9 +10,10 @@
 	let animationId: number = 0;
 	let scoreParticles: ScoreParticle[] = [];
 	let animationStarted = $state(false);
-	let barsAnimating: boolean[] = $state([]);
+	let barDisplayScore: number[] = $state([]);
 	let barRefs: HTMLDivElement[] = $state([]);
 	let barAbsorbing: boolean[] = $state([]);
+	let sequenceResolve: (() => void) | null = null;
 
 	interface ScoreParticle {
 		x: number;
@@ -24,8 +25,9 @@
 		arcHeight: number;
 		progress: number;
 		speed: number;
-		label: string;       // "+1" or "-1"
-		color: string;       // green for gain, red for loss
+		label: string;
+		color: string;
+		baseFontSize: number;
 		fontSize: number;
 		opacity: number;
 		identityIndex: number;
@@ -33,92 +35,136 @@
 		type: 'gain' | 'loss';
 	}
 
-	function spawnGainParticles(identity: DigestIdentity, index: number) {
-		if (!browser || !canvas || !ctx) return;
+	function spawnSingleGainParticle(identity: DigestIdentity, index: number, particleIndex: number): Promise<void> {
+		return new Promise((resolve) => {
+			if (!browser || !canvas || !ctx) { resolve(); return; }
 
-		const barEl = barRefs[index];
-		if (!barEl) return;
+			const barEl = barRefs[index];
+			if (!barEl) { resolve(); return; }
 
-		const barRect = barEl.getBoundingClientRect();
-		const canvasRect = canvas.getBoundingClientRect();
+			const barRect = barEl.getBoundingClientRect();
+			const canvasRect = canvas.getBoundingClientRect();
 
-		// Target: right edge of today's bar
-		const targetX = barRect.left - canvasRect.left + barRect.width * (Math.min(100, identity.todayScore) / 100);
-		const targetY = barRect.top - canvasRect.top + barRect.height / 2;
+			// Target: current leading edge of the bar (where it will be after this +1)
+			const nextScore = barDisplayScore[index] + 1;
+			const targetX = barRect.left - canvasRect.left + barRect.width * (Math.min(100, nextScore) / 100);
+			const targetY = barRect.top - canvasRect.top + barRect.height / 2;
 
-		// Start: below the identity card
-		const startX = barRect.left - canvasRect.left + barRect.width / 2;
-		const startY = barRect.bottom - canvasRect.top + 35;
+			// Start: below the identity card
+			const startX = barRect.left - canvasRect.left + barRect.width * 0.3 + Math.random() * barRect.width * 0.4;
+			const startY = barRect.bottom - canvasRect.top + 35;
 
-		const delta = identity.todayScore - identity.yesterdayScore;
-		const count = Math.max(0, Math.min(delta, 8));
-
-		for (let i = 0; i < count; i++) {
-			scoreParticles.push({
+			const particle: ScoreParticle = {
 				x: startX,
 				y: startY,
-				startX: startX + (Math.random() - 0.5) * 30,
-				startY: startY + Math.random() * 15,
-				targetX: targetX + (Math.random() - 0.5) * 8,
-				targetY: targetY + (Math.random() - 0.5) * 6,
+				startX,
+				startY,
+				targetX,
+				targetY,
 				arcHeight: 30 + Math.random() * 50,
-				progress: -(i * 0.25),
-				speed: 0.012 + Math.random() * 0.006,
+				progress: 0,
+				speed: 0.018 + Math.random() * 0.004,
 				label: '+1',
 				color: '#22c55e',
+				baseFontSize: 13 + Math.random() * 3,
 				fontSize: 13 + Math.random() * 3,
 				opacity: 1,
 				identityIndex: index,
 				arrived: false,
 				type: 'gain'
-			});
-		}
+			};
 
-		startAnimationLoop();
+			// When this particle arrives, bump the bar and resolve
+			const originalResolve = resolve;
+			sequenceResolve = () => {
+				barDisplayScore[index] = nextScore;
+				barAbsorbing[index] = true;
+				setTimeout(() => { barAbsorbing[index] = false; }, 200);
+				sequenceResolve = null;
+				originalResolve();
+			};
+
+			scoreParticles.push(particle);
+			startAnimationLoop();
+		});
 	}
 
-	function spawnLossParticles(identity: DigestIdentity, index: number) {
-		if (!browser || !canvas || !ctx) return;
+	function spawnSingleLossParticle(identity: DigestIdentity, index: number, particleIndex: number): Promise<void> {
+		return new Promise((resolve) => {
+			if (!browser || !canvas || !ctx) { resolve(); return; }
 
-		const barEl = barRefs[index];
-		if (!barEl) return;
+			const barEl = barRefs[index];
+			if (!barEl) { resolve(); return; }
 
-		const barRect = barEl.getBoundingClientRect();
-		const canvasRect = canvas.getBoundingClientRect();
+			const barRect = barEl.getBoundingClientRect();
+			const canvasRect = canvas.getBoundingClientRect();
 
-		const delta = Math.abs(identity.todayScore - identity.yesterdayScore);
-		const count = Math.max(0, Math.min(delta, 6));
+			const currentScore = barDisplayScore[index];
+			// Start: current right edge of the bar
+			const startX = barRect.left - canvasRect.left + barRect.width * (Math.min(100, currentScore) / 100);
+			const startY = barRect.top - canvasRect.top + barRect.height / 2;
 
-		// Start: right edge of yesterday's bar (where it's shrinking from)
-		const startX = barRect.left - canvasRect.left + barRect.width * (Math.min(100, identity.yesterdayScore) / 100);
-		const startY = barRect.top - canvasRect.top + barRect.height / 2;
+			const targetX = startX + 25 + Math.random() * 35;
+			const targetY = startY - 35 - Math.random() * 25;
 
-		// Target: float up and to the right, then fade out
-		for (let i = 0; i < count; i++) {
-			const targetX = startX + 30 + Math.random() * 40;
-			const targetY = startY - 40 - Math.random() * 30;
+			// Shrink bar immediately when loss particle spawns
+			barDisplayScore[index] = currentScore - 1;
 
-			scoreParticles.push({
+			const particle: ScoreParticle = {
 				x: startX,
 				y: startY,
-				startX: startX + (Math.random() - 0.5) * 10,
-				startY: startY,
+				startX,
+				startY,
 				targetX,
 				targetY,
-				arcHeight: 10 + Math.random() * 15,
-				progress: -(i * 0.3),
-				speed: 0.010 + Math.random() * 0.004,
+				arcHeight: 8 + Math.random() * 12,
+				progress: 0,
+				speed: 0.025 + Math.random() * 0.008, // faster — short distance from bar
 				label: '-1',
 				color: '#ef4444',
+				baseFontSize: 12 + Math.random() * 2,
 				fontSize: 12 + Math.random() * 2,
 				opacity: 1,
 				identityIndex: index,
 				arrived: false,
 				type: 'loss'
-			});
-		}
+			};
 
-		startAnimationLoop();
+			// Resolve after a short delay so the next -1 doesn't overlap too much
+			// Loss is faster since it starts at the bar, so shorter gap
+			const originalResolve = resolve;
+			sequenceResolve = () => {
+				sequenceResolve = null;
+				originalResolve();
+			};
+
+			scoreParticles.push(particle);
+			startAnimationLoop();
+		});
+	}
+
+	async function animateIdentity(identity: DigestIdentity, index: number) {
+		const delta = identity.todayScore - identity.yesterdayScore;
+
+		if (delta > 0) {
+			const count = Math.min(delta, 8);
+			for (let i = 0; i < count; i++) {
+				await spawnSingleGainParticle(identity, index, i);
+				// Small pause between particles so they don't stack
+				await sleep(120);
+			}
+		} else if (delta < 0) {
+			const count = Math.min(Math.abs(delta), 6);
+			for (let i = 0; i < count; i++) {
+				await spawnSingleLossParticle(identity, index, i);
+				// Shorter pause for losses — they're quicker
+				await sleep(80);
+			}
+		}
+	}
+
+	function sleep(ms: number): Promise<void> {
+		return new Promise((resolve) => setTimeout(resolve, ms));
 	}
 
 	function quadraticBezier(start: number, control: number, end: number, t: number): number {
@@ -139,38 +185,33 @@
 		scoreParticles = scoreParticles.filter((p) => {
 			p.progress += p.speed;
 
-			if (p.progress < 0) return true; // stagger wait
-
 			const t = Math.min(p.progress, 1);
 
 			if (p.type === 'gain') {
-				// Arc from below into the bar
 				const controlX = (p.startX + p.targetX) / 2;
 				const controlY = p.startY - p.arcHeight;
 				p.x = quadraticBezier(p.startX, controlX, p.targetX, t);
 				p.y = quadraticBezier(p.startY, controlY, p.targetY, t);
 			} else {
-				// Float up and outward from the bar
 				const controlX = p.startX + (p.targetX - p.startX) * 0.3;
 				const controlY = p.startY - p.arcHeight;
 				p.x = quadraticBezier(p.startX, controlX, p.targetX, t);
 				p.y = quadraticBezier(p.startY, controlY, p.targetY, t);
 			}
 
-			// Fade logic
-			const fadeStart = p.type === 'gain' ? 0.6 : 0.4;
+			// Fade and shrink
+			const fadeStart = p.type === 'gain' ? 0.65 : 0.4;
 			if (t > fadeStart) {
 				const fadeProg = (t - fadeStart) / (1 - fadeStart);
 				p.opacity = 1 - fadeProg;
-				p.fontSize = p.fontSize * (1 - fadeProg * 0.3);
+				p.fontSize = p.baseFontSize * (1 - fadeProg * 0.3);
 			}
 
 			if (t >= 1) {
-				if (p.type === 'gain' && !p.arrived) {
+				if (!p.arrived) {
 					p.arrived = true;
-					if (!barAbsorbing[p.identityIndex]) {
-						barAbsorbing[p.identityIndex] = true;
-					}
+					// Notify the sequence that this particle landed
+					if (sequenceResolve) sequenceResolve();
 				}
 				return false;
 			}
@@ -198,10 +239,6 @@
 		}
 	}
 
-	function hasPositiveActivity(identities: DigestIdentity[]): boolean {
-		return identities.some((i) => i.yesterdayVotes > 0);
-	}
-
 	function getScoreDelta(identity: DigestIdentity): number {
 		return identity.todayScore - identity.yesterdayScore;
 	}
@@ -210,30 +247,24 @@
 		return `${Math.max(0, Math.min(100, score))}%`;
 	}
 
-	function getGainGradient(identity: DigestIdentity): string {
-		const today = Math.max(0, Math.min(100, identity.todayScore));
+	function getBarBackground(identity: DigestIdentity, currentScore: number): string {
 		const yesterday = Math.max(0, Math.min(100, identity.yesterdayScore));
 		const color = identity.color || '#8b7355';
 
-		if (today <= yesterday || today === 0) {
+		if (currentScore <= yesterday || currentScore === 0) {
 			return color;
 		}
 
-		const keptRatio = (yesterday / today) * 100;
+		const keptRatio = (yesterday / currentScore) * 100;
 		return `linear-gradient(90deg, ${color} ${keptRatio}%, color-mix(in srgb, ${color}, #4ade80 40%) ${keptRatio}%, color-mix(in srgb, ${color}, #4ade80 40%) 100%)`;
 	}
 
 	let digestState = $derived($dailyDigestStore);
-	let staggerTimeouts: ReturnType<typeof setTimeout>[] = [];
+	let animationAborted = false;
 
-	function clearStaggerTimeouts() {
-		staggerTimeouts.forEach(clearTimeout);
-		staggerTimeouts = [];
-	}
-
-	function startStaggeredAnimation(identities: DigestIdentity[]) {
-		clearStaggerTimeouts();
-		barsAnimating = identities.map(() => false);
+	async function startSequentialAnimation(identities: DigestIdentity[]) {
+		animationAborted = false;
+		barDisplayScore = identities.map((i) => i.yesterdayScore);
 		barAbsorbing = identities.map(() => false);
 
 		if (!canvas) return;
@@ -242,46 +273,30 @@
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
 
-		identities.forEach((identity, index) => {
-			const staggerDelay = index * 400;
-			const delta = getScoreDelta(identity);
+		// Wait for cards to fade in
+		await sleep(400);
 
-			if (delta > 0 && identity.yesterdayVotes > 0) {
-				// Gain: +1 particles fly in, then bar grows
-				const tid1 = setTimeout(() => {
-					spawnGainParticles(identity, index);
-				}, staggerDelay + 300);
-				staggerTimeouts.push(tid1);
+		for (let i = 0; i < identities.length; i++) {
+			if (animationAborted) return;
+			// Wait for the card's fade-slide-in to finish (200ms per card stagger + 400ms animation)
+			const cardDelay = Math.max(0, (i * 200 + 400) - 400);
+			if (cardDelay > 0) await sleep(cardDelay);
 
-				const tid2 = setTimeout(() => {
-					barsAnimating[index] = true;
-				}, staggerDelay + 700);
-				staggerTimeouts.push(tid2);
-			} else if (delta < 0) {
-				// Loss: bar shrinks, then -1 particles fly out
-				const tid1 = setTimeout(() => {
-					barsAnimating[index] = true;
-				}, staggerDelay + 300);
-				staggerTimeouts.push(tid1);
+			await animateIdentity(identities[i], i);
 
-				const tid2 = setTimeout(() => {
-					spawnLossParticles(identity, index);
-				}, staggerDelay + 600);
-				staggerTimeouts.push(tid2);
-			} else {
-				// No change or 0 votes: just transition the bar
-				const tid = setTimeout(() => {
-					barsAnimating[index] = true;
-				}, staggerDelay + 300);
-				staggerTimeouts.push(tid);
+			// Pause between identities so each one is distinct
+			if (i < identities.length - 1) {
+				await sleep(300);
 			}
-		});
+		}
 	}
 
 	$effect(() => {
 		if (digestState.visible && digestState.data && browser) {
 			animationStarted = false;
+			animationAborted = true;
 			scoreParticles = [];
+			sequenceResolve = null;
 			if (animationId) {
 				cancelAnimationFrame(animationId);
 				animationId = 0;
@@ -290,17 +305,17 @@
 			setTimeout(() => {
 				animationStarted = true;
 				if (digestState.data) {
-					startStaggeredAnimation(digestState.data.identities);
+					startSequentialAnimation(digestState.data.identities);
 				}
 			}, 300);
 		}
 	});
 
 	onDestroy(() => {
+		animationAborted = true;
 		if (browser && animationId) {
 			cancelAnimationFrame(animationId);
 		}
-		clearStaggerTimeouts();
 	});
 
 	function handleDismiss() {
@@ -347,6 +362,7 @@
 					<div class="space-y-4">
 						{#each digestState.data.identities as identity, index (identity.id)}
 							{@const delta = getScoreDelta(identity)}
+							{@const displayScore = barDisplayScore[index] ?? identity.yesterdayScore}
 							<div
 								class="digest-identity"
 								style="animation-delay: {index * 200}ms"
@@ -380,12 +396,12 @@
 										class="absolute inset-y-0 left-0 rounded-full transition-none"
 										style="width: {getBarWidth(identity.yesterdayScore)}; background-color: {identity.color || '#8b7355'}; opacity: 0.25;"
 									></div>
-									<!-- Animated bar (today) -->
+									<!-- Animated bar (today) — driven by barDisplayScore -->
 									<div
 										class="absolute inset-y-0 left-0 rounded-full digest-bar {barAbsorbing[index] ? 'bar-absorbing' : ''}"
 										style="
-											width: {barsAnimating[index] ? getBarWidth(identity.todayScore) : getBarWidth(identity.yesterdayScore)};
-											background: {barsAnimating[index] ? getGainGradient(identity) : (identity.color || '#8b7355')};
+											width: {getBarWidth(displayScore)};
+											background: {getBarBackground(identity, displayScore)};
 										"
 									>
 										<div class="shimmer-overlay"></div>
@@ -488,11 +504,11 @@
 	}
 
 	.digest-bar {
-		transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+		transition: width 0.25s ease-out;
 	}
 
 	.bar-absorbing {
-		animation: bar-pulse 0.3s ease-out;
+		animation: bar-pulse 0.2s ease-out;
 		transform-origin: center;
 	}
 
