@@ -88,7 +88,7 @@
 
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-		confettiPieces.forEach((piece, index) => {
+		confettiPieces = confettiPieces.filter((piece) => {
 			// Update physics
 			piece.x += piece.vx;
 			piece.y += piece.vy;
@@ -104,10 +104,8 @@
 			ctx!.fillRect(-piece.size / 2, -piece.size / 2, piece.size, piece.size * 0.6);
 			ctx!.restore();
 
-			// Remove if off screen
-			if (piece.y > canvas.height + 50) {
-				confettiPieces.splice(index, 1);
-			}
+			// Keep if still on screen
+			return piece.y <= canvas.height + 50;
 		});
 
 		if (confettiPieces.length > 0) {

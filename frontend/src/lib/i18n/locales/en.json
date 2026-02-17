@@ -1826,5 +1826,16 @@
 			"completed": "Tour completed",
 			"notCompleted": "Tour not completed"
 		}
+	},
+	"dailyDigest": {
+		"title": "Your Daily Progress",
+		"subtitle": "Here's how yesterday shaped your identities",
+		"noActivity": "Yesterday was a rest day. Today is a fresh start!",
+		"letsGo": "Let's Go!",
+		"reshow": "Show daily digest",
+		"habits": "Habits",
+		"tasks": "Tasks",
+		"proofs": "Proofs",
+		"bonus": "Bonus"
 	}
 }

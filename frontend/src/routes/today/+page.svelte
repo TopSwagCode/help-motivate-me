@@ -16,10 +16,12 @@
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
 	import ErrorState from '$lib/components/shared/ErrorState.svelte';
 	import { tour } from '$lib/stores/tour';
+	import { dailyDigestStore } from '$lib/stores/dailyDigest';
 	import TodayViewContent from '$lib/components/today/TodayViewContent.svelte';
 	import DailyCommitmentCard from '$lib/components/today/DailyCommitmentCard.svelte';
 	import CommitmentFlowModal from '$lib/components/today/CommitmentFlowModal.svelte';
 	import IdentityProofModal from '$lib/components/today/IdentityProofModal.svelte';
+	import DailyDigestOverlay from '$lib/components/today/DailyDigestOverlay.svelte';
 	import type { TodayView, TodayTask, Identity, IdentityProof } from '$lib/types';
 	import { getLocalDateString } from '$lib/utils/date';
 
@@ -89,6 +91,11 @@
 		}
 
 		await loadToday();
+
+		// Show daily digest overlay on first visit of the day
+		if (isToday() && dailyDigestStore.shouldAutoShow()) {
+			dailyDigestStore.showDigest();
+		}
 	});
 
 	function closeWelcomePopup() {
@@ -587,10 +594,21 @@
 		<div class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">
 			<!-- Page Title with Info -->
 			<div class="flex items-center justify-between pt-4 pb-2">
-				<InfoOverlay 
-					title={$t('today.title')} 
-					description={$t('today.info.description')} 
+				<InfoOverlay
+					title={$t('today.title')}
+					description={$t('today.info.description')}
 				/>
+				{#if isToday()}
+					<button
+						onclick={() => dailyDigestStore.showDigest(true)}
+						class="p-2 text-cocoa-400 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-colors"
+						title={$t('dailyDigest.reshow')}
+					>
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+						</svg>
+					</button>
+				{/if}
 			</div>
 			
 			<div class="flex items-center justify-center py-3 gap-2 sm:gap-4">
@@ -828,4 +846,7 @@
 		onClose={handleCloseProofModal}
 		onProofCreated={handleProofCreated}
 	/>
+
+	<!-- Daily Digest Overlay -->
+	<DailyDigestOverlay />
 </div>

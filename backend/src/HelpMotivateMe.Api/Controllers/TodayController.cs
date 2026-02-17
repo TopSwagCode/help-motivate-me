@@ -87,4 +87,55 @@ public class TodayController : ApiControllerBase
             yesterdayCommitment
         ));
     }
+
+    /// <summary>
+    ///     Get the daily digest comparing yesterday's and today's identity scores.
+    /// </summary>
+    [HttpGet("digest")]
+    public async Task<ActionResult<DailyDigestResponse>> GetDailyDigest([FromQuery] DateOnly? date = null)
+    {
+        var userId = _auth.GetCurrentUserId();
+        var today = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
+        var yesterday = today.AddDays(-1);
+
+        var todayScoresTask = _identityScoreService.CalculateScoresAsync(userId, today);
+        var yesterdayScoresTask = _identityScoreService.CalculateScoresAsync(userId, yesterday);
+        var yesterdayFeedbackTask = _todayViewService.GetIdentityFeedbackAsync(userId, yesterday);
+
+        await Task.WhenAll(todayScoresTask, yesterdayScoresTask, yesterdayFeedbackTask);
+
+        var todayScores = todayScoresTask.Result;
+        var yesterdayScores = yesterdayScoresTask.Result;
+        var yesterdayFeedback = yesterdayFeedbackTask.Result;
+
+        var yesterdayScoreMap = yesterdayScores.ToDictionary(s => s.Id);
+        var feedbackMap = yesterdayFeedback.ToDictionary(f => f.Id);
+
+        var identities = todayScores.Select(s =>
+        {
+            yesterdayScoreMap.TryGetValue(s.Id, out var ys);
+            feedbackMap.TryGetValue(s.Id, out var fb);
+
+            return new DailyDigestIdentityResponse(
+                s.Id,
+                s.Name,
+                s.Color,
+                s.Icon,
+                ys?.Score ?? 0,
+                s.Score,
+                ys?.Status.ToString() ?? "Dormant",
+                s.Status.ToString(),
+                s.Trend.ToString(),
+                fb?.TotalVotes ?? 0,
+                fb?.HabitVotes ?? 0,
+                fb?.StackBonusVotes ?? 0,
+                fb?.TaskVotes ?? 0,
+                fb?.ProofVotes ?? 0
+            );
+        }).ToList();
+
+        var totalYesterdayVotes = identities.Sum(i => i.YesterdayVotes);
+
+        return Ok(new DailyDigestResponse(today, identities, totalYesterdayVotes));
+    }
 }
