@@ -98,15 +98,9 @@ public class TodayController : ApiControllerBase
         var today = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
         var yesterday = today.AddDays(-1);
 
-        var todayScoresTask = _identityScoreService.CalculateScoresAsync(userId, today);
-        var yesterdayScoresTask = _identityScoreService.CalculateScoresAsync(userId, yesterday);
-        var yesterdayFeedbackTask = _todayViewService.GetIdentityFeedbackAsync(userId, yesterday);
-
-        await Task.WhenAll(todayScoresTask, yesterdayScoresTask, yesterdayFeedbackTask);
-
-        var todayScores = todayScoresTask.Result;
-        var yesterdayScores = yesterdayScoresTask.Result;
-        var yesterdayFeedback = yesterdayFeedbackTask.Result;
+        var todayScores = await _identityScoreService.CalculateScoresAsync(userId, today);
+        var yesterdayScores = await _identityScoreService.CalculateScoresAsync(userId, yesterday);
+        var yesterdayFeedback = await _todayViewService.GetIdentityFeedbackAsync(userId, yesterday);
 
         var yesterdayScoreMap = yesterdayScores.ToDictionary(s => s.Id);
         var feedbackMap = yesterdayFeedback.ToDictionary(f => f.Id);
