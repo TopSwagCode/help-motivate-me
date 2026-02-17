@@ -63,7 +63,7 @@
 				targetY,
 				arcHeight: 30 + Math.random() * 50,
 				progress: 0,
-				speed: 0.018 + Math.random() * 0.004,
+				speed: 0.028 + Math.random() * 0.006,
 				label: '+1',
 				color: '#22c55e',
 				baseFontSize: 13 + Math.random() * 3,
@@ -119,7 +119,7 @@
 				targetY,
 				arcHeight: 8 + Math.random() * 12,
 				progress: 0,
-				speed: 0.025 + Math.random() * 0.008, // faster — short distance from bar
+				speed: 0.04 + Math.random() * 0.01, // faster — short distance from bar
 				label: '-1',
 				color: '#ef4444',
 				baseFontSize: 12 + Math.random() * 2,
@@ -150,15 +150,13 @@
 			const count = Math.min(delta, 8);
 			for (let i = 0; i < count; i++) {
 				await spawnSingleGainParticle(identity, index, i);
-				// Small pause between particles so they don't stack
-				await sleep(120);
+				await sleep(50);
 			}
 		} else if (delta < 0) {
 			const count = Math.min(Math.abs(delta), 6);
 			for (let i = 0; i < count; i++) {
 				await spawnSingleLossParticle(identity, index, i);
-				// Shorter pause for losses — they're quicker
-				await sleep(80);
+				await sleep(30);
 			}
 		}
 	}
@@ -284,9 +282,9 @@
 
 			await animateIdentity(identities[i], i);
 
-			// Pause between identities so each one is distinct
+			// Brief pause between identities
 			if (i < identities.length - 1) {
-				await sleep(300);
+				await sleep(150);
 			}
 		}
 	}
@@ -504,7 +502,7 @@
 	}
 
 	.digest-bar {
-		transition: width 0.25s ease-out;
+		transition: width 0.15s ease-out;
 	}
 
 	.bar-absorbing {
