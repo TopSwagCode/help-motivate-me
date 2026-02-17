@@ -7,26 +7,14 @@
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D | null = null;
-	let animationId: number;
-	let confettiPieces: ConfettiPiece[] = [];
-	let voteParticles: VoteParticle[] = [];
+	let animationId: number = 0;
+	let scoreParticles: ScoreParticle[] = [];
 	let animationStarted = $state(false);
 	let barsAnimating: boolean[] = $state([]);
 	let barRefs: HTMLDivElement[] = $state([]);
 	let barAbsorbing: boolean[] = $state([]);
 
-	interface ConfettiPiece {
-		x: number;
-		y: number;
-		vx: number;
-		vy: number;
-		color: string;
-		rotation: number;
-		rotationSpeed: number;
-		size: number;
-	}
-
-	interface VoteParticle {
+	interface ScoreParticle {
 		x: number;
 		y: number;
 		startX: number;
@@ -36,43 +24,16 @@
 		arcHeight: number;
 		progress: number;
 		speed: number;
-		color: string;
-		size: number;
+		label: string;       // "+1" or "-1"
+		color: string;       // green for gain, red for loss
+		fontSize: number;
 		opacity: number;
 		identityIndex: number;
 		arrived: boolean;
+		type: 'gain' | 'loss';
 	}
 
-	const COLORS = [
-		'#f97316', '#eab308', '#22c55e', '#3b82f6',
-		'#a855f7', '#ec4899', '#ef4444'
-	];
-
-	function initConfetti() {
-		if (!browser || !canvas) return;
-		ctx = canvas.getContext('2d');
-		if (!ctx) return;
-
-		canvas.width = window.innerWidth;
-		canvas.height = window.innerHeight;
-
-		for (let i = 0; i < 120; i++) {
-			confettiPieces.push({
-				x: canvas.width / 2,
-				y: canvas.height / 2,
-				vx: (Math.random() - 0.5) * 18,
-				vy: Math.random() * -14 - 4,
-				color: COLORS[Math.floor(Math.random() * COLORS.length)],
-				rotation: Math.random() * 360,
-				rotationSpeed: (Math.random() - 0.5) * 10,
-				size: Math.random() * 8 + 4
-			});
-		}
-
-		startAnimationLoop();
-	}
-
-	function spawnVoteParticles(identity: DigestIdentity, index: number) {
+	function spawnGainParticles(identity: DigestIdentity, index: number) {
 		if (!browser || !canvas || !ctx) return;
 
 		const barEl = barRefs[index];
@@ -81,33 +42,78 @@
 		const barRect = barEl.getBoundingClientRect();
 		const canvasRect = canvas.getBoundingClientRect();
 
-		// Target: right edge of the progress bar area
+		// Target: right edge of today's bar
 		const targetX = barRect.left - canvasRect.left + barRect.width * (Math.min(100, identity.todayScore) / 100);
 		const targetY = barRect.top - canvasRect.top + barRect.height / 2;
 
 		// Start: below the identity card
 		const startX = barRect.left - canvasRect.left + barRect.width / 2;
-		const startY = barRect.bottom - canvasRect.top + 30;
+		const startY = barRect.bottom - canvasRect.top + 35;
 
-		const voteCount = Math.min(identity.yesterdayVotes, 15);
-		const color = identity.color || '#8b7355';
+		const count = Math.min(identity.yesterdayVotes, 12);
 
-		for (let i = 0; i < voteCount; i++) {
-			voteParticles.push({
-				x: startX + (Math.random() - 0.5) * 40,
-				y: startY + Math.random() * 20,
-				startX: startX + (Math.random() - 0.5) * 40,
-				startY: startY + Math.random() * 20,
-				targetX: targetX + (Math.random() - 0.5) * 6,
-				targetY: targetY + (Math.random() - 0.5) * 4,
-				arcHeight: 40 + Math.random() * 60,
-				progress: -(i * 0.04), // stagger particle starts
-				speed: 0.015 + Math.random() * 0.01,
-				color,
-				size: 4 + Math.random() * 3,
+		for (let i = 0; i < count; i++) {
+			scoreParticles.push({
+				x: startX,
+				y: startY,
+				startX: startX + (Math.random() - 0.5) * 30,
+				startY: startY + Math.random() * 15,
+				targetX: targetX + (Math.random() - 0.5) * 8,
+				targetY: targetY + (Math.random() - 0.5) * 6,
+				arcHeight: 30 + Math.random() * 50,
+				progress: -(i * 0.05),
+				speed: 0.014 + Math.random() * 0.008,
+				label: '+1',
+				color: '#22c55e',
+				fontSize: 13 + Math.random() * 3,
 				opacity: 1,
 				identityIndex: index,
-				arrived: false
+				arrived: false,
+				type: 'gain'
+			});
+		}
+
+		startAnimationLoop();
+	}
+
+	function spawnLossParticles(identity: DigestIdentity, index: number) {
+		if (!browser || !canvas || !ctx) return;
+
+		const barEl = barRefs[index];
+		if (!barEl) return;
+
+		const barRect = barEl.getBoundingClientRect();
+		const canvasRect = canvas.getBoundingClientRect();
+
+		const delta = Math.abs(identity.todayScore - identity.yesterdayScore);
+		const count = Math.min(Math.ceil(delta), 10);
+
+		// Start: right edge of yesterday's bar (where it's shrinking from)
+		const startX = barRect.left - canvasRect.left + barRect.width * (Math.min(100, identity.yesterdayScore) / 100);
+		const startY = barRect.top - canvasRect.top + barRect.height / 2;
+
+		// Target: float up and to the right, then fade out
+		for (let i = 0; i < count; i++) {
+			const targetX = startX + 30 + Math.random() * 40;
+			const targetY = startY - 40 - Math.random() * 30;
+
+			scoreParticles.push({
+				x: startX,
+				y: startY,
+				startX: startX + (Math.random() - 0.5) * 10,
+				startY: startY,
+				targetX,
+				targetY,
+				arcHeight: 10 + Math.random() * 15,
+				progress: -(i * 0.06),
+				speed: 0.012 + Math.random() * 0.006,
+				label: '-1',
+				color: '#ef4444',
+				fontSize: 12 + Math.random() * 2,
+				opacity: 1,
+				identityIndex: index,
+				arrived: false,
+				type: 'loss'
 			});
 		}
 
@@ -120,7 +126,7 @@
 	}
 
 	function startAnimationLoop() {
-		if (animationId) return; // already running
+		if (animationId) return;
 		animateLoop();
 	}
 
@@ -129,72 +135,62 @@
 
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-		// Update and draw vote particles
-		voteParticles = voteParticles.filter((p) => {
+		scoreParticles = scoreParticles.filter((p) => {
 			p.progress += p.speed;
 
-			if (p.progress < 0) {
-				// Still waiting to start (stagger delay)
-				return true;
-			}
+			if (p.progress < 0) return true; // stagger wait
 
 			const t = Math.min(p.progress, 1);
 
-			const controlX = (p.startX + p.targetX) / 2;
-			const controlY = p.startY - p.arcHeight;
+			if (p.type === 'gain') {
+				// Arc from below into the bar
+				const controlX = (p.startX + p.targetX) / 2;
+				const controlY = p.startY - p.arcHeight;
+				p.x = quadraticBezier(p.startX, controlX, p.targetX, t);
+				p.y = quadraticBezier(p.startY, controlY, p.targetY, t);
+			} else {
+				// Float up and outward from the bar
+				const controlX = p.startX + (p.targetX - p.startX) * 0.3;
+				const controlY = p.startY - p.arcHeight;
+				p.x = quadraticBezier(p.startX, controlX, p.targetX, t);
+				p.y = quadraticBezier(p.startY, controlY, p.targetY, t);
+			}
 
-			p.x = quadraticBezier(p.startX, controlX, p.targetX, t);
-			p.y = quadraticBezier(p.startY, controlY, p.targetY, t);
-
-			// Shrink and fade as approaching target
-			const fadeStart = 0.7;
+			// Fade logic
+			const fadeStart = p.type === 'gain' ? 0.6 : 0.4;
 			if (t > fadeStart) {
 				const fadeProg = (t - fadeStart) / (1 - fadeStart);
 				p.opacity = 1 - fadeProg;
-				p.size = (4 + Math.random() * 0.5) * (1 - fadeProg * 0.8);
+				p.fontSize = p.fontSize * (1 - fadeProg * 0.3);
 			}
 
 			if (t >= 1) {
-				if (!p.arrived) {
+				if (p.type === 'gain' && !p.arrived) {
 					p.arrived = true;
-					// Trigger bar absorb pulse on first arrival per identity
 					if (!barAbsorbing[p.identityIndex]) {
 						barAbsorbing[p.identityIndex] = true;
 					}
 				}
-				return false; // remove particle
+				return false;
 			}
 
-			// Draw particle as filled circle
-			ctx!.beginPath();
-			ctx!.arc(p.x, p.y, Math.max(0.5, p.size), 0, Math.PI * 2);
-			ctx!.fillStyle = p.color;
+			// Draw text particle
+			ctx!.save();
 			ctx!.globalAlpha = p.opacity;
-			ctx!.fill();
-			ctx!.globalAlpha = 1;
+			ctx!.font = `bold ${Math.max(8, p.fontSize)}px system-ui, -apple-system, sans-serif`;
+			ctx!.fillStyle = p.color;
+			ctx!.strokeStyle = p.type === 'gain' ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.25)';
+			ctx!.lineWidth = 2.5;
+			ctx!.textAlign = 'center';
+			ctx!.textBaseline = 'middle';
+			ctx!.strokeText(p.label, p.x, p.y);
+			ctx!.fillText(p.label, p.x, p.y);
+			ctx!.restore();
 
 			return true;
 		});
 
-		// Update and draw confetti
-		confettiPieces = confettiPieces.filter((piece) => {
-			piece.x += piece.vx;
-			piece.y += piece.vy;
-			piece.vy += 0.3;
-			piece.vx *= 0.99;
-			piece.rotation += piece.rotationSpeed;
-
-			ctx!.save();
-			ctx!.translate(piece.x, piece.y);
-			ctx!.rotate((piece.rotation * Math.PI) / 180);
-			ctx!.fillStyle = piece.color;
-			ctx!.fillRect(-piece.size / 2, -piece.size / 2, piece.size, piece.size * 0.6);
-			ctx!.restore();
-
-			return piece.y <= canvas.height + 50;
-		});
-
-		if (voteParticles.length > 0 || confettiPieces.length > 0) {
+		if (scoreParticles.length > 0) {
 			animationId = requestAnimationFrame(animateLoop);
 		} else {
 			animationId = 0;
@@ -222,7 +218,6 @@
 			return color;
 		}
 
-		// The portion of the bar that is "kept" vs "gained"
 		const keptRatio = (yesterday / today) * 100;
 		return `linear-gradient(90deg, ${color} ${keptRatio}%, color-mix(in srgb, ${color}, #4ade80 40%) ${keptRatio}%, color-mix(in srgb, ${color}, #4ade80 40%) 100%)`;
 	}
@@ -240,54 +235,52 @@
 		barsAnimating = identities.map(() => false);
 		barAbsorbing = identities.map(() => false);
 
-		// Ensure canvas is ready
 		if (!canvas) return;
 		ctx = canvas.getContext('2d');
 		if (!ctx) return;
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
 
-		const identityCount = identities.length;
-
 		identities.forEach((identity, index) => {
 			const staggerDelay = index * 400;
+			const delta = getScoreDelta(identity);
 
-			if (identity.yesterdayVotes === 0) {
-				// No votes: bar transitions immediately at its stagger time
-				const tid = setTimeout(() => {
-					barsAnimating[index] = true;
-				}, staggerDelay + 300); // small delay after card fade-in
-				staggerTimeouts.push(tid);
-			} else {
-				// Spawn particles, then trigger bar growth after 400ms head start
+			if (delta > 0 && identity.yesterdayVotes > 0) {
+				// Gain: +1 particles fly in, then bar grows
 				const tid1 = setTimeout(() => {
-					spawnVoteParticles(identity, index);
+					spawnGainParticles(identity, index);
 				}, staggerDelay + 300);
 				staggerTimeouts.push(tid1);
 
 				const tid2 = setTimeout(() => {
 					barsAnimating[index] = true;
-				}, staggerDelay + 700); // 300 + 400ms head start
+				}, staggerDelay + 700);
 				staggerTimeouts.push(tid2);
+			} else if (delta < 0) {
+				// Loss: bar shrinks, then -1 particles fly out
+				const tid1 = setTimeout(() => {
+					barsAnimating[index] = true;
+				}, staggerDelay + 300);
+				staggerTimeouts.push(tid1);
+
+				const tid2 = setTimeout(() => {
+					spawnLossParticles(identity, index);
+				}, staggerDelay + 600);
+				staggerTimeouts.push(tid2);
+			} else {
+				// No change or 0 votes: just transition the bar
+				const tid = setTimeout(() => {
+					barsAnimating[index] = true;
+				}, staggerDelay + 300);
+				staggerTimeouts.push(tid);
 			}
 		});
-
-		// Fire confetti after last identity's particles finish
-		if (hasPositiveActivity(identities)) {
-			const confettiDelay = (identityCount - 1) * 400 + 1200;
-			const tid = setTimeout(() => {
-				initConfetti();
-			}, confettiDelay);
-			staggerTimeouts.push(tid);
-		}
 	}
 
-	// Trigger animation when overlay becomes visible
 	$effect(() => {
 		if (digestState.visible && digestState.data && browser) {
 			animationStarted = false;
-			confettiPieces = [];
-			voteParticles = [];
+			scoreParticles = [];
 			if (animationId) {
 				cancelAnimationFrame(animationId);
 				animationId = 0;
@@ -316,7 +309,7 @@
 
 {#if digestState.visible && digestState.data}
 	<div class="fixed inset-0 z-[300] flex items-center justify-center bg-black/60 backdrop-blur-sm">
-		<!-- Canvas for particles and confetti -->
+		<!-- Canvas for score particles -->
 		<canvas bind:this={canvas} class="absolute inset-0 pointer-events-none"></canvas>
 
 		<!-- Modal -->
