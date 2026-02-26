@@ -17,7 +17,12 @@
 	import IdentityProofModal from '$lib/components/today/IdentityProofModal.svelte';
 	import HelpPopup from '$lib/components/help/HelpPopup.svelte';
 	import MilestoneCelebration from '$lib/components/milestones/MilestoneCelebration.svelte';
+	import NotificationFabOverlay from '$lib/components/NotificationFabOverlay.svelte';
 	import { initI18n, setLocale, getLocaleFromLanguage } from '$lib/i18n';
+	import {
+		isPushSupported,
+		checkPushPermission
+	} from '$lib/services/pushNotifications';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
@@ -38,6 +43,8 @@
 	let authChecked = $state(false);
 	let showProofModal = $state(false);
 	let showHelpPopup = $state(false);
+	let showNotificationFab = $state(false);
+	let showNotificationOverlay = $state(false);
 
 	// Initialize i18n and auth on mount
 	onMount(async () => {
@@ -61,6 +68,21 @@
 			}, 500);
 		}
 	});
+
+	// Check if we should show the notification FAB
+	$effect(() => {
+		if (authChecked && $auth.user && browser) {
+			checkNotificationFab();
+		}
+	});
+
+	async function checkNotificationFab() {
+		if (localStorage.getItem('notification_fab_dismissed') === 'true') return;
+		if (!isPushSupported()) return;
+		const permission = await checkPushPermission();
+		if (permission === 'granted') return;
+		showNotificationFab = true;
+	}
 
 	let { children } = $props();
 
@@ -296,6 +318,43 @@
 				</svg>
 			</button>
 		</div>
+
+		<!-- Floating Notification Button -->
+		{#if showNotificationFab}
+			<div class="fixed bottom-56 right-4 sm:right-6 z-30 animate-wiggle" style="animation-delay: 2s;">
+				<button
+					type="button"
+					onclick={() => showNotificationOverlay = true}
+					class="group relative w-12 h-12 sm:w-14 sm:h-14
+					       bg-gradient-to-r from-primary-300 to-primary-400
+					       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110
+					       transition-all duration-300 flex items-center justify-center
+					       touch-manipulation"
+					title={$t('notificationFab.tooltip')}
+					aria-label={$t('notificationFab.tooltip')}
+				>
+					<span class="absolute right-full mr-3 px-3 py-1.5 bg-cocoa-900 text-white text-sm font-medium rounded-2xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+						{$t('notificationFab.tooltip')}
+					</span>
+					<!-- Bell with slash icon -->
+					<svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+						/>
+						<line x1="3" y1="3" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+					</svg>
+				</button>
+			</div>
+		{/if}
+
+		<!-- Notification FAB Overlay -->
+		<NotificationFabOverlay
+			isOpen={showNotificationOverlay}
+			onClose={() => { showNotificationOverlay = false; showNotificationFab = false; }}
+		/>
 
 		<!-- Help Popup -->
 		<HelpPopup

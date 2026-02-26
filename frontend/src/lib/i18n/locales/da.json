@@ -1582,6 +1582,14 @@
 		"success": "Tak! Vi vender tilbage til dig snart.",
 		"error": "Kunne ikke sende besked. Prøv venligst igen."
 	},
+	"notificationFab": {
+		"title": "Aktivér notifikationer",
+		"body": "Vi spammer dig ikke — notifikationer bruges kun til at minde dig om dit daglige engagement.",
+		"settingsNote": "Du kan altid ændre mening senere i Indstillinger.",
+		"enable": "Aktivér notifikationer",
+		"dismiss": "Nej tak",
+		"tooltip": "Notifikationer"
+	},
 	"pushPrompt": {
 		"title": "Bliv motiveret!",
 		"subtitle": "Aktivér notifikationer",

@@ -1582,6 +1582,14 @@
 		"success": "Thank you! We'll get back to you soon.",
 		"error": "Failed to send message. Please try again."
 	},
+	"notificationFab": {
+		"title": "Enable Notifications",
+		"body": "We won't spam you — notifications are only used to remind you about your daily commitment.",
+		"settingsNote": "You can always change your mind later in Settings.",
+		"enable": "Enable Notifications",
+		"dismiss": "No Thanks",
+		"tooltip": "Notifications"
+	},
 	"pushPrompt": {
 		"title": "Stay Motivated!",
 		"subtitle": "Enable notifications",
