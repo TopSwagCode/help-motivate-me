@@ -19,10 +19,7 @@
 	import MilestoneCelebration from '$lib/components/milestones/MilestoneCelebration.svelte';
 	import NotificationFabOverlay from '$lib/components/NotificationFabOverlay.svelte';
 	import { initI18n, setLocale, getLocaleFromLanguage } from '$lib/i18n';
-	import {
-		isPushSupported,
-		checkPushPermission
-	} from '$lib/services/pushNotifications';
+	import { getPushStatus } from '$lib/services/pushNotifications';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
@@ -78,9 +75,9 @@
 
 	async function checkNotificationFab() {
 		if (localStorage.getItem('notification_fab_dismissed') === 'true') return;
-		if (!isPushSupported()) return;
-		const permission = await checkPushPermission();
-		if (permission === 'granted') return;
+		// Ask the backend if the user has any active push subscriptions
+		const status = await getPushStatus();
+		if (status.subscribed) return;
 		showNotificationFab = true;
 	}
 
