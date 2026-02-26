@@ -683,18 +683,22 @@
 				<ErrorState message={error} onRetry={loadToday} size="md" />
 			</div>
 		{:else if todayData}
-			<!-- Daily Commitment Card (only show if viewing today) -->
-			{#if isToday()}
-				<div class="mb-6" data-tour="daily-commitment">
-					<DailyCommitmentCard
-						commitment={todayData.dailyCommitment}
-						yesterdayCommitment={todayData.yesterdayCommitment}
-						onStartCommitment={handleStartCommitment}
-						onComplete={handleCompleteCommitment}
-						onDismiss={handleDismissCommitment}
-					/>
-				</div>
-			{/if}
+			<!-- Daily Commitment Card -->
+			<div class="mb-6" data-tour="daily-commitment">
+				<DailyCommitmentCard
+					commitment={todayData.dailyCommitment}
+					yesterdayCommitment={todayData.yesterdayCommitment}
+					onStartCommitment={handleStartCommitment}
+					onComplete={handleCompleteCommitment}
+					onDismiss={handleDismissCommitment}
+					isPastDay={!isToday()}
+					daySummary={!isToday() ? {
+						completedHabits: todayData.habitStacks.reduce((sum, s) => sum + s.completedCount, 0),
+						completedTasks: todayData.completedTasks.length,
+						winsLogged: wins.length
+					} : undefined}
+				/>
+			</div>
 
 			<TodayViewContent
 				{todayData}

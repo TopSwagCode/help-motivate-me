@@ -2,6 +2,12 @@
 	import { t } from 'svelte-i18n';
 	import type { DailyCommitment, YesterdayCommitment } from '$lib/types';
 
+	interface DaySummary {
+		completedHabits: number;
+		completedTasks: number;
+		winsLogged: number;
+	}
+
 	interface Props {
 		commitment: DailyCommitment | null;
 		yesterdayCommitment: YesterdayCommitment;
@@ -9,6 +15,8 @@
 		onComplete: (commitmentId: string) => Promise<void>;
 		onDismiss: (commitmentId: string) => Promise<void>;
 		readonly?: boolean;
+		isPastDay?: boolean;
+		daySummary?: DaySummary;
 	}
 
 	let {
@@ -17,7 +25,9 @@
 		onStartCommitment,
 		onComplete,
 		onDismiss,
-		readonly = false
+		readonly = false,
+		isPastDay = false,
+		daySummary
 	}: Props = $props();
 
 	let isCompleting = $state(false);
@@ -47,11 +57,26 @@
 			isDismissing = false;
 		}
 	}
+
+	function summaryParts(): string[] {
+		if (!daySummary) return [];
+		const parts: string[] = [];
+		if (daySummary.completedHabits > 0) {
+			parts.push($t('dailyCommitment.pastDay.habitsCompleted', { values: { count: daySummary.completedHabits } }));
+		}
+		if (daySummary.completedTasks > 0) {
+			parts.push($t('dailyCommitment.pastDay.tasksDone', { values: { count: daySummary.completedTasks } }));
+		}
+		if (daySummary.winsLogged > 0) {
+			parts.push($t('dailyCommitment.pastDay.winsLogged', { values: { count: daySummary.winsLogged } }));
+		}
+		return parts;
+	}
 </script>
 
 <div class="rounded-xl overflow-hidden shadow-sm border border-gray-100">
-	<!-- Yesterday missed warning -->
-	{#if yesterdayCommitment.wasMissed && !commitment}
+	<!-- Yesterday missed warning (only for today view) -->
+	{#if !isPastDay && yesterdayCommitment.wasMissed && !commitment}
 		<div class="bg-amber-50 border-b border-amber-100 px-4 py-3">
 			<div class="flex items-start gap-3">
 				<span class="text-lg flex-shrink-0">🌅</span>
@@ -72,7 +97,116 @@
 		class="p-4"
 		style="background: linear-gradient(135deg, {commitment?.identityColor || '#d4944c'}08 0%, {commitment?.identityColor || '#d4944c'}15 100%)"
 	>
-		{#if !commitment}
+		{#if isPastDay}
+			<!-- Past day view -->
+			{#if !commitment}
+				<!-- No commitment was set for this day -->
+				<div class="flex items-center gap-3 opacity-50">
+					<div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gray-100">
+						<span class="text-xl">📋</span>
+					</div>
+					<div class="flex-1 min-w-0">
+						<p class="text-sm font-medium text-cocoa-600">
+							{$t('dailyCommitment.pastDay.noCommitmentTitle')}
+						</p>
+						<p class="text-xs text-cocoa-400 mt-0.5">
+							{$t('dailyCommitment.pastDay.noCommitmentMessage')}
+						</p>
+					</div>
+				</div>
+
+			{:else if commitment.status === 'Completed'}
+				<!-- Past day: Completed -->
+				<div class="flex items-start gap-3">
+					<div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-green-100">
+						<img src="/done.png" alt="Done" class="object-contain" />
+					</div>
+					<div class="flex-1 min-w-0">
+						<div class="flex items-center gap-2 mb-1">
+							<span class="text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-green-700">
+								{$t('dailyCommitment.pastDay.completedTitle')}
+							</span>
+							<span
+								class="text-xs font-medium px-2 py-0.5 rounded-full"
+								style="background-color: {commitment.identityColor || '#d4944c'}20; color: {commitment.identityColor || '#d4944c'}"
+							>
+								{commitment.identityName}
+							</span>
+						</div>
+						<p class="text-sm text-cocoa-600 line-through">
+							{commitment.actionDescription}
+						</p>
+						<p class="text-sm font-medium text-green-600 mt-1">
+							{$t('dailyCommitment.pastDay.completedMessage', { values: { identity: commitment.identityName } })}
+						</p>
+						{#if summaryParts().length > 0}
+							<p class="text-xs text-cocoa-400 mt-2">
+								{summaryParts().join(' · ')}
+							</p>
+						{/if}
+					</div>
+				</div>
+
+			{:else if commitment.status === 'Dismissed'}
+				<!-- Past day: Dismissed -->
+				<div class="flex items-start gap-3 opacity-60">
+					<div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gray-100">
+						<span class="text-xl">{commitment.identityIcon || '🎯'}</span>
+					</div>
+					<div class="flex-1 min-w-0">
+						<div class="flex items-center gap-2 mb-1">
+							<span class="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-cocoa-500">
+								{$t('dailyCommitment.pastDay.dismissedTitle')}
+							</span>
+						</div>
+						<p class="text-sm text-gray-400 line-through">
+							{commitment.actionDescription}
+						</p>
+						<p class="text-xs text-cocoa-400 mt-1">
+							{$t('dailyCommitment.pastDay.dismissedMessage')}
+						</p>
+						{#if summaryParts().length > 0}
+							<p class="text-xs text-cocoa-400 mt-2">
+								{summaryParts().join(' · ')}
+							</p>
+						{/if}
+					</div>
+				</div>
+
+			{:else}
+				<!-- Past day: Committed (was never completed or dismissed — missed) -->
+				<div class="flex items-start gap-3">
+					<div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-amber-100">
+						<span class="text-xl">{commitment.identityIcon || '🎯'}</span>
+					</div>
+					<div class="flex-1 min-w-0">
+						<div class="flex items-center gap-2 mb-1">
+							<span class="text-xs font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
+								{$t('dailyCommitment.pastDay.missedTitle')}
+							</span>
+							<span
+								class="text-xs font-medium px-2 py-0.5 rounded-full"
+								style="background-color: {commitment.identityColor || '#d4944c'}20; color: {commitment.identityColor || '#d4944c'}"
+							>
+								{commitment.identityName}
+							</span>
+						</div>
+						<p class="text-sm text-cocoa-600">
+							{commitment.actionDescription}
+						</p>
+						<p class="text-xs text-amber-600 mt-1">
+							{$t('dailyCommitment.pastDay.missedMessage')}
+						</p>
+						{#if summaryParts().length > 0}
+							<p class="text-xs text-cocoa-400 mt-2">
+								{summaryParts().join(' · ')}
+							</p>
+						{/if}
+					</div>
+				</div>
+			{/if}
+
+		{:else if !commitment}
 			<!-- No commitment - Start your day prompt -->
 			<div class="text-center py-4">
 				<div class="w-14 h-14 mx-auto mb-3 rounded-full bg-warm-paper shadow-sm flex items-center justify-center">

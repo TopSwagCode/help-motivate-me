@@ -1136,6 +1136,19 @@
 			"weakestDescription": "Foreslå den identitet, der har brug for mest opmærksomhed",
 			"strongest": "Momentumnudge",
 			"strongestDescription": "Foreslå den identitet, hvor du har mest momentum"
+		},
+		"pastDay": {
+			"completedTitle": "Forpligtelse holdt",
+			"completedMessage": "Du mødte op for dig selv. Det er hvad en {identity} gør.",
+			"dismissedTitle": "Sprunget over denne dag",
+			"dismissedMessage": "Hviledage er en del af rejsen. Det vigtige er at komme tilbage.",
+			"missedTitle": "Misset denne dag",
+			"missedMessage": "En misset dag sletter ikke din fremgang. Hver dag er en ny stemme.",
+			"noCommitmentTitle": "Ingen forpligtelse",
+			"noCommitmentMessage": "Der blev ikke sat en forpligtelse for denne dag.",
+			"habitsCompleted": "{count} {count, plural, one {vane} other {vaner}} gennemført",
+			"tasksDone": "{count} {count, plural, one {opgave} other {opgaver}} udført",
+			"winsLogged": "{count} {count, plural, one {gevinst} other {gevinster}} logget"
 		}
 	},
 	"identityProof": {

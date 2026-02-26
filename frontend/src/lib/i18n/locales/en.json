@@ -1136,6 +1136,19 @@
 			"weakestDescription": "Suggest the identity that needs the most attention",
 			"strongest": "Momentum nudge",
 			"strongestDescription": "Suggest the identity where you have the most momentum"
+		},
+		"pastDay": {
+			"completedTitle": "Commitment Kept",
+			"completedMessage": "You showed up for yourself. That's what {identity} do.",
+			"dismissedTitle": "Skipped This Day",
+			"dismissedMessage": "Rest days are part of the journey. What matters is coming back.",
+			"missedTitle": "Missed This Day",
+			"missedMessage": "A missed day doesn't erase your progress. Every day is a fresh vote.",
+			"noCommitmentTitle": "No Commitment",
+			"noCommitmentMessage": "No commitment was set for this day.",
+			"habitsCompleted": "{count} {count, plural, one {habit} other {habits}} completed",
+			"tasksDone": "{count} {count, plural, one {task} other {tasks}} done",
+			"winsLogged": "{count} {count, plural, one {win} other {wins}} logged"
 		}
 	},
 	"identityProof": {
