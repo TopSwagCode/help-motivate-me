@@ -2,18 +2,14 @@ import { apiGet, apiPost, apiPut, apiDelete, apiUpload } from './client';
 import type {
 	JournalEntry,
 	JournalImage,
-	JournalReaction,
 	CreateJournalEntryRequest,
 	UpdateJournalEntryRequest,
 	LinkableHabitStack,
 	LinkableTask
 } from '$lib/types';
 
-export type JournalFilter = 'all' | 'own' | 'buddies';
-
-export async function getJournalEntries(filter: JournalFilter = 'all'): Promise<JournalEntry[]> {
-	const params = filter !== 'all' ? `?filter=${filter}` : '';
-	return apiGet<JournalEntry[]>(`/journal${params}`);
+export async function getJournalEntries(): Promise<JournalEntry[]> {
+	return apiGet<JournalEntry[]>('/journal');
 }
 
 export async function getJournalEntry(id: string): Promise<JournalEntry> {
@@ -49,13 +45,4 @@ export async function getLinkableHabitStacks(): Promise<LinkableHabitStack[]> {
 
 export async function getLinkableTasks(): Promise<LinkableTask[]> {
 	return apiGet<LinkableTask[]>('/journal/linkable/tasks');
-}
-
-// Reaction APIs
-export async function addJournalReaction(entryId: string, emoji: string): Promise<JournalReaction> {
-	return apiPost<JournalReaction>(`/journal/${entryId}/reactions`, { emoji });
-}
-
-export async function removeJournalReaction(entryId: string, reactionId: string): Promise<void> {
-	return apiDelete<void>(`/journal/${entryId}/reactions/${reactionId}`);
 }

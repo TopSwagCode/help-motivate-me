@@ -294,6 +294,8 @@
 			"title": "Welcome Back",
 			"subtitle": "Sign in to continue your journey",
 			"heading": "Sign in to your account",
+			"username": "Username",
+			"failed": "Login failed",
 			"noAccountLink": "Create one",
 			"email": "Email",
 			"emailPlaceholder": "Enter your email",
@@ -345,8 +347,6 @@
 			"submit": "Create Account",
 			"hasAccount": "Already have an account?",
 			"signIn": "Sign in",
-			"passwordRequirements": "Password must be at least 8 characters",
-			"passwordHint": "Must be at least 8 characters",
 			"orContinueWith": "Or continue with",
 			"continueGoogle": "Continue with Google",
 			"continueLinkedIn": "Continue with LinkedIn",
@@ -393,7 +393,24 @@
 		"settings": "Settings",
 		"help": "Help",
 		"signOut": "Sign out",
-		"adminDashboard": "Admin Dashboard"
+		"advanced": "Advanced"
+	},
+	"advanced": {
+		"title": "Advanced",
+		"subtitle": "Personal activity and milestone settings",
+		"yourActivity": "Your activity",
+		"logins": "Logins",
+		"wins": "Identity wins",
+		"habits": "Habits completed",
+		"tasks": "Tasks completed",
+		"proofs": "Identity proofs",
+		"journalEntries": "Journal entries",
+		"lastActivity": "Last activity",
+		"milestones": "Milestone settings",
+		"milestonesDescription": "Choose which milestones can be earned.",
+		"active": "Active",
+		"inactive": "Inactive",
+		"loadFailed": "Failed to load advanced settings"
 	},
 	"settings": {
 		"title": "Settings",
@@ -413,7 +430,6 @@
 			"confirm": "Confirm New Password",
 			"change": "Change Password",
 			"changing": "Changing...",
-			"requirements": "Password must be at least 8 characters",
 			"mismatch": "Passwords do not match",
 			"success": "Password changed successfully",
 			"error": "Failed to change password"

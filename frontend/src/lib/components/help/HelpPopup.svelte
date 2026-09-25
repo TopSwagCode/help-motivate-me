@@ -278,7 +278,7 @@
 					</div>
 					<div class="flex gap-3">
 						<a
-							href="/faq"
+							href="/today"
 							onclick={onClose}
 							class="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
 						>
@@ -288,7 +288,7 @@
 							</svg>
 						</a>
 						<a
-							href="/contact"
+							href="/today"
 							onclick={onClose}
 							class="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
 						>

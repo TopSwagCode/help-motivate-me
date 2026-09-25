@@ -1,53 +1,68 @@
 using System.Security.Claims;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using HelpMotivateMe.Api.Services;
 using HelpMotivateMe.Core.Interfaces;
-using HelpMotivateMe.Core.Localization.EmailTemplates;
 using HelpMotivateMe.Core.Options;
 using HelpMotivateMe.Infrastructure.Data;
 using HelpMotivateMe.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using MinimalWorker;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure forwarded headers for proxy support (Traefik/ngrok)
+// Configure forwarded headers only from explicitly configured proxies.
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor |
                                ForwardedHeaders.XForwardedProto |
                                ForwardedHeaders.XForwardedHost;
-    options.KnownIPNetworks.Clear();
-    options.KnownProxies.Clear();
-
-    // Trust all proxies (ngrok/Traefik)
-    options.ForwardLimit = null;
 });
 
 // Database
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("ConnectionStrings:DefaultConnection is required.");
+if (connectionString.StartsWith("Data Source", StringComparison.OrdinalIgnoreCase))
+{
+    var sqliteConnection = new SqliteConnectionStringBuilder(connectionString);
+    if (sqliteConnection.DataSource != ":memory:")
+    {
+        sqliteConnection.DataSource = Path.GetFullPath(sqliteConnection.DataSource);
+        Directory.CreateDirectory(Path.GetDirectoryName(sqliteConnection.DataSource)!);
+        connectionString = sqliteConnection.ConnectionString;
+    }
+}
+
+builder.Services.AddSingleton<SqliteConnectionInterceptor>();
+builder.Services.AddSingleton<GuidKeyInterceptor>();
+builder.Services.AddDbContext<AppDbContext>((services, options) =>
+    options.UseSqlite(connectionString)
+        .AddInterceptors(
+            services.GetRequiredService<SqliteConnectionInterceptor>(),
+            services.GetRequiredService<GuidKeyInterceptor>()));
 
 // Data Protection - store keys in database for persistence across restarts and multiple instances
 builder.Services.AddDataProtection()
     .SetApplicationName("HelpMotivateMe")
     .PersistKeysToDbContext<AppDbContext>();
 
-// Email Service
-builder.Services.AddScoped<IEmailService, SmtpEmailService>();
-
-// Push Notification Service
-builder.Services.AddScoped<IPushNotificationService, WebPushNotificationService>();
-builder.Services.AddScoped<ScheduledPushNotificationService>();
-
 // Local File Storage Service
 builder.Services.AddSingleton<IStorageService, LocalFileStorageService>();
 
 // OpenAI Service
+builder.Services.AddOptions<AiOptions>()
+    .Bind(builder.Configuration.GetSection(AiOptions.SectionName))
+    .PostConfigure(options =>
+    {
+        if (string.IsNullOrWhiteSpace(options.ApiKey))
+            options.ApiKey = builder.Configuration["OpenAI:ApiKey"] ?? "";
+    });
 builder.Services.AddHttpClient<IOpenAiService, OpenAiService>();
 
 // AI Budget Service
@@ -68,18 +83,16 @@ builder.Services.AddScoped<IIdentityProofService, IdentityProofService>();
 
 // Auth Service
 builder.Services.AddScoped<IAuthService, AuthService>();
-
-// Accountability Buddy Service
-builder.Services.AddScoped<IAccountabilityBuddyService, AccountabilityBuddyService>();
+builder.Services.AddScoped<IPasswordHasher<HelpMotivateMe.Core.Entities.User>, PasswordHasher<HelpMotivateMe.Core.Entities.User>>();
+builder.Services.AddOptions<SingleUserOptions>()
+    .Bind(builder.Configuration.GetSection(SingleUserOptions.SectionName))
+    .ValidateDataAnnotations()
+    .Validate(options => !string.Equals(options.Password, "change-me", StringComparison.OrdinalIgnoreCase),
+        "SingleUser:Password must not use the placeholder value 'change-me'.")
+    .ValidateOnStart();
 
 // Habit Stack Service
 builder.Services.AddScoped<IHabitStackService, HabitStackService>();
-
-// Admin Service
-builder.Services.AddScoped<IAdminService, AdminService>();
-
-// Daily Commitment Notification Service
-builder.Services.AddScoped<IDailyCommitmentNotificationService, DailyCommitmentNotificationService>();
 
 // Analytics Service
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
@@ -111,8 +124,19 @@ builder.Services.AddSession(options =>
 });
 
 // Database Seeders
-builder.Services.AddHostedService<AdminUserSeeder>();
+builder.Services.AddHostedService<SingleUserInitializer>();
 builder.Services.AddHostedService<MilestoneSeeder>();
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("login", limiter =>
+    {
+        limiter.PermitLimit = 5;
+        limiter.Window = TimeSpan.FromMinutes(1);
+        limiter.QueueLimit = 0;
+        limiter.AutoReplenishment = true;
+    });
+});
 
 // CORS
 builder.Services.AddCors(options =>
@@ -139,12 +163,8 @@ builder.Services.AddAuthentication(options =>
     {
         options.Cookie.Name = ".HelpMotivateMe.Auth";
         options.Cookie.HttpOnly = true;
-        options.Cookie.SameSite = builder.Environment.IsDevelopment()
-            ? SameSiteMode.Lax
-            : SameSiteMode.None;
-        options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
-            ? CookieSecurePolicy.SameAsRequest
-            : CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
         options.ExpireTimeSpan = TimeSpan.FromDays(30);
         options.SlidingExpiration = true;
 
@@ -159,47 +179,21 @@ builder.Services.AddAuthentication(options =>
             context.Response.StatusCode = 403;
             return Task.CompletedTask;
         };
-    })
-    .AddGitHub(options =>
-    {
-        options.ClientId = builder.Configuration["OAuth:GitHub:ClientId"] ?? "";
-        options.ClientSecret = builder.Configuration["OAuth:GitHub:ClientSecret"] ?? "";
-        options.Scope.Add("user:email");
-        options.SaveTokens = true;
-        options.CallbackPath = "/api/signin-github";
-
-        options.Events.OnCreatingTicket = context =>
+        options.Events.OnValidatePrincipal = async context =>
         {
-            if (context.Principal?.Identity is ClaimsIdentity identity)
+            var userIdValue = context.Principal?.FindFirstValue(ClaimTypes.NameIdentifier);
+            var versionValue = context.Principal?.FindFirstValue("credential_version");
+            if (!Guid.TryParse(userIdValue, out var userId) || !int.TryParse(versionValue, out var version))
             {
-                identity.AddClaim(new Claim("urn:github:login", context.User.GetProperty("login").GetString() ?? ""));
-                identity.AddClaim(new Claim("urn:github:avatar",
-                    context.User.GetProperty("avatar_url").GetString() ?? ""));
+                context.RejectPrincipal();
+                return;
             }
 
-            return Task.CompletedTask;
+            var db = context.HttpContext.RequestServices.GetRequiredService<AppDbContext>();
+            var valid = await db.Users.AnyAsync(user =>
+                user.Id == userId && user.IsActive && user.CredentialVersion == version);
+            if (!valid) context.RejectPrincipal();
         };
-    })
-    .AddGoogle(options =>
-    {
-        options.ClientId = builder.Configuration["OAuth:Google:ClientId"] ?? "";
-        options.ClientSecret = builder.Configuration["OAuth:Google:ClientSecret"] ?? "";
-        options.SaveTokens = true;
-        options.CallbackPath = "/api/signin-google";
-    })
-    .AddLinkedIn(options =>
-    {
-        options.ClientId = builder.Configuration["OAuth:LinkedIn:ClientId"] ?? "";
-        options.ClientSecret = builder.Configuration["OAuth:LinkedIn:ClientSecret"] ?? "";
-        options.SaveTokens = true;
-        options.CallbackPath = "/api/signin-linkedin";
-    })
-    .AddFacebook(options =>
-    {
-        options.AppId = builder.Configuration["OAuth:Facebook:AppId"] ?? "";
-        options.AppSecret = builder.Configuration["OAuth:Facebook:AppSecret"] ?? "";
-        options.SaveTokens = true;
-        options.CallbackPath = "/api/signin-facebook";
     });
 
 builder.Services.AddControllers()
@@ -208,139 +202,40 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure email templates to use hosted images (better email client compatibility)
-EmailTemplateBase.FrontendUrl = builder.Configuration["FrontendUrl"];
-
-// Use forwarded headers from Traefik/ngrok
-app.UseForwardedHeaders();
-
-// Force HTTPS scheme when behind proxy (ngrok)
-app.Use(async (context, next) =>
+await using (var scope = app.Services.CreateAsyncScope())
 {
-    // If not localhost and not already HTTPS, force HTTPS scheme
-    if (!context.Request.Host.Host.Contains("localhost") &&
-        context.Request.Scheme != "https")
-        context.Request.Scheme = "https";
-    await next();
-});
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await db.Database.EnsureCreatedAsync();
+}
 
-// Configure the HTTP request pipeline
-
-// Don't use HTTPS redirection when behind a proxy (Traefik/ngrok handles HTTPS)
-// app.UseHttpsRedirection();
-
-app.UseCors("AllowFrontend");
+app.UseForwardedHeaders();
+app.UseDefaultFiles();
+app.UseStaticFiles();
+if (app.Environment.IsDevelopment()) app.UseCors("AllowFrontend");
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseSession();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGet("/health/live", () => Results.Ok(new { status = "live" }));
+app.MapGet("/health/ready", async (AppDbContext db) =>
+    await db.Database.CanConnectAsync()
+        ? Results.Ok(new { status = "ready" })
+        : Results.StatusCode(StatusCodes.Status503ServiceUnavailable));
 
-// OpenAPI + Scalar API Docs (admin-only in production, open in development for codegen)
-var openApi = app.MapOpenApi("/api/openapi/{documentName}.json");
-if (!app.Environment.IsDevelopment())
-    openApi.RequireAuthorization(policy => policy.RequireRole("Admin"));
-
-var frontendUrl = builder.Configuration["FrontendUrl"] ?? "http://localhost:5173";
-app.MapScalarApiReference("/api/docs", options =>
+if (app.Environment.IsDevelopment())
 {
-    options
+    app.MapOpenApi("/api/openapi/{documentName}.json");
+    app.MapScalarApiReference("/api/docs", options => options
         .WithOpenApiRoutePattern("/api/openapi/{documentName}.json")
         .WithTitle("Help Motivate Me - API Reference")
         .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient)
-        .HideDarkModeToggle()
-        .AddHeadContent($@"
-            <link rel=""preconnect"" href=""https://fonts.googleapis.com"" />
-            <link rel=""preconnect"" href=""https://fonts.gstatic.com"" crossorigin />
-            <link href=""https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"" rel=""stylesheet"" />
-            <style>
-                :root {{
-                    --scalar-background-1: #faf7f2;
-                    --scalar-background-2: #f5f0e8;
-                    --scalar-background-3: #fdfcfa;
-                    --scalar-color-1: #5f483d;
-                    --scalar-color-2: #8a6a54;
-                    --scalar-color-3: #9a7d64;
-                    --scalar-color-accent: #d4944c;
-                    --scalar-border-color: rgba(212, 148, 76, 0.2);
-                    --scalar-sidebar-background-1: #f5f0e8;
-                    --scalar-sidebar-color-1: #5f483d;
-                    --scalar-sidebar-color-2: #8a6a54;
-                    --scalar-button-1: #d4944c;
-                    --scalar-button-1-hover: #b87a3a;
-                    --scalar-button-1-color: #ffffff;
-                    --scalar-font: 'Nunito', 'Inter', system-ui, sans-serif;
-                }}
-                .back-to-admin {{
-                    position: fixed;
-                    top: 12px;
-                    right: 16px;
-                    z-index: 1000;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 6px;
-                    padding: 6px 14px;
-                    font-family: 'Nunito', sans-serif;
-                    font-size: 13px;
-                    font-weight: 600;
-                    color: #8a6a54;
-                    background: #f5f0e8;
-                    border: 1px solid rgba(212, 148, 76, 0.3);
-                    border-radius: 999px;
-                    text-decoration: none;
-                    transition: background 0.15s, color 0.15s;
-                }}
-                .back-to-admin:hover {{
-                    background: #d4944c;
-                    color: #fff;
-                }}
-            </style>
-        ")
-        .AddHeaderContent($@"
-            <a class=""back-to-admin"" href=""{frontendUrl}/admin"">
-                <svg xmlns=""http://www.w3.org/2000/svg"" width=""14"" height=""14"" viewBox=""0 0 20 20"" fill=""currentColor"">
-                    <path fill-rule=""evenodd"" d=""M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"" clip-rule=""evenodd"" />
-                </svg>
-                Admin Dashboard
-            </a>
-        ");
-})
-.RequireAuthorization(policy => policy.RequireRole("Admin"));
+        .HideDarkModeToggle());
+}
 
-// Background Workers - Scheduled Push Notifications
-// app.RunCronBackgroundWorker("0 */6 * * *",
-//     async (CancellationToken ct, ScheduledPushNotificationService service, ILogger<Program> logger) =>
-// {
-//     logger.LogInformation("Scheduled push notification worker executing at {Time}", DateTime.UtcNow);
-//     await service.SendScheduledNotificationAsync();
-// })
-// .WithName("scheduled-push-notifications")
-// .WithErrorHandler(ex =>
-// {
-//     var logger = app.Services.GetRequiredService<ILogger<Program>>();
-//     logger.LogError(ex, "Error in scheduled push notification worker");
-// });
-
-app.RunPeriodicBackgroundWorker(TimeSpan.FromMinutes(5), async (ILogger<Program> logger) =>
-{
-    logger.LogInformation("Heartbeat at {Time}", DateTime.UtcNow);
-    await Task.Delay(1);
-});
-
-// Background Worker - Daily Identity Commitment Notifications
-app.RunPeriodicBackgroundWorker(TimeSpan.FromMinutes(5),
-        async (CancellationToken ct, IDailyCommitmentNotificationService service, ILogger<Program> logger) =>
-        {
-            logger.LogInformation("Daily commitment notification worker executing at {Time}", DateTime.UtcNow);
-            var sentCount = await service.ProcessEligibleUsersAsync(ct);
-            logger.LogInformation("Daily commitment notification worker completed. Sent {SentCount} notifications",
-                sentCount);
-        })
-    .WithName("daily-commitment-notifications")
-    .WithErrorHandler(ex =>
-    {
-        var logger = app.Services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Error in daily commitment notification worker");
-    });
+app.Map("/api/{**path}", () => Results.NotFound());
+app.Map("/health/{**path}", () => Results.NotFound());
+app.MapFallbackToFile("index.html");
 
 app.Run();

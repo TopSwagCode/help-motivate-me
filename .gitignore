@@ -1,6 +1,7 @@
 # Backend - .NET / C#
 backend/**/bin/
 backend/**/obj/
+backend/**/bin\\Debug/
 backend/.vs/
 backend/*.user
 backend/*.suo
@@ -41,7 +42,6 @@ backend/.env.*
 !backend/.env.example
 
 # Frontend build artifacts
-frontend/package-lock.json
 frontend/yarn.lock
 frontend/pnpm-lock.yaml
 

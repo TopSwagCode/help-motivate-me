@@ -1,0 +1,120 @@
+{
+  "name": "Help Motivate Me (.NET 10 + SvelteKit)",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+
+  "features": {
+    "ghcr.io/devcontainers/features/dotnet:2": {
+      "version": "10.0"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.13"
+    },
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  "remoteUser": "vscode",
+  "updateRemoteUserUID": true,
+  "init": true,
+  "shutdownAction": "stopContainer",
+
+  "mounts": [
+    "source=help-motivate-me-bash-history,target=/commandhistory,type=volume",
+    "source=help-motivate-me-nuget,target=/home/vscode/.nuget/packages,type=volume",
+    "source=help-motivate-me-copilot,target=/home/vscode/.copilot,type=volume",
+    "source=help-motivate-me-vscode-global-storage,target=/home/vscode/.vscode-server/data/User/globalStorage,type=volume"
+  ],
+  "containerEnv": {
+    "PROMPT_COMMAND": "history -a",
+    "HISTFILE": "/commandhistory/.bash_history",
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+    "DOTNET_NOLOGO": "1",
+    "ConnectionStrings__DefaultConnection": "Host=host.docker.internal;Database=helpmotivateme;Username=postgres;Password=postgres",
+    "Email__SmtpHost": "host.docker.internal"
+  },
+
+  "forwardPorts": [5001, 5173, 5432, 8025, 1025, 80, 8080],
+  "portsAttributes": {
+    "5001": {
+      "label": "Help Motivate Me API",
+      "onAutoForward": "notify"
+    },
+    "5173": {
+      "label": "SvelteKit frontend",
+      "onAutoForward": "openBrowser"
+    },
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "silent"
+    },
+    "8025": {
+      "label": "Mailpit",
+      "onAutoForward": "notify"
+    },
+    "1025": {
+      "label": "Mailpit SMTP",
+      "onAutoForward": "silent"
+    },
+    "80": {
+      "label": "Full stack (Traefik)",
+      "onAutoForward": "notify"
+    },
+    "8080": {
+      "label": "Traefik dashboard",
+      "onAutoForward": "silent"
+    }
+  },
+
+  "onCreateCommand": "sudo mkdir -p /commandhistory /home/vscode/.nuget/packages /home/vscode/.copilot /home/vscode/.vscode-server/data/User/globalStorage && sudo chown -R vscode:vscode /commandhistory /home/vscode/.nuget /home/vscode/.copilot /home/vscode/.vscode-server",
+  "postCreateCommand": "cd backend && dotnet restore HelpMotivateMe.sln && dotnet tool restore && cd ../frontend && npm install",
+  "postStartCommand": "git config --global --add safe.directory '${containerWorkspaceFolder}'",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "ms-dotnettools.csdevkit",
+        "ms-azuretools.vscode-docker",
+        "svelte.svelte-vscode",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-python.python"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "workbench.colorCustomizations": {
+          "activityBar.background": "#4A3830",
+          "activityBar.foreground": "#FDFCFA",
+          "activityBar.activeBorder": "#D4944C",
+          "statusBar.background": "#965E2C",
+          "statusBar.foreground": "#FEFCF9",
+          "statusBar.noFolderBackground": "#735748",
+          "statusBarItem.remoteBackground": "#768862",
+          "statusBarItem.remoteForeground": "#FEFCF9",
+          "titleBar.activeBackground": "#5F483D",
+          "titleBar.activeForeground": "#FEFCF9",
+          "titleBar.inactiveBackground": "#735748",
+          "titleBar.inactiveForeground": "#F9E8D2"
+        },
+        "github.copilot.enable": {
+          "*": true
+        },
+        "chat.tools.global.autoApprove": true,
+        "chat.agent.maxRequests": 1000000,
+        "dotnet.defaultSolution": "backend/HelpMotivateMe.sln"
+      }
+    }
+  },
+
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "32gb"
+  }
+}

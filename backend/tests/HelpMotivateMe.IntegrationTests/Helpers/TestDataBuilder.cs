@@ -2,6 +2,7 @@ using Bogus;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace HelpMotivateMe.IntegrationTests.Helpers;
 
@@ -15,15 +16,15 @@ public class TestDataBuilder
         _db = db;
     }
 
-    public async Task<User> CreateUserAsync(string? email = null)
+    public async Task<User> CreateUserAsync(string? username = null)
     {
         var user = new User
         {
             Id = Guid.NewGuid(),
-            Email = email ?? _faker.Internet.Email(),
+            Username = username ?? $"user-{Guid.NewGuid():N}",
+            PasswordHash = "test-password-hash",
             DisplayName = _faker.Name.FullName(),
             IsActive = true,
-            IsEmailVerified = true, // Verified for testing
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -183,14 +184,7 @@ public class TestDataBuilder
 
     public async Task ClearAllDataAsync()
     {
-        _db.HabitStackItemCompletions.RemoveRange(_db.HabitStackItemCompletions);
-        _db.HabitStackItems.RemoveRange(_db.HabitStackItems);
-        _db.HabitStacks.RemoveRange(_db.HabitStacks);
-        _db.TaskItems.RemoveRange(_db.TaskItems);
-        _db.Goals.RemoveRange(_db.Goals);
-        _db.Identities.RemoveRange(_db.Identities);
-        _db.UserExternalLogins.RemoveRange(_db.UserExternalLogins);
-        _db.Users.RemoveRange(_db.Users);
-        await _db.SaveChangesAsync();
+        await _db.Users.ExecuteDeleteAsync();
+        _db.ChangeTracker.Clear();
     }
 }

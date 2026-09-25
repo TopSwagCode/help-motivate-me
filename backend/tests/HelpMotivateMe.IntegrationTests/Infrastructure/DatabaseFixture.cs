@@ -1,31 +1,32 @@
-using Testcontainers.PostgreSql;
-
 namespace HelpMotivateMe.IntegrationTests.Infrastructure;
 
 public class DatabaseFixture : IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _postgresContainer;
+    private readonly string _directory;
 
     public DatabaseFixture()
     {
-        _postgresContainer = new PostgreSqlBuilder()
-            .WithImage("postgres:16-alpine")
-            .WithDatabase("testdb")
-            .WithUsername("testuser")
-            .WithPassword("testpassword")
-            .Build();
+        _directory = Path.Combine(Path.GetTempPath(), "help-motivate-me-tests", Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(_directory);
+        ConnectionString = $"Data Source={Path.Combine(_directory, "tests.db")};Foreign Keys=True;Default Timeout=30";
     }
 
-    public string ConnectionString => _postgresContainer.GetConnectionString();
+    public string ConnectionString { get; }
 
-    public async Task InitializeAsync()
+    public void Reset()
     {
-        await _postgresContainer.StartAsync();
+        foreach (var file in Directory.EnumerateFiles(_directory)) File.Delete(file);
     }
 
-    public async Task DisposeAsync()
+    public Task InitializeAsync()
     {
-        await _postgresContainer.DisposeAsync();
+        return Task.CompletedTask;
+    }
+
+    public Task DisposeAsync()
+    {
+        Directory.Delete(_directory, true);
+        return Task.CompletedTask;
     }
 }
 

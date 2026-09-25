@@ -2,6 +2,7 @@
 	import { onMount, tick } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
+	import { aiConfig } from '$lib/stores/aiConfig';
 	import { commandBar } from '$lib/stores/commandBar';
 	import { t } from 'svelte-i18n';
 	import { get } from 'svelte/store';
@@ -556,7 +557,7 @@
 						</div>
 						<h3 class="text-lg font-medium text-cocoa-800 mb-2">{$t('habitStacks.emptyTitle')}</h3>
 						<p class="text-cocoa-500 mb-4">{$t('habitStacks.emptyDescription')}</p>
-						<p class="text-cocoa-500 text-sm mb-6 flex items-center justify-center gap-1 flex-wrap">
+						{#if $aiConfig.isEnabled}<p class="text-cocoa-500 text-sm mb-6 flex items-center justify-center gap-1 flex-wrap">
 							{$t('habitStacks.emptyHowTo')}
 							<button
 								type="button"
@@ -568,7 +569,7 @@
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
 								</svg>
 							</button>
-						</p>
+						</p>{/if}
 						<button onclick={openCreatePopup} class="btn-primary">{$t('habitStacks.createFirst')}</button>
 					</div>
 				</div>

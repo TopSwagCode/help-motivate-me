@@ -81,6 +81,7 @@ public class TasksController : ApiControllerBase
 
         var task = new TaskItem
         {
+            Id = Guid.NewGuid(),
             GoalId = goalId,
             Title = request.Title,
             Description = request.Description,
@@ -117,6 +118,7 @@ public class TasksController : ApiControllerBase
 
         var subtask = new TaskItem
         {
+            Id = Guid.NewGuid(),
             GoalId = parentTask.GoalId,
             ParentTaskId = id,
             Title = request.Title,
@@ -340,6 +342,7 @@ public class TasksController : ApiControllerBase
 
         var tinyTask = new TaskItem
         {
+            Id = Guid.NewGuid(),
             GoalId = task.GoalId,
             Title = $"[2 min] {task.Title}",
             Description = "Tiny version: Start with just 2 minutes. The goal is to begin, not to finish.",

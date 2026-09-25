@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
+	import { aiConfig } from '$lib/stores/aiConfig';
 	import { completeOnboarding } from '$lib/api/onboarding';
 	import OnboardingWizard from '$lib/components/onboarding/OnboardingWizard.svelte';
 	import AiOnboardingWizard from '$lib/components/onboarding/AiOnboardingWizard.svelte';
@@ -76,9 +77,9 @@
 {:else if mode === 'language'}
 	<LanguageSelectStep oncontinue={handleLanguageContinue} />
 {:else if mode === 'select'}
-	<OnboardingModeSelect onselect={handleModeSelect} />
+	<OnboardingModeSelect onselect={handleModeSelect} aiEnabled={$aiConfig.isEnabled} />
 {:else if mode === 'manual'}
 	<OnboardingWizard oncomplete={handleComplete} onskip={handleSkip} />
-{:else if mode === 'ai'}
+{:else if mode === 'ai' && $aiConfig.isEnabled}
 	<AiOnboardingWizard oncomplete={handleComplete} onskip={handleSkip} />
 {/if}

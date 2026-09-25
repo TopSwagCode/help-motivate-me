@@ -9,16 +9,11 @@
 // ===== Auth =====
 export type { UserResponse as User } from './generated/api';
 export type { LoginRequest } from './generated/api';
-export type { RegisterRequest } from './generated/api';
 export type { UpdateProfileRequest } from './generated/api';
-export type { ChangePasswordRequest } from './generated/api';
-export type { UpdateMembershipRequest } from './generated/api';
 export type { UpdateLanguageRequest } from './generated/api';
-export type { BuddyLoginResponse } from './generated/api';
+export type { AiStatusResponse as AiStatus } from './generated/api';
 
 // Auth enums (frontend-only string literals, not generated)
-export type MembershipTier = 'Free' | 'Plus' | 'Pro';
-export type UserRole = 'User' | 'Admin';
 export type Language = 'English' | 'Danish';
 
 // ===== Goals =====
@@ -75,7 +70,13 @@ export type { DailyDigestResponse as DailyDigest } from './generated/api';
 export type { DailyDigestIdentityResponse as DigestIdentity } from './generated/api';
 
 // Today enums (frontend-only string literals)
-export type IdentityStatus = 'Dormant' | 'Forming' | 'Emerging' | 'Stabilizing' | 'Strong' | 'Automatic';
+export type IdentityStatus =
+	| 'Dormant'
+	| 'Forming'
+	| 'Emerging'
+	| 'Stabilizing'
+	| 'Strong'
+	| 'Automatic';
 export type TrendDirection = 'Up' | 'Down' | 'Neutral';
 
 // ===== Analytics =====
@@ -87,19 +88,10 @@ export type { HeatmapDataResponse as HeatmapData } from './generated/api';
 // ===== Journal =====
 export type { JournalEntryResponse as JournalEntry } from './generated/api';
 export type { JournalImageResponse as JournalImage } from './generated/api';
-export type { JournalReactionResponse as JournalReaction } from './generated/api';
 export type { CreateJournalEntryRequest } from './generated/api';
 export type { UpdateJournalEntryRequest } from './generated/api';
 export type { LinkableHabitStackResponse as LinkableHabitStack } from './generated/api';
 export type { LinkableTaskResponse as LinkableTask } from './generated/api';
-
-// JournalReactionSummary is frontend-only (computed from JournalReaction[])
-export interface JournalReactionSummary {
-	emoji: string;
-	count: number;
-	users: Array<{ id: string; displayName: string }>;
-	hasReacted: boolean;
-}
 
 // ===== Daily Commitments =====
 export type { DailyCommitmentResponse as DailyCommitment } from './generated/api';
@@ -113,55 +105,6 @@ export type { YesterdayCommitmentResponse as YesterdayCommitment } from './gener
 // DailyCommitmentStatus enum (generated as string enum)
 export type { DailyCommitmentStatus } from './generated/api';
 
-// ===== Notifications =====
-export type { NotificationPreferencesResponse as NotificationPreferences } from './generated/api';
-export type { UpdateNotificationPreferencesRequest } from './generated/api';
-
-// Notification enums (frontend-only)
-export type TimeSlot = 'Morning' | 'Afternoon' | 'Evening' | 'Night' | 'Custom';
-
-export enum DayOfWeek {
-	Sunday = 0,
-	Monday = 1,
-	Tuesday = 2,
-	Wednesday = 3,
-	Thursday = 4,
-	Friday = 5,
-	Saturday = 6
-}
-
-export const NotificationDays = {
-	None: 0,
-	Sunday: 1,
-	Monday: 2,
-	Tuesday: 4,
-	Wednesday: 8,
-	Thursday: 16,
-	Friday: 32,
-	Saturday: 64,
-	Weekdays: 2 + 4 + 8 + 16 + 32,
-	Weekends: 1 + 64,
-	Weekend: 1 + 64,
-	EveryDay: 1 + 2 + 4 + 8 + 16 + 32 + 64,
-	All: 1 + 2 + 4 + 8 + 16 + 32 + 64
-} as const;
-
-// ===== Buddies =====
-export type { BuddyResponse } from './generated/api';
-export type { BuddyForResponse } from './generated/api';
-export type { BuddyRelationshipsResponse } from './generated/api';
-export type { BuddyTodayViewResponse } from './generated/api';
-export type { BuddyJournalEntryResponse as BuddyJournalEntry } from './generated/api';
-export type { BuddyJournalImageResponse as BuddyJournalImage } from './generated/api';
-export type { BuddyJournalReactionResponse as BuddyJournalReaction } from './generated/api';
-export type { CreateBuddyJournalEntryRequest } from './generated/api';
-
-// Buddy-specific today types alias to existing generated today types
-export type { TodayHabitStackResponse as BuddyTodayHabitStack } from './generated/api';
-export type { TodayHabitStackItemResponse as BuddyTodayHabitStackItem } from './generated/api';
-export type { TodayTaskResponse as BuddyTodayTask } from './generated/api';
-export type { TodayIdentityFeedbackResponse as BuddyIdentityFeedback } from './generated/api';
-
 // ===== Milestones =====
 export type { MilestoneDefinitionResponse as MilestoneDefinition } from './generated/api';
 export type { UserMilestoneResponse as UserMilestone } from './generated/api';
@@ -170,44 +113,3 @@ export type { MarkSeenRequest } from './generated/api';
 export type { CreateMilestoneRequest } from './generated/api';
 export type { UpdateMilestoneRequest } from './generated/api';
 export type { ToggleMilestoneRequest } from './generated/api';
-
-// ===== Admin =====
-export type { AdminStatsResponse as AdminStats } from './generated/api';
-export type { MembershipStats } from './generated/api';
-export type { TaskTotals } from './generated/api';
-export type { DailyStatsResponse as DailyStats } from './generated/api';
-export type { AdminUserResponse as AdminUser } from './generated/api';
-export type { UpdateRoleRequest } from './generated/api';
-export type { UserActivityPeriod } from './generated/api';
-export type { UserActivityResponse as UserActivity } from './generated/api';
-export type { AiUsageStatsResponse as AiUsageStats } from './generated/api';
-export type { AiUsageLogResponse as AiUsageLog } from './generated/api';
-export type { PaginatedResponseOfAiUsageLogResponse } from './generated/api';
-export type { AnalyticsOverviewResponse } from './generated/api';
-export type { EventTypeCount } from './generated/api';
-export type { DailyEventCount } from './generated/api';
-export type { SessionSummary } from './generated/api';
-export type { SignupSettingsResponse } from './generated/api';
-export type { UserPushStatus } from './generated/api';
-export type { PushNotificationResult } from './generated/api';
-export type { PushNotificationStatsResponse as PushStats } from './generated/api';
-
-// Generic paginated response (frontend convenience type)
-export interface PaginatedResponse<T> {
-	items: T[];
-	totalCount: number;
-	page: number;
-	pageSize: number;
-	totalPages: number;
-}
-
-// ===== Waitlist =====
-export type { WaitlistEntryResponse as WaitlistEntry } from './generated/api';
-export type { WhitelistEntryResponse as WhitelistEntry } from './generated/api';
-export type { WhitelistCheckResponse } from './generated/api';
-
-// WaitlistSignupResponse - controller returns IActionResult, not in generated schema
-export interface WaitlistSignupResponse {
-	message: string;
-	canSignup?: boolean;
-}

@@ -2,8 +2,9 @@
 	import { t, locale } from 'svelte-i18n';
 	import { get } from 'svelte/store';
 	import { commandBar } from '$lib/stores/commandBar';
+	import { aiConfig } from '$lib/stores/aiConfig';
 	import type { TodayView, TodayTask, TodayHabitStack, IdentityFeedback, IdentityProgress } from '$lib/types';
-	import type { BuddyTodayViewResponse, BuddyTodayTask, BuddyTodayHabitStack, IdentityProof } from '$lib/types';
+	import type { IdentityProof } from '$lib/types';
 	import VoteBreakdownPopover from './VoteBreakdownPopover.svelte';
 	import IdentityProgressIcon from '$lib/components/icons/IdentityProgressIcon.svelte';
 	import HabitStackIcon from '$lib/components/icons/HabitStackIcon.svelte';
@@ -11,9 +12,9 @@
 	import CompletedIcon from '$lib/components/icons/CompletedIcon.svelte';
 
 	// Unified type to accept both TodayView and BuddyTodayViewResponse
-	type TodayViewData = TodayView | BuddyTodayViewResponse;
-	type TaskData = TodayTask | BuddyTodayTask;
-	type HabitStackData = TodayHabitStack | BuddyTodayHabitStack;
+	type TodayViewData = TodayView;
+	type TaskData = TodayTask;
+	type HabitStackData = TodayHabitStack;
 
 	interface Props {
 		todayData: TodayViewData;
@@ -513,6 +514,7 @@
 							<a href="/habit-stacks" class="text-primary-600 hover:text-primary-700 font-medium">
 								{$t('today.createHabitStack')} →
 							</a>
+							{#if $aiConfig.isEnabled}
 							<span class="text-gray-400 hidden sm:inline">•</span>
 							<span class="text-cocoa-500 flex items-center gap-1">
 								{$t('today.orUseAssistant')}
@@ -527,6 +529,7 @@
 									</svg>
 								</button>
 							</span>
+							{/if}
 						</div>
 					{/if}
 				</div>
@@ -637,6 +640,7 @@
 								</svg>
 								{$t('today.logFirstWin')} →
 							</button>
+							{#if $aiConfig.isEnabled}
 							<span class="text-gray-400 hidden sm:inline">•</span>
 							<span class="text-cocoa-500 flex items-center gap-1">
 								{$t('today.orUseAssistant')}
@@ -651,6 +655,7 @@
 									</svg>
 								</button>
 							</span>
+							{/if}
 						</div>
 					{/if}
 				</div>
@@ -824,6 +829,7 @@
 							<a href="/goals" class="text-primary-600 hover:text-primary-700 font-medium">
 								{$t('today.goToGoals')} →
 							</a>
+							{#if $aiConfig.isEnabled}
 							<span class="text-gray-400 hidden sm:inline">•</span>
 							<span class="text-cocoa-500 flex items-center gap-1">
 								{$t('today.orUseAssistant')}
@@ -838,6 +844,7 @@
 									</svg>
 								</button>
 							</span>
+							{/if}
 						</div>
 					{/if}
 				</div>

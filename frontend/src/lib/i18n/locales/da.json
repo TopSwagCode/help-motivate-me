@@ -294,6 +294,8 @@
 			"title": "Velkommen tilbage",
 			"subtitle": "Log ind for at fortsætte din rejse",
 			"heading": "Log ind på din konto",
+			"username": "Brugernavn",
+			"failed": "Login mislykkedes",
 			"noAccountLink": "Opret en",
 			"email": "E-mail",
 			"emailPlaceholder": "Indtast din e-mail",
@@ -345,8 +347,6 @@
 			"submit": "Opret konto",
 			"hasAccount": "Har du allerede en konto?",
 			"signIn": "Log ind",
-			"passwordRequirements": "Adgangskoden skal være mindst 8 tegn",
-			"passwordHint": "Skal være mindst 8 tegn",
 			"orContinueWith": "Eller fortsæt med",
 			"continueGoogle": "Fortsæt med Google",
 			"continueLinkedIn": "Fortsæt med LinkedIn",
@@ -393,7 +393,24 @@
 		"settings": "Indstillinger",
 		"help": "Hjælp",
 		"signOut": "Log ud",
-		"adminDashboard": "Admin Dashboard"
+		"advanced": "Avanceret"
+	},
+	"advanced": {
+		"title": "Avanceret",
+		"subtitle": "Personlig aktivitet og milepælsindstillinger",
+		"yourActivity": "Din aktivitet",
+		"logins": "Login",
+		"wins": "Identitetssejre",
+		"habits": "Gennemførte vaner",
+		"tasks": "Gennemførte opgaver",
+		"proofs": "Identitetsbeviser",
+		"journalEntries": "Dagbogsindlæg",
+		"lastActivity": "Seneste aktivitet",
+		"milestones": "Milepælsindstillinger",
+		"milestonesDescription": "Vælg hvilke milepæle der kan opnås.",
+		"active": "Aktiv",
+		"inactive": "Inaktiv",
+		"loadFailed": "Kunne ikke indlæse avancerede indstillinger"
 	},
 	"settings": {
 		"title": "Indstillinger",
@@ -413,7 +430,6 @@
 			"confirm": "Bekræft ny adgangskode",
 			"change": "Skift adgangskode",
 			"changing": "Skifter...",
-			"requirements": "Adgangskoden skal være mindst 8 tegn",
 			"mismatch": "Adgangskoderne matcher ikke",
 			"success": "Adgangskode ændret",
 			"error": "Kunne ikke ændre adgangskode"

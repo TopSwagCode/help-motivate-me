@@ -248,7 +248,7 @@
 			<p class="text-sm text-cocoa-500 mb-2">
 				{$t('errorPages.helpText')}
 			</p>
-			<a href="/faq" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
+			<a href="/today" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
 				{$t('common.info.visitFaq')}
 			</a>
 		</div>

@@ -2,7 +2,7 @@ namespace HelpMotivateMe.Core.Entities;
 
 public class HabitStack
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
     public Guid UserId { get; set; }
     public required string Name { get; set; }
     public string? Description { get; set; }

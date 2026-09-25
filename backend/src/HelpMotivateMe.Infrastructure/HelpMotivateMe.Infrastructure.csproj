@@ -11,22 +11,35 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Remove="Data\AppDbContext.cs" />
+        <Compile Remove="Data\Configurations\AccountabilityBuddyConfiguration.cs" />
+        <Compile Remove="Data\Configurations\AnalyticsEventConfiguration.cs" />
+        <Compile Remove="Data\Configurations\BuddyInviteTokenConfiguration.cs" />
+        <Compile Remove="Data\Configurations\DailyCommitmentNotificationLogConfiguration.cs" />
+        <Compile Remove="Data\Configurations\EmailLoginTokenConfiguration.cs" />
+        <Compile Remove="Data\Configurations\JournalReactionConfiguration.cs" />
+        <Compile Remove="Data\Configurations\PushSubscriptionConfiguration.cs" />
+        <Compile Remove="Data\Configurations\UserExternalLoginConfiguration.cs" />
+        <Compile Remove="Data\Configurations\UserConfiguration.cs" />
+        <Compile Remove="Data\Configurations\WaitlistEntryConfiguration.cs" />
+        <Compile Remove="Data\Configurations\WhitelistEntryConfiguration.cs" />
+    </ItemGroup>
+    <ItemGroup>
         <ProjectReference Include="..\HelpMotivateMe.Core\HelpMotivateMe.Core.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MailKit" Version="4.14.1"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0"/>
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="10.0.0"/>
-        <PackageReference Include="WebPush" Version="1.0.12"/>
     </ItemGroup>
 
     <ItemGroup>
         <Folder Include="Migrations\"/>
+        <Compile Remove="Migrations\**\*.cs" />
     </ItemGroup>
 
 </Project>

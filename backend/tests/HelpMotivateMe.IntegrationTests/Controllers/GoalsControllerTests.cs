@@ -75,6 +75,71 @@ public class GoalsControllerTests : IntegrationTestBase
     }
 
     [Fact]
+    public async Task CreateGoal_ReturnedGoalCanBeRetrieved()
+    {
+        var user = await DataBuilder.CreateUserAsync();
+
+        Client.AuthenticateAs(user.Id);
+        var createResponse = await Client.PostAsJsonAsync("/api/goals", new { Title = "Persistent Goal" });
+
+        createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+        var created = await createResponse.Content.ReadFromJsonAsync<GoalResponse>();
+        created!.Id.Should().NotBeEmpty();
+
+        Db.ChangeTracker.Clear();
+        var persisted = await Db.Goals.FindAsync(created.Id);
+        persisted.Should().NotBeNull();
+        persisted!.UserId.Should().Be(user.Id);
+
+        var getResponse = await Client.GetAsync($"/api/goals/{created.Id}");
+
+        getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var retrieved = await getResponse.Content.ReadFromJsonAsync<GoalResponse>();
+        retrieved!.Id.Should().Be(created.Id);
+        retrieved.Title.Should().Be("Persistent Goal");
+    }
+
+    [Fact]
+    public async Task CreateGoal_WithOwnedIdentity_ReturnsLinkedGoalThatCanBeRetrieved()
+    {
+        var user = await DataBuilder.CreateUserAsync();
+
+        Client.AuthenticateAs(user.Id);
+        var identityResponse = await Client.PostAsJsonAsync("/api/identities", new { Name = "I am focused" });
+        identityResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+        var identity = await identityResponse.Content.ReadFromJsonAsync<IdentityResponse>();
+        var request = new { Title = "Focused Goal", IdentityId = identity!.Id };
+
+        var createResponse = await Client.PostAsJsonAsync("/api/goals", request);
+
+        createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+        var created = await createResponse.Content.ReadFromJsonAsync<GoalResponse>();
+        created!.IdentityId.Should().Be(identity.Id);
+        created.IdentityName.Should().Be(identity.Name);
+
+        var retrieved = await Client.GetFromJsonAsync<GoalResponse>($"/api/goals/{created.Id}");
+        retrieved!.IdentityId.Should().Be(identity.Id);
+        retrieved.IdentityName.Should().Be(identity.Name);
+    }
+
+    [Fact]
+    public async Task CreateGoal_WithAnotherUsersIdentity_ReturnsBadRequest()
+    {
+        var user = await DataBuilder.CreateUserAsync();
+        var otherUser = await DataBuilder.CreateUserAsync();
+        var identity = await DataBuilder.CreateIdentityAsync(otherUser.Id, "Other identity");
+
+        Client.AuthenticateAs(user.Id);
+        var response = await Client.PostAsJsonAsync("/api/goals", new
+        {
+            Title = "Invalid identity goal",
+            IdentityId = identity.Id
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
     public async Task UpdateGoal_UpdatesFields()
     {
         // Arrange
@@ -355,6 +420,10 @@ public record GoalResponse(
     int SortOrder,
     int TaskCount,
     int CompletedTaskCount,
+    Guid? IdentityId,
+    string? IdentityName,
+    string? IdentityColor,
+    string? IdentityIcon,
     DateTime CreatedAt,
     DateTime? UpdatedAt
 );

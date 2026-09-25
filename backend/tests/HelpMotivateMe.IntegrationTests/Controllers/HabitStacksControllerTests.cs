@@ -71,10 +71,11 @@ public class HabitStacksControllerTests : IntegrationTestBase
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         var created = await response.Content.ReadFromJsonAsync<HabitStackResponse>();
+        created!.Id.Should().NotBeEmpty();
 
-        // Verify the sort order is 6 (max + 1)
-        var allStacks = await Client.GetFromJsonAsync<List<HabitStackResponse>>("/api/habit-stacks");
-        allStacks!.First(s => s.Name == "New Stack").Should().NotBeNull();
+        var retrieved = await Client.GetFromJsonAsync<HabitStackResponse>($"/api/habit-stacks/{created.Id}");
+        retrieved!.Id.Should().Be(created.Id);
+        retrieved.Name.Should().Be("New Stack");
     }
 
     [Fact]

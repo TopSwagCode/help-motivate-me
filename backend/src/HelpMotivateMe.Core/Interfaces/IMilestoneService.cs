@@ -26,7 +26,7 @@ public interface IMilestoneService
     Task MarkMilestonesSeenAsync(Guid userId, List<Guid> milestoneIds);
 
     /// <summary>
-    ///     Get all milestone definitions (admin).
+    ///     Get all milestone definitions.
     /// </summary>
     Task<List<MilestoneDefinitionResponse>> GetAllDefinitionsAsync();
 
@@ -36,22 +36,22 @@ public interface IMilestoneService
     Task<UserStatsResponse> GetUserStatsAsync(Guid userId);
 
     /// <summary>
-    ///     Create a new milestone definition (admin).
+    ///     Create a new milestone definition.
     /// </summary>
     Task<MilestoneDefinitionResponse> CreateDefinitionAsync(CreateMilestoneRequest request);
 
     /// <summary>
-    ///     Update an existing milestone definition (admin).
+    ///     Update an existing milestone definition.
     /// </summary>
     Task<MilestoneDefinitionResponse?> UpdateDefinitionAsync(Guid id, UpdateMilestoneRequest request);
 
     /// <summary>
-    ///     Toggle milestone active status (admin).
+    ///     Toggle milestone active status.
     /// </summary>
     Task<bool> ToggleDefinitionAsync(Guid id, bool isActive);
 
     /// <summary>
-    ///     Delete a milestone definition (admin).
+    ///     Delete a milestone definition.
     /// </summary>
     Task<bool> DeleteDefinitionAsync(Guid id);
 }

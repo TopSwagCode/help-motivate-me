@@ -7,25 +7,16 @@ using HelpMotivateMe.Core.DTOs.Ai;
 using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Exceptions;
 using HelpMotivateMe.Core.Interfaces;
+using HelpMotivateMe.Core.Options;
 using HelpMotivateMe.Infrastructure.Data;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace HelpMotivateMe.Infrastructure.Services;
 
 public class OpenAiService : IOpenAiService
 {
-    private const string ChatModel = "gpt-4.1-mini";
-    private const string WhisperModel = "whisper-1";
-
-    // Pricing per 1M tokens (USD)
-    private const decimal InputCostPer1M = 0.40m;
-
-    private const decimal OutputCostPer1M = 1.60m;
-
-    // Whisper pricing per minute
-    private const decimal WhisperCostPerMinute = 0.006m;
-    private readonly string _apiKey;
+    private readonly AiOptions _options;
     private readonly IAiBudgetService _budgetService;
     private readonly AppDbContext _db;
     private readonly HttpClient _httpClient;
@@ -35,18 +26,21 @@ public class OpenAiService : IOpenAiService
         HttpClient httpClient,
         AppDbContext db,
         IAiBudgetService budgetService,
-        IConfiguration configuration,
+        IOptions<AiOptions> options,
         ILogger<OpenAiService> logger)
     {
         _httpClient = httpClient;
         _db = db;
         _budgetService = budgetService;
         _logger = logger;
-        _apiKey = configuration["OpenAI:ApiKey"] ??
-                  throw new InvalidOperationException("OpenAI API key not configured");
+        _options = options.Value;
 
-        _httpClient.BaseAddress = new Uri("https://api.openai.com/v1/");
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+        if (_options.IsEnabled)
+        {
+            _httpClient.BaseAddress = new Uri(_options.BaseUrl.TrimEnd('/') + "/");
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", _options.ApiKey);
+        }
     }
 
     public async IAsyncEnumerable<ChatStreamChunk> StreamChatCompletionAsync(
@@ -55,12 +49,14 @@ public class OpenAiService : IOpenAiService
         Guid userId,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
+        EnsureChatIsConfigured();
+
         // Estimate cost and check budget BEFORE making the API call
         var estimatedCost = EstimateChatCost(messages, systemPrompt);
         var budgetCheck = await _budgetService.CheckBudgetAsync(userId, estimatedCost, cancellationToken);
         if (!budgetCheck.IsAllowed)
         {
-            await LogRejectedCallAsync(userId, ChatModel, "chat", estimatedCost, cancellationToken);
+            await LogRejectedCallAsync(userId, _options.ChatModel, "chat", estimatedCost, cancellationToken);
             throw new AiBudgetExceededException(budgetCheck.DenialReason ?? "Budget limit exceeded");
         }
 
@@ -78,7 +74,7 @@ public class OpenAiService : IOpenAiService
         await producerTask;
 
         // Log usage after streaming is complete (with both estimated and actual costs)
-        await LogUsageAsync(userId, ChatModel, usageInfo.InputTokens, usageInfo.OutputTokens, null, "chat",
+        await LogUsageAsync(userId, _options.ChatModel, usageInfo.InputTokens, usageInfo.OutputTokens, null, "chat",
             usageInfo.EstimatedCost, cancellationToken);
     }
 
@@ -88,6 +84,8 @@ public class OpenAiService : IOpenAiService
         Guid userId,
         CancellationToken cancellationToken = default)
     {
+        EnsureTranscriptionIsConfigured();
+
         // Get stream length for cost estimation, buffering only if necessary
         Stream streamToUse;
         MemoryStream? memoryStream = null;
@@ -114,7 +112,8 @@ public class OpenAiService : IOpenAiService
             var budgetCheck = await _budgetService.CheckBudgetAsync(userId, estimatedCost, cancellationToken);
             if (!budgetCheck.IsAllowed)
             {
-                await LogRejectedCallAsync(userId, WhisperModel, "transcription", estimatedCost, cancellationToken);
+                await LogRejectedCallAsync(userId, _options.TranscriptionModel, "transcription", estimatedCost,
+                    cancellationToken);
                 throw new AiBudgetExceededException(budgetCheck.DenialReason ?? "Budget limit exceeded");
             }
 
@@ -123,7 +122,7 @@ public class OpenAiService : IOpenAiService
 
             streamContent.Headers.ContentType = new MediaTypeHeaderValue("audio/webm");
             content.Add(streamContent, "file", fileName);
-            content.Add(new StringContent(WhisperModel), "model");
+            content.Add(new StringContent(_options.TranscriptionModel), "model");
             content.Add(new StringContent("json"), "response_format");
 
             var response = await _httpClient.PostAsync("audio/transcriptions", content, cancellationToken);
@@ -140,8 +139,8 @@ public class OpenAiService : IOpenAiService
             var estimatedDurationSeconds = (int)Math.Ceiling(wordCount / 2.5); // ~150 wpm = 2.5 words/sec
 
             // Log usage with both estimated and actual costs
-            await LogUsageAsync(userId, WhisperModel, 0, 0, estimatedDurationSeconds, "transcription", estimatedCost,
-                cancellationToken);
+            await LogUsageAsync(userId, _options.TranscriptionModel, 0, 0, estimatedDurationSeconds, "transcription",
+                estimatedCost, cancellationToken);
 
             return new TranscriptionResponse(text, estimatedDurationSeconds);
         }
@@ -151,7 +150,7 @@ public class OpenAiService : IOpenAiService
         }
     }
 
-    private static decimal EstimateChatCost(List<ChatMessage> messages, string systemPrompt)
+    private decimal EstimateChatCost(List<ChatMessage> messages, string systemPrompt)
     {
         // Estimate input tokens: chars / 4 (use ceiling to avoid underestimation for budget checks)
         var totalChars = systemPrompt.Length + messages.Sum(m => m.Content.Length);
@@ -160,16 +159,16 @@ public class OpenAiService : IOpenAiService
         // Using 1.2x multiplier (was 3x which caused 7-10x overestimation)
         var estimatedOutputTokens = (int)Math.Ceiling(estimatedInputTokens * 1.2m);
 
-        return estimatedInputTokens * InputCostPer1M / 1_000_000m +
-               estimatedOutputTokens * OutputCostPer1M / 1_000_000m;
+         return estimatedInputTokens * _options.InputCostPer1MTokens / 1_000_000m +
+             estimatedOutputTokens * _options.OutputCostPer1MTokens / 1_000_000m;
     }
 
-    private static decimal EstimateWhisperCost(long audioStreamLength)
+    private decimal EstimateWhisperCost(long audioStreamLength)
     {
         // Estimate duration from stream length (~4KB/sec for webm audio)
         var estimatedDurationSeconds = audioStreamLength / 4000.0;
         var estimatedDurationMinutes = estimatedDurationSeconds / 60.0;
-        return (decimal)estimatedDurationMinutes * WhisperCostPerMinute;
+        return (decimal)estimatedDurationMinutes * _options.TranscriptionCostPerMinute;
     }
 
     private async Task ProduceStreamChunksAsync(
@@ -189,7 +188,7 @@ public class OpenAiService : IOpenAiService
 
             var requestBody = new
             {
-                model = ChatModel,
+                model = _options.ChatModel,
                 messages = allMessages,
                 stream = true,
                 stream_options = new { include_usage = true }
@@ -354,10 +353,10 @@ public class OpenAiService : IOpenAiService
     {
         decimal actualCost;
         if (requestType == "transcription" && audioDurationSeconds.HasValue)
-            actualCost = audioDurationSeconds.Value / 60.0m * WhisperCostPerMinute;
+            actualCost = audioDurationSeconds.Value / 60.0m * _options.TranscriptionCostPerMinute;
         else
-            actualCost = inputTokens * InputCostPer1M / 1_000_000m +
-                         outputTokens * OutputCostPer1M / 1_000_000m;
+            actualCost = inputTokens * _options.InputCostPer1MTokens / 1_000_000m +
+                         outputTokens * _options.OutputCostPer1MTokens / 1_000_000m;
 
         var usageLog = new AiUsageLog
         {
@@ -405,6 +404,18 @@ public class OpenAiService : IOpenAiService
         _logger.LogWarning(
             "AI call rejected: User={UserId}, Model={Model}, EstimatedCost=${EstimatedCost:F6}",
             userId, model, estimatedCost);
+    }
+
+    private void EnsureChatIsConfigured()
+    {
+        if (!_options.IsEnabled)
+            throw new InvalidOperationException("AI features are not configured.");
+    }
+
+    private void EnsureTranscriptionIsConfigured()
+    {
+        if (!_options.IsTranscriptionEnabled)
+            throw new InvalidOperationException("AI transcription is not configured.");
     }
 
     private class UsageInfo

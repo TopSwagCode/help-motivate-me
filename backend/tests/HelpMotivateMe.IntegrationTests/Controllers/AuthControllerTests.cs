@@ -1,377 +1,88 @@
 using System.Net;
 using System.Net.Http.Json;
-using System.Security.Cryptography;
-using HelpMotivateMe.Core.Entities;
-using HelpMotivateMe.IntegrationTests.Helpers;
+using HelpMotivateMe.Core.DTOs.Auth;
+using HelpMotivateMe.Infrastructure.Data;
 using HelpMotivateMe.IntegrationTests.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HelpMotivateMe.IntegrationTests.Controllers;
 
-[Collection("Database")]
-public class AuthControllerTests : IntegrationTestBase
+public sealed class AuthControllerTests : IAsyncLifetime
 {
-    public AuthControllerTests(DatabaseFixture dbFixture) : base(dbFixture)
+    private string _directory = null!;
+    private CustomWebApplicationFactory _factory = null!;
+
+    public Task InitializeAsync()
     {
+        _directory = Path.Combine(Path.GetTempPath(), "help-motivate-me-auth-tests", Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(_directory);
+        var connectionString = $"Data Source={Path.Combine(_directory, "auth.db")};Foreign Keys=True;Default Timeout=30";
+        _factory = new CustomWebApplicationFactory(connectionString, useTestAuthentication: false);
+        _ = _factory.CreateClient();
+        return Task.CompletedTask;
     }
 
-
-    [Fact]
-    public async Task Register_CreatesNewUser()
+    public async Task DisposeAsync()
     {
-        // Arrange
-        var request = new
-        {
-            Email = "newuser@example.com",
-            Password = "SecureP@ss123",
-            DisplayName = "New User"
-        };
-
-        // Act
-        var response = await Client.PostAsJsonAsync("/api/auth/register", request);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var result = await response.Content.ReadFromJsonAsync<RegisterResponse>();
-        result!.Email.Should().Be("newuser@example.com");
-        result.Message.Should().Contain("verify");
+        await _factory.DisposeAsync();
+        Directory.Delete(_directory, true);
     }
 
     [Fact]
-    public async Task Register_RejectsExistingEmail()
+    public async Task Startup_ProvisionsExactlyOneConfiguredUser()
     {
-        // Arrange
-        var existingUser = await DataBuilder.CreateUserAsync();
+        await using var scope = _factory.Services.CreateAsyncScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        var request = new
-        {
-            existingUser.Email,
-            Password = "SecureP@ss123"
-        };
+        var users = await db.Users.ToListAsync();
 
-        // Act
-        var response = await Client.PostAsJsonAsync("/api/auth/register", request);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
-        error!.Message.Should().Contain("Email already exists");
-    }
-
-
-    [Fact]
-    public async Task Login_WorksWithEmail()
-    {
-        // Arrange
-        var password = "TestPassword123!";
-        var user = await CreateUserWithPasswordAsync("test@example.com", password);
-
-        var request = new
-        {
-            Email = "test@example.com",
-            Password = password
-        };
-
-        // Act
-        var response = await Client.PostAsJsonAsync("/api/auth/login", request);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var loggedIn = await response.Content.ReadFromJsonAsync<UserResponse>();
-        loggedIn!.Email.Should().Be("test@example.com");
+        users.Should().ContainSingle();
+        users[0].Username.Should().Be("test-admin");
+        users[0].PasswordHash.Should().NotBeNullOrWhiteSpace();
     }
 
     [Fact]
-    public async Task Login_RejectsInvalidPassword()
+    public async Task Login_WithConfiguredCredentials_CreatesSession()
     {
-        // Arrange
-        var user = await CreateUserWithPasswordAsync("test@example.com", "CorrectPassword");
+        using var client = _factory.CreateClient();
 
-        var request = new
-        {
-            Email = "test@example.com",
-            Password = "WrongPassword"
-        };
+        var login = await client.PostAsJsonAsync("/api/auth/login", new LoginRequest("test-admin", "test-password-only"));
+        var current = await client.GetAsync("/api/auth/me");
 
-        // Act
-        var response = await Client.PostAsJsonAsync("/api/auth/login", request);
+        login.StatusCode.Should().Be(HttpStatusCode.OK);
+        current.StatusCode.Should().Be(HttpStatusCode.OK);
+        var user = await current.Content.ReadFromJsonAsync<UserResponse>();
+        user!.Username.Should().Be("test-admin");
+    }
 
-        // Assert
+    [Theory]
+    [InlineData("test-admin", "wrong-password")]
+    [InlineData("missing-user", "test-password-only")]
+    public async Task Login_WithInvalidCredentials_UsesGenericError(string username, string password)
+    {
+        using var client = _factory.CreateClient();
+
+        var response = await client.PostAsJsonAsync("/api/auth/login", new LoginRequest(username, password));
+        var body = await response.Content.ReadAsStringAsync();
+
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        body.Should().Contain("Invalid username or password");
     }
 
     [Fact]
-    public async Task Login_RejectsNonExistentUser()
+    public async Task RegistrationEndpoint_DoesNotExist()
     {
-        // Arrange
-        var request = new
-        {
-            Email = "nonexistent@example.com",
-            Password = "SomePassword"
-        };
-
-        // Act
-        var response = await Client.PostAsJsonAsync("/api/auth/login", request);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-    }
-
-    [Fact]
-    public async Task Login_RejectsDisabledUser()
-    {
-        // Arrange
-        var password = "TestPassword123!";
-        var user = await CreateUserWithPasswordAsync("disabled@example.com", password);
-        user.IsActive = false;
-        await Db.SaveChangesAsync();
-
-        var request = new
-        {
-            Email = "disabled@example.com",
-            Password = password
-        };
-
-        // Act
-        var response = await Client.PostAsJsonAsync("/api/auth/login", request);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
-        error!.Message.Should().Contain("disabled");
-    }
-
-    [Fact]
-    public async Task Login_RejectsUserWithOnlyExternalLogin()
-    {
-        // Arrange - Create user without password (OAuth only)
-        var user = await DataBuilder.CreateUserAsync();
-        user.PasswordHash = null;
-        await Db.SaveChangesAsync();
-
-        var request = new
-        {
-            user.Email,
-            Password = "AnyPassword"
-        };
-
-        // Act
-        var response = await Client.PostAsJsonAsync("/api/auth/login", request);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-    }
-
-
-    [Fact]
-    public async Task GetMe_ReturnsCurrentUser()
-    {
-        // Arrange
-        var user = await DataBuilder.CreateUserAsync();
-
-        // Act
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.GetFromJsonAsync<UserResponse>("/api/auth/me");
-
-        // Assert
-        response.Should().NotBeNull();
-        response!.Id.Should().Be(user.Id);
-        response.Email.Should().Be(user.Email);
-    }
-
-    [Fact]
-    public async Task GetMe_ReturnsUnauthorized_WhenNotLoggedIn()
-    {
-        // Act - No authentication
-        var response = await Client.GetAsync("/api/auth/me");
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-    }
-
-
-    [Fact]
-    public async Task Unlink_RemovesExternalLogin()
-    {
-        // Arrange
-        var user = await CreateUserWithPasswordAsync("link@example.com", "Password123!");
-        var externalLogin = new UserExternalLogin
-        {
-            Id = Guid.NewGuid(),
-            UserId = user.Id,
-            Provider = "github",
-            ProviderKey = "12345",
-            ProviderDisplayName = "github_user"
-        };
-        Db.UserExternalLogins.Add(externalLogin);
-        await Db.SaveChangesAsync();
-
-        // Act
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.DeleteAsync("/api/auth/unlink/github");
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-    }
-
-    [Fact]
-    public async Task Unlink_ReturnsNotFound_ForNonExistentProvider()
-    {
-        // Arrange
-        var user = await CreateUserWithPasswordAsync("link@example.com", "Password123!");
-
-        // Act
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.DeleteAsync("/api/auth/unlink/nonexistent");
-
-        // Assert
+        using var client = _factory.CreateClient();
+        var response = await client.PostAsJsonAsync("/api/auth/register", new { });
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
-    public async Task Unlink_PreventsRemovingLastLoginMethod()
+    public async Task AnonymousPrivateRequest_ReturnsUnauthorized()
     {
-        // Arrange - User with only external login (no password)
-        var user = await DataBuilder.CreateUserAsync();
-        user.PasswordHash = null;
-        var externalLogin = new UserExternalLogin
-        {
-            Id = Guid.NewGuid(),
-            UserId = user.Id,
-            Provider = "github",
-            ProviderKey = "12345",
-            ProviderDisplayName = "github_user"
-        };
-        Db.UserExternalLogins.Add(externalLogin);
-        await Db.SaveChangesAsync();
-
-        // Act
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.DeleteAsync("/api/auth/unlink/github");
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
-        error!.Message.Should().Contain("Cannot remove last login method");
-    }
-
-    [Fact]
-    public async Task Unlink_AllowsRemovingExternalLogin_WhenPasswordExists()
-    {
-        // Arrange - User with password AND external login
-        var user = await CreateUserWithPasswordAsync("multi@example.com", "Password123!");
-        var externalLogin = new UserExternalLogin
-        {
-            Id = Guid.NewGuid(),
-            UserId = user.Id,
-            Provider = "github",
-            ProviderKey = "12345",
-            ProviderDisplayName = "github_user"
-        };
-        Db.UserExternalLogins.Add(externalLogin);
-        await Db.SaveChangesAsync();
-
-        // Act
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.DeleteAsync("/api/auth/unlink/github");
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-    }
-
-    [Fact]
-    public async Task Unlink_AllowsRemovingExternalLogin_WhenOtherExternalLoginsExist()
-    {
-        // Arrange - User with two external logins, no password
-        var user = await DataBuilder.CreateUserAsync();
-        user.PasswordHash = null;
-
-        var githubLogin = new UserExternalLogin
-        {
-            Id = Guid.NewGuid(),
-            UserId = user.Id,
-            Provider = "github",
-            ProviderKey = "github_123",
-            ProviderDisplayName = "github_user"
-        };
-        var googleLogin = new UserExternalLogin
-        {
-            Id = Guid.NewGuid(),
-            UserId = user.Id,
-            Provider = "google",
-            ProviderKey = "google_456",
-            ProviderDisplayName = "google_user"
-        };
-        Db.UserExternalLogins.AddRange(githubLogin, googleLogin);
-        await Db.SaveChangesAsync();
-
-        // Act - Remove github, but google should remain
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.DeleteAsync("/api/auth/unlink/github");
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-    }
-
-
-    [Fact]
-    public async Task Logout_ReturnsNoContent()
-    {
-        // Arrange
-        var user = await DataBuilder.CreateUserAsync();
-
-        // Act
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.PostAsync("/api/auth/logout", null);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-    }
-
-    [Fact]
-    public async Task Logout_ReturnsUnauthorized_WhenNotLoggedIn()
-    {
-        // Act - No authentication
-        var response = await Client.PostAsync("/api/auth/logout", null);
-
-        // Assert
+        using var client = _factory.CreateClient();
+        var response = await client.GetAsync("/api/goals");
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
-
-
-    private async Task<User> CreateUserWithPasswordAsync(string email, string password)
-    {
-        var user = new User
-        {
-            Id = Guid.NewGuid(),
-            Email = email,
-            PasswordHash = HashPassword(password),
-            DisplayName = email.Split('@')[0],
-            IsActive = true,
-            IsEmailVerified = true, // Verified for testing
-            CreatedAt = DateTime.UtcNow
-        };
-        Db.Users.Add(user);
-        await Db.SaveChangesAsync();
-        return user;
-    }
-
-    private static string HashPassword(string password)
-    {
-        var salt = RandomNumberGenerator.GetBytes(16);
-        var hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, 100000, HashAlgorithmName.SHA256, 32);
-        return $"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}";
-    }
 }
-
-// Response DTOs for deserialization
-public record UserResponse(
-    Guid Id,
-    string Email,
-    string? DisplayName,
-    DateTime CreatedAt,
-    IEnumerable<string> ExternalLogins
-);
-
-public record RegisterResponse(string Message, string Email);
-
-public record ErrorResponse(string Message);

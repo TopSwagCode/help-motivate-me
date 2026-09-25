@@ -1,56 +1,30 @@
-using HelpMotivateMe.Core.Enums;
-using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
+using HelpMotivateMe.Infrastructure.Services;
+using HelpMotivateMe.Api.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace HelpMotivateMe.IntegrationTests.Infrastructure;
-
-public class MockEmailService : IEmailService
-{
-    public Task SendLoginLinkAsync(string email, string loginUrl, Language language)
-    {
-        return Task.CompletedTask;
-    }
-
-    public Task SendVerificationEmailAsync(string email, string verificationUrl, Language language)
-    {
-        return Task.CompletedTask;
-    }
-
-    public Task SendBuddyInviteAsync(string email, string inviterName, string loginUrl, Language language)
-    {
-        return Task.CompletedTask;
-    }
-
-    public Task SendBuddyJournalNotificationAsync(string email, string buddyName, string entryTitle, string journalUrl,
-        Language language)
-    {
-        return Task.CompletedTask;
-    }
-
-    public Task SendWaitlistConfirmationAsync(string email, string name, Language language)
-    {
-        return Task.CompletedTask;
-    }
-
-    public Task SendWhitelistInviteAsync(string email, string loginUrl, Language language)
-    {
-        return Task.CompletedTask;
-    }
-}
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
     private readonly string _connectionString;
+    private readonly IReadOnlyDictionary<string, string?>? _configuration;
+    private readonly bool _useTestAuthentication;
 
-    public CustomWebApplicationFactory(string connectionString)
+    public CustomWebApplicationFactory(
+        string connectionString,
+        bool useTestAuthentication = true,
+        IReadOnlyDictionary<string, string?>? configuration = null)
     {
         _connectionString = connectionString;
+        _useTestAuthentication = useTestAuthentication;
+        _configuration = configuration;
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -60,6 +34,9 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             config.AddInMemoryCollection(new Dictionary<string, string?>
             {
+                ["ConnectionStrings:DefaultConnection"] = _connectionString,
+                ["SingleUser:Username"] = "test-admin",
+                ["SingleUser:Password"] = "test-password-only",
                 ["OAuth:GitHub:ClientId"] = "test-client-id",
                 ["OAuth:GitHub:ClientSecret"] = "test-client-secret",
                 ["OAuth:Google:ClientId"] = "test-client-id",
@@ -69,42 +46,43 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 ["OAuth:Facebook:AppId"] = "test-app-id",
                 ["OAuth:Facebook:AppSecret"] = "test-app-secret"
             });
+            if (_configuration is not null) config.AddInMemoryCollection(_configuration);
         });
 
         builder.ConfigureServices(services =>
         {
+            if (_useTestAuthentication)
+            {
+                var initializer = services.SingleOrDefault(descriptor =>
+                    descriptor.ServiceType == typeof(IHostedService) &&
+                    descriptor.ImplementationType == typeof(SingleUserInitializer));
+                if (initializer is not null) services.Remove(initializer);
+            }
+
             // Remove existing DbContext registration
             var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
             if (descriptor != null) services.Remove(descriptor);
 
             // Add DbContext with test connection string
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql(_connectionString));
+            services.AddDbContext<AppDbContext>((serviceProvider, options) =>
+                options.UseSqlite(_connectionString)
+                    .AddInterceptors(
+                        serviceProvider.GetRequiredService<SqliteConnectionInterceptor>(),
+                        serviceProvider.GetRequiredService<GuidKeyInterceptor>()));
 
-            // Override the default authentication scheme to use our test handler
-            services.PostConfigure<AuthenticationOptions>(options =>
+            if (_useTestAuthentication)
             {
-                options.DefaultAuthenticateScheme = TestAuthHandler.AuthenticationScheme;
-                options.DefaultChallengeScheme = TestAuthHandler.AuthenticationScheme;
-            });
+                services.PostConfigure<AuthenticationOptions>(options =>
+                {
+                    options.DefaultAuthenticateScheme = TestAuthHandler.AuthenticationScheme;
+                    options.DefaultChallengeScheme = TestAuthHandler.AuthenticationScheme;
+                });
 
-            // Add our test authentication handler
-            services.AddAuthentication()
-                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
-                    TestAuthHandler.AuthenticationScheme, _ => { });
+                services.AddAuthentication()
+                    .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                        TestAuthHandler.AuthenticationScheme, _ => { });
+            }
 
-            // Replace email service with mock to avoid SMTP connection issues
-            var emailServiceDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IEmailService));
-            if (emailServiceDescriptor != null) services.Remove(emailServiceDescriptor);
-            services.AddSingleton<IEmailService, MockEmailService>();
-
-            // Build the service provider
-            var sp = services.BuildServiceProvider();
-
-            // Create database and apply migrations
-            using var scope = sp.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            db.Database.Migrate();
         });
 
         builder.UseEnvironment("Testing");

@@ -3,9 +3,10 @@
 
 	interface Props {
 		onselect: (mode: 'manual' | 'ai') => void;
+		aiEnabled?: boolean;
 	}
 
-	let { onselect }: Props = $props();
+	let { onselect, aiEnabled = false }: Props = $props();
 </script>
 
 <div class="min-h-[calc(100dvh-3rem)] sm:min-h-[calc(100dvh-3.5rem)] bg-gradient-to-b from-primary-50 to-white">
@@ -17,7 +18,7 @@
 			</p>
 		</div>
 
-		<div class="grid gap-6 md:grid-cols-2">
+		<div class="grid gap-6 {aiEnabled ? 'md:grid-cols-2' : 'max-w-md mx-auto'}">
 			<!-- Manual Setup Card -->
 			<button
 				onclick={() => onselect('manual')}
@@ -56,6 +57,7 @@
 				</span>
 			</button>
 
+			{#if aiEnabled}
 			<!-- AI Assistant Card -->
 			<button
 				onclick={() => onselect('ai')}
@@ -122,6 +124,7 @@
 					</svg>
 				</span>
 			</button>
+			{/if}
 		</div>
 	</div>
 </div>

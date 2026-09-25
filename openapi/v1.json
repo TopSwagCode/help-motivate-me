@@ -10,99 +10,10 @@
     }
   ],
   "paths": {
-    "/api/buddies": {
+    "/health/live": {
       "get": {
         "tags": [
-          "AccountabilityBuddy"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyRelationshipsResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyRelationshipsResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyRelationshipsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/buddies/invite": {
-      "post": {
-        "tags": [
-          "AccountabilityBuddy"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InviteBuddyRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InviteBuddyRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/InviteBuddyRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/buddies/{id}": {
-      "delete": {
-        "tags": [
-          "AccountabilityBuddy"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
+          "HelpMotivateMe.Api"
         ],
         "responses": {
           "200": {
@@ -111,21 +22,10 @@
         }
       }
     },
-    "/api/buddies/leave/{ownerUserId}": {
-      "delete": {
+    "/health/ready": {
+      "get": {
         "tags": [
-          "AccountabilityBuddy"
-        ],
-        "parameters": [
-          {
-            "name": "ownerUserId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
+          "HelpMotivateMe.Api"
         ],
         "responses": {
           "200": {
@@ -134,29 +34,10 @@
         }
       }
     },
-    "/api/buddies/{targetUserId}/today": {
+    "/api/ai/status": {
       "get": {
         "tags": [
-          "AccountabilityBuddy"
-        ],
-        "parameters": [
-          {
-            "name": "targetUserId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          }
+          "Ai"
         ],
         "responses": {
           "200": {
@@ -164,994 +45,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/BuddyTodayViewResponse"
+                  "$ref": "#/components/schemas/AiStatusResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BuddyTodayViewResponse"
+                  "$ref": "#/components/schemas/AiStatusResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BuddyTodayViewResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/buddies/{targetUserId}/journal": {
-      "get": {
-        "tags": [
-          "AccountabilityBuddy"
-        ],
-        "parameters": [
-          {
-            "name": "targetUserId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BuddyJournalEntryResponse"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BuddyJournalEntryResponse"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BuddyJournalEntryResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "AccountabilityBuddy"
-        ],
-        "parameters": [
-          {
-            "name": "targetUserId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateBuddyJournalEntryRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateBuddyJournalEntryRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateBuddyJournalEntryRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyJournalEntryResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyJournalEntryResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyJournalEntryResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/buddies/{targetUserId}/journal/{entryId}/images": {
-      "post": {
-        "tags": [
-          "AccountabilityBuddy"
-        ],
-        "parameters": [
-          {
-            "name": "targetUserId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "entryId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "$ref": "#/components/schemas/IFormFile"
-                  }
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyJournalImageResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyJournalImageResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyJournalImageResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/buddies/{targetUserId}/journal/{entryId}/reactions": {
-      "post": {
-        "tags": [
-          "AccountabilityBuddy"
-        ],
-        "parameters": [
-          {
-            "name": "targetUserId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "entryId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddBuddyJournalReactionRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddBuddyJournalReactionRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddBuddyJournalReactionRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyJournalReactionResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyJournalReactionResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyJournalReactionResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/buddies/{targetUserId}/journal/{entryId}/reactions/{reactionId}": {
-      "delete": {
-        "tags": [
-          "AccountabilityBuddy"
-        ],
-        "parameters": [
-          {
-            "name": "targetUserId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "entryId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "reactionId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/admin/stats": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminStatsResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminStatsResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminStatsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/admin/stats/daily": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "date",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DailyStatsResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DailyStatsResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DailyStatsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/admin/users": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "search",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tier",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "isActive",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 50
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AdminUserResponse"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AdminUserResponse"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AdminUserResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/admin/users/{userId}/toggle-active": {
-      "patch": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminUserResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminUserResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminUserResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/admin/users/{userId}/role": {
-      "patch": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRoleRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRoleRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRoleRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminUserResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminUserResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminUserResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/admin/users/{userId}/activity": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserActivityResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserActivityResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserActivityResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/admin/settings": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/SignupSettingsResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SignupSettingsResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SignupSettingsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/admin/waitlist": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "search",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 50
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WaitlistEntryResponse"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WaitlistEntryResponse"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WaitlistEntryResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/admin/waitlist/{id}": {
-      "delete": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/admin/waitlist/{id}/approve": {
-      "post": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/WhitelistEntryResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WhitelistEntryResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WhitelistEntryResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/admin/whitelist": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "search",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 50
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WhitelistEntryResponse"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WhitelistEntryResponse"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WhitelistEntryResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Admin"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InviteUserRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InviteUserRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/InviteUserRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/WhitelistEntryResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WhitelistEntryResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WhitelistEntryResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/admin/whitelist/{id}": {
-      "delete": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/admin/analytics/overview": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "days",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 30
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnalyticsOverviewResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnalyticsOverviewResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnalyticsOverviewResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/admin/ai-usage/stats": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AiUsageStatsResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AiUsageStatsResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AiUsageStatsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/admin/ai-usage": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 50
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginatedResponseOfAiUsageLogResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginatedResponseOfAiUsageLogResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginatedResponseOfAiUsageLogResponse"
+                  "$ref": "#/components/schemas/AiStatusResponse"
                 }
               }
             }
@@ -1452,38 +356,6 @@
         }
       }
     },
-    "/api/auth/register": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/auth/login": {
       "post": {
         "tags": [
@@ -1574,263 +446,6 @@
         }
       }
     },
-    "/api/auth/external/{provider}": {
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "parameters": [
-          {
-            "name": "provider",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/auth/callback/{provider}": {
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "parameters": [
-          {
-            "name": "provider",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "returnUrl",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/auth/link/{provider}": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "parameters": [
-          {
-            "name": "provider",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/auth/unlink/{provider}": {
-      "delete": {
-        "tags": [
-          "Auth"
-        ],
-        "parameters": [
-          {
-            "name": "provider",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/auth/request-login-link": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestLoginLinkRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestLoginLinkRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestLoginLinkRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/auth/login-with-token": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginWithTokenRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginWithTokenRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginWithTokenRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/auth/verify-email": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerifyEmailRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerifyEmailRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerifyEmailRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/auth/resend-verification": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResendVerificationRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResendVerificationRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResendVerificationRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/auth/profile": {
       "patch": {
         "tags": [
@@ -1851,87 +466,6 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/UpdateProfileRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/auth/change-password": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangePasswordRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangePasswordRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangePasswordRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/auth/membership": {
-      "patch": {
-        "tags": [
-          "Auth"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateMembershipRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateMembershipRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateMembershipRequest"
               }
             }
           },
@@ -2064,163 +598,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/api/auth/notification-preferences": {
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotificationPreferencesResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotificationPreferencesResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotificationPreferencesResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Auth"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateNotificationPreferencesRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateNotificationPreferencesRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateNotificationPreferencesRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotificationPreferencesResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotificationPreferencesResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotificationPreferencesResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/auth/login-with-buddy-token": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginWithTokenRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginWithTokenRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginWithTokenRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyLoginResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyLoginResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuddyLoginResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/auth/account": {
-      "delete": {
-        "tags": [
-          "Auth"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteAccountRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteAccountRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteAccountRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -3992,98 +2369,6 @@
         }
       }
     },
-    "/api/journal/{entryId}/reactions": {
-      "post": {
-        "tags": [
-          "Journal"
-        ],
-        "parameters": [
-          {
-            "name": "entryId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddJournalReactionRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddJournalReactionRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddJournalReactionRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/JournalReactionResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/JournalReactionResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/JournalReactionResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/journal/{entryId}/reactions/{reactionId}": {
-      "delete": {
-        "tags": [
-          "Journal"
-        ],
-        "parameters": [
-          {
-            "name": "entryId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "reactionId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/journal/linkable/habit-stacks": {
       "get": {
         "tags": [
@@ -4502,269 +2787,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/notifications/push/subscribe": {
-      "post": {
-        "tags": [
-          "PushNotifications"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PushSubscriptionRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PushSubscriptionRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PushSubscriptionRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/notifications/push/unsubscribe": {
-      "delete": {
-        "tags": [
-          "PushNotifications"
-        ],
-        "parameters": [
-          {
-            "name": "endpoint",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/notifications/push/status": {
-      "get": {
-        "tags": [
-          "PushNotifications"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PushSubscriptionsStatusResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PushSubscriptionsStatusResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PushSubscriptionsStatusResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/notifications/push/admin/send-to-user": {
-      "post": {
-        "tags": [
-          "PushNotifications"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SendPushToUserRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SendPushToUserRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/SendPushToUserRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PushNotificationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PushNotificationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PushNotificationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/notifications/push/admin/send-to-all": {
-      "post": {
-        "tags": [
-          "PushNotifications"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SendPushToAllRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SendPushToAllRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/SendPushToAllRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PushNotificationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PushNotificationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PushNotificationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/notifications/push/admin/users": {
-      "get": {
-        "tags": [
-          "PushNotifications"
-        ],
-        "parameters": [
-          {
-            "name": "hasPush",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "search",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UserPushStatus"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UserPushStatus"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UserPushStatus"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/notifications/push/admin/stats": {
-      "get": {
-        "tags": [
-          "PushNotifications"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PushNotificationStatsResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PushNotificationStatsResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PushNotificationStatsResponse"
-                }
-              }
-            }
           }
         }
       }
@@ -5335,49 +3357,18 @@
         }
       }
     },
-    "/api/waitlist": {
-      "post": {
-        "tags": [
-          "Waitlist"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WaitlistSignupRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WaitlistSignupRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/WaitlistSignupRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/waitlist/check": {
+    "/api/today/digest": {
       "get": {
         "tags": [
-          "Waitlist"
+          "Today"
         ],
         "parameters": [
           {
-            "name": "email",
+            "name": "date",
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "date"
             }
           }
         ],
@@ -5387,17 +3378,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/WhitelistCheckResponse"
+                  "$ref": "#/components/schemas/DailyDigestResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WhitelistCheckResponse"
+                  "$ref": "#/components/schemas/DailyDigestResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WhitelistCheckResponse"
+                  "$ref": "#/components/schemas/DailyDigestResponse"
                 }
               }
             }
@@ -5453,28 +3444,6 @@
           }
         }
       },
-      "AddBuddyJournalReactionRequest": {
-        "required": [
-          "emoji"
-        ],
-        "type": "object",
-        "properties": {
-          "emoji": {
-            "type": "string"
-          }
-        }
-      },
-      "AddJournalReactionRequest": {
-        "required": [
-          "emoji"
-        ],
-        "type": "object",
-        "properties": {
-          "emoji": {
-            "type": "string"
-          }
-        }
-      },
       "AddStackItemRequest": {
         "required": [
           "cueDescription",
@@ -5487,94 +3456,6 @@
           },
           "habitDescription": {
             "type": "string"
-          }
-        }
-      },
-      "AdminStatsResponse": {
-        "required": [
-          "totalUsers",
-          "activeUsers",
-          "usersLoggedInToday",
-          "membershipStats",
-          "taskTotals"
-        ],
-        "type": "object",
-        "properties": {
-          "totalUsers": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "activeUsers": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "usersLoggedInToday": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "membershipStats": {
-            "$ref": "#/components/schemas/MembershipStats"
-          },
-          "taskTotals": {
-            "$ref": "#/components/schemas/TaskTotals"
-          }
-        }
-      },
-      "AdminUserResponse": {
-        "required": [
-          "id",
-          "email",
-          "displayName",
-          "isActive",
-          "membershipTier",
-          "role",
-          "createdAt",
-          "updatedAt",
-          "aiCallsCount",
-          "aiTotalCostUsd"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "email": {
-            "type": "string"
-          },
-          "displayName": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "isActive": {
-            "type": "boolean"
-          },
-          "membershipTier": {
-            "type": "string"
-          },
-          "role": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "date-time"
-          },
-          "aiCallsCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "aiTotalCostUsd": {
-            "type": "number",
-            "format": "double"
           }
         }
       },
@@ -5599,435 +3480,39 @@
           }
         }
       },
-      "AiUsageLogResponse": {
+      "AiStatusResponse": {
         "required": [
-          "id",
-          "userId",
-          "email",
-          "model",
-          "inputTokens",
-          "outputTokens",
-          "audioDurationSeconds",
-          "estimatedCostUsd",
-          "actualCostUsd",
-          "requestType",
-          "rejected",
-          "createdAt"
+          "isEnabled",
+          "provider",
+          "chatModel",
+          "isTranscriptionEnabled",
+          "transcriptionModel"
         ],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "email": {
-            "type": "string"
-          },
-          "model": {
-            "type": "string"
-          },
-          "inputTokens": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "outputTokens": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "audioDurationSeconds": {
-            "type": [
-              "null",
-              "integer"
-            ],
-            "format": "int32"
-          },
-          "estimatedCostUsd": {
-            "type": "number",
-            "format": "double"
-          },
-          "actualCostUsd": {
-            "type": "number",
-            "format": "double"
-          },
-          "requestType": {
-            "type": "string"
-          },
-          "rejected": {
+          "isEnabled": {
             "type": "boolean"
           },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "AiUsageStatsResponse": {
-        "required": [
-          "totalEstimatedAllTime",
-          "totalActualAllTime",
-          "totalEstimatedLast30Days",
-          "totalActualLast30Days",
-          "globalLimitLast30DaysUsd",
-          "perUserLimitLast30DaysUsd"
-        ],
-        "type": "object",
-        "properties": {
-          "totalEstimatedAllTime": {
-            "type": "number",
-            "format": "double"
-          },
-          "totalActualAllTime": {
-            "type": "number",
-            "format": "double"
-          },
-          "totalEstimatedLast30Days": {
-            "type": "number",
-            "format": "double"
-          },
-          "totalActualLast30Days": {
-            "type": "number",
-            "format": "double"
-          },
-          "globalLimitLast30DaysUsd": {
-            "type": "number",
-            "format": "double"
-          },
-          "perUserLimitLast30DaysUsd": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "AnalyticsOverviewResponse": {
-        "required": [
-          "totalEvents",
-          "uniqueUsers",
-          "uniqueSessions",
-          "avgEventsPerSession",
-          "topEventTypes",
-          "dailyEventCounts",
-          "recentSessions"
-        ],
-        "type": "object",
-        "properties": {
-          "totalEvents": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "uniqueUsers": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "uniqueSessions": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "avgEventsPerSession": {
-            "type": "number",
-            "format": "double"
-          },
-          "topEventTypes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EventTypeCount"
-            }
-          },
-          "dailyEventCounts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DailyEventCount"
-            }
-          },
-          "recentSessions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SessionSummary"
-            }
-          }
-        }
-      },
-      "BuddyForResponse": {
-        "required": [
-          "id",
-          "userId",
-          "userEmail",
-          "userDisplayName",
-          "createdAt"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userEmail": {
-            "type": "string"
-          },
-          "userDisplayName": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "BuddyJournalEntryResponse": {
-        "required": [
-          "id",
-          "title",
-          "description",
-          "entryDate",
-          "authorUserId",
-          "authorDisplayName",
-          "images",
-          "reactions",
-          "createdAt"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "title": {
-            "type": "string"
-          },
-          "description": {
+          "provider": {
             "type": [
               "null",
               "string"
             ]
           },
-          "entryDate": {
-            "type": "string"
-          },
-          "authorUserId": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "uuid"
-          },
-          "authorDisplayName": {
+          "chatModel": {
             "type": [
               "null",
               "string"
             ]
           },
-          "images": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BuddyJournalImageResponse"
-            }
+          "isTranscriptionEnabled": {
+            "type": "boolean"
           },
-          "reactions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BuddyJournalReactionResponse"
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "BuddyJournalImageResponse": {
-        "required": [
-          "id",
-          "fileName",
-          "url",
-          "sortOrder"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "fileName": {
-            "type": "string"
-          },
-          "url": {
-            "type": "string"
-          },
-          "sortOrder": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "BuddyJournalReactionResponse": {
-        "required": [
-          "id",
-          "emoji",
-          "userId",
-          "userDisplayName",
-          "createdAt"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "emoji": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userDisplayName": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "BuddyLoginResponse": {
-        "required": [
-          "user",
-          "inviterUserId",
-          "inviterDisplayName"
-        ],
-        "type": "object",
-        "properties": {
-          "user": {
-            "$ref": "#/components/schemas/UserResponse"
-          },
-          "inviterUserId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "inviterDisplayName": {
-            "type": "string"
-          }
-        }
-      },
-      "BuddyRelationshipsResponse": {
-        "required": [
-          "myBuddies",
-          "buddyingFor"
-        ],
-        "type": "object",
-        "properties": {
-          "myBuddies": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BuddyResponse"
-            }
-          },
-          "buddyingFor": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BuddyForResponse"
-            }
-          }
-        }
-      },
-      "BuddyResponse": {
-        "required": [
-          "id",
-          "buddyUserId",
-          "buddyEmail",
-          "buddyDisplayName",
-          "createdAt"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "buddyUserId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "buddyEmail": {
-            "type": "string"
-          },
-          "buddyDisplayName": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "BuddyTodayViewResponse": {
-        "required": [
-          "userId",
-          "userDisplayName",
-          "date",
-          "habitStacks",
-          "upcomingTasks",
-          "completedTasks",
-          "identityFeedback"
-        ],
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userDisplayName": {
-            "type": "string"
-          },
-          "date": {
-            "type": "string",
-            "format": "date"
-          },
-          "habitStacks": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TodayHabitStackResponse"
-            }
-          },
-          "upcomingTasks": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TodayTaskResponse"
-            }
-          },
-          "completedTasks": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TodayTaskResponse"
-            }
-          },
-          "identityFeedback": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TodayIdentityFeedbackResponse"
-            }
-          }
-        }
-      },
-      "ChangePasswordRequest": {
-        "required": [
-          "currentPassword",
-          "newPassword"
-        ],
-        "type": "object",
-        "properties": {
-          "currentPassword": {
-            "type": "string"
-          },
-          "newPassword": {
-            "type": "string"
+          "transcriptionModel": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -6186,31 +3671,6 @@
           "missedDays": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "CreateBuddyJournalEntryRequest": {
-        "required": [
-          "title",
-          "description",
-          "entryDate"
-        ],
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "entryDate": {
-            "type": [
-              "null",
-              "string"
-            ]
           }
         }
       },
@@ -6620,73 +4080,102 @@
           "Missed"
         ]
       },
-      "DailyEventCount": {
+      "DailyDigestIdentityResponse": {
         "required": [
-          "date",
-          "count"
+          "id",
+          "name",
+          "color",
+          "icon",
+          "yesterdayScore",
+          "todayScore",
+          "yesterdayStatus",
+          "todayStatus",
+          "trend",
+          "yesterdayVotes",
+          "habitVotes",
+          "stackBonusVotes",
+          "taskVotes",
+          "proofVotes"
         ],
         "type": "object",
         "properties": {
-          "date": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
             "type": "string"
           },
-          "count": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "DailyStatsResponse": {
-        "required": [
-          "date",
-          "tasksCreated",
-          "tasksCompleted",
-          "tasksDue"
-        ],
-        "type": "object",
-        "properties": {
-          "date": {
-            "type": "string"
-          },
-          "tasksCreated": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "tasksCompleted": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "tasksDue": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "DeleteAccountRequest": {
-        "required": [
-          "password"
-        ],
-        "type": "object",
-        "properties": {
-          "password": {
+          "color": {
             "type": [
               "null",
               "string"
             ]
+          },
+          "icon": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "yesterdayScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "todayScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "yesterdayStatus": {
+            "type": "string"
+          },
+          "todayStatus": {
+            "type": "string"
+          },
+          "trend": {
+            "type": "string"
+          },
+          "yesterdayVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "habitVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "stackBonusVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "taskVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "proofVotes": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
-      "EventTypeCount": {
+      "DailyDigestResponse": {
         "required": [
-          "eventType",
-          "count"
+          "date",
+          "identities",
+          "totalYesterdayVotes"
         ],
         "type": "object",
         "properties": {
-          "eventType": {
-            "type": "string"
+          "date": {
+            "type": "string",
+            "format": "date"
           },
-          "count": {
+          "identities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DailyDigestIdentityResponse"
+            }
+          },
+          "totalYesterdayVotes": {
             "type": "integer",
             "format": "int32"
           }
@@ -7303,28 +4792,6 @@
         "type": "string",
         "format": "binary"
       },
-      "InviteBuddyRequest": {
-        "required": [
-          "email"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string"
-          }
-        }
-      },
-      "InviteUserRequest": {
-        "required": [
-          "email"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string"
-          }
-        }
-      },
       "JournalEntryResponse": {
         "required": [
           "id",
@@ -7338,7 +4805,6 @@
           "authorUserId",
           "authorDisplayName",
           "images",
-          "reactions",
           "createdAt",
           "updatedAt"
         ],
@@ -7406,12 +4872,6 @@
               "$ref": "#/components/schemas/JournalImageResponse"
             }
           },
-          "reactions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/JournalReactionResponse"
-            }
-          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -7444,36 +4904,6 @@
           "sortOrder": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "JournalReactionResponse": {
-        "required": [
-          "id",
-          "emoji",
-          "userId",
-          "userDisplayName",
-          "createdAt"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "emoji": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userDisplayName": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
           }
         }
       },
@@ -7515,26 +4945,15 @@
       },
       "LoginRequest": {
         "required": [
-          "email",
+          "username",
           "password"
         ],
         "type": "object",
         "properties": {
-          "email": {
+          "username": {
             "type": "string"
           },
           "password": {
-            "type": "string"
-          }
-        }
-      },
-      "LoginWithTokenRequest": {
-        "required": [
-          "token"
-        ],
-        "type": "object",
-        "properties": {
-          "token": {
             "type": "string"
           }
         }
@@ -7551,28 +4970,6 @@
               "type": "string",
               "format": "uuid"
             }
-          }
-        }
-      },
-      "MembershipStats": {
-        "required": [
-          "freeUsers",
-          "plusUsers",
-          "proUsers"
-        ],
-        "type": "object",
-        "properties": {
-          "freeUsers": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "plusUsers": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "proUsers": {
-            "type": "integer",
-            "format": "int32"
           }
         }
       },
@@ -7636,131 +5033,6 @@
           }
         }
       },
-      "NotificationPreferencesResponse": {
-        "required": [
-          "notificationsEnabled",
-          "emailEnabled",
-          "smsEnabled",
-          "phoneEnabled",
-          "habitRemindersEnabled",
-          "goalRemindersEnabled",
-          "dailyDigestEnabled",
-          "streakAlertsEnabled",
-          "motivationalQuotesEnabled",
-          "weeklyReviewEnabled",
-          "buddyUpdatesEnabled",
-          "dailyCommitmentEnabled",
-          "commitmentDefaultMode",
-          "selectedDays",
-          "preferredTimeSlot",
-          "customTimeStart",
-          "customTimeEnd",
-          "timezoneId",
-          "utcOffsetMinutes"
-        ],
-        "type": "object",
-        "properties": {
-          "notificationsEnabled": {
-            "type": "boolean"
-          },
-          "emailEnabled": {
-            "type": "boolean"
-          },
-          "smsEnabled": {
-            "type": "boolean"
-          },
-          "phoneEnabled": {
-            "type": "boolean"
-          },
-          "habitRemindersEnabled": {
-            "type": "boolean"
-          },
-          "goalRemindersEnabled": {
-            "type": "boolean"
-          },
-          "dailyDigestEnabled": {
-            "type": "boolean"
-          },
-          "streakAlertsEnabled": {
-            "type": "boolean"
-          },
-          "motivationalQuotesEnabled": {
-            "type": "boolean"
-          },
-          "weeklyReviewEnabled": {
-            "type": "boolean"
-          },
-          "buddyUpdatesEnabled": {
-            "type": "boolean"
-          },
-          "dailyCommitmentEnabled": {
-            "type": "boolean"
-          },
-          "commitmentDefaultMode": {
-            "type": "string"
-          },
-          "selectedDays": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "preferredTimeSlot": {
-            "type": "string"
-          },
-          "customTimeStart": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "customTimeEnd": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "timezoneId": {
-            "type": "string"
-          },
-          "utcOffsetMinutes": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "PaginatedResponseOfAiUsageLogResponse": {
-        "required": [
-          "items",
-          "totalCount",
-          "page",
-          "pageSize",
-          "totalPages"
-        ],
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AiUsageLogResponse"
-            }
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "PostponeTaskRequest": {
         "required": [
           "newDueDate"
@@ -7780,182 +5052,6 @@
           "Moderate",
           "Hard"
         ]
-      },
-      "PushNotificationResult": {
-        "required": [
-          "totalSubscriptions",
-          "successCount",
-          "failureCount",
-          "errors"
-        ],
-        "type": "object",
-        "properties": {
-          "totalSubscriptions": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "successCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "failureCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "PushNotificationStatsResponse": {
-        "required": [
-          "totalSubscriptions",
-          "usersWithPush",
-          "totalUsers",
-          "percentageWithPush",
-          "oldestSubscription",
-          "newestSubscription"
-        ],
-        "type": "object",
-        "properties": {
-          "totalSubscriptions": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "usersWithPush": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalUsers": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "percentageWithPush": {
-            "type": "number",
-            "format": "double"
-          },
-          "oldestSubscription": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "date-time"
-          },
-          "newestSubscription": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "date-time"
-          }
-        }
-      },
-      "PushSubscriptionKeys": {
-        "required": [
-          "p256dh",
-          "auth"
-        ],
-        "type": "object",
-        "properties": {
-          "p256dh": {
-            "type": "string"
-          },
-          "auth": {
-            "type": "string"
-          }
-        }
-      },
-      "PushSubscriptionRequest": {
-        "required": [
-          "endpoint",
-          "keys"
-        ],
-        "type": "object",
-        "properties": {
-          "endpoint": {
-            "type": "string"
-          },
-          "keys": {
-            "$ref": "#/components/schemas/PushSubscriptionKeys"
-          }
-        }
-      },
-      "PushSubscriptionsStatusResponse": {
-        "required": [
-          "hasSubscriptions",
-          "subscriptionCount",
-          "subscriptions"
-        ],
-        "type": "object",
-        "properties": {
-          "hasSubscriptions": {
-            "type": "boolean"
-          },
-          "subscriptionCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "subscriptions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PushSubscriptionStatusResponse"
-            }
-          }
-        }
-      },
-      "PushSubscriptionStatusResponse": {
-        "required": [
-          "id",
-          "createdAt",
-          "lastUsedAt",
-          "userAgent"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "lastUsedAt": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "date-time"
-          },
-          "userAgent": {
-            "type": "string"
-          }
-        }
-      },
-      "RegisterRequest": {
-        "required": [
-          "email",
-          "password",
-          "displayName"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "displayName": {
-            "type": [
-              "null",
-              "string"
-            ]
-          }
-        }
       },
       "ReorderHabitStacksRequest": {
         "required": [
@@ -7984,127 +5080,6 @@
               "type": "string",
               "format": "uuid"
             }
-          }
-        }
-      },
-      "RequestLoginLinkRequest": {
-        "required": [
-          "email"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string"
-          }
-        }
-      },
-      "ResendVerificationRequest": {
-        "required": [
-          "email"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string"
-          }
-        }
-      },
-      "SendPushToAllRequest": {
-        "required": [
-          "title",
-          "body"
-        ],
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "body": {
-            "type": "string"
-          },
-          "url": {
-            "type": [
-              "null",
-              "string"
-            ]
-          }
-        }
-      },
-      "SendPushToUserRequest": {
-        "required": [
-          "userId",
-          "title",
-          "body"
-        ],
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "title": {
-            "type": "string"
-          },
-          "body": {
-            "type": "string"
-          },
-          "url": {
-            "type": [
-              "null",
-              "string"
-            ]
-          }
-        }
-      },
-      "SessionSummary": {
-        "required": [
-          "sessionId",
-          "userId",
-          "email",
-          "firstEvent",
-          "lastEvent",
-          "eventCount",
-          "durationMinutes"
-        ],
-        "type": "object",
-        "properties": {
-          "sessionId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "email": {
-            "type": "string"
-          },
-          "firstEvent": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "lastEvent": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "eventCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "durationMinutes": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "SignupSettingsResponse": {
-        "required": [
-          "allowSignups"
-        ],
-        "type": "object",
-        "properties": {
-          "allowSignups": {
-            "type": "boolean"
           }
         }
       },
@@ -8291,23 +5266,6 @@
             "type": "boolean"
           },
           "daysUntilStreakBreaks": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "TaskTotals": {
-        "required": [
-          "totalTasksCreated",
-          "totalTasksCompleted"
-        ],
-        "type": "object",
-        "properties": {
-          "totalTasksCreated": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalTasksCompleted": {
             "type": "integer",
             "format": "int32"
           }
@@ -8780,17 +5738,6 @@
           }
         }
       },
-      "UpdateMembershipRequest": {
-        "required": [
-          "tier"
-        ],
-        "type": "object",
-        "properties": {
-          "tier": {
-            "type": "string"
-          }
-        }
-      },
       "UpdateMilestoneRequest": {
         "required": [
           "code",
@@ -8846,121 +5793,6 @@
           }
         }
       },
-      "UpdateNotificationPreferencesRequest": {
-        "type": "object",
-        "properties": {
-          "notificationsEnabled": {
-            "type": [
-              "null",
-              "boolean"
-            ]
-          },
-          "emailEnabled": {
-            "type": [
-              "null",
-              "boolean"
-            ]
-          },
-          "smsEnabled": {
-            "type": [
-              "null",
-              "boolean"
-            ]
-          },
-          "habitRemindersEnabled": {
-            "type": [
-              "null",
-              "boolean"
-            ]
-          },
-          "goalRemindersEnabled": {
-            "type": [
-              "null",
-              "boolean"
-            ]
-          },
-          "dailyDigestEnabled": {
-            "type": [
-              "null",
-              "boolean"
-            ]
-          },
-          "streakAlertsEnabled": {
-            "type": [
-              "null",
-              "boolean"
-            ]
-          },
-          "motivationalQuotesEnabled": {
-            "type": [
-              "null",
-              "boolean"
-            ]
-          },
-          "weeklyReviewEnabled": {
-            "type": [
-              "null",
-              "boolean"
-            ]
-          },
-          "buddyUpdatesEnabled": {
-            "type": [
-              "null",
-              "boolean"
-            ]
-          },
-          "dailyCommitmentEnabled": {
-            "type": [
-              "null",
-              "boolean"
-            ]
-          },
-          "commitmentDefaultMode": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "selectedDays": {
-            "type": [
-              "null",
-              "integer"
-            ],
-            "format": "int32"
-          },
-          "preferredTimeSlot": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "customTimeStart": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "customTimeEnd": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "timezoneId": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "utcOffsetMinutes": {
-            "type": [
-              "null",
-              "integer"
-            ],
-            "format": "int32"
-          }
-        }
-      },
       "UpdateProfileRequest": {
         "required": [
           "displayName"
@@ -8972,17 +5804,6 @@
               "null",
               "string"
             ]
-          }
-        }
-      },
-      "UpdateRoleRequest": {
-        "required": [
-          "role"
-        ],
-        "type": "object",
-        "properties": {
-          "role": {
-            "type": "string"
           }
         }
       },
@@ -9031,82 +5852,6 @@
               "string"
             ],
             "format": "uuid"
-          }
-        }
-      },
-      "UserActivityPeriod": {
-        "required": [
-          "tasksCreated",
-          "tasksCompleted",
-          "goalsCreated",
-          "identitiesCreated",
-          "habitStacksCreated",
-          "habitCompletions",
-          "journalEntries",
-          "aiCalls",
-          "aiCostUsd"
-        ],
-        "type": "object",
-        "properties": {
-          "tasksCreated": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "tasksCompleted": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "goalsCreated": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "identitiesCreated": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "habitStacksCreated": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "habitCompletions": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "journalEntries": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "aiCalls": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "aiCostUsd": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "UserActivityResponse": {
-        "required": [
-          "userId",
-          "email",
-          "lastWeek",
-          "total"
-        ],
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "email": {
-            "type": "string"
-          },
-          "lastWeek": {
-            "$ref": "#/components/schemas/UserActivityPeriod"
-          },
-          "total": {
-            "$ref": "#/components/schemas/UserActivityPeriod"
           }
         }
       },
@@ -9163,50 +5908,13 @@
           }
         }
       },
-      "UserPushStatus": {
-        "required": [
-          "userId",
-          "email",
-          "hasPushEnabled",
-          "subscriptionCount",
-          "lastPushSentAt"
-        ],
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "email": {
-            "type": "string"
-          },
-          "hasPushEnabled": {
-            "type": "boolean"
-          },
-          "subscriptionCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "lastPushSentAt": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "date-time"
-          }
-        }
-      },
       "UserResponse": {
         "required": [
           "id",
-          "email",
+          "username",
           "displayName",
           "createdAt",
-          "linkedProviders",
-          "hasPassword",
-          "membershipTier",
           "hasCompletedOnboarding",
-          "role",
           "preferredLanguage"
         ],
         "type": "object",
@@ -9215,7 +5923,7 @@
             "type": "string",
             "format": "uuid"
           },
-          "email": {
+          "username": {
             "type": "string"
           },
           "displayName": {
@@ -9228,23 +5936,8 @@
             "type": "string",
             "format": "date-time"
           },
-          "linkedProviders": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "hasPassword": {
-            "type": "boolean"
-          },
-          "membershipTier": {
-            "type": "string"
-          },
           "hasCompletedOnboarding": {
             "type": "boolean"
-          },
-          "role": {
-            "type": "string"
           },
           "preferredLanguage": {
             "type": "string"
@@ -9304,104 +5997,6 @@
           }
         }
       },
-      "VerifyEmailRequest": {
-        "required": [
-          "token"
-        ],
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string"
-          }
-        }
-      },
-      "WaitlistEntryResponse": {
-        "required": [
-          "id",
-          "email",
-          "name",
-          "createdAt"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "email": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "WaitlistSignupRequest": {
-        "required": [
-          "email",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          }
-        }
-      },
-      "WhitelistCheckResponse": {
-        "required": [
-          "canSignup"
-        ],
-        "type": "object",
-        "properties": {
-          "canSignup": {
-            "type": "boolean"
-          }
-        }
-      },
-      "WhitelistEntryResponse": {
-        "required": [
-          "id",
-          "email",
-          "addedAt",
-          "addedByEmail",
-          "invitedAt"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "email": {
-            "type": "string"
-          },
-          "addedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "addedByEmail": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "invitedAt": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "date-time"
-          }
-        }
-      },
       "YesterdayCommitmentResponse": {
         "required": [
           "wasMissed",
@@ -9431,10 +6026,7 @@
   },
   "tags": [
     {
-      "name": "AccountabilityBuddy"
-    },
-    {
-      "name": "Admin"
+      "name": "HelpMotivateMe.Api"
     },
     {
       "name": "Ai"
@@ -9470,16 +6062,10 @@
       "name": "Milestones"
     },
     {
-      "name": "PushNotifications"
-    },
-    {
       "name": "Tasks"
     },
     {
       "name": "Today"
-    },
-    {
-      "name": "Waitlist"
     }
   ]
 }

@@ -57,6 +57,50 @@ public class TasksControllerTests : IntegrationTestBase
     }
 
     [Fact]
+    public async Task CreateAndCompleteTask_ThroughApi_PersistsEachState()
+    {
+        var user = await DataBuilder.CreateUserAsync();
+        Client.AuthenticateAs(user.Id);
+
+        var identityResponse = await Client.PostAsJsonAsync("/api/identities", new { Name = "API Identity" });
+        identityResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+        var identity = await identityResponse.Content.ReadFromJsonAsync<IdentityResponse>();
+
+        var goalResponse = await Client.PostAsJsonAsync("/api/goals", new
+        {
+            Title = "API Goal",
+            IdentityId = identity!.Id
+        });
+        goalResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+        var goal = await goalResponse.Content.ReadFromJsonAsync<GoalResponse>();
+
+        var taskResponse = await Client.PostAsJsonAsync($"/api/goals/{goal!.Id}/tasks", new
+        {
+            Title = "API Task",
+            IdentityId = identity.Id
+        });
+        taskResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+        var task = await taskResponse.Content.ReadFromJsonAsync<TaskResponse>();
+        task!.Id.Should().NotBeEmpty();
+        task.IdentityId.Should().Be(identity.Id);
+
+        var retrieved = await Client.GetFromJsonAsync<TaskResponse>($"/api/tasks/{task.Id}");
+        retrieved!.Status.Should().Be("Pending");
+
+        var completeResponse = await Client.PatchAsync($"/api/tasks/{task.Id}/complete?date=2026-09-25", null);
+        completeResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var completed = await completeResponse.Content.ReadFromJsonAsync<TaskResponse>();
+        completed!.Status.Should().Be("Completed");
+        completed.CompletedAt.Should().Be(new DateOnly(2026, 9, 25));
+
+        var uncompleteResponse = await Client.PatchAsync($"/api/tasks/{task.Id}/complete?date=2026-09-25", null);
+        uncompleteResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var uncompleted = await uncompleteResponse.Content.ReadFromJsonAsync<TaskResponse>();
+        uncompleted!.Status.Should().Be("Pending");
+        uncompleted.CompletedAt.Should().BeNull();
+    }
+
+    [Fact]
     public async Task CreateSubtask_LinksToParentTask()
     {
         // Arrange
@@ -75,6 +119,9 @@ public class TasksControllerTests : IntegrationTestBase
         var created = await response.Content.ReadFromJsonAsync<TaskResponse>();
         created!.ParentTaskId.Should().Be(parentTask.Id);
         created.GoalId.Should().Be(goal.Id);
+
+        var retrieved = await Client.GetFromJsonAsync<TaskResponse>($"/api/tasks/{created.Id}");
+        retrieved!.ParentTaskId.Should().Be(parentTask.Id);
     }
 
     [Fact]
@@ -166,8 +213,8 @@ public class TasksControllerTests : IntegrationTestBase
         var tinyTask = await response.Content.ReadFromJsonAsync<TaskResponse>();
 
         tinyTask!.Title.Should().StartWith("[2 min]");
-        // The actual API response doesn't include these fields in the DTO,
-        // but we can verify the task was created with the correct title
+        var retrieved = await Client.GetFromJsonAsync<TaskResponse>($"/api/tasks/{tinyTask.Id}");
+        retrieved!.Title.Should().Be(tinyTask.Title);
     }
 
     [Fact]

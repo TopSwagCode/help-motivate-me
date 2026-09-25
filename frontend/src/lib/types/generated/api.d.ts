@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/api/buddies": {
+    "/health/live": {
         parameters: {
             query?: never;
             header?: never;
@@ -16,91 +16,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["BuddyRelationshipsResponse"];
-                        "application/json": components["schemas"]["BuddyRelationshipsResponse"];
-                        "text/json": components["schemas"]["BuddyRelationshipsResponse"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/buddies/invite": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["InviteBuddyRequest"];
-                    "text/json": components["schemas"]["InviteBuddyRequest"];
-                    "application/*+json": components["schemas"]["InviteBuddyRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["BuddyResponse"];
-                        "application/json": components["schemas"]["BuddyResponse"];
-                        "text/json": components["schemas"]["BuddyResponse"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/buddies/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    id: string;
-                };
                 cookie?: never;
             };
             requestBody?: never;
@@ -114,28 +29,26 @@ export interface paths {
                 };
             };
         };
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/buddies/leave/{ownerUserId}": {
+    "/health/ready": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete: {
+        get: {
             parameters: {
                 query?: never;
                 header?: never;
-                path: {
-                    ownerUserId: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody?: never;
@@ -149,44 +62,6 @@ export interface paths {
                 };
             };
         };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/buddies/{targetUserId}/today": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: {
-                    date?: string;
-                };
-                header?: never;
-                path: {
-                    targetUserId: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["BuddyTodayViewResponse"];
-                        "application/json": components["schemas"]["BuddyTodayViewResponse"];
-                        "text/json": components["schemas"]["BuddyTodayViewResponse"];
-                    };
-                };
-            };
-        };
         put?: never;
         post?: never;
         delete?: never;
@@ -195,204 +70,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/buddies/{targetUserId}/journal": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    targetUserId: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["BuddyJournalEntryResponse"][];
-                        "application/json": components["schemas"]["BuddyJournalEntryResponse"][];
-                        "text/json": components["schemas"]["BuddyJournalEntryResponse"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    targetUserId: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["CreateBuddyJournalEntryRequest"];
-                    "text/json": components["schemas"]["CreateBuddyJournalEntryRequest"];
-                    "application/*+json": components["schemas"]["CreateBuddyJournalEntryRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["BuddyJournalEntryResponse"];
-                        "application/json": components["schemas"]["BuddyJournalEntryResponse"];
-                        "text/json": components["schemas"]["BuddyJournalEntryResponse"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/buddies/{targetUserId}/journal/{entryId}/images": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    targetUserId: string;
-                    entryId: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "multipart/form-data": {
-                        file?: components["schemas"]["IFormFile"];
-                    };
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["BuddyJournalImageResponse"];
-                        "application/json": components["schemas"]["BuddyJournalImageResponse"];
-                        "text/json": components["schemas"]["BuddyJournalImageResponse"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/buddies/{targetUserId}/journal/{entryId}/reactions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    targetUserId: string;
-                    entryId: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["AddBuddyJournalReactionRequest"];
-                    "text/json": components["schemas"]["AddBuddyJournalReactionRequest"];
-                    "application/*+json": components["schemas"]["AddBuddyJournalReactionRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["BuddyJournalReactionResponse"];
-                        "application/json": components["schemas"]["BuddyJournalReactionResponse"];
-                        "text/json": components["schemas"]["BuddyJournalReactionResponse"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/buddies/{targetUserId}/journal/{entryId}/reactions/{reactionId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    targetUserId: string;
-                    entryId: string;
-                    reactionId: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/stats": {
+    "/api/ai/status": {
         parameters: {
             query?: never;
             header?: never;
@@ -414,585 +92,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["AdminStatsResponse"];
-                        "application/json": components["schemas"]["AdminStatsResponse"];
-                        "text/json": components["schemas"]["AdminStatsResponse"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/stats/daily": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: {
-                    date?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["DailyStatsResponse"];
-                        "application/json": components["schemas"]["DailyStatsResponse"];
-                        "text/json": components["schemas"]["DailyStatsResponse"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: {
-                    search?: string;
-                    tier?: string;
-                    isActive?: boolean;
-                    page?: number;
-                    pageSize?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["AdminUserResponse"][];
-                        "application/json": components["schemas"]["AdminUserResponse"][];
-                        "text/json": components["schemas"]["AdminUserResponse"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/{userId}/toggle-active": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    userId: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["AdminUserResponse"];
-                        "application/json": components["schemas"]["AdminUserResponse"];
-                        "text/json": components["schemas"]["AdminUserResponse"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/api/admin/users/{userId}/role": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    userId: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["UpdateRoleRequest"];
-                    "text/json": components["schemas"]["UpdateRoleRequest"];
-                    "application/*+json": components["schemas"]["UpdateRoleRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["AdminUserResponse"];
-                        "application/json": components["schemas"]["AdminUserResponse"];
-                        "text/json": components["schemas"]["AdminUserResponse"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/api/admin/users/{userId}/activity": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    userId: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["UserActivityResponse"];
-                        "application/json": components["schemas"]["UserActivityResponse"];
-                        "text/json": components["schemas"]["UserActivityResponse"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/settings": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["SignupSettingsResponse"];
-                        "application/json": components["schemas"]["SignupSettingsResponse"];
-                        "text/json": components["schemas"]["SignupSettingsResponse"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/waitlist": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: {
-                    search?: string;
-                    page?: number;
-                    pageSize?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["WaitlistEntryResponse"][];
-                        "application/json": components["schemas"]["WaitlistEntryResponse"][];
-                        "text/json": components["schemas"]["WaitlistEntryResponse"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/waitlist/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/waitlist/{id}/approve": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["WhitelistEntryResponse"];
-                        "application/json": components["schemas"]["WhitelistEntryResponse"];
-                        "text/json": components["schemas"]["WhitelistEntryResponse"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/whitelist": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: {
-                    search?: string;
-                    page?: number;
-                    pageSize?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["WhitelistEntryResponse"][];
-                        "application/json": components["schemas"]["WhitelistEntryResponse"][];
-                        "text/json": components["schemas"]["WhitelistEntryResponse"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["InviteUserRequest"];
-                    "text/json": components["schemas"]["InviteUserRequest"];
-                    "application/*+json": components["schemas"]["InviteUserRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["WhitelistEntryResponse"];
-                        "application/json": components["schemas"]["WhitelistEntryResponse"];
-                        "text/json": components["schemas"]["WhitelistEntryResponse"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/whitelist/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/analytics/overview": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: {
-                    days?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["AnalyticsOverviewResponse"];
-                        "application/json": components["schemas"]["AnalyticsOverviewResponse"];
-                        "text/json": components["schemas"]["AnalyticsOverviewResponse"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/ai-usage/stats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["AiUsageStatsResponse"];
-                        "application/json": components["schemas"]["AiUsageStatsResponse"];
-                        "text/json": components["schemas"]["AiUsageStatsResponse"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/ai-usage": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: {
-                    page?: number;
-                    pageSize?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["PaginatedResponseOfAiUsageLogResponse"];
-                        "application/json": components["schemas"]["PaginatedResponseOfAiUsageLogResponse"];
-                        "text/json": components["schemas"]["PaginatedResponseOfAiUsageLogResponse"];
+                        "text/plain": components["schemas"]["AiStatusResponse"];
+                        "application/json": components["schemas"]["AiStatusResponse"];
+                        "text/json": components["schemas"]["AiStatusResponse"];
                     };
                 };
             };
@@ -1319,45 +421,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/auth/register": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["RegisterRequest"];
-                    "text/json": components["schemas"]["RegisterRequest"];
-                    "application/*+json": components["schemas"]["RegisterRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/auth/login": {
         parameters: {
             query?: never;
@@ -1471,312 +534,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/auth/external/{provider}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    provider: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/callback/{provider}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: {
-                    returnUrl?: string;
-                };
-                header?: never;
-                path: {
-                    provider: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/link/{provider}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    provider: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/unlink/{provider}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    provider: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/request-login-link": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["RequestLoginLinkRequest"];
-                    "text/json": components["schemas"]["RequestLoginLinkRequest"];
-                    "application/*+json": components["schemas"]["RequestLoginLinkRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/login-with-token": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["LoginWithTokenRequest"];
-                    "text/json": components["schemas"]["LoginWithTokenRequest"];
-                    "application/*+json": components["schemas"]["LoginWithTokenRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["UserResponse"];
-                        "application/json": components["schemas"]["UserResponse"];
-                        "text/json": components["schemas"]["UserResponse"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/verify-email": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["VerifyEmailRequest"];
-                    "text/json": components["schemas"]["VerifyEmailRequest"];
-                    "application/*+json": components["schemas"]["VerifyEmailRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["UserResponse"];
-                        "application/json": components["schemas"]["UserResponse"];
-                        "text/json": components["schemas"]["UserResponse"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/resend-verification": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["ResendVerificationRequest"];
-                    "text/json": components["schemas"]["ResendVerificationRequest"];
-                    "application/*+json": components["schemas"]["ResendVerificationRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/auth/profile": {
         parameters: {
             query?: never;
@@ -1802,88 +559,6 @@ export interface paths {
                     "application/json": components["schemas"]["UpdateProfileRequest"];
                     "text/json": components["schemas"]["UpdateProfileRequest"];
                     "application/*+json": components["schemas"]["UpdateProfileRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["UserResponse"];
-                        "application/json": components["schemas"]["UserResponse"];
-                        "text/json": components["schemas"]["UserResponse"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/api/auth/change-password": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["ChangePasswordRequest"];
-                    "text/json": components["schemas"]["ChangePasswordRequest"];
-                    "application/*+json": components["schemas"]["ChangePasswordRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/membership": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["UpdateMembershipRequest"];
-                    "text/json": components["schemas"]["UpdateMembershipRequest"];
-                    "application/*+json": components["schemas"]["UpdateMembershipRequest"];
                 };
             };
             responses: {
@@ -2017,152 +692,6 @@ export interface paths {
                 };
             };
         };
-        trace?: never;
-    };
-    "/api/auth/notification-preferences": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["NotificationPreferencesResponse"];
-                        "application/json": components["schemas"]["NotificationPreferencesResponse"];
-                        "text/json": components["schemas"]["NotificationPreferencesResponse"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["UpdateNotificationPreferencesRequest"];
-                    "text/json": components["schemas"]["UpdateNotificationPreferencesRequest"];
-                    "application/*+json": components["schemas"]["UpdateNotificationPreferencesRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["NotificationPreferencesResponse"];
-                        "application/json": components["schemas"]["NotificationPreferencesResponse"];
-                        "text/json": components["schemas"]["NotificationPreferencesResponse"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/api/auth/login-with-buddy-token": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["LoginWithTokenRequest"];
-                    "text/json": components["schemas"]["LoginWithTokenRequest"];
-                    "application/*+json": components["schemas"]["LoginWithTokenRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["BuddyLoginResponse"];
-                        "application/json": components["schemas"]["BuddyLoginResponse"];
-                        "text/json": components["schemas"]["BuddyLoginResponse"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/account": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["DeleteAccountRequest"];
-                    "text/json": components["schemas"]["DeleteAccountRequest"];
-                    "application/*+json": components["schemas"]["DeleteAccountRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
         trace?: never;
     };
     "/api/daily-commitment": {
@@ -3636,87 +2165,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/journal/{entryId}/reactions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    entryId: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["AddJournalReactionRequest"];
-                    "text/json": components["schemas"]["AddJournalReactionRequest"];
-                    "application/*+json": components["schemas"]["AddJournalReactionRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["JournalReactionResponse"];
-                        "application/json": components["schemas"]["JournalReactionResponse"];
-                        "text/json": components["schemas"]["JournalReactionResponse"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/journal/{entryId}/reactions/{reactionId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    entryId: string;
-                    reactionId: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/journal/linkable/habit-stacks": {
         parameters: {
             query?: never;
@@ -4108,280 +2556,6 @@ export interface paths {
                 };
             };
         };
-        trace?: never;
-    };
-    "/api/notifications/push/subscribe": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["PushSubscriptionRequest"];
-                    "text/json": components["schemas"]["PushSubscriptionRequest"];
-                    "application/*+json": components["schemas"]["PushSubscriptionRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/notifications/push/unsubscribe": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete: {
-            parameters: {
-                query?: {
-                    endpoint?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/notifications/push/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["PushSubscriptionsStatusResponse"];
-                        "application/json": components["schemas"]["PushSubscriptionsStatusResponse"];
-                        "text/json": components["schemas"]["PushSubscriptionsStatusResponse"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/notifications/push/admin/send-to-user": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["SendPushToUserRequest"];
-                    "text/json": components["schemas"]["SendPushToUserRequest"];
-                    "application/*+json": components["schemas"]["SendPushToUserRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["PushNotificationResult"];
-                        "application/json": components["schemas"]["PushNotificationResult"];
-                        "text/json": components["schemas"]["PushNotificationResult"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/notifications/push/admin/send-to-all": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["SendPushToAllRequest"];
-                    "text/json": components["schemas"]["SendPushToAllRequest"];
-                    "application/*+json": components["schemas"]["SendPushToAllRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["PushNotificationResult"];
-                        "application/json": components["schemas"]["PushNotificationResult"];
-                        "text/json": components["schemas"]["PushNotificationResult"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/notifications/push/admin/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: {
-                    hasPush?: boolean;
-                    search?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["UserPushStatus"][];
-                        "application/json": components["schemas"]["UserPushStatus"][];
-                        "text/json": components["schemas"]["UserPushStatus"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/notifications/push/admin/stats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["PushNotificationStatsResponse"];
-                        "application/json": components["schemas"]["PushNotificationStatsResponse"];
-                        "text/json": components["schemas"]["PushNotificationStatsResponse"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
         trace?: never;
     };
     "/api/goals/{goalId}/tasks": {
@@ -4830,46 +3004,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/waitlist": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["WaitlistSignupRequest"];
-                    "text/json": components["schemas"]["WaitlistSignupRequest"];
-                    "application/*+json": components["schemas"]["WaitlistSignupRequest"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/waitlist/check": {
+    "/api/today/digest": {
         parameters: {
             query?: never;
             header?: never;
@@ -4879,7 +3014,7 @@ export interface paths {
         get: {
             parameters: {
                 query?: {
-                    email?: string;
+                    date?: string;
                 };
                 header?: never;
                 path?: never;
@@ -4893,9 +3028,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["WhitelistCheckResponse"];
-                        "application/json": components["schemas"]["WhitelistCheckResponse"];
-                        "text/json": components["schemas"]["WhitelistCheckResponse"];
+                        "text/plain": components["schemas"]["DailyDigestResponse"];
+                        "application/json": components["schemas"]["DailyDigestResponse"];
+                        "text/json": components["schemas"]["DailyDigestResponse"];
                     };
                 };
             };
@@ -4923,172 +3058,20 @@ export interface components {
         ActionSuggestionsResponse: {
             suggestions: components["schemas"]["ActionSuggestion"][];
         };
-        AddBuddyJournalReactionRequest: {
-            emoji: string;
-        };
-        AddJournalReactionRequest: {
-            emoji: string;
-        };
         AddStackItemRequest: {
             cueDescription: string;
             habitDescription: string;
-        };
-        AdminStatsResponse: {
-            /** Format: int32 */
-            totalUsers: number;
-            /** Format: int32 */
-            activeUsers: number;
-            /** Format: int32 */
-            usersLoggedInToday: number;
-            membershipStats: components["schemas"]["MembershipStats"];
-            taskTotals: components["schemas"]["TaskTotals"];
-        };
-        AdminUserResponse: {
-            /** Format: uuid */
-            id: string;
-            email: string;
-            displayName: null | string;
-            isActive: boolean;
-            membershipTier: string;
-            role: string;
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            updatedAt: null | string;
-            /** Format: int32 */
-            aiCallsCount: number;
-            /** Format: double */
-            aiTotalCostUsd: number;
         };
         AiContextResponse: {
             identities: components["schemas"]["IdentitySummary"][];
             goals: components["schemas"]["GoalSummary"][];
         };
-        AiUsageLogResponse: {
-            /** Format: uuid */
-            id: string;
-            /** Format: uuid */
-            userId: string;
-            email: string;
-            model: string;
-            /** Format: int32 */
-            inputTokens: number;
-            /** Format: int32 */
-            outputTokens: number;
-            /** Format: int32 */
-            audioDurationSeconds: null | number;
-            /** Format: double */
-            estimatedCostUsd: number;
-            /** Format: double */
-            actualCostUsd: number;
-            requestType: string;
-            rejected: boolean;
-            /** Format: date-time */
-            createdAt: string;
-        };
-        AiUsageStatsResponse: {
-            /** Format: double */
-            totalEstimatedAllTime: number;
-            /** Format: double */
-            totalActualAllTime: number;
-            /** Format: double */
-            totalEstimatedLast30Days: number;
-            /** Format: double */
-            totalActualLast30Days: number;
-            /** Format: double */
-            globalLimitLast30DaysUsd: number;
-            /** Format: double */
-            perUserLimitLast30DaysUsd: number;
-        };
-        AnalyticsOverviewResponse: {
-            /** Format: int32 */
-            totalEvents: number;
-            /** Format: int32 */
-            uniqueUsers: number;
-            /** Format: int32 */
-            uniqueSessions: number;
-            /** Format: double */
-            avgEventsPerSession: number;
-            topEventTypes: components["schemas"]["EventTypeCount"][];
-            dailyEventCounts: components["schemas"]["DailyEventCount"][];
-            recentSessions: components["schemas"]["SessionSummary"][];
-        };
-        BuddyForResponse: {
-            /** Format: uuid */
-            id: string;
-            /** Format: uuid */
-            userId: string;
-            userEmail: string;
-            userDisplayName: string;
-            /** Format: date-time */
-            createdAt: string;
-        };
-        BuddyJournalEntryResponse: {
-            /** Format: uuid */
-            id: string;
-            title: string;
-            description: null | string;
-            entryDate: string;
-            /** Format: uuid */
-            authorUserId: null | string;
-            authorDisplayName: null | string;
-            images: components["schemas"]["BuddyJournalImageResponse"][];
-            reactions: components["schemas"]["BuddyJournalReactionResponse"][];
-            /** Format: date-time */
-            createdAt: string;
-        };
-        BuddyJournalImageResponse: {
-            /** Format: uuid */
-            id: string;
-            fileName: string;
-            url: string;
-            /** Format: int32 */
-            sortOrder: number;
-        };
-        BuddyJournalReactionResponse: {
-            /** Format: uuid */
-            id: string;
-            emoji: string;
-            /** Format: uuid */
-            userId: string;
-            userDisplayName: string;
-            /** Format: date-time */
-            createdAt: string;
-        };
-        BuddyLoginResponse: {
-            user: components["schemas"]["UserResponse"];
-            /** Format: uuid */
-            inviterUserId: string;
-            inviterDisplayName: string;
-        };
-        BuddyRelationshipsResponse: {
-            myBuddies: components["schemas"]["BuddyResponse"][];
-            buddyingFor: components["schemas"]["BuddyForResponse"][];
-        };
-        BuddyResponse: {
-            /** Format: uuid */
-            id: string;
-            /** Format: uuid */
-            buddyUserId: string;
-            buddyEmail: string;
-            buddyDisplayName: string;
-            /** Format: date-time */
-            createdAt: string;
-        };
-        BuddyTodayViewResponse: {
-            /** Format: uuid */
-            userId: string;
-            userDisplayName: string;
-            /** Format: date */
-            date: string;
-            habitStacks: components["schemas"]["TodayHabitStackResponse"][];
-            upcomingTasks: components["schemas"]["TodayTaskResponse"][];
-            completedTasks: components["schemas"]["TodayTaskResponse"][];
-            identityFeedback: components["schemas"]["TodayIdentityFeedbackResponse"][];
-        };
-        ChangePasswordRequest: {
-            currentPassword: string;
-            newPassword: string;
+        AiStatusResponse: {
+            isEnabled: boolean;
+            provider: null | string;
+            chatModel: null | string;
+            isTranscriptionEnabled: boolean;
+            transcriptionModel: null | string;
         };
         ChatMessage: {
             role: string;
@@ -5135,11 +3118,6 @@ export interface components {
             totalCompletions: number;
             /** Format: int32 */
             missedDays: number;
-        };
-        CreateBuddyJournalEntryRequest: {
-            title: string;
-            description: null | string;
-            entryDate: null | string;
         };
         CreateDailyCommitmentRequest: {
             /** Format: uuid */
@@ -5244,27 +3222,36 @@ export interface components {
         };
         /** @enum {string} */
         DailyCommitmentStatus: "Committed" | "Completed" | "Dismissed" | "Missed";
-        DailyEventCount: {
+        DailyDigestIdentityResponse: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            color: null | string;
+            icon: null | string;
+            /** Format: int32 */
+            yesterdayScore: number;
+            /** Format: int32 */
+            todayScore: number;
+            yesterdayStatus: string;
+            todayStatus: string;
+            trend: string;
+            /** Format: int32 */
+            yesterdayVotes: number;
+            /** Format: int32 */
+            habitVotes: number;
+            /** Format: int32 */
+            stackBonusVotes: number;
+            /** Format: int32 */
+            taskVotes: number;
+            /** Format: int32 */
+            proofVotes: number;
+        };
+        DailyDigestResponse: {
+            /** Format: date */
             date: string;
+            identities: components["schemas"]["DailyDigestIdentityResponse"][];
             /** Format: int32 */
-            count: number;
-        };
-        DailyStatsResponse: {
-            date: string;
-            /** Format: int32 */
-            tasksCreated: number;
-            /** Format: int32 */
-            tasksCompleted: number;
-            /** Format: int32 */
-            tasksDue: number;
-        };
-        DeleteAccountRequest: {
-            password: null | string;
-        };
-        EventTypeCount: {
-            eventType: string;
-            /** Format: int32 */
-            count: number;
+            totalYesterdayVotes: number;
         };
         GeneralChatRequest: {
             messages: components["schemas"]["ChatMessage"][];
@@ -5440,12 +3427,6 @@ export interface components {
         };
         /** Format: binary */
         IFormFile: string;
-        InviteBuddyRequest: {
-            email: string;
-        };
-        InviteUserRequest: {
-            email: string;
-        };
         JournalEntryResponse: {
             /** Format: uuid */
             id: string;
@@ -5463,7 +3444,6 @@ export interface components {
             authorUserId: null | string;
             authorDisplayName: null | string;
             images: components["schemas"]["JournalImageResponse"][];
-            reactions: components["schemas"]["JournalReactionResponse"][];
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
@@ -5477,16 +3457,6 @@ export interface components {
             /** Format: int32 */
             sortOrder: number;
         };
-        JournalReactionResponse: {
-            /** Format: uuid */
-            id: string;
-            emoji: string;
-            /** Format: uuid */
-            userId: string;
-            userDisplayName: string;
-            /** Format: date-time */
-            createdAt: string;
-        };
         LinkableHabitStackResponse: {
             /** Format: uuid */
             id: string;
@@ -5499,22 +3469,11 @@ export interface components {
             goalTitle: string;
         };
         LoginRequest: {
-            email: string;
+            username: string;
             password: string;
-        };
-        LoginWithTokenRequest: {
-            token: string;
         };
         MarkSeenRequest: {
             milestoneIds: string[];
-        };
-        MembershipStats: {
-            /** Format: int32 */
-            freeUsers: number;
-            /** Format: int32 */
-            plusUsers: number;
-            /** Format: int32 */
-            proUsers: number;
         };
         MilestoneDefinitionResponse: {
             /** Format: uuid */
@@ -5532,138 +3491,17 @@ export interface components {
             sortOrder: number;
             isActive: boolean;
         };
-        NotificationPreferencesResponse: {
-            notificationsEnabled: boolean;
-            emailEnabled: boolean;
-            smsEnabled: boolean;
-            phoneEnabled: boolean;
-            habitRemindersEnabled: boolean;
-            goalRemindersEnabled: boolean;
-            dailyDigestEnabled: boolean;
-            streakAlertsEnabled: boolean;
-            motivationalQuotesEnabled: boolean;
-            weeklyReviewEnabled: boolean;
-            buddyUpdatesEnabled: boolean;
-            dailyCommitmentEnabled: boolean;
-            commitmentDefaultMode: string;
-            /** Format: int32 */
-            selectedDays: number;
-            preferredTimeSlot: string;
-            customTimeStart: null | string;
-            customTimeEnd: null | string;
-            timezoneId: string;
-            /** Format: int32 */
-            utcOffsetMinutes: number;
-        };
-        PaginatedResponseOfAiUsageLogResponse: {
-            items: components["schemas"]["AiUsageLogResponse"][];
-            /** Format: int32 */
-            totalCount: number;
-            /** Format: int32 */
-            page: number;
-            /** Format: int32 */
-            pageSize: number;
-            /** Format: int32 */
-            totalPages: number;
-        };
         PostponeTaskRequest: {
             /** Format: date */
             newDueDate: string;
         };
         /** @enum {string} */
         ProofIntensity: "Easy" | "Moderate" | "Hard";
-        PushNotificationResult: {
-            /** Format: int32 */
-            totalSubscriptions: number;
-            /** Format: int32 */
-            successCount: number;
-            /** Format: int32 */
-            failureCount: number;
-            errors: string[];
-        };
-        PushNotificationStatsResponse: {
-            /** Format: int32 */
-            totalSubscriptions: number;
-            /** Format: int32 */
-            usersWithPush: number;
-            /** Format: int32 */
-            totalUsers: number;
-            /** Format: double */
-            percentageWithPush: number;
-            /** Format: date-time */
-            oldestSubscription: null | string;
-            /** Format: date-time */
-            newestSubscription: null | string;
-        };
-        PushSubscriptionKeys: {
-            p256dh: string;
-            auth: string;
-        };
-        PushSubscriptionRequest: {
-            endpoint: string;
-            keys: components["schemas"]["PushSubscriptionKeys"];
-        };
-        PushSubscriptionsStatusResponse: {
-            hasSubscriptions: boolean;
-            /** Format: int32 */
-            subscriptionCount: number;
-            subscriptions: components["schemas"]["PushSubscriptionStatusResponse"][];
-        };
-        PushSubscriptionStatusResponse: {
-            /** Format: uuid */
-            id: string;
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            lastUsedAt: null | string;
-            userAgent: string;
-        };
-        RegisterRequest: {
-            email: string;
-            password: string;
-            displayName: null | string;
-        };
         ReorderHabitStacksRequest: {
             stackIds: string[];
         };
         ReorderStackItemsRequest: {
             itemIds: string[];
-        };
-        RequestLoginLinkRequest: {
-            email: string;
-        };
-        ResendVerificationRequest: {
-            email: string;
-        };
-        SendPushToAllRequest: {
-            title: string;
-            body: string;
-            url?: null | string;
-        };
-        SendPushToUserRequest: {
-            /** Format: uuid */
-            userId: string;
-            title: string;
-            body: string;
-            url?: null | string;
-        };
-        SessionSummary: {
-            /** Format: uuid */
-            sessionId: string;
-            /** Format: uuid */
-            userId: string;
-            email: string;
-            /** Format: date-time */
-            firstEvent: string;
-            /** Format: date-time */
-            lastEvent: string;
-            /** Format: int32 */
-            eventCount: number;
-            /** Format: double */
-            durationMinutes: number;
-        };
-        SignupSettingsResponse: {
-            allowSignups: boolean;
         };
         StreakSummaryResponse: {
             /** Format: int32 */
@@ -5717,12 +3555,6 @@ export interface components {
             /** Format: int32 */
             daysUntilStreakBreaks: number;
         };
-        TaskTotals: {
-            /** Format: int32 */
-            totalTasksCreated: number;
-            /** Format: int32 */
-            totalTasksCompleted: number;
-        };
         TodayHabitStackItemResponse: {
             /** Format: uuid */
             id: string;
@@ -5746,37 +3578,6 @@ export interface components {
             completedCount: number;
             /** Format: int32 */
             totalCount: number;
-        };
-        DailyDigestResponse: {
-            /** Format: date */
-            date: string;
-            identities: components["schemas"]["DailyDigestIdentityResponse"][];
-            /** Format: int32 */
-            totalYesterdayVotes: number;
-        };
-        DailyDigestIdentityResponse: {
-            /** Format: uuid */
-            id: string;
-            name: string;
-            color: null | string;
-            icon: null | string;
-            /** Format: int32 */
-            yesterdayScore: number;
-            /** Format: int32 */
-            todayScore: number;
-            yesterdayStatus: string;
-            todayStatus: string;
-            trend: string;
-            /** Format: int32 */
-            yesterdayVotes: number;
-            /** Format: int32 */
-            habitVotes: number;
-            /** Format: int32 */
-            stackBonusVotes: number;
-            /** Format: int32 */
-            taskVotes: number;
-            /** Format: int32 */
-            proofVotes: number;
         };
         TodayIdentityFeedbackResponse: {
             /** Format: uuid */
@@ -5867,9 +3668,6 @@ export interface components {
         UpdateLanguageRequest: {
             language: string;
         };
-        UpdateMembershipRequest: {
-            tier: string;
-        };
         UpdateMilestoneRequest: {
             code: string;
             titleKey: string;
@@ -5884,33 +3682,8 @@ export interface components {
             sortOrder: number;
             isActive: boolean;
         };
-        UpdateNotificationPreferencesRequest: {
-            notificationsEnabled?: null | boolean;
-            emailEnabled?: null | boolean;
-            smsEnabled?: null | boolean;
-            habitRemindersEnabled?: null | boolean;
-            goalRemindersEnabled?: null | boolean;
-            dailyDigestEnabled?: null | boolean;
-            streakAlertsEnabled?: null | boolean;
-            motivationalQuotesEnabled?: null | boolean;
-            weeklyReviewEnabled?: null | boolean;
-            buddyUpdatesEnabled?: null | boolean;
-            dailyCommitmentEnabled?: null | boolean;
-            commitmentDefaultMode?: null | string;
-            /** Format: int32 */
-            selectedDays?: null | number;
-            preferredTimeSlot?: null | string;
-            customTimeStart?: null | string;
-            customTimeEnd?: null | string;
-            timezoneId?: null | string;
-            /** Format: int32 */
-            utcOffsetMinutes?: null | number;
-        };
         UpdateProfileRequest: {
             displayName: null | string;
-        };
-        UpdateRoleRequest: {
-            role: string;
         };
         UpdateStackItemRequest: {
             cueDescription: string;
@@ -5923,33 +3696,6 @@ export interface components {
             dueDate: null | string;
             /** Format: uuid */
             identityId?: null | string;
-        };
-        UserActivityPeriod: {
-            /** Format: int32 */
-            tasksCreated: number;
-            /** Format: int32 */
-            tasksCompleted: number;
-            /** Format: int32 */
-            goalsCreated: number;
-            /** Format: int32 */
-            identitiesCreated: number;
-            /** Format: int32 */
-            habitStacksCreated: number;
-            /** Format: int32 */
-            habitCompletions: number;
-            /** Format: int32 */
-            journalEntries: number;
-            /** Format: int32 */
-            aiCalls: number;
-            /** Format: double */
-            aiCostUsd: number;
-        };
-        UserActivityResponse: {
-            /** Format: uuid */
-            userId: string;
-            email: string;
-            lastWeek: components["schemas"]["UserActivityPeriod"];
-            total: components["schemas"]["UserActivityPeriod"];
         };
         UserMilestoneResponse: {
             /** Format: uuid */
@@ -5966,28 +3712,14 @@ export interface components {
             awardedAt: string;
             hasBeenSeen: boolean;
         };
-        UserPushStatus: {
-            /** Format: uuid */
-            userId: string;
-            email: string;
-            hasPushEnabled: boolean;
-            /** Format: int32 */
-            subscriptionCount: number;
-            /** Format: date-time */
-            lastPushSentAt: null | string;
-        };
         UserResponse: {
             /** Format: uuid */
             id: string;
-            email: string;
+            username: string;
             displayName: null | string;
             /** Format: date-time */
             createdAt: string;
-            linkedProviders: string[];
-            hasPassword: boolean;
-            membershipTier: string;
             hasCompletedOnboarding: boolean;
-            role: string;
             preferredLanguage: string;
         };
         UserStatsResponse: {
@@ -6008,34 +3740,6 @@ export interface components {
             /** Format: date-time */
             lastActivityAt: null | string;
         };
-        VerifyEmailRequest: {
-            token: string;
-        };
-        WaitlistEntryResponse: {
-            /** Format: uuid */
-            id: string;
-            email: string;
-            name: string;
-            /** Format: date-time */
-            createdAt: string;
-        };
-        WaitlistSignupRequest: {
-            email: string;
-            name: string;
-        };
-        WhitelistCheckResponse: {
-            canSignup: boolean;
-        };
-        WhitelistEntryResponse: {
-            /** Format: uuid */
-            id: string;
-            email: string;
-            /** Format: date-time */
-            addedAt: string;
-            addedByEmail: null | string;
-            /** Format: date-time */
-            invitedAt: null | string;
-        };
         YesterdayCommitmentResponse: {
             wasMissed: boolean;
             identityName: null | string;
@@ -6050,24 +3754,9 @@ export interface components {
 }
 export type ActionSuggestion = components['schemas']['ActionSuggestion'];
 export type ActionSuggestionsResponse = components['schemas']['ActionSuggestionsResponse'];
-export type AddBuddyJournalReactionRequest = components['schemas']['AddBuddyJournalReactionRequest'];
-export type AddJournalReactionRequest = components['schemas']['AddJournalReactionRequest'];
 export type AddStackItemRequest = components['schemas']['AddStackItemRequest'];
-export type AdminStatsResponse = components['schemas']['AdminStatsResponse'];
-export type AdminUserResponse = components['schemas']['AdminUserResponse'];
 export type AiContextResponse = components['schemas']['AiContextResponse'];
-export type AiUsageLogResponse = components['schemas']['AiUsageLogResponse'];
-export type AiUsageStatsResponse = components['schemas']['AiUsageStatsResponse'];
-export type AnalyticsOverviewResponse = components['schemas']['AnalyticsOverviewResponse'];
-export type BuddyForResponse = components['schemas']['BuddyForResponse'];
-export type BuddyJournalEntryResponse = components['schemas']['BuddyJournalEntryResponse'];
-export type BuddyJournalImageResponse = components['schemas']['BuddyJournalImageResponse'];
-export type BuddyJournalReactionResponse = components['schemas']['BuddyJournalReactionResponse'];
-export type BuddyLoginResponse = components['schemas']['BuddyLoginResponse'];
-export type BuddyRelationshipsResponse = components['schemas']['BuddyRelationshipsResponse'];
-export type BuddyResponse = components['schemas']['BuddyResponse'];
-export type BuddyTodayViewResponse = components['schemas']['BuddyTodayViewResponse'];
-export type ChangePasswordRequest = components['schemas']['ChangePasswordRequest'];
+export type AiStatusResponse = components['schemas']['AiStatusResponse'];
 export type ChatMessage = components['schemas']['ChatMessage'];
 export type ChatRequest = components['schemas']['ChatRequest'];
 export type CommitmentOptionsResponse = components['schemas']['CommitmentOptionsResponse'];
@@ -6075,7 +3764,6 @@ export type CompleteAllResponse = components['schemas']['CompleteAllResponse'];
 export type CompleteMultipleTasksRequest = components['schemas']['CompleteMultipleTasksRequest'];
 export type CompleteMultipleTasksResponse = components['schemas']['CompleteMultipleTasksResponse'];
 export type CompletionRateResponse = components['schemas']['CompletionRateResponse'];
-export type CreateBuddyJournalEntryRequest = components['schemas']['CreateBuddyJournalEntryRequest'];
 export type CreateDailyCommitmentRequest = components['schemas']['CreateDailyCommitmentRequest'];
 export type CreateGoalRequest = components['schemas']['CreateGoalRequest'];
 export type CreateHabitStackRequest = components['schemas']['CreateHabitStackRequest'];
@@ -6089,10 +3777,6 @@ export type DailyCommitmentResponse = components['schemas']['DailyCommitmentResp
 export type DailyCommitmentStatus = components['schemas']['DailyCommitmentStatus'];
 export type DailyDigestIdentityResponse = components['schemas']['DailyDigestIdentityResponse'];
 export type DailyDigestResponse = components['schemas']['DailyDigestResponse'];
-export type DailyEventCount = components['schemas']['DailyEventCount'];
-export type DailyStatsResponse = components['schemas']['DailyStatsResponse'];
-export type DeleteAccountRequest = components['schemas']['DeleteAccountRequest'];
-export type EventTypeCount = components['schemas']['EventTypeCount'];
 export type GeneralChatRequest = components['schemas']['GeneralChatRequest'];
 export type GoalResponse = components['schemas']['GoalResponse'];
 export type GoalSummary = components['schemas']['GoalSummary'];
@@ -6108,42 +3792,21 @@ export type IdentityResponse = components['schemas']['IdentityResponse'];
 export type IdentityStatsResponse = components['schemas']['IdentityStatsResponse'];
 export type IdentitySummary = components['schemas']['IdentitySummary'];
 export type IFormFile = components['schemas']['IFormFile'];
-export type InviteBuddyRequest = components['schemas']['InviteBuddyRequest'];
-export type InviteUserRequest = components['schemas']['InviteUserRequest'];
 export type JournalEntryResponse = components['schemas']['JournalEntryResponse'];
 export type JournalImageResponse = components['schemas']['JournalImageResponse'];
-export type JournalReactionResponse = components['schemas']['JournalReactionResponse'];
 export type LinkableHabitStackResponse = components['schemas']['LinkableHabitStackResponse'];
 export type LinkableTaskResponse = components['schemas']['LinkableTaskResponse'];
 export type LoginRequest = components['schemas']['LoginRequest'];
-export type LoginWithTokenRequest = components['schemas']['LoginWithTokenRequest'];
 export type MarkSeenRequest = components['schemas']['MarkSeenRequest'];
-export type MembershipStats = components['schemas']['MembershipStats'];
 export type MilestoneDefinitionResponse = components['schemas']['MilestoneDefinitionResponse'];
-export type NotificationPreferencesResponse = components['schemas']['NotificationPreferencesResponse'];
-export type PaginatedResponseOfAiUsageLogResponse = components['schemas']['PaginatedResponseOfAiUsageLogResponse'];
 export type PostponeTaskRequest = components['schemas']['PostponeTaskRequest'];
 export type ProofIntensity = components['schemas']['ProofIntensity'];
-export type PushNotificationResult = components['schemas']['PushNotificationResult'];
-export type PushNotificationStatsResponse = components['schemas']['PushNotificationStatsResponse'];
-export type PushSubscriptionKeys = components['schemas']['PushSubscriptionKeys'];
-export type PushSubscriptionRequest = components['schemas']['PushSubscriptionRequest'];
-export type PushSubscriptionsStatusResponse = components['schemas']['PushSubscriptionsStatusResponse'];
-export type PushSubscriptionStatusResponse = components['schemas']['PushSubscriptionStatusResponse'];
-export type RegisterRequest = components['schemas']['RegisterRequest'];
 export type ReorderHabitStacksRequest = components['schemas']['ReorderHabitStacksRequest'];
 export type ReorderStackItemsRequest = components['schemas']['ReorderStackItemsRequest'];
-export type RequestLoginLinkRequest = components['schemas']['RequestLoginLinkRequest'];
-export type ResendVerificationRequest = components['schemas']['ResendVerificationRequest'];
-export type SendPushToAllRequest = components['schemas']['SendPushToAllRequest'];
-export type SendPushToUserRequest = components['schemas']['SendPushToUserRequest'];
-export type SessionSummary = components['schemas']['SessionSummary'];
-export type SignupSettingsResponse = components['schemas']['SignupSettingsResponse'];
 export type StreakSummaryResponse = components['schemas']['StreakSummaryResponse'];
 export type TaskItemStatus = components['schemas']['TaskItemStatus'];
 export type TaskResponse = components['schemas']['TaskResponse'];
 export type TaskStreakResponse = components['schemas']['TaskStreakResponse'];
-export type TaskTotals = components['schemas']['TaskTotals'];
 export type TodayHabitStackItemResponse = components['schemas']['TodayHabitStackItemResponse'];
 export type TodayHabitStackResponse = components['schemas']['TodayHabitStackResponse'];
 export type TodayIdentityFeedbackResponse = components['schemas']['TodayIdentityFeedbackResponse'];
@@ -6156,24 +3819,13 @@ export type UpdateHabitStackRequest = components['schemas']['UpdateHabitStackReq
 export type UpdateIdentityRequest = components['schemas']['UpdateIdentityRequest'];
 export type UpdateJournalEntryRequest = components['schemas']['UpdateJournalEntryRequest'];
 export type UpdateLanguageRequest = components['schemas']['UpdateLanguageRequest'];
-export type UpdateMembershipRequest = components['schemas']['UpdateMembershipRequest'];
 export type UpdateMilestoneRequest = components['schemas']['UpdateMilestoneRequest'];
-export type UpdateNotificationPreferencesRequest = components['schemas']['UpdateNotificationPreferencesRequest'];
 export type UpdateProfileRequest = components['schemas']['UpdateProfileRequest'];
-export type UpdateRoleRequest = components['schemas']['UpdateRoleRequest'];
 export type UpdateStackItemRequest = components['schemas']['UpdateStackItemRequest'];
 export type UpdateTaskRequest = components['schemas']['UpdateTaskRequest'];
-export type UserActivityPeriod = components['schemas']['UserActivityPeriod'];
-export type UserActivityResponse = components['schemas']['UserActivityResponse'];
 export type UserMilestoneResponse = components['schemas']['UserMilestoneResponse'];
-export type UserPushStatus = components['schemas']['UserPushStatus'];
 export type UserResponse = components['schemas']['UserResponse'];
 export type UserStatsResponse = components['schemas']['UserStatsResponse'];
-export type VerifyEmailRequest = components['schemas']['VerifyEmailRequest'];
-export type WaitlistEntryResponse = components['schemas']['WaitlistEntryResponse'];
-export type WaitlistSignupRequest = components['schemas']['WaitlistSignupRequest'];
-export type WhitelistCheckResponse = components['schemas']['WhitelistCheckResponse'];
-export type WhitelistEntryResponse = components['schemas']['WhitelistEntryResponse'];
 export type YesterdayCommitmentResponse = components['schemas']['YesterdayCommitmentResponse'];
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;

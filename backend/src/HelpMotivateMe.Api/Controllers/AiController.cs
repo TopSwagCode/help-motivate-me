@@ -6,10 +6,12 @@ using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Core.Localization;
+using HelpMotivateMe.Core.Options;
 using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace HelpMotivateMe.Api.Controllers;
 
@@ -24,21 +26,38 @@ public class AiController : ApiControllerBase
 
     private readonly IResourceAuthorizationService _auth;
     private readonly AppDbContext _db;
+    private readonly AiOptions _options;
     private readonly ILogger<AiController> _logger;
     private readonly IOpenAiService _openAiService;
 
-    public AiController(IOpenAiService openAiService, ILogger<AiController> logger, AppDbContext db,
+    public AiController(IOpenAiService openAiService, IOptions<AiOptions> options, ILogger<AiController> logger,
+        AppDbContext db,
         IResourceAuthorizationService auth)
     {
         _openAiService = openAiService;
+        _options = options.Value;
         _logger = logger;
         _db = db;
         _auth = auth;
     }
 
+    [HttpGet("status")]
+    [AllowAnonymous]
+    public ActionResult<AiStatusResponse> GetStatus()
+    {
+        return Ok(new AiStatusResponse(
+            _options.IsEnabled,
+            _options.IsEnabled ? _options.Provider : null,
+            _options.IsEnabled ? _options.ChatModel : null,
+            _options.IsTranscriptionEnabled,
+            _options.IsTranscriptionEnabled ? _options.TranscriptionModel : null));
+    }
+
     [HttpPost("onboarding/chat")]
     public async Task StreamChat([FromBody] ChatRequest request, CancellationToken cancellationToken)
     {
+        if (!await EnsureAiEnabledAsync(cancellationToken)) return;
+
         var userId = _auth.GetCurrentUserId();
 
         Response.ContentType = "text/event-stream";
@@ -85,6 +104,9 @@ public class AiController : ApiControllerBase
         IFormFile file,
         CancellationToken cancellationToken)
     {
+        if (!_options.IsTranscriptionEnabled)
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, new { message = "AI transcription is not configured." });
+
         var userId = _auth.GetCurrentUserId();
 
         if (file == null || file.Length == 0) return BadRequest("No audio file provided");
@@ -118,6 +140,8 @@ public class AiController : ApiControllerBase
     [HttpPost("general/chat")]
     public async Task StreamGeneralChat([FromBody] GeneralChatRequest request, CancellationToken cancellationToken)
     {
+        if (!await EnsureAiEnabledAsync(cancellationToken)) return;
+
         var userId = _auth.GetCurrentUserId();
 
         Response.ContentType = "text/event-stream";
@@ -178,6 +202,9 @@ public class AiController : ApiControllerBase
     [HttpGet("context")]
     public async Task<ActionResult<AiContextResponse>> GetAiContext(CancellationToken cancellationToken)
     {
+        if (!_options.IsEnabled)
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, new { message = "AI features are not configured." });
+
         var userId = _auth.GetCurrentUserId();
 
         var identities = await _db.Identities
@@ -202,6 +229,9 @@ public class AiController : ApiControllerBase
         [FromBody] CreateIdentityFromAiRequest request,
         CancellationToken cancellationToken)
     {
+        if (!_options.IsEnabled)
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, new { message = "AI features are not configured." });
+
         var userId = _auth.GetCurrentUserId();
 
         var identity = new Identity
@@ -227,5 +257,14 @@ public class AiController : ApiControllerBase
             0, 0, 0, 0, 0, 0, 0, 0, 0,
             identity.CreatedAt
         ));
+    }
+
+    private async Task<bool> EnsureAiEnabledAsync(CancellationToken cancellationToken)
+    {
+        if (_options.IsEnabled) return true;
+
+        Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
+        await Response.WriteAsJsonAsync(new { message = "AI features are not configured." }, cancellationToken);
+        return false;
     }
 }

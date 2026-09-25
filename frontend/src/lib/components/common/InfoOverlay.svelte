@@ -140,7 +140,7 @@
 									{$t('common.info.moreQuestions')}
 								</p>
 								<a
-									href="/faq"
+									href="/today"
 									class="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold text-sm group transition-colors"
 								>
 									<span>{$t('common.info.visitFaq')}</span>

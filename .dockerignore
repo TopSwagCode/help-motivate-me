@@ -1,0 +1,15 @@
+.git
+.github
+.vscode
+.devcontainer
+**/bin
+**/obj
+**/build
+**/.svelte-kit
+**/node_modules
+**/.env
+**/.env.*
+!**/.env.example
+backend/uploads
+data
+*.log

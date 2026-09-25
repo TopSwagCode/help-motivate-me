@@ -60,18 +60,7 @@ public class JournalController : ApiControllerBase
             .Include(j => j.TaskItem)
             .Include(j => j.Author)
             .Include(j => j.Images.OrderBy(i => i.SortOrder))
-            .Include(j => j.Reactions)
-            .ThenInclude(r => r.User)
             .Where(j => j.UserId == userId);
-
-        // Apply filter based on who authored the entry
-        if (filter == "own")
-            // Only entries written by the user themselves (AuthorUserId is null for legacy or equals userId)
-            query = query.Where(j => j.AuthorUserId == null || j.AuthorUserId == userId);
-        else if (filter == "buddies")
-            // Only entries written by buddies (AuthorUserId is set and not equal to userId)
-            query = query.Where(j => j.AuthorUserId != null && j.AuthorUserId != userId);
-        // "all" or no filter = return everything
 
         var entries = await query
             .OrderByDescending(j => j.EntryDate)
@@ -91,8 +80,6 @@ public class JournalController : ApiControllerBase
             .Include(j => j.TaskItem)
             .Include(j => j.Author)
             .Include(j => j.Images.OrderBy(i => i.SortOrder))
-            .Include(j => j.Reactions)
-            .ThenInclude(r => r.User)
             .FirstOrDefaultAsync(j => j.Id == id && j.UserId == userId);
 
         if (entry == null) return NotFound();
@@ -295,64 +282,6 @@ public class JournalController : ApiControllerBase
         return NoContent();
     }
 
-    // Reaction endpoints
-    [HttpPost("{entryId:guid}/reactions")]
-    public async Task<ActionResult<JournalReactionResponse>> AddReaction(Guid entryId,
-        [FromBody] AddJournalReactionRequest request)
-    {
-        var userId = _auth.GetCurrentUserId();
-
-        // Verify the entry exists and user has access (either owns it or is a buddy)
-        var entry = await _db.JournalEntries
-            .FirstOrDefaultAsync(j => j.Id == entryId);
-
-        if (entry == null) return NotFound();
-        if (!await _auth.IsOwnerOrBuddyAsync(entry.UserId)) return NotFound();
-
-        // Check if user already reacted with this emoji
-        var existingReaction = await _db.JournalReactions
-            .FirstOrDefaultAsync(r => r.JournalEntryId == entryId && r.UserId == userId && r.Emoji == request.Emoji);
-
-        if (existingReaction != null) return BadRequest(new { message = "You have already added this reaction" });
-
-        var user = await _db.Users.FindAsync(userId);
-
-        var reaction = new JournalReaction
-        {
-            JournalEntryId = entryId,
-            UserId = userId,
-            Emoji = request.Emoji
-        };
-
-        _db.JournalReactions.Add(reaction);
-        await _db.SaveChangesAsync();
-
-        return Ok(new JournalReactionResponse(
-            reaction.Id,
-            reaction.Emoji,
-            reaction.UserId,
-            user!.DisplayName ?? user.Email,
-            reaction.CreatedAt
-        ));
-    }
-
-    [HttpDelete("{entryId:guid}/reactions/{reactionId:guid}")]
-    public async Task<IActionResult> RemoveReaction(Guid entryId, Guid reactionId)
-    {
-        var userId = _auth.GetCurrentUserId();
-
-        // Only allow removing own reactions
-        var reaction = await _db.JournalReactions
-            .FirstOrDefaultAsync(r => r.Id == reactionId && r.JournalEntryId == entryId && r.UserId == userId);
-
-        if (reaction == null) return NotFound();
-
-        _db.JournalReactions.Remove(reaction);
-        await _db.SaveChangesAsync();
-
-        return NoContent();
-    }
-
     // Endpoints to get linkable items for dropdowns
     [HttpGet("linkable/habit-stacks")]
     public async Task<ActionResult<List<LinkableHabitStackResponse>>> GetLinkableHabitStacks()
@@ -396,19 +325,12 @@ public class JournalController : ApiControllerBase
             entry.TaskItemId,
             entry.TaskItem?.Title,
             entry.AuthorUserId,
-            entry.Author != null ? entry.Author.DisplayName ?? entry.Author.Email : null,
+            entry.Author?.DisplayName,
             entry.Images.Select(i => new JournalImageResponse(
                 i.Id,
                 i.FileName,
                 _storage.GetPresignedUrl(i.S3Key),
                 i.SortOrder
-            )),
-            entry.Reactions.Select(r => new JournalReactionResponse(
-                r.Id,
-                r.Emoji,
-                r.UserId,
-                r.User.DisplayName ?? r.User.Email,
-                r.CreatedAt
             )),
             entry.CreatedAt,
             entry.UpdatedAt

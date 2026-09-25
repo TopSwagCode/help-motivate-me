@@ -63,10 +63,9 @@ public class MilestonesController : ApiControllerBase
     }
 
     /// <summary>
-    ///     Get all milestone definitions (admin only).
+    ///     Get all milestone definitions.
     /// </summary>
     [HttpGet("definitions")]
-    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<IEnumerable<MilestoneDefinitionResponse>>> GetDefinitions()
     {
         var definitions = await _milestoneService.GetAllDefinitionsAsync();
@@ -74,10 +73,9 @@ public class MilestonesController : ApiControllerBase
     }
 
     /// <summary>
-    ///     Create a new milestone definition (admin only).
+    ///     Create a new milestone definition.
     /// </summary>
     [HttpPost("definitions")]
-    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<MilestoneDefinitionResponse>> CreateDefinition(
         [FromBody] CreateMilestoneRequest request)
     {
@@ -86,10 +84,9 @@ public class MilestonesController : ApiControllerBase
     }
 
     /// <summary>
-    ///     Update a milestone definition (admin only).
+    ///     Update a milestone definition.
     /// </summary>
     [HttpPut("definitions/{id}")]
-    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<MilestoneDefinitionResponse>> UpdateDefinition(Guid id,
         [FromBody] UpdateMilestoneRequest request)
     {
@@ -100,10 +97,9 @@ public class MilestonesController : ApiControllerBase
     }
 
     /// <summary>
-    ///     Toggle milestone active status (admin only).
+    ///     Toggle milestone active status.
     /// </summary>
     [HttpPatch("definitions/{id}/toggle")]
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> ToggleDefinition(Guid id, [FromBody] ToggleMilestoneRequest request)
     {
         var success = await _milestoneService.ToggleDefinitionAsync(id, request.IsActive);
@@ -113,10 +109,9 @@ public class MilestonesController : ApiControllerBase
     }
 
     /// <summary>
-    ///     Delete a milestone definition (admin only).
+    ///     Delete a milestone definition.
     /// </summary>
     [HttpDelete("definitions/{id}")]
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteDefinition(Guid id)
     {
         var success = await _milestoneService.DeleteDefinitionAsync(id);

@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
-import type { User, LoginRequest, RegisterRequest } from '$lib/types';
-import { apiGet, apiPost, getOAuthUrl, ApiError, NetworkError } from '$lib/api/client';
+import type { User, LoginRequest } from '$lib/types';
+import { apiGet, apiPost, NetworkError } from '$lib/api/client';
 import { connectionStore } from '$lib/stores/connection';
 
 interface AuthState {
@@ -54,28 +54,9 @@ function createAuthStore() {
 				return { success: true };
 			} catch (error) {
 				update((state) => ({ ...state, loading: false }));
-				const apiError = error instanceof ApiError ? error : null;
 				return {
 					success: false,
-					error: error instanceof Error ? error.message : 'Login failed',
-					code: apiError?.code,
-					email: apiError?.data?.email as string | undefined
-				};
-			}
-		},
-
-		async register(data: RegisterRequest) {
-			update((state) => ({ ...state, loading: true }));
-			try {
-				const response = await apiPost<{ message: string; email: string }>('/auth/register', data);
-				update((state) => ({ ...state, loading: false }));
-				return { success: true, email: response.email };
-			} catch (error) {
-				update((state) => ({ ...state, loading: false }));
-				return {
-					success: false,
-					error: error instanceof Error ? error.message : 'Registration failed',
-					code: error instanceof ApiError ? error.code : undefined
+					error: error instanceof Error ? error.message : 'Login failed'
 				};
 			}
 		},
@@ -88,22 +69,6 @@ function createAuthStore() {
 			}
 			set({ user: null, loading: false, initialized: true, networkError: false });
 			window.location.href = '/';
-		},
-
-		loginWithGitHub() {
-			window.location.href = getOAuthUrl('GitHub');
-		},
-
-		loginWithGoogle() {
-			window.location.href = getOAuthUrl('Google');
-		},
-
-		loginWithLinkedIn() {
-			window.location.href = getOAuthUrl('LinkedIn');
-		},
-
-		loginWithFacebook() {
-			window.location.href = getOAuthUrl('Facebook');
 		},
 
 		setUser(user: User) {

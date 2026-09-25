@@ -69,8 +69,12 @@ public class GoalsController : ApiControllerBase
     {
         var userId = _auth.GetCurrentUserId();
 
+        if (request.IdentityId.HasValue && !await IdentityBelongsToUser(request.IdentityId.Value, userId))
+            return BadRequest(new { message = "Identity not found" });
+
         var goal = new Goal
         {
+            Id = Guid.NewGuid(),
             UserId = userId,
             Title = request.Title,
             Description = request.Description,
@@ -100,6 +104,9 @@ public class GoalsController : ApiControllerBase
     public async Task<ActionResult<GoalResponse>> UpdateGoal(Guid id, [FromBody] UpdateGoalRequest request)
     {
         var userId = _auth.GetCurrentUserId();
+
+        if (request.IdentityId.HasValue && !await IdentityBelongsToUser(request.IdentityId.Value, userId))
+            return BadRequest(new { message = "Identity not found" });
 
         var goal = await _db.Goals
             .Include(g => g.Tasks)
@@ -189,6 +196,11 @@ public class GoalsController : ApiControllerBase
         await _db.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    private Task<bool> IdentityBelongsToUser(Guid identityId, Guid userId)
+    {
+        return _db.Identities.AnyAsync(identity => identity.Id == identityId && identity.UserId == userId);
     }
 
     private static GoalResponse MapToResponse(Goal goal)

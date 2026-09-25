@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using HelpMotivateMe.Core.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HelpMotivateMe.Api.Controllers;
@@ -37,13 +36,4 @@ public abstract class ApiControllerBase : ControllerBase
         return newSessionId;
     }
 
-    /// <summary>
-    ///     Gets the authenticated user's role from claims.
-    /// </summary>
-    protected UserRole GetUserRole()
-    {
-        var roleClaim = User.FindFirstValue(ClaimTypes.Role);
-        if (roleClaim != null && Enum.TryParse<UserRole>(roleClaim, out var role)) return role;
-        return UserRole.User;
-    }
 }

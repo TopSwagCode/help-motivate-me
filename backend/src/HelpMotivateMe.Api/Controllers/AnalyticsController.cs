@@ -98,9 +98,8 @@ public class AnalyticsController : ApiControllerBase
                         t.CompletedAt.Value <= today)
             .GroupBy(t => t.CompletedAt!.Value)
             .Select(g => new HeatmapDataResponse(g.Key, g.Count()))
-            .OrderBy(x => x.Date)
             .ToListAsync();
 
-        return Ok(heatmapData);
+        return Ok(heatmapData.OrderBy(x => x.Date));
     }
 }

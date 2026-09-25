@@ -80,6 +80,7 @@ public class IdentitiesController : ApiControllerBase
 
         var identity = new Identity
         {
+            Id = Guid.NewGuid(),
             UserId = userId,
             Name = request.Name,
             Description = request.Description,

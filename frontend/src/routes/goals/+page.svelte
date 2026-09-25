@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
+	import { aiConfig } from '$lib/stores/aiConfig';
 	import { commandBar } from '$lib/stores/commandBar';
 	import { t, locale } from 'svelte-i18n';
 	import { get } from 'svelte/store';
@@ -95,7 +96,7 @@
 					</div>
 					<h3 class="text-lg font-medium text-cocoa-800 mb-2">{$t('goals.emptyTitle')}</h3>
 					<p class="text-cocoa-500 mb-4">{$t('goals.emptyDescription')}</p>
-					<p class="text-cocoa-500 text-sm mb-6 flex items-center justify-center gap-1 flex-wrap">
+					{#if $aiConfig.isEnabled}<p class="text-cocoa-500 text-sm mb-6 flex items-center justify-center gap-1 flex-wrap">
 						{$t('goals.emptyHowTo')}
 						<button
 							type="button"
@@ -107,7 +108,7 @@
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
 							</svg>
 						</button>
-					</p>
+					</p>{/if}
 					<button onclick={openModal} class="btn-primary">{$t('goals.createFirst')}</button>
 				</div>
 			</div>

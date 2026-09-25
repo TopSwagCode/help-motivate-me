@@ -2,24 +2,21 @@
 	import '../app.css';
 	import { page } from '$app/stores';
 	import { auth } from '$lib/stores/auth';
+	import { aiConfig } from '$lib/stores/aiConfig';
 	import { commandBar } from '$lib/stores/commandBar';
 	import { milestoneStore } from '$lib/stores/milestones';
 	import { t } from 'svelte-i18n';
 	import TopNav from '$lib/components/layout/TopNav.svelte';
 	import BottomNav from '$lib/components/layout/BottomNav.svelte';
-	import BetaBanner from '$lib/components/layout/BetaBanner.svelte';
 	import CommandBar from '$lib/components/ai/CommandBar.svelte';
 	import PWAReloadPrompt from '$lib/components/PWAReloadPrompt.svelte';
-	import PushPermissionPrompt from '$lib/components/PushPermissionPrompt.svelte';
 	import OfflineBanner from '$lib/components/OfflineBanner.svelte';
 	import ConnectionErrorOverlay from '$lib/components/ConnectionErrorOverlay.svelte';
 	import GuidedTour from '$lib/components/tour/GuidedTour.svelte';
 	import IdentityProofModal from '$lib/components/today/IdentityProofModal.svelte';
 	import HelpPopup from '$lib/components/help/HelpPopup.svelte';
 	import MilestoneCelebration from '$lib/components/milestones/MilestoneCelebration.svelte';
-	import NotificationFabOverlay from '$lib/components/NotificationFabOverlay.svelte';
 	import { initI18n, setLocale, getLocaleFromLanguage } from '$lib/i18n';
-	import { getPushStatus } from '$lib/services/pushNotifications';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
@@ -40,8 +37,6 @@
 	let authChecked = $state(false);
 	let showProofModal = $state(false);
 	let showHelpPopup = $state(false);
-	let showNotificationFab = $state(false);
-	let showNotificationOverlay = $state(false);
 
 	// Initialize i18n and auth on mount
 	onMount(async () => {
@@ -51,7 +46,7 @@
 		
 		// Check if user is logged in (validates cookie with backend)
 		if (browser) {
-			await auth.init();
+			await Promise.all([auth.init(), aiConfig.init()]);
 			authChecked = true;
 		}
 	});
@@ -66,21 +61,6 @@
 		}
 	});
 
-	// Check if we should show the notification FAB
-	$effect(() => {
-		if (authChecked && $auth.user && browser) {
-			checkNotificationFab();
-		}
-	});
-
-	async function checkNotificationFab() {
-		if (localStorage.getItem('notification_fab_dismissed') === 'true') return;
-		// Ask the backend if the user has any active push subscriptions
-		const status = await getPushStatus();
-		if (status.subscribed) return;
-		showNotificationFab = true;
-	}
-
 	let { children } = $props();
 
 	// Sync locale with user's preferred language when auth state changes
@@ -92,7 +72,7 @@
 	});
 
 	// Routes that should NOT show the nav
-	const publicRoutes = ['/', '/auth/login', '/auth/register', '/auth/callback', '/faq', '/privacy', '/terms', '/pricing', '/about', '/contact'];
+	const publicRoutes = ['/', '/auth/login', '/about'];
 
 	// Check if user is currently in onboarding (not yet completed)
 	function isInOnboarding(): boolean {
@@ -114,7 +94,7 @@
 	function handleGlobalKeydown(e: KeyboardEvent) {
 		if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
 			e.preventDefault();
-			if (shouldShowFullNav()) {
+			if (shouldShowFullNav() && $aiConfig.isEnabled) {
 				commandBar.toggle();
 			}
 		}
@@ -212,14 +192,8 @@
 		<!-- PWA Update Prompt -->
 		<PWAReloadPrompt />
 
-		<!-- Push Notification Permission Prompt -->
-		<PushPermissionPrompt />
-
 		<!-- Offline Banner (for minor offline state, not full overlay) -->
 		<OfflineBanner />
-
-		<!-- Beta Banner (shown on all pages) -->
-		<BetaBanner />
 
 		{#if shouldShowNav()}
 			<TopNav hideUserMenu={isInOnboarding()} onHelpClick={() => showHelpPopup = true} />
@@ -241,7 +215,7 @@
 	{/if}
 
 	<!-- Command Bar (Cmd+K / Ctrl+K) -->
-	{#if shouldShowFullNav()}
+	{#if shouldShowFullNav() && $aiConfig.isEnabled}
 		<CommandBar
 			isOpen={$commandBar}
 			onClose={() => commandBar.close()}
@@ -252,40 +226,15 @@
 			onCreateIdentityProof={handleCreateIdentityProof}
 		/>
 
+	{/if}
+
+	{#if shouldShowFullNav()}
 		<!-- Identity Proof Modal -->
 		<IdentityProofModal
 			isOpen={showProofModal}
 			onClose={() => showProofModal = false}
 			onProofCreated={() => showProofModal = false}
 		/>
-
-		<!-- Floating AI Assistant Button -->
-		<div class="fixed bottom-24 right-4 sm:right-6 z-30 animate-wiggle">
-			<button
-				type="button"
-				onclick={() => commandBar.open()}
-				data-tour="ai-assistant"
-				class="group relative w-12 h-12 sm:w-14 sm:h-14
-				       bg-gradient-to-r from-primary-500 to-primary-600
-				       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110
-				       transition-all duration-300 flex items-center justify-center
-				       touch-manipulation"
-				title="AI Assistant (⌘K / Ctrl+K)"
-				aria-label="Open AI Assistant"
-			>
-				<span class="absolute right-full mr-3 px-3 py-1.5 bg-cocoa-900 text-white text-sm font-medium rounded-2xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-					Commands
-				</span>
-				<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M13 10V3L4 14h7v7l9-11h-7z"
-					/>
-				</svg>
-			</button>
-		</div>
 
 		<!-- Floating Identity Proof Button -->
 		<div class="fixed bottom-40 right-4 sm:right-6 z-30 animate-wiggle" style="animation-delay: 2.5s;">
@@ -315,43 +264,6 @@
 				</svg>
 			</button>
 		</div>
-
-		<!-- Floating Notification Button -->
-		{#if showNotificationFab}
-			<div class="fixed bottom-56 right-4 sm:right-6 z-30 animate-wiggle" style="animation-delay: 2s;">
-				<button
-					type="button"
-					onclick={() => showNotificationOverlay = true}
-					class="group relative w-12 h-12 sm:w-14 sm:h-14
-					       bg-gradient-to-r from-primary-300 to-primary-400
-					       text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110
-					       transition-all duration-300 flex items-center justify-center
-					       touch-manipulation"
-					title={$t('notificationFab.tooltip')}
-					aria-label={$t('notificationFab.tooltip')}
-				>
-					<span class="absolute right-full mr-3 px-3 py-1.5 bg-cocoa-900 text-white text-sm font-medium rounded-2xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-						{$t('notificationFab.tooltip')}
-					</span>
-					<!-- Bell with slash icon -->
-					<svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-						/>
-						<line x1="3" y1="3" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-					</svg>
-				</button>
-			</div>
-		{/if}
-
-		<!-- Notification FAB Overlay -->
-		<NotificationFabOverlay
-			isOpen={showNotificationOverlay}
-			onClose={() => { showNotificationOverlay = false; showNotificationFab = false; }}
-		/>
 
 		<!-- Help Popup -->
 		<HelpPopup
