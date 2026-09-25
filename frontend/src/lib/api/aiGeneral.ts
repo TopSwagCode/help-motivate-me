@@ -39,6 +39,8 @@ export interface HabitStackPreviewData {
 	name: string;
 	description?: string | null;
 	triggerCue: string;
+	oddWeekDays?: number;
+	evenWeekDays?: number;
 	identityId?: string | null;
 	identityName?: string | null;
 	reasoning?: string | null;
@@ -178,6 +180,8 @@ function normalizePreviewData(raw: Record<string, unknown>, type: string): Recor
 	// HabitStack-specific fields
 	if (type === 'habitStack') {
 		result.triggerCue = raw.TriggerCue ?? raw.triggerCue;
+		result.oddWeekDays = raw.OddWeekDays ?? raw.oddWeekDays ?? 127;
+		result.evenWeekDays = raw.EvenWeekDays ?? raw.evenWeekDays ?? 127;
 		const rawHabits = (raw.Habits ?? raw.habits) as Array<Record<string, unknown>> | undefined;
 		if (rawHabits) {
 			result.habits = rawHabits.map(h => ({

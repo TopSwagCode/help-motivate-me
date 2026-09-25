@@ -152,7 +152,6 @@ public class IdentitiesController : ApiControllerBase
             identity.Id,
             identity.Name,
             completedTasks,
-            0, // Streak no longer tracked for tasks
             completedTasks,
             reinforcementMessage
         ));

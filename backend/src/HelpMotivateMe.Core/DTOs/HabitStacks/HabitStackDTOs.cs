@@ -1,3 +1,5 @@
+using HelpMotivateMe.Core.Enums;
+
 namespace HelpMotivateMe.Core.DTOs.HabitStacks;
 
 public record CreateHabitStackRequest(
@@ -5,7 +7,9 @@ public record CreateHabitStackRequest(
     string? Description,
     Guid? IdentityId,
     string? TriggerCue,
-    List<HabitStackItemRequest>? Items
+    List<HabitStackItemRequest>? Items,
+    HabitStackDays OddWeekDays = HabitStackDays.EveryDay,
+    HabitStackDays EvenWeekDays = HabitStackDays.EveryDay
 );
 
 public record UpdateHabitStackRequest(
@@ -13,7 +17,9 @@ public record UpdateHabitStackRequest(
     string? Description,
     Guid? IdentityId,
     string? TriggerCue,
-    bool IsActive
+    bool IsActive,
+    HabitStackDays OddWeekDays = HabitStackDays.EveryDay,
+    HabitStackDays EvenWeekDays = HabitStackDays.EveryDay
 );
 
 public record HabitStackItemRequest(
@@ -30,6 +36,8 @@ public record HabitStackResponse(
     string? IdentityColor,
     string? TriggerCue,
     bool IsActive,
+    HabitStackDays OddWeekDays,
+    HabitStackDays EvenWeekDays,
     IEnumerable<HabitStackItemResponse> Items,
     DateTime CreatedAt
 );
@@ -38,9 +46,7 @@ public record HabitStackItemResponse(
     Guid Id,
     string CueDescription,
     string HabitDescription,
-    int SortOrder,
-    int CurrentStreak,
-    int LongestStreak
+    int SortOrder
 );
 
 public record AddStackItemRequest(
@@ -78,16 +84,13 @@ public record TodayHabitStackResponse(
 public record TodayHabitStackItemResponse(
     Guid Id,
     string HabitDescription,
-    bool IsCompletedToday,
-    int CurrentStreak
+    bool IsCompletedToday
 );
 
 // Response DTOs for habit completion
 public record HabitStackItemCompletionResponse(
     Guid ItemId,
     string HabitDescription,
-    int CurrentStreak,
-    int LongestStreak,
     bool IsCompleted
 );
 
@@ -98,8 +101,6 @@ public record HabitStackItemCompletionResult(
     Guid ItemId,
     Guid HabitStackId,
     string HabitDescription,
-    int CurrentStreak,
-    int LongestStreak,
     bool IsCompleted,
     bool WasNewlyCompleted
 )
@@ -107,7 +108,7 @@ public record HabitStackItemCompletionResult(
     public HabitStackItemCompletionResponse ToResponse()
     {
         return new HabitStackItemCompletionResponse(
-            ItemId, HabitDescription, CurrentStreak, LongestStreak, IsCompleted
+            ItemId, HabitDescription, IsCompleted
         );
     }
 }

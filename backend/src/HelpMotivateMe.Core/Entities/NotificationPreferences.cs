@@ -19,7 +19,6 @@ public class NotificationPreferences
     public bool HabitRemindersEnabled { get; set; } = true;
     public bool GoalRemindersEnabled { get; set; } = true;
     public bool DailyDigestEnabled { get; set; } = true;
-    public bool StreakAlertsEnabled { get; set; } = true;
     public bool MotivationalQuotesEnabled { get; set; } = true;
     public bool WeeklyReviewEnabled { get; set; } = true;
     public bool BuddyUpdatesEnabled { get; set; } = true;

@@ -16,8 +16,6 @@ public class HabitStackItemConfiguration : IEntityTypeConfiguration<HabitStackIt
         builder.Property(hsi => hsi.CueDescription).HasColumnType("text").IsRequired();
         builder.Property(hsi => hsi.HabitDescription).HasColumnType("text").IsRequired();
         builder.Property(hsi => hsi.SortOrder).HasDefaultValue(0);
-        builder.Property(hsi => hsi.CurrentStreak).HasDefaultValue(0);
-        builder.Property(hsi => hsi.LongestStreak).HasDefaultValue(0);
         builder.Property(hsi => hsi.CreatedAt).HasDefaultValueSql("NOW()");
 
         builder.HasIndex(hsi => hsi.HabitStackId);

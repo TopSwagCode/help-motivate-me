@@ -126,7 +126,9 @@ public class TestDataBuilder
         string? name = null,
         bool isActive = true,
         int sortOrder = 0,
-        Guid? identityId = null)
+        Guid? identityId = null,
+        HabitStackDays oddWeekDays = HabitStackDays.EveryDay,
+        HabitStackDays evenWeekDays = HabitStackDays.EveryDay)
     {
         var stack = new HabitStack
         {
@@ -136,6 +138,8 @@ public class TestDataBuilder
             Description = _faker.Lorem.Sentence(),
             IdentityId = identityId,
             IsActive = isActive,
+            OddWeekDays = oddWeekDays,
+            EvenWeekDays = evenWeekDays,
             SortOrder = sortOrder,
             CreatedAt = DateTime.UtcNow
         };
@@ -157,8 +161,6 @@ public class TestDataBuilder
             CueDescription = cueDescription ?? _faker.Lorem.Sentence(3),
             HabitDescription = habitDescription ?? _faker.Lorem.Sentence(3),
             SortOrder = sortOrder,
-            CurrentStreak = 0,
-            LongestStreak = 0,
             CreatedAt = DateTime.UtcNow
         };
         _db.HabitStackItems.Add(item);

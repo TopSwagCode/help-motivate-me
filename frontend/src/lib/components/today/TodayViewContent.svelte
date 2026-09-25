@@ -122,14 +122,6 @@
 		return 'text-cocoa-500';
 	}
 
-	function getStreakEmoji(streak: number): string {
-		if (streak >= 30) return '🏆';
-		if (streak >= 14) return '💪';
-		if (streak >= 7) return '🔥';
-		if (streak >= 3) return '⚡';
-		return '';
-	}
-
 	async function handleToggleHabitItem(itemId: string) {
 		if (readonly || !onToggleHabitItem) return;
 		await onToggleHabitItem(itemId);
@@ -438,10 +430,7 @@
 												{item.habitDescription}
 											</span>
 											
-											<!-- Streak or pending indicator -->
-											{#if item.currentStreak > 0}
-												<span class="text-[10px] text-orange-500 flex-shrink-0">🔥{item.currentStreak}</span>
-											{:else if !item.isCompletedToday}
+											{#if !item.isCompletedToday}
 												<span class="text-[10px] text-gray-400 flex-shrink-0">{$t('today.pending')}</span>
 											{/if}
 										</div>
@@ -491,10 +480,7 @@
 												{item.habitDescription}
 											</span>
 											
-											<!-- Streak or tap hint -->
-											{#if item.currentStreak > 0}
-												<span class="text-[10px] text-orange-500 flex-shrink-0">🔥{item.currentStreak}</span>
-											{:else if !item.isCompletedToday}
+											{#if !item.isCompletedToday}
 												<span class="text-[10px] text-gray-400 opacity-0 group-hover/item:opacity-100 transition-opacity flex-shrink-0">
 													{$t('today.tapToComplete')}
 												</span>

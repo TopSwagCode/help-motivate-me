@@ -4,12 +4,10 @@
 	import { auth } from '$lib/stores/auth';
 	import { t, locale } from 'svelte-i18n';
 	import { get } from 'svelte/store';
-	import { getStreakSummary, getCompletionRates, getHeatmapData } from '$lib/api/analytics';
-	import StreakBadge from '$lib/components/analytics/StreakBadge.svelte';
+	import { getCompletionRates, getHeatmapData } from '$lib/api/analytics';
 	import ErrorState from '$lib/components/shared/ErrorState.svelte';
-	import type { StreakSummary, CompletionRate, HeatmapData } from '$lib/types';
+	import type { CompletionRate, HeatmapData } from '$lib/types';
 
-	let streakSummary = $state<StreakSummary | null>(null);
 	let completionRates = $state<CompletionRate | null>(null);
 	let heatmapData = $state<HeatmapData[]>([]);
 	let loading = $state(true);
@@ -32,12 +30,10 @@
 		loading = true;
 		error = '';
 		try {
-			const [streaks, rates, heatmap] = await Promise.all([
-				getStreakSummary(),
+			const [rates, heatmap] = await Promise.all([
 				getCompletionRates(),
 				getHeatmapData(90)
 			]);
-			streakSummary = streaks;
 			completionRates = rates;
 			heatmapData = heatmap;
 		} catch (e) {
@@ -81,22 +77,6 @@
 				<ErrorState message={error} onRetry={loadAnalytics} size="md" />
 			</div>
 		{:else}
-			<!-- Summary Cards -->
-			<div class="grid gap-4 sm:grid-cols-3 mb-8">
-				<div class="card p-4">
-					<p class="text-sm text-cocoa-500">{$t('analytics.summary.totalHabits')}</p>
-					<p class="text-2xl font-bold text-cocoa-800">{streakSummary?.totalHabits || 0}</p>
-				</div>
-				<div class="card p-4">
-					<p class="text-sm text-cocoa-500">{$t('analytics.summary.activeStreaks')}</p>
-					<p class="text-2xl font-bold text-green-600">{streakSummary?.activeStreaks || 0}</p>
-				</div>
-				<div class="card p-4">
-					<p class="text-sm text-cocoa-500">{$t('analytics.summary.longestStreak')}</p>
-					<p class="text-2xl font-bold text-orange-600">{streakSummary?.longestActiveStreak || 0} {$t('analytics.streak.days')}</p>
-				</div>
-			</div>
-
 			<!-- Completion Rates -->
 			{#if completionRates}
 				<div class="card p-6 mb-8">
@@ -173,43 +153,6 @@
 						<div class="w-3 h-3 rounded-sm bg-green-500"></div>
 						<span>{$t('analytics.heatmap.more')}</span>
 					</div>
-				</div>
-			{/if}
-
-			<!-- Streak Details -->
-			{#if streakSummary && streakSummary.streaks.length > 0}
-				<div class="card p-6">
-					<h2 class="font-semibold text-cocoa-800 mb-4">{$t('analytics.streaks.title')}</h2>
-					<div class="space-y-3">
-						{#each streakSummary.streaks as streak (streak.taskId)}
-							<div class="flex items-center justify-between p-3 bg-warm-cream rounded-2xl">
-								<div>
-									<p class="font-medium text-cocoa-800">{streak.taskTitle}</p>
-									<p class="text-xs text-cocoa-500">
-										{$t('analytics.streaks.longest')}: {streak.longestStreak} {$t('analytics.streak.days')}
-										{#if streak.lastCompletedDate}
-											<span class="mx-1">•</span>
-											{$t('analytics.streaks.last')}: {formatDate(streak.lastCompletedDate)}
-										{/if}
-									</p>
-								</div>
-								<StreakBadge
-									currentStreak={streak.currentStreak}
-									isOnGracePeriod={streak.isOnGracePeriod}
-									daysUntilStreakBreaks={streak.daysUntilStreakBreaks}
-								/>
-							</div>
-						{/each}
-					</div>
-				</div>
-			{:else}
-				<div class="card p-12 text-center">
-					<div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-						<span class="text-3xl">📊</span>
-					</div>
-					<h3 class="text-lg font-medium text-cocoa-800 mb-2">{$t('analytics.empty.title')}</h3>
-					<p class="text-cocoa-500 mb-6">{$t('analytics.empty.description')}</p>
-					<a href="/dashboard" class="btn-primary inline-block">{$t('analytics.empty.goToDashboard')}</a>
 				</div>
 			{/if}
 		{/if}

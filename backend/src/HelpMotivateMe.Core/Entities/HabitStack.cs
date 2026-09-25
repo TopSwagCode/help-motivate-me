@@ -1,3 +1,5 @@
+using HelpMotivateMe.Core.Enums;
+
 namespace HelpMotivateMe.Core.Entities;
 
 public class HabitStack
@@ -15,6 +17,8 @@ public class HabitStack
 
     public int SortOrder { get; set; }
     public bool IsActive { get; set; } = true;
+    public HabitStackDays OddWeekDays { get; set; } = HabitStackDays.EveryDay;
+    public HabitStackDays EvenWeekDays { get; set; } = HabitStackDays.EveryDay;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation properties

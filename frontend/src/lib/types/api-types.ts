@@ -57,6 +57,7 @@ export type { ReorderStackItemsRequest } from './generated/api';
 export type { ReorderHabitStacksRequest } from './generated/api';
 export type { HabitStackItemCompletionResponse } from './generated/api';
 export type { CompleteAllResponse } from './generated/api';
+export type { HabitStackDays } from './generated/api';
 
 // ===== Today View =====
 export type { TodayViewResponse as TodayView } from './generated/api';
@@ -80,8 +81,6 @@ export type IdentityStatus =
 export type TrendDirection = 'Up' | 'Down' | 'Neutral';
 
 // ===== Analytics =====
-export type { TaskStreakResponse as TaskStreak } from './generated/api';
-export type { StreakSummaryResponse as StreakSummary } from './generated/api';
 export type { CompletionRateResponse as CompletionRate } from './generated/api';
 export type { HeatmapDataResponse as HeatmapData } from './generated/api';
 

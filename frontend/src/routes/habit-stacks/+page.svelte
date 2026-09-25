@@ -19,6 +19,7 @@
 	import { getIdentities } from '$lib/api/identities';
 	import InfoOverlay from '$lib/components/common/InfoOverlay.svelte';
 	import ErrorState from '$lib/components/shared/ErrorState.svelte';
+	import SchedulePicker from '$lib/components/habit-stacks/SchedulePicker.svelte';
 	import type {
 		HabitStack,
 		HabitStackItemRequest,
@@ -34,6 +35,8 @@
 	let showCreatePopup = $state(false);
 	let createName = $state('');
 	let createIdentityId = $state<string | null>(null);
+	let createOddWeekDays = $state(127);
+	let createEvenWeekDays = $state(127);
 	let createItems = $state<HabitStackItemRequest[]>([{ cueDescription: '', habitDescription: '' }]);
 	let createLoading = $state(false);
 	let createError = $state('');
@@ -45,6 +48,8 @@
 	let editName = $state('');
 	let editIdentityId = $state<string | null>(null);
 	let editIsActive = $state(true);
+	let editOddWeekDays = $state(127);
+	let editEvenWeekDays = $state(127);
 	let editLoading = $state(false);
 	let editError = $state('');
 
@@ -100,6 +105,8 @@
 	function openCreatePopup() {
 		createName = '';
 		createIdentityId = null;
+		createOddWeekDays = 127;
+		createEvenWeekDays = 127;
 		createItems = [{ cueDescription: '', habitDescription: '' }];
 		createError = '';
 		showCreatePopup = true;
@@ -109,6 +116,8 @@
 		showCreatePopup = false;
 		createName = '';
 		createIdentityId = null;
+		createOddWeekDays = 127;
+		createEvenWeekDays = 127;
 		createItems = [{ cueDescription: '', habitDescription: '' }];
 		createError = '';
 	}
@@ -194,7 +203,9 @@
 				description: null,
 				identityId: createIdentityId,
 				triggerCue: null,
-				items: validItems
+				items: validItems,
+				oddWeekDays: createOddWeekDays,
+				evenWeekDays: createEvenWeekDays
 			});
 			stacks = [stack, ...stacks];
 			closeCreatePopup();
@@ -211,6 +222,8 @@
 		editName = stack.name;
 		editIdentityId = stack.identityId || null;
 		editIsActive = stack.isActive;
+		editOddWeekDays = stack.oddWeekDays;
+		editEvenWeekDays = stack.evenWeekDays;
 		editError = '';
 		newItemCue = '';
 		newItemHabit = '';
@@ -223,6 +236,8 @@
 		editName = '';
 		editIdentityId = null;
 		editIsActive = true;
+		editOddWeekDays = 127;
+		editEvenWeekDays = 127;
 		editError = '';
 		newItemCue = '';
 		newItemHabit = '';
@@ -243,7 +258,9 @@
 				description: editingStack.description ?? null,
 				identityId: editIdentityId,
 				triggerCue: editingStack.triggerCue ?? null,
-				isActive: editIsActive
+				isActive: editIsActive,
+				oddWeekDays: editOddWeekDays,
+				evenWeekDays: editEvenWeekDays
 			});
 			stacks = stacks.map((s) => (s.id === updated.id ? updated : s));
 			editingStack = updated;
@@ -356,12 +373,19 @@
 		}
 	}
 
-	function getStreakEmoji(streak: number): string {
-		if (streak >= 30) return '🏆';
-		if (streak >= 14) return '💪';
-		if (streak >= 7) return '🔥';
-		if (streak >= 3) return '⚡';
-		return '';
+	function formatDays(days: number): string {
+		const dayKeys = ['mondayShort', 'tuesdayShort', 'wednesdayShort', 'thursdayShort', 'fridayShort', 'saturdayShort', 'sundayShort'];
+		return dayKeys
+			.filter((_, index) => (days & (1 << index)) !== 0)
+			.map((key) => get(t)(`habitStacks.schedule.${key}`))
+			.join(', ');
+	}
+
+	function formatSchedule(oddWeekDays: number, evenWeekDays: number): string {
+		if (oddWeekDays === 127 && evenWeekDays === 127) return get(t)('habitStacks.schedule.everyDay');
+		if (oddWeekDays === evenWeekDays) return `${formatDays(oddWeekDays)} · ${get(t)('habitStacks.schedule.everyWeek')}`;
+
+		return `${get(t)('habitStacks.schedule.oddWeeks')}: ${formatDays(oddWeekDays) || '–'} · ${get(t)('habitStacks.schedule.evenWeeks')}: ${formatDays(evenWeekDays) || '–'}`;
 	}
 
 	// Reorder popup functions
@@ -500,6 +524,7 @@
 											>{$t('habitStacks.inactive')}</span
 										>
 									{/if}
+									<span class="text-xs text-cocoa-500">{formatSchedule(stack.oddWeekDays, stack.evenWeekDays)}</span>
 									<span class="text-sm text-cocoa-500"
 										>{stack.items.length} {stack.items.length !== 1 ? $t('habitStacks.habits') : $t('habitStacks.habit')}</span
 									>
@@ -531,13 +556,6 @@
 													<span class="font-medium text-primary-600">{$t('habitStacks.chain.iWill')}</span>
 													{item.habitDescription}
 												</p>
-												{#if item.currentStreak > 0}
-													<span
-														class="inline-flex items-center gap-1 text-xs text-orange-600 mt-1"
-													>
-														{getStreakEmoji(item.currentStreak)} {item.currentStreak} {$t('habitStacks.dayStreak')}
-													</span>
-												{/if}
 											</div>
 										</div>
 									{/each}
@@ -640,6 +658,8 @@
 							</select>
 							<p class="text-xs text-cocoa-500 mt-1">{$t('habitStacks.form.identityHint')}</p>
 						</div>
+
+						<SchedulePicker bind:oddWeekDays={createOddWeekDays} bind:evenWeekDays={createEvenWeekDays} disabled={createLoading} />
 
 						<div>
 							<span class="block text-sm font-medium text-cocoa-700 mb-3">{$t('habitStacks.createPopup.habitChain')}</span>
@@ -806,6 +826,8 @@
 								</select>
 							</div>
 
+							<SchedulePicker bind:oddWeekDays={editOddWeekDays} bind:evenWeekDays={editEvenWeekDays} disabled={editLoading} />
+
 							<div class="flex items-center justify-between">
 								<label for="editActive" class="text-sm font-medium text-cocoa-700">{$t('habitStacks.editPopup.active')}</label>
 								<button
@@ -908,11 +930,6 @@
 														<span class="font-medium text-primary-600">{$t('habitStacks.chain.iWill')}</span>
 														{item.habitDescription}
 													</p>
-													{#if item.currentStreak > 0}
-														<p class="text-xs text-orange-600 mt-2 flex items-center gap-1">
-															{getStreakEmoji(item.currentStreak)} {item.currentStreak} {$t('habitStacks.dayStreak')}
-														</p>
-													{/if}
 													<!-- Edit hint on hover -->
 													<span class="absolute bottom-2 right-10 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-gray-400">
 														{$t('common.clickToEdit')}

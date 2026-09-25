@@ -4,6 +4,7 @@ using HelpMotivateMe.Core.Entities;
 using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace HelpMotivateMe.Infrastructure.Services;
 
@@ -32,11 +33,26 @@ public class TodayViewService : ITodayViewService
     /// </summary>
     public async Task<List<TodayHabitStackResponse>> GetTodayHabitStacksAsync(Guid userId, DateOnly targetDate)
     {
+        var scheduledDay = targetDate.DayOfWeek switch
+        {
+            DayOfWeek.Monday => HabitStackDays.Monday,
+            DayOfWeek.Tuesday => HabitStackDays.Tuesday,
+            DayOfWeek.Wednesday => HabitStackDays.Wednesday,
+            DayOfWeek.Thursday => HabitStackDays.Thursday,
+            DayOfWeek.Friday => HabitStackDays.Friday,
+            DayOfWeek.Saturday => HabitStackDays.Saturday,
+            DayOfWeek.Sunday => HabitStackDays.Sunday,
+            _ => HabitStackDays.None
+        };
+        var isEvenIsoWeek = ISOWeek.GetWeekOfYear(targetDate.ToDateTime(TimeOnly.MinValue)) % 2 == 0;
+        var scheduledDays = isEvenIsoWeek ? nameof(HabitStack.EvenWeekDays) : nameof(HabitStack.OddWeekDays);
+
         var stacks = await _habitStacks
             .Include(s => s.Identity)
             .Include(s => s.Items.OrderBy(i => i.SortOrder))
             .ThenInclude(i => i.Completions.Where(c => c.CompletedDate == targetDate))
-            .Where(s => s.UserId == userId && s.IsActive)
+            .Where(s => s.UserId == userId && s.IsActive &&
+                        (EF.Property<HabitStackDays>(s, scheduledDays) & scheduledDay) != 0)
             .OrderBy(s => s.SortOrder)
             .ThenBy(s => s.Name)
             .ToListAsync();
@@ -52,8 +68,7 @@ public class TodayViewService : ITodayViewService
             s.Items.Select(i => new TodayHabitStackItemResponse(
                 i.Id,
                 i.HabitDescription,
-                i.Completions.Any(),
-                i.CurrentStreak
+                i.Completions.Any()
             )),
             s.Items.Count(i => i.Completions.Any()),
             s.Items.Count

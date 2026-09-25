@@ -28,7 +28,6 @@ public class NotificationPreferencesConfiguration : IEntityTypeConfiguration<Not
         builder.Property(np => np.HabitRemindersEnabled).HasDefaultValue(true);
         builder.Property(np => np.GoalRemindersEnabled).HasDefaultValue(true);
         builder.Property(np => np.DailyDigestEnabled).HasDefaultValue(true);
-        builder.Property(np => np.StreakAlertsEnabled).HasDefaultValue(true);
         builder.Property(np => np.MotivationalQuotesEnabled).HasDefaultValue(true);
         builder.Property(np => np.WeeklyReviewEnabled).HasDefaultValue(true);
         builder.Property(np => np.BuddyUpdatesEnabled).HasDefaultValue(true);

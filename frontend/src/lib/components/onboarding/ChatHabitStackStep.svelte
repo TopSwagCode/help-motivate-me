@@ -33,6 +33,8 @@
 		name: string;
 		description?: string;
 		triggerCue: string;
+		oddWeekDays?: number;
+		evenWeekDays?: number;
 		habits?: HabitItem[];
 		items?: HabitItem[]; // Legacy format support
 		identityId?: string;
@@ -67,6 +69,8 @@
 						name: String(stack.name || ''),
 						description: String(stack.description || ''),
 						triggerCue: String(stack.triggerCue || ''),
+						oddWeekDays: Number(stack.oddWeekDays ?? 127),
+						evenWeekDays: Number(stack.evenWeekDays ?? 127),
 						identityId,
 						items: habits.map((item) => ({
 							cueDescription: item.cueDescription,
@@ -90,6 +94,8 @@
 					name: String(stackData.name || ''),
 					description: String(stackData.description || ''),
 					triggerCue: String(stackData.triggerCue || ''),
+					oddWeekDays: Number(stackData.oddWeekDays ?? 127),
+					evenWeekDays: Number(stackData.evenWeekDays ?? 127),
 					identityId,
 					items: habits.map((item) => ({
 						cueDescription: item.cueDescription,

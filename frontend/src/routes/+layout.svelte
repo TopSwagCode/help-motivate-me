@@ -150,6 +150,8 @@
 			name: data.name,
 			description: data.description ?? null,
 			triggerCue: data.triggerCue,
+			oddWeekDays: data.oddWeekDays ?? 127,
+			evenWeekDays: data.evenWeekDays ?? 127,
 			identityId: data.identityId ?? null,
 			items: data.habits.map((h) => ({
 				cueDescription: h.cueDescription,

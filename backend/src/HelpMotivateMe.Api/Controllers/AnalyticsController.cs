@@ -24,43 +24,11 @@ public class AnalyticsController : ApiControllerBase
         _auth = auth;
     }
 
-    [HttpGet("streaks")]
-    public async Task<ActionResult<StreakSummaryResponse>> GetAllStreaks()
-    {
-        var userId = _auth.GetCurrentUserId();
-        var sessionId = GetSessionId();
-
-        await _analyticsService.LogEventAsync(userId, sessionId, "AnalyticsPageLoaded");
-
-        // Get all tasks using read-only query interface
-        var tasks = await _tasks
-            .Include(t => t.Goal)
-            .Where(t => t.Goal.UserId == userId)
-            .ToListAsync();
-
-        // Without TaskCompletion, we can only show basic stats
-        var streaks = tasks.Select(task => new TaskStreakResponse(
-            task.Id,
-            task.Title,
-            0, // No streak tracking without completions
-            0,
-            task.CompletedAt,
-            false,
-            0
-        )).ToList();
-
-        return Ok(new StreakSummaryResponse(
-            streaks.Count,
-            0,
-            0,
-            streaks
-        ));
-    }
-
     [HttpGet("completion-rates")]
     public async Task<ActionResult<CompletionRateResponse>> GetCompletionRates()
     {
         var userId = _auth.GetCurrentUserId();
+        await _analyticsService.LogEventAsync(userId, GetSessionId(), "AnalyticsPageLoaded");
 
         // Get all tasks for this user using read-only query interface
         var tasks = await _tasks

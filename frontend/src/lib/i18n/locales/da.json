@@ -240,7 +240,7 @@
 			"subtitle": "Du er klar! Dette er din <strong>I dag</strong>-side - dit daglige kontrolcenter.",
 			"hereYouCan": "Her kan du:",
 			"features": {
-				"trackHabits": "Følg dine daglige vanestakke og opbyg striber",
+				"trackHabits": "Følg vanestakke, når de passer ind i din uge",
 				"completeTasks": "Fuldfør opgaver og se dine fremskridt mod mål",
 				"reinforceIdentity": "Forstærk din identitet med hver handling du tager"
 			},
@@ -572,8 +572,6 @@
 				"goalRemindersDescription": "Opdateringer om dine mål og deadlines",
 				"dailyDigest": "Daglig oversigt",
 				"dailyDigestDescription": "Oversigt over dine daglige opgaver og fremskridt",
-				"streakAlerts": "Stribe-advarsler",
-				"streakAlertsDescription": "Advarsler når din stribe er i fare",
 				"motivationalQuotes": "Motiverende citater",
 				"motivationalQuotesDescription": "Inspirerende citater for at holde dig motiveret",
 				"weeklyReview": "Ugentlig gennemgang",
@@ -812,7 +810,32 @@
 		"habits": "vaner",
 		"habit": "vane",
 		"noHabitsYet": "Ingen vaner i denne stak endnu",
-		"dayStreak": "dages stribe",
+		"schedule": {
+			"title": "Hvornår skal stakken vises?",
+			"description": "Vælg de dage, hvor rutinen giver værdi.",
+			"days": "Ugedage",
+			"pattern": "Ugemønster",
+			"everyDay": "Hver dag",
+			"everyWeek": "Hver uge",
+			"twoWeekPattern": "Tougers mønster",
+			"oddWeeks": "Ulige uger",
+			"evenWeeks": "Lige uger",
+			"isoWeekHint": "Lige og ulige uger følger det normale ugenummer fra mandag til søndag.",
+			"monday": "Mandag",
+			"tuesday": "Tirsdag",
+			"wednesday": "Onsdag",
+			"thursday": "Torsdag",
+			"friday": "Fredag",
+			"saturday": "Lørdag",
+			"sunday": "Søndag",
+			"mondayShort": "Man",
+			"tuesdayShort": "Tir",
+			"wednesdayShort": "Ons",
+			"thursdayShort": "Tor",
+			"fridayShort": "Fre",
+			"saturdayShort": "Lør",
+			"sundayShort": "Søn"
+		},
 		"infoCard": {
 			"title": "Vanestabling",
 			"description": "Vanestabling virker ved at knytte en ny vane til noget, du allerede gør. Ved at forankre små forbedringer til eksisterende rutiner reducerer du friktion og gør konsistens nemmere. Over tid danner disse sammenkædede handlinger kraftfulde daglige rytmer, der kører næsten automatisk.",
@@ -1029,7 +1052,7 @@
 	"today": {
 		"title": "I dag",
 		"info": {
-			"description": "<p><strong>I dag</strong> er dit daglige kommandocenter—en fokuseret visning af hvad der betyder mest lige nu.</p><p>Se alle dine vanestakke, opgaver og dagbogsindlæg ét sted, organiseret efter dag.</p><ul><li><strong>7-dages tidslinje:</strong> Se en uge på ét blik for at se hvad der kommer og hvad du har fuldført</li><li><strong>Vanestakke:</strong> Afkryds hver vane i dine daglige rutiner og opbyg striber</li><li><strong>Opgaver & stemmer:</strong> Fuldfør opgaver og se hvordan de bidrager til din identitetsvækst</li><li><strong>Identitetsbeviser / Log sejre:</strong> Registrer øjeblikke hvor du handlede i overensstemmelse med din identitet. Vælg et intensitetsniveau (Let, Moderat, Svær) for at optjene identitetsstemmer og forstærke hvem du er ved at blive</li><li><strong>Hurtige handlinger:</strong> Udskyd opgaver, tilføj dagbogsindlæg eller opret nye vaner på farten</li></ul><p>Fokuser på i dag, men hold altid et øje med i morgen. Små daglige handlinger sammensætter til bemærkelsesværdige langsigtede resultater.</p>"
+			"description": "<p><strong>I dag</strong> er dit daglige kommandocenter—en fokuseret visning af hvad der betyder mest lige nu.</p><p>Se alle dine vanestakke, opgaver og dagbogsindlæg ét sted, organiseret efter dag.</p><ul><li><strong>7-dages tidslinje:</strong> Se en uge på ét blik for at se hvad der kommer og hvad du har fuldført</li><li><strong>Vanestakke:</strong> Se kun rutinerne på de valgte ugedage og i det valgte ugemønster</li><li><strong>Opgaver & stemmer:</strong> Fuldfør opgaver og se hvordan de bidrager til din identitetsvækst</li><li><strong>Identitetsbeviser / Log sejre:</strong> Registrer øjeblikke hvor du handlede i overensstemmelse med din identitet. Vælg et intensitetsniveau (Let, Moderat, Svær) for at optjene identitetsstemmer og forstærke hvem du er ved at blive</li><li><strong>Hurtige handlinger:</strong> Udskyd opgaver, tilføj dagbogsindlæg eller opret nye vaner på farten</li></ul><p>Fokuser på i dag, men hold altid et øje med i morgen. Små daglige handlinger sammensætter til bemærkelsesværdige langsigtede resultater.</p>"
 		},
 		"greeting": {
 			"morning": "Godmorgen",
@@ -1072,7 +1095,6 @@
 		"noIdentity": "Ingen identitet",
 		"snooze1Week": "Udskyd 1 uge",
 		"movedOutsideView": "Flyttet udenfor 7-dages visning",
-		"dayStreak": "dages stribe",
 		"trendUp": "Stigende trend",
 		"trendDown": "Faldende trend",
 		"trendStable": "Stabil",
@@ -1191,17 +1213,10 @@
 	"analytics": {
 		"title": "Analyse",
 		"pageTitle": "Analyse",
-		"streak": {
-			"current": "Nuværende stribe",
-			"longest": "Længste stribe",
-			"days": "dage"
-		},
 		"completionRate": "Fuldførelsesrate",
 		"tasksCompleted": "Opgaver fuldført",
 		"summary": {
-			"totalHabits": "Totale vaner",
-			"activeStreaks": "Aktive striber",
-			"longestStreak": "Længste stribe"
+			"totalHabits": "Totale vaner"
 		},
 		"rates": {
 			"title": "Fuldførelsesrater",
@@ -1218,14 +1233,9 @@
 			"completion": "fuldførelse",
 			"completions": "fuldførelser"
 		},
-		"streaks": {
-			"title": "Vanestriber",
-			"longest": "Længste",
-			"last": "Sidst"
-		},
 		"empty": {
-			"title": "Ingen stribedata endnu",
-			"description": "Fuldfør gentagne opgaver for at begynde at opbygge striber.",
+			"title": "Ingen aktivitet endnu",
+			"description": "Fuldfør opgaver og vaner for at se din aktivitet her.",
 			"goToDashboard": "Gå til dashboard"
 		},
 		"errors": {
@@ -1630,7 +1640,7 @@
 				"tips": [
 					"Dit daglige kontrolcenter der viser opgaver, vaner og sejre",
 					"Brug 7-dages tidslinjen til at planlægge og gennemgå fremskridt",
-					"Fuldfør vaner i rækkefølge for at opbygge kraftfulde striber",
+					"Fuldfør planlagte vaner for at styrke dine identiteter",
 					"Log sejre for at forstærke din identitet gennem dagen"
 				]
 			},
@@ -1727,7 +1737,7 @@
 			"description": "100 vaner fuldført! Sand dedikation."
 		},
 		"habits_5_in_week": {
-			"title": "Ugentlig streak",
+			"title": "Ugentlig rytme",
 			"description": "5 vaner på én uge! Imponerende konsistens."
 		},
 		"first_task": {
@@ -1802,7 +1812,7 @@
 			},
 			"habits": {
 				"title": "Vanestakke",
-				"description": "Dine vanestakke for i dag. Afkryds hver vane, når du fuldfører den, for at opbygge rækker og forstærke din identitet."
+				"description": "Dine vanestakke for i dag. Afkryds hver vane for at styrke din identitet i et tempo, der passer til dit liv."
 			},
 			"wins": {
 				"title": "Sejre",

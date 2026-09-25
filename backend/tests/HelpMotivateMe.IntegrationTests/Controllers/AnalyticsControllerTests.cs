@@ -12,24 +12,6 @@ public class AnalyticsControllerTests : IntegrationTestBase
     {
     }
 
-
-    [Fact]
-    public async Task GetStreaks_ReturnsEmptyForNewUser()
-    {
-        // Arrange
-        var user = await DataBuilder.CreateUserAsync();
-
-        // Act
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.GetFromJsonAsync<StreakSummaryResponse>("/api/analytics/streaks");
-
-        // Assert
-        response.Should().NotBeNull();
-        response!.TotalHabits.Should().Be(0);
-        response.Streaks.Should().BeEmpty();
-    }
-
-
     [Fact]
     public async Task GetCompletionRates_CalculatesCorrectPercentage()
     {
@@ -264,24 +246,6 @@ public class AnalyticsControllerTests : IntegrationTestBase
         response![0].Count.Should().Be(1);
     }
 }
-
-// Response DTOs for deserialization
-public record StreakSummaryResponse(
-    int TotalHabits,
-    int ActiveStreaks,
-    int LongestActiveStreak,
-    List<TaskStreakResponse> Streaks
-);
-
-public record TaskStreakResponse(
-    Guid TaskId,
-    string TaskTitle,
-    int CurrentStreak,
-    int LongestStreak,
-    DateOnly? LastCompletedDate,
-    bool IsOnGracePeriod,
-    int DaysUntilStreakBreaks
-);
 
 public record CompletionRateResponse(
     double DailyRate,

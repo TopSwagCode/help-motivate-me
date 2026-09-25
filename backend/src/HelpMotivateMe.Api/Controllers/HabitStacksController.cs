@@ -1,5 +1,6 @@
 using HelpMotivateMe.Core.DTOs.HabitStacks;
 using HelpMotivateMe.Core.Entities;
+using HelpMotivateMe.Core.Enums;
 using HelpMotivateMe.Core.Interfaces;
 using HelpMotivateMe.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -72,6 +73,9 @@ public class HabitStacksController : ApiControllerBase
     [HttpPost]
     public async Task<ActionResult<HabitStackResponse>> CreateHabitStack([FromBody] CreateHabitStackRequest request)
     {
+        if (!IsValidSchedule(request.OddWeekDays, request.EvenWeekDays))
+            return BadRequest("Select at least one valid weekday and week pattern.");
+
         var userId = _auth.GetCurrentUserId();
 
         // Get max sort order for user's habit stacks
@@ -86,6 +90,8 @@ public class HabitStacksController : ApiControllerBase
             Description = request.Description,
             IdentityId = request.IdentityId,
             TriggerCue = request.TriggerCue,
+            OddWeekDays = request.OddWeekDays,
+            EvenWeekDays = request.EvenWeekDays,
             SortOrder = maxSortOrder + 1
         };
 
@@ -114,6 +120,9 @@ public class HabitStacksController : ApiControllerBase
     public async Task<ActionResult<HabitStackResponse>> UpdateHabitStack(Guid id,
         [FromBody] UpdateHabitStackRequest request)
     {
+        if (!IsValidSchedule(request.OddWeekDays, request.EvenWeekDays))
+            return BadRequest("Select at least one valid weekday and week pattern.");
+
         var userId = _auth.GetCurrentUserId();
 
         var stack = await _db.HabitStacks
@@ -128,6 +137,8 @@ public class HabitStacksController : ApiControllerBase
         stack.IdentityId = request.IdentityId;
         stack.TriggerCue = request.TriggerCue;
         stack.IsActive = request.IsActive;
+        stack.OddWeekDays = request.OddWeekDays;
+        stack.EvenWeekDays = request.EvenWeekDays;
 
         await _db.SaveChangesAsync();
 
@@ -321,15 +332,22 @@ public class HabitStacksController : ApiControllerBase
             stack.Identity?.Color,
             stack.TriggerCue,
             stack.IsActive,
+            stack.OddWeekDays,
+            stack.EvenWeekDays,
             stack.Items.OrderBy(i => i.SortOrder).Select(i => new HabitStackItemResponse(
                 i.Id,
                 i.CueDescription,
                 i.HabitDescription,
-                i.SortOrder,
-                i.CurrentStreak,
-                i.LongestStreak
+                i.SortOrder
             )),
             stack.CreatedAt
         );
+    }
+
+    private static bool IsValidSchedule(HabitStackDays oddWeekDays, HabitStackDays evenWeekDays)
+    {
+        return (oddWeekDays != HabitStackDays.None || evenWeekDays != HabitStackDays.None) &&
+               (oddWeekDays & ~HabitStackDays.EveryDay) == 0 &&
+               (evenWeekDays & ~HabitStackDays.EveryDay) == 0;
     }
 }

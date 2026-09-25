@@ -3,6 +3,7 @@
 	import { t } from 'svelte-i18n';
 	import type { CreateHabitStackRequest, HabitStackItemRequest, Identity } from '$lib/types';
 	import { getIdentities } from '$lib/api/identities';
+	import SchedulePicker from './SchedulePicker.svelte';
 
 	interface Props {
 		onsubmit: (data: CreateHabitStackRequest) => Promise<void>;
@@ -13,6 +14,8 @@
 
 	let name = $state('');
 	let identityId = $state('');
+	let oddWeekDays = $state(127);
+	let evenWeekDays = $state(127);
 	let identities = $state<Identity[]>([]);
 	let items = $state<HabitStackItemRequest[]>([
 		{ cueDescription: '', habitDescription: '' }
@@ -104,7 +107,9 @@
 				description: null,
 				identityId: identityId || null,
 				triggerCue: null,
-				items: validItems
+				items: validItems,
+				oddWeekDays,
+				evenWeekDays
 			});
 		} catch (e) {
 			error = e instanceof Error ? e.message : $t('habitStacks.form.errors.createFailed');
@@ -120,6 +125,8 @@
 			{error}
 		</div>
 	{/if}
+
+	<SchedulePicker bind:oddWeekDays bind:evenWeekDays disabled={loading} />
 
 	<div>
 		<label for="name" class="block text-sm font-medium text-cocoa-700 mb-1">{$t('habitStacks.form.name')}</label>

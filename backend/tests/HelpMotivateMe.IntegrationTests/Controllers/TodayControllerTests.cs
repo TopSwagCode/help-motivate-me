@@ -208,6 +208,31 @@ public class TodayControllerTests : IntegrationTestBase
         response.HabitStacks.Should().NotContain(s => s.Name == "Inactive Stack");
     }
 
+    [Theory]
+    [InlineData("2026-01-05", true)]
+    [InlineData("2026-01-12", true)]
+    [InlineData("2026-01-09", true)]
+    [InlineData("2026-01-16", false)]
+    [InlineData("2026-01-06", false)]
+    public async Task GetToday_HabitStack_RespectsWeekdayAndIsoWeekPattern(
+        string date,
+        bool shouldAppear)
+    {
+        var user = await DataBuilder.CreateUserAsync();
+        var stack = await DataBuilder.CreateHabitStackAsync(
+            user.Id,
+            "Scheduled Stack",
+            oddWeekDays: HabitStackDays.Monday,
+            evenWeekDays: HabitStackDays.Monday | HabitStackDays.Friday | HabitStackDays.Saturday | HabitStackDays.Sunday);
+        await DataBuilder.CreateHabitStackItemAsync(stack.Id);
+
+        Client.AuthenticateAs(user.Id);
+        var response = await Client.GetFromJsonAsync<TodayViewResponse>($"/api/today?date={date}");
+
+        response.Should().NotBeNull();
+        response!.HabitStacks.Any(s => s.Name == "Scheduled Stack").Should().Be(shouldAppear);
+    }
+
     [Fact]
     public async Task GetToday_HabitStack_CompletionStatus_ReflectsTargetDate()
     {
@@ -384,8 +409,7 @@ public record TodayHabitStackResponse(
 public record TodayHabitStackItemResponse(
     Guid Id,
     string HabitDescription,
-    bool IsCompletedToday,
-    int CurrentStreak
+    bool IsCompletedToday
 );
 
 public record TodayTaskResponse(

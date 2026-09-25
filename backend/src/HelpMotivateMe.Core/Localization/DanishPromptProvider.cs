@@ -93,19 +93,29 @@ public class DanishPromptProvider : IPromptProvider
                                             - Input nævner at ville have vaner men giver ingen detaljer overhovedet
                                             - Input er et enkelt vagt ord
 
+                                            PLANLÆGNINGSFORMAT:
+                                            - Hver stak SKAL indeholde de numeriske felter "oddWeekDays" og "evenWeekDays"
+                                            - Brug denne ugedags-bitmaske: mandag=1, tirsdag=2, onsdag=4, torsdag=8, fredag=16, lørdag=32, søndag=64
+                                            - Læg de valgte dage sammen. Eksempler: hverdage=31, weekend=96, alle dage=127
+                                            - Hvis ingen plan er angivet, brug 127 i begge felter
+                                            - Brug samme værdi i begge felter når planen er ens hver uge
+                                            - Beregn værdierne separat for skiftende planer eller tougers mønstre
+                                            - Ulige og lige betyder altid ISO-ugenummerets paritet
+                                            - Eksempel på 2-2-5-5 med mandag/tirsdag hver uge og fredag-søndag hver anden uge: oddWeekDays=3, evenWeekDays=115
+
                                             **KRITISK**: Du SKAL inkludere en JSON-blok til SIDST i HVER respons.
                                             Indpak det i ```json kodeblokke præcis som vist.
 
                                             FOR KLAR HENSIGT - OPRET STRAKS:
                                             "Jeg opretter din morgenrutine."
                                             ```json
-                                            {"action":"create","type":"habitStack","data":{"stacks":[{"name":"Morgenrutine","description":"Start dagen rigtigt","triggerCue":"Efter jeg vågner","habits":[{"cueDescription":"Efter jeg vågner","habitDescription":"Red min seng"},{"cueDescription":"Efter jeg har redt sengen","habitDescription":"Drik et glas vand"}]}]},"suggestedActions":["Tilføj endnu en rutine","Jeg er færdig, næste trin"]}
+                                            {"action":"create","type":"habitStack","data":{"stacks":[{"name":"Morgenrutine","description":"Start dagen rigtigt","triggerCue":"Efter jeg vågner","oddWeekDays":127,"evenWeekDays":127,"habits":[{"cueDescription":"Efter jeg vågner","habitDescription":"Red min seng"},{"cueDescription":"Efter jeg har redt sengen","habitDescription":"Drik et glas vand"}]}]},"suggestedActions":["Tilføj endnu en rutine","Jeg er færdig, næste trin"]}
                                             ```
 
                                             FOR FLERE RUTINER - OPRET ALLE PÅ ÉN GANG:
                                             "Jeg opretter begge rutiner for dig."
                                             ```json
-                                            {"action":"create","type":"habitStack","data":{"stacks":[{"name":"Morgenrutine","description":"Start dagen rigtigt","triggerCue":"Efter jeg vågner","habits":[{"cueDescription":"Efter jeg vågner","habitDescription":"Stræk i 5 min"},{"cueDescription":"Efter strækøvelser","habitDescription":"Drik vand"}]},{"name":"Aften nedtrapning","description":"Forbered god søvn","triggerCue":"Efter aftensmad","habits":[{"cueDescription":"Efter aftensmad","habitDescription":"Tag en kort gåtur"},{"cueDescription":"Efter gåtur","habitDescription":"Læs i 15 min"}]}]},"suggestedActions":["Tilføj flere rutiner","Jeg er færdig, næste trin"]}
+                                            {"action":"create","type":"habitStack","data":{"stacks":[{"name":"Morgenrutine","description":"Start dagen rigtigt","triggerCue":"Efter jeg vågner","oddWeekDays":127,"evenWeekDays":127,"habits":[{"cueDescription":"Efter jeg vågner","habitDescription":"Stræk i 5 min"},{"cueDescription":"Efter strækøvelser","habitDescription":"Drik vand"}]},{"name":"Aften nedtrapning","description":"Forbered god søvn","triggerCue":"Efter aftensmad","oddWeekDays":127,"evenWeekDays":127,"habits":[{"cueDescription":"Efter aftensmad","habitDescription":"Tag en kort gåtur"},{"cueDescription":"Efter gåtur","habitDescription":"Læs i 15 min"}]}]},"suggestedActions":["Tilføj flere rutiner","Jeg er færdig, næste trin"]}
                                             ```
 
                                             FOR VIRKELIG TVETYDIGT INPUT - Spørg kort:
@@ -308,6 +318,15 @@ public class DanishPromptProvider : IPromptProvider
                                                - Hvis du opretter identitet først, forklar at den automatisk vil blive forbundet til opgaven/målet/vanen
                                                - Efter identiteten er oprettet, skal den næste opgave/mål/vane automatisk forbindes til den
 
+                                               PLANLÆGNINGSFORMAT FOR VANESTAKKE:
+                                               - Hver habitStack-forhåndsvisning SKAL indeholde numeriske "oddWeekDays" og "evenWeekDays"
+                                               - Ugedags-bitmaske: mandag=1, tirsdag=2, onsdag=4, torsdag=8, fredag=16, lørdag=32, søndag=64
+                                               - Læg de valgte dage sammen. Eksempler: hverdage=31, weekend=96, alle dage=127
+                                               - Hvis ingen plan er angivet, brug oddWeekDays=127 og evenWeekDays=127
+                                               - Brug ens værdier for en ugentlig plan og separate værdier for et skiftende tougers mønster
+                                               - Ulige/lige henviser til ISO-ugenummerets paritet
+                                               - Eksempel: mandag/tirsdag hver uge plus fredag-søndag i lige uger er oddWeekDays=3 og evenWeekDays=115
+
                                                **KRITISK KRAV**: Du SKAL inkludere en JSON-blok til SIDST i HVER respons.
                                                Indpak det i ```json kodeblokke præcis som vist.
 
@@ -325,7 +344,7 @@ public class DanishPromptProvider : IPromptProvider
                                                [Vis menneskelig læsbar forhåndsvisning]
                                                "Skal dette være en engangsopgave eller en tilbagevendende vane?"
                                                ```json
-                                               {"intent":"create_habit_stack","confidence":0.68,"preview":{"type":"habitStack","data":{"name":"Træningsrutine","description":null,"triggerCue":"Efter jeg vågner","identityId":"guid-hvis-matchet","identityName":"Sund Person","habits":[{"cueDescription":"vågner","habitDescription":"går en løbetur"}]}},"clarifyingQuestion":"Skal dette være en engangsopgave eller en tilbagevendende vane?","actions":["confirm","edit","make_task","cancel"]}
+                                               {"intent":"create_habit_stack","confidence":0.68,"preview":{"type":"habitStack","data":{"name":"Træningsrutine","description":null,"triggerCue":"Efter jeg vågner","identityId":"guid-hvis-matchet","identityName":"Sund Person","oddWeekDays":127,"evenWeekDays":127,"habits":[{"cueDescription":"vågner","habitDescription":"går en løbetur"}]}},"clarifyingQuestion":"Skal dette være en engangsopgave eller en tilbagevendende vane?","actions":["confirm","edit","make_task","cancel"]}
                                                ```
 
                                                FOR LAV TILLID (< 0.50) - Bed om præcisering:
@@ -349,7 +368,7 @@ public class DanishPromptProvider : IPromptProvider
                                                {"type":"goal","data":{"title":"streng (påkrævet)","description":"streng eller null","targetDate":"ÅÅÅÅ-MM-DD eller null","identityId":"guid eller null","identityName":"streng eller null"}}
 
                                                Vanestak:
-                                               {"type":"habitStack","data":{"name":"streng (påkrævet)","description":"streng eller null","triggerCue":"Efter jeg... (påkrævet)","identityId":"guid eller null","identityName":"streng eller null","habits":[{"cueDescription":"vågner","habitDescription":"drikker et glas vand"}]}}
+                                               {"type":"habitStack","data":{"name":"streng (påkrævet)","description":"streng eller null","triggerCue":"Efter jeg... (påkrævet)","identityId":"guid eller null","identityName":"streng eller null","oddWeekDays":"tal (påkrævet)","evenWeekDays":"tal (påkrævet)","habits":[{"cueDescription":"vågner","habitDescription":"drikker et glas vand"}]}}
 
                                                Identitet:
                                                {"type":"identity","data":{"name":"streng (påkrævet)","description":"streng eller null","icon":"emoji","color":"#hexfarve","reasoning":"streng der forklarer hvorfor denne identitet anbefales"}}

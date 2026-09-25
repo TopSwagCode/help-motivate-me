@@ -95,19 +95,29 @@ public static class OnboardingPrompts
                                                  - Input mentions wanting habits but gives no specifics at all
                                                  - Input is a single vague word
 
+                                                 SCHEDULE FORMAT:
+                                                 - Every stack MUST include numeric "oddWeekDays" and "evenWeekDays" fields
+                                                 - Use this weekday bitmask: Monday=1, Tuesday=2, Wednesday=4, Thursday=8, Friday=16, Saturday=32, Sunday=64
+                                                 - Add selected days together. Examples: weekdays=31, weekend=96, every day=127
+                                                 - If no schedule is stated, use 127 for both fields
+                                                 - For the same schedule every week, use the same value for both fields
+                                                 - For alternating or two-week schedules, independently calculate each ISO week's value
+                                                 - "Odd" and "even" always mean ISO week-number parity
+                                                 - Example 2-2-5-5 pattern with Monday/Tuesday every week and alternating Friday-Sunday: oddWeekDays=3, evenWeekDays=115
+
                                                  **CRITICAL**: You MUST include a JSON block at the END of EVERY response.
                                                  Wrap it in ```json code blocks exactly as shown.
 
                                                  FOR CLEAR INTENT - CREATE IMMEDIATELY:
                                                  "I'll create your morning routine."
                                                  ```json
-                                                 {"action":"create","type":"habitStack","data":{"stacks":[{"name":"Morning Routine","description":"Start the day right","triggerCue":"After I wake up","habits":[{"cueDescription":"After waking up","habitDescription":"Make my bed"},{"cueDescription":"After making bed","habitDescription":"Drink a glass of water"}]}]},"suggestedActions":["Add another routine","I'm done, next step"]}
+                                                 {"action":"create","type":"habitStack","data":{"stacks":[{"name":"Morning Routine","description":"Start the day right","triggerCue":"After I wake up","oddWeekDays":127,"evenWeekDays":127,"habits":[{"cueDescription":"After waking up","habitDescription":"Make my bed"},{"cueDescription":"After making bed","habitDescription":"Drink a glass of water"}]}]},"suggestedActions":["Add another routine","I'm done, next step"]}
                                                  ```
 
                                                  FOR MULTIPLE ROUTINES - CREATE ALL AT ONCE:
                                                  "I'll create both routines for you."
                                                  ```json
-                                                 {"action":"create","type":"habitStack","data":{"stacks":[{"name":"Morning Routine","description":"Start the day right","triggerCue":"After I wake up","habits":[{"cueDescription":"After waking up","habitDescription":"Stretch for 5 min"},{"cueDescription":"After stretching","habitDescription":"Drink water"}]},{"name":"Evening Wind-down","description":"Prepare for good sleep","triggerCue":"After dinner","habits":[{"cueDescription":"After dinner","habitDescription":"Take a short walk"},{"cueDescription":"After walk","habitDescription":"Read for 15 min"}]}]},"suggestedActions":["Add more routines","I'm done, next step"]}
+                                                 {"action":"create","type":"habitStack","data":{"stacks":[{"name":"Morning Routine","description":"Start the day right","triggerCue":"After I wake up","oddWeekDays":127,"evenWeekDays":127,"habits":[{"cueDescription":"After waking up","habitDescription":"Stretch for 5 min"},{"cueDescription":"After stretching","habitDescription":"Drink water"}]},{"name":"Evening Wind-down","description":"Prepare for good sleep","triggerCue":"After dinner","oddWeekDays":127,"evenWeekDays":127,"habits":[{"cueDescription":"After dinner","habitDescription":"Take a short walk"},{"cueDescription":"After walk","habitDescription":"Read for 15 min"}]}]},"suggestedActions":["Add more routines","I'm done, next step"]}
                                                  ```
 
                                                  FOR TRULY AMBIGUOUS INPUT - Ask briefly:

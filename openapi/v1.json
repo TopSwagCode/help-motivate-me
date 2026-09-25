@@ -249,35 +249,6 @@
         }
       }
     },
-    "/api/analytics/streaks": {
-      "get": {
-        "tags": [
-          "Analytics"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/StreakSummaryResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StreakSummaryResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StreakSummaryResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/analytics/completion-rates": {
       "get": {
         "tags": [
@@ -3779,6 +3750,12 @@
             "items": {
               "$ref": "#/components/schemas/HabitStackItemRequest"
             }
+          },
+          "oddWeekDays": {
+            "$ref": "#/components/schemas/HabitStackDays"
+          },
+          "evenWeekDays": {
+            "$ref": "#/components/schemas/HabitStackDays"
           }
         }
       },
@@ -4314,12 +4291,13 @@
           }
         }
       },
+      "HabitStackDays": {
+        "type": "integer"
+      },
       "HabitStackItemCompletionResponse": {
         "required": [
           "itemId",
           "habitDescription",
-          "currentStreak",
-          "longestStreak",
           "isCompleted"
         ],
         "type": "object",
@@ -4330,14 +4308,6 @@
           },
           "habitDescription": {
             "type": "string"
-          },
-          "currentStreak": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "longestStreak": {
-            "type": "integer",
-            "format": "int32"
           },
           "isCompleted": {
             "type": "boolean"
@@ -4364,9 +4334,7 @@
           "id",
           "cueDescription",
           "habitDescription",
-          "sortOrder",
-          "currentStreak",
-          "longestStreak"
+          "sortOrder"
         ],
         "type": "object",
         "properties": {
@@ -4383,14 +4351,6 @@
           "sortOrder": {
             "type": "integer",
             "format": "int32"
-          },
-          "currentStreak": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "longestStreak": {
-            "type": "integer",
-            "format": "int32"
           }
         }
       },
@@ -4404,6 +4364,8 @@
           "identityColor",
           "triggerCue",
           "isActive",
+          "oddWeekDays",
+          "evenWeekDays",
           "items",
           "createdAt"
         ],
@@ -4449,6 +4411,12 @@
           },
           "isActive": {
             "type": "boolean"
+          },
+          "oddWeekDays": {
+            "$ref": "#/components/schemas/HabitStackDays"
+          },
+          "evenWeekDays": {
+            "$ref": "#/components/schemas/HabitStackDays"
           },
           "items": {
             "type": "array",
@@ -4728,7 +4696,6 @@
           "id",
           "name",
           "totalCompletions",
-          "currentStreak",
           "weeklyCompletions",
           "reinforcementMessage"
         ],
@@ -4742,10 +4709,6 @@
             "type": "string"
           },
           "totalCompletions": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "currentStreak": {
             "type": "integer",
             "format": "int32"
           },
@@ -5083,35 +5046,6 @@
           }
         }
       },
-      "StreakSummaryResponse": {
-        "required": [
-          "totalHabits",
-          "activeStreaks",
-          "longestActiveStreak",
-          "streaks"
-        ],
-        "type": "object",
-        "properties": {
-          "totalHabits": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "activeStreaks": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "longestActiveStreak": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "streaks": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TaskStreakResponse"
-            }
-          }
-        }
-      },
       "TaskItemStatus": {
         "type": "string",
         "enum": [
@@ -5228,55 +5162,11 @@
           }
         }
       },
-      "TaskStreakResponse": {
-        "required": [
-          "taskId",
-          "taskTitle",
-          "currentStreak",
-          "longestStreak",
-          "lastCompletedDate",
-          "isOnGracePeriod",
-          "daysUntilStreakBreaks"
-        ],
-        "type": "object",
-        "properties": {
-          "taskId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "taskTitle": {
-            "type": "string"
-          },
-          "currentStreak": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "longestStreak": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "lastCompletedDate": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "date"
-          },
-          "isOnGracePeriod": {
-            "type": "boolean"
-          },
-          "daysUntilStreakBreaks": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "TodayHabitStackItemResponse": {
         "required": [
           "id",
           "habitDescription",
-          "isCompletedToday",
-          "currentStreak"
+          "isCompletedToday"
         ],
         "type": "object",
         "properties": {
@@ -5289,10 +5179,6 @@
           },
           "isCompletedToday": {
             "type": "boolean"
-          },
-          "currentStreak": {
-            "type": "integer",
-            "format": "int32"
           }
         }
       },
@@ -5653,6 +5539,12 @@
           },
           "isActive": {
             "type": "boolean"
+          },
+          "oddWeekDays": {
+            "$ref": "#/components/schemas/HabitStackDays"
+          },
+          "evenWeekDays": {
+            "$ref": "#/components/schemas/HabitStackDays"
           }
         }
       },

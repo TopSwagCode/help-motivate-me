@@ -313,7 +313,6 @@ public record IdentityStatsResponse(
     Guid Id,
     string Name,
     int TotalCompletions,
-    int CurrentStreak,
     int WeeklyCompletions,
     string ReinforcementMessage
 );

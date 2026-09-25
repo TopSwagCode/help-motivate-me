@@ -30,16 +30,11 @@ public class HabitStackService : IHabitStackService
 
         if (existingCompletion != null)
         {
-            // Toggle off - remove completion
             _db.HabitStackItemCompletions.Remove(existingCompletion);
             item.Completions.Remove(existingCompletion);
-
-            // Recalculate streak
-            RecalculateStreak(item, targetDate);
         }
         else
         {
-            // Complete for this date
             var completion = new HabitStackItemCompletion
             {
                 HabitStackItemId = itemId,
@@ -48,10 +43,6 @@ public class HabitStackService : IHabitStackService
             };
             _db.HabitStackItemCompletions.Add(completion);
             item.Completions.Add(completion);
-            item.LastCompletedDate = targetDate;
-
-            // Update streak
-            UpdateStreak(item, targetDate);
         }
 
         await _db.SaveChangesAsync();
@@ -60,8 +51,6 @@ public class HabitStackService : IHabitStackService
             item.Id,
             item.HabitStackId,
             item.HabitDescription,
-            item.CurrentStreak,
-            item.LongestStreak,
             wasNewlyCompleted, // IsCompleted - true if this was a new completion
             wasNewlyCompleted
         );
@@ -84,7 +73,6 @@ public class HabitStackService : IHabitStackService
 
             if (existingCompletion == null)
             {
-                // Complete for this date
                 var completion = new HabitStackItemCompletion
                 {
                     HabitStackItemId = item.Id,
@@ -93,10 +81,6 @@ public class HabitStackService : IHabitStackService
                 };
                 _db.HabitStackItemCompletions.Add(completion);
                 item.Completions.Add(completion);
-                item.LastCompletedDate = targetDate;
-
-                // Update streak
-                UpdateStreak(item, targetDate);
                 completedCount++;
             }
         }
@@ -110,55 +94,4 @@ public class HabitStackService : IHabitStackService
         );
     }
 
-    public void UpdateStreak(HabitStackItem item, DateOnly completedDate)
-    {
-        var yesterday = completedDate.AddDays(-1);
-        var hadCompletionYesterday = item.Completions.Any(c => c.CompletedDate == yesterday);
-
-        if (hadCompletionYesterday || item.CurrentStreak == 0)
-            item.CurrentStreak++;
-        else
-            // Gap in streak, reset to 1
-            item.CurrentStreak = 1;
-
-        if (item.CurrentStreak > item.LongestStreak) item.LongestStreak = item.CurrentStreak;
-    }
-
-    public void RecalculateStreak(HabitStackItem item, DateOnly removedDate)
-    {
-        // Recalculate streak from scratch based on remaining completions
-        var sortedCompletions = item.Completions
-            .Where(c => c.CompletedDate != removedDate)
-            .OrderByDescending(c => c.CompletedDate)
-            .ToList();
-
-        if (!sortedCompletions.Any())
-        {
-            item.CurrentStreak = 0;
-            item.LastCompletedDate = null;
-            return;
-        }
-
-        item.LastCompletedDate = sortedCompletions.First().CompletedDate;
-
-        // Calculate current streak from most recent completion
-        var streak = 1;
-        var currentDate = sortedCompletions[0].CompletedDate;
-
-        for (var i = 1; i < sortedCompletions.Count; i++)
-        {
-            var expectedPrevious = currentDate.AddDays(-1);
-            if (sortedCompletions[i].CompletedDate == expectedPrevious)
-            {
-                streak++;
-                currentDate = sortedCompletions[i].CompletedDate;
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        item.CurrentStreak = streak;
-    }
 }

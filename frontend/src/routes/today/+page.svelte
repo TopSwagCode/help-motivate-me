@@ -171,8 +171,7 @@
 						i.id === itemId
 							? {
 									...i,
-									isCompletedToday: !wasCompleted,
-									currentStreak: wasCompleted ? Math.max(0, i.currentStreak - 1) : i.currentStreak + 1
+									isCompletedToday: !wasCompleted
 								}
 							: i
 					);
@@ -206,8 +205,7 @@
 
 					const updatedItems = stack.items.map((item) => ({
 						...item,
-						isCompletedToday: true,
-						currentStreak: item.isCompletedToday ? item.currentStreak : item.currentStreak + 1
+						isCompletedToday: true
 					}));
 
 					return {

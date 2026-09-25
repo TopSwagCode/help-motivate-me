@@ -169,127 +169,6 @@ public class HabitStacksControllerTests : IntegrationTestBase
         updatedStack.Items[2].HabitDescription.Should().Be("habit2");
     }
 
-
-    [Fact]
-    public async Task CompleteItem_IncreasesStreak_WhenConsecutive()
-    {
-        // Arrange
-        var user = await DataBuilder.CreateUserAsync();
-        var stack = await DataBuilder.CreateHabitStackAsync(user.Id, "Streak Test");
-        var item = await DataBuilder.CreateHabitStackItemAsync(stack.Id, "cue", "habit");
-        var yesterday = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
-
-        // Complete yesterday
-        await DataBuilder.CreateHabitStackItemCompletionAsync(item.Id, yesterday);
-        // Manually update streak
-        item.CurrentStreak = 1;
-        item.LongestStreak = 1;
-        item.LastCompletedDate = yesterday;
-        await Db.SaveChangesAsync();
-
-        // Act - Complete today
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.PatchAsync($"/api/habit-stacks/items/{item.Id}/complete?date={today:yyyy-MM-dd}",
-            user.Id);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var result = await response.Content.ReadFromJsonAsync<HabitStackItemCompletionResponse>();
-        result!.CurrentStreak.Should().Be(2);
-        result.IsCompleted.Should().BeTrue();
-    }
-
-    [Fact]
-    public async Task CompleteItem_ResetsStreak_WhenGapInDays()
-    {
-        // Arrange
-        var user = await DataBuilder.CreateUserAsync();
-        var stack = await DataBuilder.CreateHabitStackAsync(user.Id, "Streak Reset Test");
-        var item = await DataBuilder.CreateHabitStackItemAsync(stack.Id, "cue", "habit");
-        var threeDaysAgo = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-3));
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
-
-        // Complete 3 days ago (gap of 2 days)
-        await DataBuilder.CreateHabitStackItemCompletionAsync(item.Id, threeDaysAgo);
-        item.CurrentStreak = 5;
-        item.LongestStreak = 5;
-        item.LastCompletedDate = threeDaysAgo;
-        await Db.SaveChangesAsync();
-
-        // Act - Complete today (should reset streak to 1)
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.PatchAsync($"/api/habit-stacks/items/{item.Id}/complete?date={today:yyyy-MM-dd}",
-            user.Id);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var result = await response.Content.ReadFromJsonAsync<HabitStackItemCompletionResponse>();
-        result!.CurrentStreak.Should().Be(1);
-    }
-
-    [Fact]
-    public async Task UncompleteItem_RecalculatesStreak()
-    {
-        // Arrange
-        var user = await DataBuilder.CreateUserAsync();
-        var stack = await DataBuilder.CreateHabitStackAsync(user.Id, "Uncomplete Test");
-        var item = await DataBuilder.CreateHabitStackItemAsync(stack.Id, "cue", "habit");
-        var twoDaysAgo = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-2));
-        var yesterday = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
-
-        // Complete 3 consecutive days
-        await DataBuilder.CreateHabitStackItemCompletionAsync(item.Id, twoDaysAgo);
-        await DataBuilder.CreateHabitStackItemCompletionAsync(item.Id, yesterday);
-        await DataBuilder.CreateHabitStackItemCompletionAsync(item.Id, today);
-        item.CurrentStreak = 3;
-        item.LongestStreak = 3;
-        item.LastCompletedDate = today;
-        await Db.SaveChangesAsync();
-
-        // Act - Uncomplete yesterday (should break the streak)
-        Client.AuthenticateAs(user.Id);
-        var response =
-            await Client.PatchAsync($"/api/habit-stacks/items/{item.Id}/complete?date={yesterday:yyyy-MM-dd}", user.Id);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var result = await response.Content.ReadFromJsonAsync<HabitStackItemCompletionResponse>();
-        result!.IsCompleted.Should().BeFalse(); // Yesterday is now uncompleted
-        // Current streak recalculated from today only
-        result.CurrentStreak.Should().Be(1);
-    }
-
-    [Fact]
-    public async Task CompleteItem_UpdatesLongestStreak()
-    {
-        // Arrange
-        var user = await DataBuilder.CreateUserAsync();
-        var stack = await DataBuilder.CreateHabitStackAsync(user.Id, "Longest Streak Test");
-        var item = await DataBuilder.CreateHabitStackItemAsync(stack.Id, "cue", "habit");
-        var yesterday = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
-
-        // Complete yesterday
-        await DataBuilder.CreateHabitStackItemCompletionAsync(item.Id, yesterday);
-        item.CurrentStreak = 1;
-        item.LongestStreak = 1;
-        item.LastCompletedDate = yesterday;
-        await Db.SaveChangesAsync();
-
-        // Act - Complete today
-        Client.AuthenticateAs(user.Id);
-        var response = await Client.PatchAsync($"/api/habit-stacks/items/{item.Id}/complete?date={today:yyyy-MM-dd}",
-            user.Id);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var result = await response.Content.ReadFromJsonAsync<HabitStackItemCompletionResponse>();
-        result!.LongestStreak.Should().Be(2);
-    }
-
-
     [Fact]
     public async Task CompleteAll_OnlyCompletesIncompleteItems()
     {
@@ -394,16 +273,12 @@ public record HabitStackItemResponse(
     Guid Id,
     string CueDescription,
     string HabitDescription,
-    int SortOrder,
-    int CurrentStreak,
-    int LongestStreak
+    int SortOrder
 );
 
 public record HabitStackItemCompletionResponse(
     Guid ItemId,
     string HabitDescription,
-    int CurrentStreak,
-    int LongestStreak,
     bool IsCompleted
 );
 

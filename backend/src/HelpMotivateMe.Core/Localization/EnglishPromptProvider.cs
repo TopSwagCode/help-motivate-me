@@ -93,19 +93,29 @@ public class EnglishPromptProvider : IPromptProvider
                                             - Input mentions wanting habits but gives no specifics at all
                                             - Input is a single vague word
 
+                                            SCHEDULE FORMAT:
+                                            - Every stack MUST include numeric "oddWeekDays" and "evenWeekDays" fields
+                                            - Use this weekday bitmask: Monday=1, Tuesday=2, Wednesday=4, Thursday=8, Friday=16, Saturday=32, Sunday=64
+                                            - Add selected days together. Examples: weekdays=31, weekend=96, every day=127
+                                            - If no schedule is stated, use 127 for both fields
+                                            - For the same schedule every week, use the same value for both fields
+                                            - For alternating or two-week schedules, independently calculate each ISO week's value
+                                            - "Odd" and "even" always mean ISO week-number parity
+                                            - Example 2-2-5-5 pattern with Monday/Tuesday every week and alternating Friday-Sunday: oddWeekDays=3, evenWeekDays=115
+
                                             **CRITICAL**: You MUST include a JSON block at the END of EVERY response.
                                             Wrap it in ```json code blocks exactly as shown.
 
                                             FOR CLEAR INTENT - CREATE IMMEDIATELY:
                                             "I'll create your morning routine."
                                             ```json
-                                            {"action":"create","type":"habitStack","data":{"stacks":[{"name":"Morning Routine","description":"Start the day right","triggerCue":"After I wake up","habits":[{"cueDescription":"After waking up","habitDescription":"Make my bed"},{"cueDescription":"After making bed","habitDescription":"Drink a glass of water"}]}]},"suggestedActions":["Add another routine","I'm done, next step"]}
+                                            {"action":"create","type":"habitStack","data":{"stacks":[{"name":"Morning Routine","description":"Start the day right","triggerCue":"After I wake up","oddWeekDays":127,"evenWeekDays":127,"habits":[{"cueDescription":"After waking up","habitDescription":"Make my bed"},{"cueDescription":"After making bed","habitDescription":"Drink a glass of water"}]}]},"suggestedActions":["Add another routine","I'm done, next step"]}
                                             ```
 
                                             FOR MULTIPLE ROUTINES - CREATE ALL AT ONCE:
                                             "I'll create both routines for you."
                                             ```json
-                                            {"action":"create","type":"habitStack","data":{"stacks":[{"name":"Morning Routine","description":"Start the day right","triggerCue":"After I wake up","habits":[{"cueDescription":"After waking up","habitDescription":"Stretch for 5 min"},{"cueDescription":"After stretching","habitDescription":"Drink water"}]},{"name":"Evening Wind-down","description":"Prepare for good sleep","triggerCue":"After dinner","habits":[{"cueDescription":"After dinner","habitDescription":"Take a short walk"},{"cueDescription":"After walk","habitDescription":"Read for 15 min"}]}]},"suggestedActions":["Add more routines","I'm done, next step"]}
+                                            {"action":"create","type":"habitStack","data":{"stacks":[{"name":"Morning Routine","description":"Start the day right","triggerCue":"After I wake up","oddWeekDays":127,"evenWeekDays":127,"habits":[{"cueDescription":"After waking up","habitDescription":"Stretch for 5 min"},{"cueDescription":"After stretching","habitDescription":"Drink water"}]},{"name":"Evening Wind-down","description":"Prepare for good sleep","triggerCue":"After dinner","oddWeekDays":127,"evenWeekDays":127,"habits":[{"cueDescription":"After dinner","habitDescription":"Take a short walk"},{"cueDescription":"After walk","habitDescription":"Read for 15 min"}]}]},"suggestedActions":["Add more routines","I'm done, next step"]}
                                             ```
 
                                             FOR TRULY AMBIGUOUS INPUT - Ask briefly:
@@ -308,6 +318,15 @@ public class EnglishPromptProvider : IPromptProvider
                                                - If creating identity first, explain it will be automatically linked to the task/goal/habit
                                                - After identity is created, the next task/goal/habit should automatically link to it
 
+                                               HABIT STACK SCHEDULE FORMAT:
+                                               - Every habitStack preview MUST include numeric "oddWeekDays" and "evenWeekDays"
+                                               - Weekday bitmask values: Monday=1, Tuesday=2, Wednesday=4, Thursday=8, Friday=16, Saturday=32, Sunday=64
+                                               - Add selected days together. Examples: weekdays=31, weekend=96, every day=127
+                                               - If no schedule is stated, use oddWeekDays=127 and evenWeekDays=127
+                                               - Use equal values for a weekly schedule; use independent values for an alternating two-week schedule
+                                               - Odd/even refer to ISO week-number parity
+                                               - Example: Monday/Tuesday every week plus Friday-Sunday on even weeks is oddWeekDays=3 and evenWeekDays=115
+
                                                **CRITICAL REQUIREMENT**: You MUST include a JSON block at the END of EVERY response.
                                                Wrap it in ```json code blocks exactly as shown.
 
@@ -325,7 +344,7 @@ public class EnglishPromptProvider : IPromptProvider
                                                [Show human-readable preview]
                                                "Should this be a one-time task or a recurring habit?"
                                                ```json
-                                               {"intent":"create_habit_stack","confidence":0.68,"preview":{"type":"habitStack","data":{"name":"Exercise Routine","description":null,"triggerCue":"After I wake up","identityId":"guid-if-matched","identityName":"Healthy Person","habits":[{"cueDescription":"wake up","habitDescription":"go for a run"}]}},"clarifyingQuestion":"Should this be a one-time task or a recurring habit?","actions":["confirm","edit","make_task","cancel"]}
+                                               {"intent":"create_habit_stack","confidence":0.68,"preview":{"type":"habitStack","data":{"name":"Exercise Routine","description":null,"triggerCue":"After I wake up","identityId":"guid-if-matched","identityName":"Healthy Person","oddWeekDays":127,"evenWeekDays":127,"habits":[{"cueDescription":"wake up","habitDescription":"go for a run"}]}},"clarifyingQuestion":"Should this be a one-time task or a recurring habit?","actions":["confirm","edit","make_task","cancel"]}
                                                ```
 
                                                FOR LOW CONFIDENCE (< 0.50) - Ask for clarification:
@@ -349,7 +368,7 @@ public class EnglishPromptProvider : IPromptProvider
                                                {"type":"goal","data":{"title":"string (required)","description":"string or null","targetDate":"YYYY-MM-DD or null","identityId":"guid or null","identityName":"string or null"}}
 
                                                Habit Stack:
-                                               {"type":"habitStack","data":{"name":"string (required)","description":"string or null","triggerCue":"After I... (required)","identityId":"guid or null","identityName":"string or null","habits":[{"cueDescription":"wake up","habitDescription":"drink a glass of water"}]}}
+                                               {"type":"habitStack","data":{"name":"string (required)","description":"string or null","triggerCue":"After I... (required)","identityId":"guid or null","identityName":"string or null","oddWeekDays":"number (required)","evenWeekDays":"number (required)","habits":[{"cueDescription":"wake up","habitDescription":"drink a glass of water"}]}}
 
                                                Identity:
                                                {"type":"identity","data":{"name":"string (required)","description":"string or null","icon":"emoji","color":"#hexcolor","reasoning":"string explaining why this identity is recommended"}}

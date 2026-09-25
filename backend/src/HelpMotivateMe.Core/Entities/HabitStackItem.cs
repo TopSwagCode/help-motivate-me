@@ -11,11 +11,6 @@ public class HabitStackItem
 
     public int SortOrder { get; set; }
 
-    // Streak tracking
-    public int CurrentStreak { get; set; }
-    public int LongestStreak { get; set; }
-    public DateOnly? LastCompletedDate { get; set; }
-
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation properties

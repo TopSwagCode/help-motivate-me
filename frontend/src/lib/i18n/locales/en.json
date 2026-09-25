@@ -240,7 +240,7 @@
 			"subtitle": "You're all set! This is your <strong>Today</strong> page - your daily command center.",
 			"hereYouCan": "Here you can:",
 			"features": {
-				"trackHabits": "Track your daily habit stacks and build streaks",
+				"trackHabits": "Track habit stacks when they fit your week",
 				"completeTasks": "Complete tasks and see your progress toward goals",
 				"reinforceIdentity": "Reinforce your identity with every action you take"
 			},
@@ -572,8 +572,6 @@
 				"goalRemindersDescription": "Updates about your goals and deadlines",
 				"dailyDigest": "Daily Digest",
 				"dailyDigestDescription": "Summary of your daily tasks and progress",
-				"streakAlerts": "Streak Alerts",
-				"streakAlertsDescription": "Alerts when your streak is at risk",
 				"motivationalQuotes": "Motivational Quotes",
 				"motivationalQuotesDescription": "Inspiring quotes to keep you motivated",
 				"weeklyReview": "Weekly Review",
@@ -812,7 +810,32 @@
 		"habits": "habits",
 		"habit": "habit",
 		"noHabitsYet": "No habits in this stack yet",
-		"dayStreak": "day streak",
+		"schedule": {
+			"title": "When should this stack appear?",
+			"description": "Choose the days that make this routine useful.",
+			"days": "Weekdays",
+			"pattern": "Week pattern",
+			"everyDay": "Every day",
+			"everyWeek": "Every week",
+			"twoWeekPattern": "Two-week pattern",
+			"oddWeeks": "Odd weeks",
+			"evenWeeks": "Even weeks",
+			"isoWeekHint": "Odd and even weeks follow the standard Monday-to-Sunday calendar week number.",
+			"monday": "Monday",
+			"tuesday": "Tuesday",
+			"wednesday": "Wednesday",
+			"thursday": "Thursday",
+			"friday": "Friday",
+			"saturday": "Saturday",
+			"sunday": "Sunday",
+			"mondayShort": "Mon",
+			"tuesdayShort": "Tue",
+			"wednesdayShort": "Wed",
+			"thursdayShort": "Thu",
+			"fridayShort": "Fri",
+			"saturdayShort": "Sat",
+			"sundayShort": "Sun"
+		},
 		"infoCard": {
 			"title": "Habit Stacking",
 			"description": "Habit stacking works by attaching a new habit to something you already do. By anchoring small improvements to existing routines, you reduce friction and make consistency easier. Over time, these linked actions form powerful daily rhythms that run almost automatically.",
@@ -1029,7 +1052,7 @@
 	"today": {
 		"title": "Today",
 		"info": {
-			"description": "<p><strong>Today</strong> is your daily command center—a focused view of what matters most right now.</p><p>See all your habit stacks, tasks, and journal entries in one place, organized by day.</p><ul><li><strong>7-day timeline:</strong> View a week at a glance to see what's coming and what you've completed</li><li><strong>Habit stacks:</strong> Check off each habit in your daily routines and build streaks</li><li><strong>Tasks & votes:</strong> Complete tasks and see how they contribute to your identity growth</li><li><strong>Identity proofs / Log wins:</strong> Record moments where you acted in line with your identity. Choose an intensity level (Easy, Moderate, Hard) to earn identity votes and reinforce who you're becoming</li><li><strong>Quick actions:</strong> Postpone tasks, add journal entries, or create new habits on the fly</li></ul><p>Focus on today, but always keep an eye on tomorrow. Small daily actions compound into remarkable long-term results.</p>"
+			"description": "<p><strong>Today</strong> is your daily command center—a focused view of what matters most right now.</p><p>See all your habit stacks, tasks, and journal entries in one place, organized by day.</p><ul><li><strong>7-day timeline:</strong> View a week at a glance to see what's coming and what you've completed</li><li><strong>Habit stacks:</strong> See each routine only on the weekdays and week pattern you selected</li><li><strong>Tasks & votes:</strong> Complete tasks and see how they contribute to your identity growth</li><li><strong>Identity proofs / Log wins:</strong> Record moments where you acted in line with your identity. Choose an intensity level (Easy, Moderate, Hard) to earn identity votes and reinforce who you're becoming</li><li><strong>Quick actions:</strong> Postpone tasks, add journal entries, or create new habits on the fly</li></ul><p>Focus on today, but always keep an eye on tomorrow. Small daily actions compound into remarkable long-term results.</p>"
 		},
 		"greeting": {
 			"morning": "Good morning",
@@ -1072,7 +1095,6 @@
 		"noIdentity": "No identity",
 		"snooze1Week": "Snooze 1 week",
 		"movedOutsideView": "Moved outside 7-day view",
-		"dayStreak": "day streak",
 		"trendUp": "Trending up",
 		"trendDown": "Trending down",
 		"trendStable": "Stable",
@@ -1191,17 +1213,10 @@
 	"analytics": {
 		"title": "Analytics",
 		"pageTitle": "Analytics",
-		"streak": {
-			"current": "Current Streak",
-			"longest": "Longest Streak",
-			"days": "days"
-		},
 		"completionRate": "Completion Rate",
 		"tasksCompleted": "Tasks Completed",
 		"summary": {
-			"totalHabits": "Total Habits",
-			"activeStreaks": "Active Streaks",
-			"longestStreak": "Longest Streak"
+			"totalHabits": "Total Habits"
 		},
 		"rates": {
 			"title": "Completion Rates",
@@ -1218,14 +1233,9 @@
 			"completion": "completion",
 			"completions": "completions"
 		},
-		"streaks": {
-			"title": "Habit Streaks",
-			"longest": "Longest",
-			"last": "Last"
-		},
 		"empty": {
-			"title": "No streak data yet",
-			"description": "Complete repeating tasks to start building streaks.",
+			"title": "No activity yet",
+			"description": "Complete tasks and habits to see your activity here.",
 			"goToDashboard": "Go to Dashboard"
 		},
 		"errors": {
@@ -1630,7 +1640,7 @@
 				"tips": [
 					"Your daily command center showing tasks, habits, and wins",
 					"Use the 7-day timeline to plan ahead and review progress",
-					"Complete habits in order to build powerful streaks",
+					"Complete scheduled habits to reinforce your identities",
 					"Log wins to reinforce your identity throughout the day"
 				]
 			},
@@ -1727,7 +1737,7 @@
 			"description": "100 habits completed! True dedication."
 		},
 		"habits_5_in_week": {
-			"title": "Weekly Streak",
+			"title": "Weekly Rhythm",
 			"description": "5 habits in one week! Impressive consistency."
 		},
 		"first_task": {
@@ -1802,7 +1812,7 @@
 			},
 			"habits": {
 				"title": "Habit Stacks",
-				"description": "Your habit stacks for today. Check off each habit as you complete it to build streaks and reinforce your identity."
+				"description": "Your habit stacks for today. Check off each habit to reinforce your identity at a pace that fits your life."
 			},
 			"wins": {
 				"title": "Wins",

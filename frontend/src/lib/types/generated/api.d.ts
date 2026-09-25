@@ -308,43 +308,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/analytics/streaks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["StreakSummaryResponse"];
-                        "application/json": components["schemas"]["StreakSummaryResponse"];
-                        "text/json": components["schemas"]["StreakSummaryResponse"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/analytics/completion-rates": {
         parameters: {
             query?: never;
@@ -3143,6 +3106,8 @@ export interface components {
             identityId: null | string;
             triggerCue: null | string;
             items: null | components["schemas"]["HabitStackItemRequest"][];
+            oddWeekDays?: components["schemas"]["HabitStackDays"];
+            evenWeekDays?: components["schemas"]["HabitStackDays"];
         };
         CreateIdentityFromAiRequest: {
             name: string;
@@ -3288,14 +3253,11 @@ export interface components {
             id: string;
             title: string;
         };
+        HabitStackDays: number;
         HabitStackItemCompletionResponse: {
             /** Format: uuid */
             itemId: string;
             habitDescription: string;
-            /** Format: int32 */
-            currentStreak: number;
-            /** Format: int32 */
-            longestStreak: number;
             isCompleted: boolean;
         };
         HabitStackItemRequest: {
@@ -3309,10 +3271,6 @@ export interface components {
             habitDescription: string;
             /** Format: int32 */
             sortOrder: number;
-            /** Format: int32 */
-            currentStreak: number;
-            /** Format: int32 */
-            longestStreak: number;
         };
         HabitStackResponse: {
             /** Format: uuid */
@@ -3325,6 +3283,8 @@ export interface components {
             identityColor: null | string;
             triggerCue: null | string;
             isActive: boolean;
+            oddWeekDays: components["schemas"]["HabitStackDays"];
+            evenWeekDays: components["schemas"]["HabitStackDays"];
             items: components["schemas"]["HabitStackItemResponse"][];
             /** Format: date-time */
             createdAt: string;
@@ -3412,8 +3372,6 @@ export interface components {
             name: string;
             /** Format: int32 */
             totalCompletions: number;
-            /** Format: int32 */
-            currentStreak: number;
             /** Format: int32 */
             weeklyCompletions: number;
             reinforcementMessage: string;
@@ -3503,15 +3461,6 @@ export interface components {
         ReorderStackItemsRequest: {
             itemIds: string[];
         };
-        StreakSummaryResponse: {
-            /** Format: int32 */
-            totalHabits: number;
-            /** Format: int32 */
-            activeStreaks: number;
-            /** Format: int32 */
-            longestActiveStreak: number;
-            streaks: components["schemas"]["TaskStreakResponse"][];
-        };
         /** @enum {string} */
         TaskItemStatus: "Pending" | "InProgress" | "Completed" | "Cancelled";
         TaskResponse: {
@@ -3541,27 +3490,11 @@ export interface components {
             /** Format: date-time */
             updatedAt: string;
         };
-        TaskStreakResponse: {
-            /** Format: uuid */
-            taskId: string;
-            taskTitle: string;
-            /** Format: int32 */
-            currentStreak: number;
-            /** Format: int32 */
-            longestStreak: number;
-            /** Format: date */
-            lastCompletedDate: null | string;
-            isOnGracePeriod: boolean;
-            /** Format: int32 */
-            daysUntilStreakBreaks: number;
-        };
         TodayHabitStackItemResponse: {
             /** Format: uuid */
             id: string;
             habitDescription: string;
             isCompletedToday: boolean;
-            /** Format: int32 */
-            currentStreak: number;
         };
         TodayHabitStackResponse: {
             /** Format: uuid */
@@ -3648,6 +3581,8 @@ export interface components {
             identityId: null | string;
             triggerCue: null | string;
             isActive: boolean;
+            oddWeekDays?: components["schemas"]["HabitStackDays"];
+            evenWeekDays?: components["schemas"]["HabitStackDays"];
         };
         UpdateIdentityRequest: {
             name: string;
@@ -3780,6 +3715,7 @@ export type DailyDigestResponse = components['schemas']['DailyDigestResponse'];
 export type GeneralChatRequest = components['schemas']['GeneralChatRequest'];
 export type GoalResponse = components['schemas']['GoalResponse'];
 export type GoalSummary = components['schemas']['GoalSummary'];
+export type HabitStackDays = components['schemas']['HabitStackDays'];
 export type HabitStackItemCompletionResponse = components['schemas']['HabitStackItemCompletionResponse'];
 export type HabitStackItemRequest = components['schemas']['HabitStackItemRequest'];
 export type HabitStackItemResponse = components['schemas']['HabitStackItemResponse'];
@@ -3803,10 +3739,8 @@ export type PostponeTaskRequest = components['schemas']['PostponeTaskRequest'];
 export type ProofIntensity = components['schemas']['ProofIntensity'];
 export type ReorderHabitStacksRequest = components['schemas']['ReorderHabitStacksRequest'];
 export type ReorderStackItemsRequest = components['schemas']['ReorderStackItemsRequest'];
-export type StreakSummaryResponse = components['schemas']['StreakSummaryResponse'];
 export type TaskItemStatus = components['schemas']['TaskItemStatus'];
 export type TaskResponse = components['schemas']['TaskResponse'];
-export type TaskStreakResponse = components['schemas']['TaskStreakResponse'];
 export type TodayHabitStackItemResponse = components['schemas']['TodayHabitStackItemResponse'];
 export type TodayHabitStackResponse = components['schemas']['TodayHabitStackResponse'];
 export type TodayIdentityFeedbackResponse = components['schemas']['TodayIdentityFeedbackResponse'];
