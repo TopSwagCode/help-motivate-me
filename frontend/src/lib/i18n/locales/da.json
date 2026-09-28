@@ -33,9 +33,7 @@
 		"clickToEdit": "Klik for at redigere",
 		"info": {
 			"whatIsThis": "Hvad er dette?",
-			"learnMore": "Lær hvordan du får mest ud af denne funktion",
-			"moreQuestions": "Har du flere spørgsmål?",
-			"visitFaq": "Besøg vores FAQ-side"
+			"learnMore": "Lær hvordan du får mest ud af denne funktion"
 		}
 	},
 	"language": {
@@ -532,7 +530,27 @@
 		},
 		"notifications": {
 			"title": "Notifikationer",
-			"description": "Konfigurer hvornår og hvordan du modtager notifikationer",
+			"description": "Administrer push-notifikationer på denne enhed, og test leveringen.",
+			"device": {
+				"title": "Denne enhed",
+				"description": "Modtag påmindelser og opmuntring, selv når appen er lukket.",
+				"toggle": "Slå push-notifikationer til eller fra",
+				"enabled": "Aktiveret. {count, plural, one {# enhed er registreret} other {# enheder er registreret}}.",
+				"disabled": "Push-notifikationer er slået fra på denne enhed.",
+				"unsupported": "Push-notifikationer understøttes ikke i denne browser.",
+				"blocked": "Notifikationer er blokeret. Tillad dem i browserens eller enhedens indstillinger.",
+				"notRegistered": "Browseren er tilmeldt, men ikke registreret. Slå notifikationer fra og til igen."
+			},
+			"test": {
+				"title": "Test levering",
+				"description": "Send en notifikation til alle enheder, der er registreret på din konto.",
+				"button": "Send testnotifikation",
+				"sending": "Sender...",
+				"success": "Leveret til {count, plural, one {# enhed} other {# enheder}}.",
+				"partial": "Leveret til {success}; mislykkedes på {failed}.",
+				"noDevices": "Der blev ikke fundet nogen registrerede enheder.",
+				"error": "Testnotifikationen kunne ikke sendes."
+			},
 			"master": {
 				"label": "Aktiver notifikationer",
 				"description": "Slå alle notifikationer til eller fra"
@@ -1689,14 +1707,6 @@
 					"Log sejre hurtigt ved at fortælle assistenten hvad du gjorde"
 				]
 			}
-		},
-		"faq": {
-			"title": "Brug for mere hjælp?",
-			"link": "Besøg FAQ"
-		},
-		"contact": {
-			"title": "Har du stadig brug for hjælp?",
-			"link": "Kontakt support"
 		}
 	},
 	"milestones": {

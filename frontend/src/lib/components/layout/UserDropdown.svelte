@@ -32,14 +32,14 @@
 		goto('/settings');
 	}
 
-	function handleAdvancedClick() {
-		isOpen = false;
-		goto('/advanced');
-	}
-
 	function handleHelpClick() {
 		isOpen = false;
 		onHelpClick?.();
+	}
+
+	function handleAdvancedClick() {
+		isOpen = false;
+		goto('/advanced');
 	}
 
 </script>
@@ -68,15 +68,6 @@
 		<div
 			class="absolute right-0 mt-2 w-48 bg-warm-paper rounded-2xl shadow-lg border border-primary-100 py-1 z-50"
 		>
-			<button
-				onclick={handleAdvancedClick}
-				class="w-full text-left px-4 py-2 text-sm text-cocoa-700 hover:bg-primary-50 flex items-center gap-2"
-			>
-				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 16v-2m6-6h2M4 12H2m15.071-5.071 1.414-1.414M5.515 18.485l1.414-1.414m10.142 0 1.414 1.414M5.515 5.515l1.414 1.414M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-				</svg>
-				{$t('userMenu.advanced')}
-			</button>
 			<button
 				onclick={handleSettingsClick}
 				class="w-full text-left px-4 py-2 text-sm text-cocoa-700 hover:bg-primary-50 flex items-center gap-2"
@@ -110,6 +101,15 @@
 					/>
 				</svg>
 				{$t('userMenu.help')}
+			</button>
+			<button
+				onclick={handleAdvancedClick}
+				class="w-full text-left px-4 py-2 text-sm text-cocoa-700 hover:bg-primary-50 flex items-center gap-2"
+			>
+				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 16v-2m6-6h2M4 12H2m15.071-5.071 1.414-1.414M5.515 18.485l1.414-1.414m10.142 0 1.414 1.414M5.515 5.515l1.414 1.414M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+				</svg>
+				{$t('userMenu.advanced')}
 			</button>
 			<hr class="my-1 border-primary-100" />
 			<button

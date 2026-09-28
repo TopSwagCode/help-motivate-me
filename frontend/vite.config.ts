@@ -13,48 +13,9 @@ export default defineConfig({
 			registerType: 'prompt',
 			scope: '/',
 			base: '/',
-			manifest: {
-				name: 'Help Motivate Me',
-				short_name: 'Motivate Me',
-				description: 'Track your goals, build habits, and become who you want to be',
-				theme_color: '#4F46E5',
-				background_color: '#ffffff',
-				display: 'standalone',
-				scope: '/',
-				start_url: '/today',
-				// Enable deep linking - links to this domain open in PWA
-				handle_links: 'preferred',
-				// Declare which URLs this PWA can handle
-				// @ts-expect-error - url_handlers is a valid web manifest property not yet in vite-pwa types
-				url_handlers: [
-					{
-						origin: 'https://helpmotivateme.dk'
-					},
-					{
-						origin: 'https://*.helpmotivateme.dk'
-					}
-				],
-				icons: [
-					{
-						src: 'android-chrome-192x192.png',
-						sizes: '192x192',
-						type: 'image/png'
-					},
-					{
-						src: 'android-chrome-512x512.png',
-						sizes: '512x512',
-						type: 'image/png'
-					},
-					{
-						src: 'android-chrome-maskable-512x512.png',
-						sizes: '512x512',
-						type: 'image/png',
-						purpose: 'maskable'
-					}
-				]
-			},
+			manifest: false,
 			injectManifest: {
-				globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,webm,woff,woff2}'],
+				globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,webm,webmanifest,woff,woff2}'],
 				globIgnores: ['**/sw*', '**/*.html']
 			},
 			kit: {

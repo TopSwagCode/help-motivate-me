@@ -13,6 +13,12 @@ export type { UpdateProfileRequest } from './generated/api';
 export type { UpdateLanguageRequest } from './generated/api';
 export type { AiStatusResponse as AiStatus } from './generated/api';
 
+// ===== Push Notifications =====
+export type { PushConfigurationResponse } from './generated/api';
+export type { PushNotificationResult } from './generated/api';
+export type { PushSubscriptionRequest } from './generated/api';
+export type { PushSubscriptionsStatusResponse } from './generated/api';
+
 // Auth enums (frontend-only string literals, not generated)
 export type Language = 'English' | 'Danish';
 

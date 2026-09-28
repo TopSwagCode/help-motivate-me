@@ -18,7 +18,6 @@
         <Compile Remove="Data\Configurations\DailyCommitmentNotificationLogConfiguration.cs" />
         <Compile Remove="Data\Configurations\EmailLoginTokenConfiguration.cs" />
         <Compile Remove="Data\Configurations\JournalReactionConfiguration.cs" />
-        <Compile Remove="Data\Configurations\PushSubscriptionConfiguration.cs" />
         <Compile Remove="Data\Configurations\UserExternalLoginConfiguration.cs" />
         <Compile Remove="Data\Configurations\UserConfiguration.cs" />
         <Compile Remove="Data\Configurations\WaitlistEntryConfiguration.cs" />
@@ -35,6 +34,7 @@
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0"/>
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="10.0.0"/>
+        <PackageReference Include="WebPush" Version="1.0.12"/>
     </ItemGroup>
 
     <ItemGroup>

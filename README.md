@@ -31,6 +31,10 @@ Do not commit `.env`. The application rejects missing credentials and the placeh
 | `SINGLE_USER_PASSWORD` | Yes | none | Login password; use a long random value |
 | `SINGLE_USER_DISPLAY_NAME` | No | empty | Display name |
 | `PORT` | No | `8080` | Published host port |
+| `PWA_NAME` | No | `Help Motivate Me` | Full installed-app name |
+| `PWA_SHORT_NAME` | No | `Motivate Me` | Short installed-app name (30 characters maximum) |
+| `VAPID_SUBJECT` | No | `mailto:admin@helpmotivateme.app` | Push notification contact URI |
+| `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` | No | generated | Existing VAPID pair; set both or neither |
 | `OPENAI_API_KEY` | No | empty | Enables optional AI-backed features |
 
 Configuration changes to the username or password are applied at restart. Credential changes increment the account credential version and invalidate existing authentication cookies. Configuration is authoritative, so password changes are not offered in the application.
@@ -40,8 +44,11 @@ The `help_motivate_me_helpmotivateme_data` volume is mounted at `/data` and cont
 ```text
 /data/
   helpmotivateme.db
+  vapid-keys.json
   uploads/
 ```
+
+On first start, the application generates a VAPID keypair for push notifications and stores it in `vapid-keys.json`. Keep that file with the rest of `/data`: replacing it invalidates existing browser subscriptions. Operators migrating an existing push setup may provide both VAPID key variables instead.
 
 Only one application replica may use a SQLite database file.
 

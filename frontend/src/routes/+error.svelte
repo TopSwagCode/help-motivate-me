@@ -242,15 +242,5 @@
 				{/if}
 			</div>
 		</div>
-
-		<!-- Help Link -->
-		<div class="mt-6 text-center">
-			<p class="text-sm text-cocoa-500 mb-2">
-				{$t('errorPages.helpText')}
-			</p>
-			<a href="/today" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
-				{$t('common.info.visitFaq')}
-			</a>
-		</div>
 	</div>
 </div>

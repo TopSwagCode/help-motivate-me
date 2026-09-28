@@ -6,9 +6,10 @@
 	import { auth } from '$lib/stores/auth';
 	import ProfileTab from '$lib/components/settings/ProfileTab.svelte';
 	import LanguageTab from '$lib/components/settings/LanguageTab.svelte';
+	import NotificationsTab from '$lib/components/settings/NotificationsTab.svelte';
 	import AppTab from '$lib/components/settings/AppTab.svelte';
 
-	type Tab = 'profile' | 'language' | 'app';
+	type Tab = 'profile' | 'language' | 'notifications' | 'app';
 
 	let activeTab = $state<Tab>('profile');
 	let loading = $state(true);
@@ -16,7 +17,7 @@
 	// Read tab from URL hash
 	$effect(() => {
 		const hash = $page.url.hash.slice(1) as Tab;
-		if (['profile', 'language', 'app'].includes(hash)) {
+		if (['profile', 'language', 'notifications', 'app'].includes(hash)) {
 			activeTab = hash;
 		}
 	});
@@ -40,6 +41,7 @@
 	const tabs: { id: Tab; labelKey: string; show: boolean }[] = $derived([
 		{ id: 'profile', labelKey: 'settings.profile.title', show: true },
 		{ id: 'language', labelKey: 'settings.language.title', show: true },
+		{ id: 'notifications', labelKey: 'settings.notifications.title', show: true },
 		{ id: 'app', labelKey: 'settings.app.title', show: true }
 	]);
 </script>
@@ -82,6 +84,8 @@
 					<ProfileTab />
 				{:else if activeTab === 'language'}
 					<LanguageTab />
+				{:else if activeTab === 'notifications'}
+					<NotificationsTab />
 				{:else if activeTab === 'app'}
 					<AppTab />
 				{/if}

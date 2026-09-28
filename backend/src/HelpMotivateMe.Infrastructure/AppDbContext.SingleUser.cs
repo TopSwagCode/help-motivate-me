@@ -17,6 +17,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<JournalImage> JournalImages => Set<JournalImage>();
     public DbSet<AiUsageLog> AiUsageLogs => Set<AiUsageLog>();
     public DbSet<NotificationPreferences> NotificationPreferences => Set<NotificationPreferences>();
+    public DbSet<PushSubscription> PushSubscriptions => Set<PushSubscription>();
     public DbSet<DailyIdentityCommitment> DailyIdentityCommitments => Set<DailyIdentityCommitment>();
     public DbSet<IdentityProof> IdentityProofs => Set<IdentityProof>();
     public DbSet<DomainEvent> DomainEvents => Set<DomainEvent>();

@@ -34,5 +34,9 @@ public class SqliteSchemaUpdaterTests
 
         columns.Should().Contain("OddWeekDays", "127");
         columns.Should().Contain("EvenWeekDays", "127");
+
+        await using var tableCommand = connection.CreateCommand();
+        tableCommand.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = 'PushSubscriptions';";
+        Convert.ToInt32(await tableCommand.ExecuteScalarAsync()).Should().Be(1);
     }
 }

@@ -5,10 +5,9 @@
 	interface Props {
 		title: string;
 		description: string;
-		showFaqLink?: boolean;
 	}
 
-	let { title, description, showFaqLink = true }: Props = $props();
+	let { title, description }: Props = $props();
 
 	let showOverlay = $state(false);
 
@@ -120,43 +119,6 @@
 				<div class="prose prose-sm sm:prose max-w-none prose-headings:text-cocoa-800 prose-p:text-cocoa-700 prose-p:leading-relaxed prose-strong:text-primary-700 prose-strong:font-semibold prose-ul:space-y-2 prose-li:text-cocoa-700">
 					{@html description}
 				</div>
-
-				{#if showFaqLink}
-					<!-- FAQ Link Section with card style -->
-					<div class="mt-8 p-5 bg-gradient-to-br from-primary-50 to-blue-50 border border-primary-100 rounded-2xl">
-						<div class="flex items-start gap-4">
-							<div class="flex-shrink-0 w-10 h-10 bg-warm-paper rounded-xl shadow-sm flex items-center justify-center">
-								<svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-									/>
-								</svg>
-							</div>
-							<div class="flex-1 min-w-0">
-								<p class="text-sm font-medium text-cocoa-800 mb-2">
-									{$t('common.info.moreQuestions')}
-								</p>
-								<a
-									href="/today"
-									class="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold text-sm group transition-colors"
-								>
-									<span>{$t('common.info.visitFaq')}</span>
-									<svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2.5"
-											d="M9 5l7 7-7 7"
-										/>
-									</svg>
-								</a>
-							</div>
-						</div>
-					</div>
-				{/if}
 			</div>
 
 			<!-- Footer -->

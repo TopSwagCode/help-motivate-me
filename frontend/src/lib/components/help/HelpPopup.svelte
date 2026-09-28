@@ -269,37 +269,6 @@
 					{/each}
 				</div>
 			</div>
-
-			<!-- Footer -->
-			<div class="px-4 py-3 border-t border-gray-100 bg-warm-cream/50 flex-shrink-0">
-				<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-					<div class="text-xs text-cocoa-500">
-						{$t('help.faq.title')}
-					</div>
-					<div class="flex gap-3">
-						<a
-							href="/today"
-							onclick={onClose}
-							class="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
-						>
-							{$t('help.faq.link')}
-							<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-							</svg>
-						</a>
-						<a
-							href="/today"
-							onclick={onClose}
-							class="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
-						>
-							{$t('help.contact.link')}
-							<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-							</svg>
-						</a>
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 {/if}

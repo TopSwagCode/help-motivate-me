@@ -30,6 +30,7 @@
 		tour.resetTour();
 		goto('/today');
 	}
+
 </script>
 
 <div class="space-y-6">

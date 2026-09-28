@@ -10,6 +10,11 @@ services:
       SingleUser__Username: ${SINGLE_USER_USERNAME:?Set SINGLE_USER_USERNAME in .env}
       SingleUser__Password: ${SINGLE_USER_PASSWORD:?Set SINGLE_USER_PASSWORD in .env}
       SingleUser__DisplayName: ${SINGLE_USER_DISPLAY_NAME:-}
+      Pwa__Name: ${PWA_NAME:-Help Motivate Me}
+      Pwa__ShortName: ${PWA_SHORT_NAME:-Motivate Me}
+      Vapid__Subject: ${VAPID_SUBJECT:-mailto:admin@helpmotivateme.app}
+      Vapid__PublicKey: ${VAPID_PUBLIC_KEY:-}
+      Vapid__PrivateKey: ${VAPID_PRIVATE_KEY:-}
       AI__Provider: ${AI_PROVIDER:-OpenAI}
       AI__ApiKey: ${AI_API_KEY:-}
       AI__BaseUrl: ${AI_BASE_URL:-https://api.openai.com/v1/}

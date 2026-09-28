@@ -33,9 +33,7 @@
 		"clickToEdit": "Click to edit",
 		"info": {
 			"whatIsThis": "What is this?",
-			"learnMore": "Learn how to make the most of this feature",
-			"moreQuestions": "Have more questions?",
-			"visitFaq": "Visit our FAQ page"
+			"learnMore": "Learn how to make the most of this feature"
 		}
 	},
 	"language": {
@@ -532,7 +530,27 @@
 		},
 		"notifications": {
 			"title": "Notifications",
-			"description": "Configure when and how you receive notifications",
+			"description": "Manage push notifications for this device and verify delivery.",
+			"device": {
+				"title": "This device",
+				"description": "Receive reminders and encouragement even when the app is closed.",
+				"toggle": "Toggle push notifications",
+				"enabled": "Enabled. {count, plural, one {# device is registered} other {# devices are registered}}.",
+				"disabled": "Push notifications are off on this device.",
+				"unsupported": "Push notifications are not supported in this browser.",
+				"blocked": "Notifications are blocked. Allow them in your browser or device settings.",
+				"notRegistered": "This browser is subscribed but not registered. Turn notifications off and on again."
+			},
+			"test": {
+				"title": "Test delivery",
+				"description": "Send a notification to every device registered to your account.",
+				"button": "Send test notification",
+				"sending": "Sending...",
+				"success": "Delivered to {count, plural, one {# device} other {# devices}}.",
+				"partial": "Delivered to {success}; failed on {failed}.",
+				"noDevices": "No registered devices were found.",
+				"error": "Could not send the test notification."
+			},
 			"master": {
 				"label": "Enable Notifications",
 				"description": "Turn all notifications on or off"
@@ -1689,14 +1707,6 @@
 					"Log wins quickly by telling the assistant what you did"
 				]
 			}
-		},
-		"faq": {
-			"title": "Need more help?",
-			"link": "Visit FAQ"
-		},
-		"contact": {
-			"title": "Still need help?",
-			"link": "Contact Support"
 		}
 	},
 	"milestones": {

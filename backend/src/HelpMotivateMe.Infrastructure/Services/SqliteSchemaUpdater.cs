@@ -14,6 +14,23 @@ public static class SqliteSchemaUpdater
 
         try
         {
+            await ExecuteAsync(connection, """
+                CREATE TABLE IF NOT EXISTS "PushSubscriptions" (
+                    "Id" TEXT NOT NULL CONSTRAINT "PK_PushSubscriptions" PRIMARY KEY,
+                    "UserId" TEXT NOT NULL,
+                    "Endpoint" TEXT NOT NULL,
+                    "P256dh" TEXT NOT NULL,
+                    "Auth" TEXT NOT NULL,
+                    "UserAgent" TEXT NULL,
+                    "CreatedAt" TEXT NOT NULL,
+                    "LastUsedAt" TEXT NULL,
+                    CONSTRAINT "FK_PushSubscriptions_users_UserId" FOREIGN KEY ("UserId") REFERENCES "users" ("Id") ON DELETE CASCADE
+                );
+                CREATE INDEX IF NOT EXISTS "IX_PushSubscriptions_Endpoint" ON "PushSubscriptions" ("Endpoint");
+                CREATE INDEX IF NOT EXISTS "IX_PushSubscriptions_UserId" ON "PushSubscriptions" ("UserId");
+                CREATE UNIQUE INDEX IF NOT EXISTS "IX_PushSubscriptions_UserId_Endpoint" ON "PushSubscriptions" ("UserId", "Endpoint");
+                """, cancellationToken);
+
             var columns = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             await using (var command = connection.CreateCommand())
             {

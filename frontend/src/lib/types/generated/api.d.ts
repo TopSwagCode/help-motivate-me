@@ -2521,6 +2521,191 @@ export interface paths {
         };
         trace?: never;
     };
+    "/api/notifications/push/configuration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["PushConfigurationResponse"];
+                        "application/json": components["schemas"]["PushConfigurationResponse"];
+                        "text/json": components["schemas"]["PushConfigurationResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/push/subscribe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["PushSubscriptionRequest"];
+                    "text/json": components["schemas"]["PushSubscriptionRequest"];
+                    "application/*+json": components["schemas"]["PushSubscriptionRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/push/unsubscribe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: {
+                    endpoint?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/push/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["PushSubscriptionsStatusResponse"];
+                        "application/json": components["schemas"]["PushSubscriptionsStatusResponse"];
+                        "text/json": components["schemas"]["PushSubscriptionsStatusResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/push/test": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["PushNotificationResult"];
+                        "application/json": components["schemas"]["PushNotificationResult"];
+                        "text/json": components["schemas"]["PushNotificationResult"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/goals/{goalId}/tasks": {
         parameters: {
             query?: never;
@@ -3455,6 +3640,40 @@ export interface components {
         };
         /** @enum {string} */
         ProofIntensity: "Easy" | "Moderate" | "Hard";
+        PushConfigurationResponse: {
+            publicKey: string;
+        };
+        PushNotificationResult: {
+            /** Format: int32 */
+            totalSubscriptions: number;
+            /** Format: int32 */
+            successCount: number;
+            /** Format: int32 */
+            failureCount: number;
+        };
+        PushSubscriptionKeys: {
+            p256dh: string;
+            auth: string;
+        };
+        PushSubscriptionRequest: {
+            endpoint: string;
+            keys: components["schemas"]["PushSubscriptionKeys"];
+        };
+        PushSubscriptionsStatusResponse: {
+            hasSubscriptions: boolean;
+            /** Format: int32 */
+            subscriptionCount: number;
+            subscriptions: components["schemas"]["PushSubscriptionStatusResponse"][];
+        };
+        PushSubscriptionStatusResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            lastUsedAt: null | string;
+            userAgent: string;
+        };
         ReorderHabitStacksRequest: {
             stackIds: string[];
         };
@@ -3737,6 +3956,12 @@ export type MarkSeenRequest = components['schemas']['MarkSeenRequest'];
 export type MilestoneDefinitionResponse = components['schemas']['MilestoneDefinitionResponse'];
 export type PostponeTaskRequest = components['schemas']['PostponeTaskRequest'];
 export type ProofIntensity = components['schemas']['ProofIntensity'];
+export type PushConfigurationResponse = components['schemas']['PushConfigurationResponse'];
+export type PushNotificationResult = components['schemas']['PushNotificationResult'];
+export type PushSubscriptionKeys = components['schemas']['PushSubscriptionKeys'];
+export type PushSubscriptionRequest = components['schemas']['PushSubscriptionRequest'];
+export type PushSubscriptionsStatusResponse = components['schemas']['PushSubscriptionsStatusResponse'];
+export type PushSubscriptionStatusResponse = components['schemas']['PushSubscriptionStatusResponse'];
 export type ReorderHabitStacksRequest = components['schemas']['ReorderHabitStacksRequest'];
 export type ReorderStackItemsRequest = components['schemas']['ReorderStackItemsRequest'];
 export type TaskItemStatus = components['schemas']['TaskItemStatus'];

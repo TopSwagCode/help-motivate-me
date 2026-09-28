@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using HelpMotivateMe.Api.Services;
@@ -46,6 +47,15 @@ builder.Services.AddDbContext<AppDbContext>((services, options) =>
         .AddInterceptors(
             services.GetRequiredService<SqliteConnectionInterceptor>(),
             services.GetRequiredService<GuidKeyInterceptor>()));
+
+var vapidKeyMaterial = VapidKeyStore.LoadOrCreate(builder.Configuration);
+builder.Services.AddSingleton(vapidKeyMaterial);
+builder.Services.AddScoped<IPushNotificationService, WebPushNotificationService>();
+
+builder.Services.AddOptions<PwaOptions>()
+    .Bind(builder.Configuration.GetSection(PwaOptions.SectionName))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
 
 // Data Protection - store keys in database for persistence across restarts and multiple instances
 builder.Services.AddDataProtection()
@@ -210,6 +220,29 @@ await using (var scope = app.Services.CreateAsyncScope())
 }
 
 app.UseForwardedHeaders();
+app.MapGet("/manifest.webmanifest", async context =>
+{
+    var options = context.RequestServices.GetRequiredService<Microsoft.Extensions.Options.IOptions<PwaOptions>>().Value;
+    context.Response.ContentType = "application/manifest+json";
+    context.Response.Headers.CacheControl = "no-cache";
+    await context.Response.WriteAsync(JsonSerializer.Serialize(new Dictionary<string, object>
+    {
+        ["name"] = options.Name,
+        ["short_name"] = options.ShortName,
+        ["description"] = options.Description,
+        ["theme_color"] = options.ThemeColor,
+        ["background_color"] = options.BackgroundColor,
+        ["display"] = "standalone",
+        ["scope"] = "/",
+        ["start_url"] = "/today",
+        ["icons"] = new[]
+        {
+            new { src = "/android-chrome-192x192.png", sizes = "192x192", type = "image/png", purpose = "any" },
+            new { src = "/android-chrome-512x512.png", sizes = "512x512", type = "image/png", purpose = "any" },
+            new { src = "/android-chrome-maskable-512x512.png", sizes = "512x512", type = "image/png", purpose = "maskable" }
+        }
+    }));
+});
 app.UseDefaultFiles();
 app.UseStaticFiles();
 if (app.Environment.IsDevelopment()) app.UseCors("AllowFrontend");

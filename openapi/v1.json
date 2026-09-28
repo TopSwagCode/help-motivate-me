@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:5001/"
+      "url": "http://127.0.0.1:5011/"
     }
   ],
   "paths": {
@@ -2762,6 +2762,146 @@
         }
       }
     },
+    "/api/notifications/push/configuration": {
+      "get": {
+        "tags": [
+          "PushNotifications"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushConfigurationResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushConfigurationResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushConfigurationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notifications/push/subscribe": {
+      "post": {
+        "tags": [
+          "PushNotifications"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PushSubscriptionRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PushSubscriptionRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PushSubscriptionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/notifications/push/unsubscribe": {
+      "delete": {
+        "tags": [
+          "PushNotifications"
+        ],
+        "parameters": [
+          {
+            "name": "endpoint",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/notifications/push/status": {
+      "get": {
+        "tags": [
+          "PushNotifications"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushSubscriptionsStatusResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushSubscriptionsStatusResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushSubscriptionsStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notifications/push/test": {
+      "post": {
+        "tags": [
+          "PushNotifications"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushNotificationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushNotificationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushNotificationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/goals/{goalId}/tasks": {
       "get": {
         "tags": [
@@ -5016,6 +5156,121 @@
           "Hard"
         ]
       },
+      "PushConfigurationResponse": {
+        "required": [
+          "publicKey"
+        ],
+        "type": "object",
+        "properties": {
+          "publicKey": {
+            "type": "string"
+          }
+        }
+      },
+      "PushNotificationResult": {
+        "required": [
+          "totalSubscriptions",
+          "successCount",
+          "failureCount"
+        ],
+        "type": "object",
+        "properties": {
+          "totalSubscriptions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "successCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "failureCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PushSubscriptionKeys": {
+        "required": [
+          "p256dh",
+          "auth"
+        ],
+        "type": "object",
+        "properties": {
+          "p256dh": {
+            "type": "string"
+          },
+          "auth": {
+            "type": "string"
+          }
+        }
+      },
+      "PushSubscriptionRequest": {
+        "required": [
+          "endpoint",
+          "keys"
+        ],
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          },
+          "keys": {
+            "$ref": "#/components/schemas/PushSubscriptionKeys"
+          }
+        }
+      },
+      "PushSubscriptionsStatusResponse": {
+        "required": [
+          "hasSubscriptions",
+          "subscriptionCount",
+          "subscriptions"
+        ],
+        "type": "object",
+        "properties": {
+          "hasSubscriptions": {
+            "type": "boolean"
+          },
+          "subscriptionCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "subscriptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PushSubscriptionStatusResponse"
+            }
+          }
+        }
+      },
+      "PushSubscriptionStatusResponse": {
+        "required": [
+          "id",
+          "createdAt",
+          "lastUsedAt",
+          "userAgent"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUsedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "userAgent": {
+            "type": "string"
+          }
+        }
+      },
       "ReorderHabitStacksRequest": {
         "required": [
           "stackIds"
@@ -5952,6 +6207,9 @@
     },
     {
       "name": "Milestones"
+    },
+    {
+      "name": "PushNotifications"
     },
     {
       "name": "Tasks"
