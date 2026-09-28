@@ -21,7 +21,7 @@ docker compose down           # stop; data is retained
 docker compose up -d          # start again
 ```
 
-Do not commit `.env`. The application rejects missing credentials, passwords shorter than 12 characters, and the placeholder `change-me`.
+Do not commit `.env`. The application rejects missing credentials and the placeholder `change-me`. Use a strong password for internet-facing installations.
 
 ## Configuration
 
