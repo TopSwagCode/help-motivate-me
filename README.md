@@ -1,6 +1,28 @@
 # Help Motivate Me
 
-Help Motivate Me is a self-hosted, single-user habit and identity tracker. One ASP.NET Core process serves the API, static Svelte application, uploaded files, and health endpoints. Mutable state lives in one Docker volume backed by SQLite.
+![Milo, the Help Motivate Me mascot](assets/milo_repo.png)
+
+**Build habits that feel like votes for the person you want to become.**
+
+Help Motivate Me is an identity-based habit tracker inspired by the ideas in James Clear's *Atomic Habits*. Instead of chasing perfect streaks, you choose who you want to become, take small actions that support that identity, and collect proof that you are making progress.
+
+Milo, your gentle motivator, is along for the journey. No guilt trips. No hustle theatre. Just a friendly place to keep showing up, notice your wins, and make the next good choice a little easier.
+
+## Make Change Feel Like You
+
+- **Shape your identities** around who you want to be, not only what you want to achieve.
+- **Build habit stacks** that connect new actions to routines already in your day.
+- **Choose a daily commitment** and focus on one meaningful vote at a time.
+- **Capture identity proofs** so small wins do not disappear unnoticed.
+- **Journal and reflect** on what is working, what feels hard, and how you are changing.
+- **Follow your progress** with goals, milestones, and insights designed to encourage rather than judge.
+- **Get optional AI guidance** during onboarding, from the command bar, and through voice transcription.
+
+## Your Habits, Your Space
+
+Help Motivate Me is built for one person and can be self-hosted on your own machine or server. Your habits, reflections, and uploads stay in a space you control, with no subscription required to keep using it.
+
+For operators: the app runs as a single Docker service. One ASP.NET Core process serves the API, Svelte application, uploaded files, and health endpoints, while SQLite and other mutable data live in one Docker volume.
 
 ## Quick Start
 
